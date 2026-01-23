@@ -1,0 +1,214 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-parser.pingqlin.dev/schema/v1.1/skill-decomposition.schema.json",
+  "title": "MCP Skill Decomposition Schema",
+  "description": "解析 Claude Skill 與 MCP Tool 內部成分結構的標準格式",
+  "version": "1.1.0",
+  "author": "pingqLIN",
+  "created": "2026-01-23",
+  
+  "definitions": {
+    "core_action": {
+      "type": "object",
+      "description": "核心動作：不具判斷價值系統的基礎操作，執行結果由輸入決定",
+      "required": ["id", "name", "action_type", "deterministic"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^ca_[0-9]{3}$" },
+        "name": { "type": "string" },
+        "action_type": {
+          "type": "string",
+          "enum": [
+            "transform",
+            "io_read",
+            "io_write",
+            "compute",
+            "external_call",
+            "state_change",
+            "llm_inference"
+          ]
+        },
+        "description": { "type": "string" },
+        "immutable_elements": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "不可變動元素，變動將導致功能語意改變"
+        },
+        "mutable_elements": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "可變動元素（輸入參數）"
+        },
+        "deterministic": {
+          "type": "boolean",
+          "description": "相同輸入是否必然產生相同輸出"
+        },
+        "side_effects": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "執行此動作產生的副作用"
+        }
+      }
+    },
+    
+    "rule": {
+      "type": "object",
+      "description": "判斷規則：純粹的條件判斷/分類，本身不執行動作",
+      "required": ["id", "name", "condition_type", "returns", "fail_consequence"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^r_[0-9]{3}$" },
+        "name": { "type": "string" },
+        "condition_type": {
+          "type": "string",
+          "enum": [
+            "validation",
+            "existence_check",
+            "type_check",
+            "range_check",
+            "permission_check",
+            "state_check",
+            "consistency_check",
+            "threshold_check"
+          ]
+        },
+        "condition_expression": {
+          "type": "string",
+          "description": "條件表達式（偽代碼或邏輯描述）"
+        },
+        "returns": {
+          "type": "string",
+          "enum": ["boolean", "classification", "enum_value", "score"]
+        },
+        "fail_consequence": {
+          "type": "string",
+          "enum": ["halt", "branch", "default_value", "error_throw", "retry", "escalate"]
+        },
+        "branching_targets": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "若 fail_consequence 為 branch，列出可能的分支目標"
+        }
+      }
+    },
+    
+    "mission": {
+      "type": "object",
+      "description": "任務/作品：最終朝向的目標方向，由多個 actions 和 rules 組成",
+      "required": ["id", "name", "goal", "composed_of", "output_type"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^m_[0-9]{3}$" },
+        "name": { "type": "string" },
+        "goal": { "type": "string" },
+        "composed_of": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "組成此任務的元素 ID 列表（依執行順序）"
+        },
+        "output_type": { "type": "string" },
+        "success_criteria": { "type": "string" },
+        "failure_modes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    
+    "execution_path": {
+      "type": "object",
+      "required": ["path_id", "sequence", "condition", "expected_outcome"],
+      "properties": {
+        "path_id": { "type": "integer" },
+        "sequence": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "執行序列（元素 ID）"
+        },
+        "condition": {
+          "type": "string",
+          "description": "觸發此路徑的條件"
+        },
+        "expected_outcome": { "type": "string" },
+        "probability": {
+          "type": "string",
+          "description": "此路徑發生的預估機率（若可判斷）"
+        },
+        "_halt": { "type": "boolean" },
+        "_note": { "type": "string" }
+      }
+    }
+  },
+  
+  "type": "object",
+  "required": ["meta", "original_definition", "decomposition", "execution_paths", "parser_meta"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["skill_id", "name", "skill_layer", "parse_timestamp"],
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "pattern": "^(claude|mcp)__[a-z_]+__[a-z_]+$"
+        },
+        "name": { "type": "string" },
+        "skill_layer": {
+          "type": "string",
+          "enum": ["claude_skill", "mcp_tool", "mcp_server_internal"],
+          "description": "技能所屬層級"
+        },
+        "server": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "parse_timestamp": { "type": "string", "format": "date-time" },
+        "parser_version": { "type": "string" },
+        "parsed_by": {
+          "type": "string",
+          "description": "執行解析的 skill_id"
+        }
+      }
+    },
+    "original_definition": {
+      "type": "object",
+      "description": "原始定義（MCP Tool 或 Claude Skill 描述）"
+    },
+    "decomposition": {
+      "type": "object",
+      "properties": {
+        "core_actions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/core_action" }
+        },
+        "rules": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/rule" }
+        },
+        "missions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/mission" }
+        }
+      }
+    },
+    "execution_paths": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/execution_path" }
+    },
+    "parser_meta": {
+      "type": "object",
+      "properties": {
+        "paths_enumerated": { "type": "integer" },
+        "max_paths_exceeded": { "type": "boolean" },
+        "max_paths_limit": { "type": "integer", "default": 100 },
+        "halt_reason": { "type": ["string", "null"] },
+        "blackbox_boundary": {
+          "type": "string",
+          "description": "解析暫停點標記"
+        },
+        "requires_deep_parse": { "type": "boolean" },
+        "deep_parse_trigger": {
+          "type": "string",
+          "description": "觸發深度解析的原因"
+        },
+        "inconsistency_detected": { "type": "boolean" },
+        "inconsistency_detail": { "type": "string" }
+      }
+    }
+  }
+}
