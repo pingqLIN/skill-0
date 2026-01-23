@@ -1,0 +1,214 @@
+# Skill-0 Development Conversation Log
+**Date:** 2026-01-23  
+**User:** pingqLIN  
+**Topic:** MCP Skill Decomposition Parser 開發
+
+---
+
+## 對話摘要
+
+本次對話建立了一個用於解析 Claude Skills 和 MCP Tools 的三元分類系統。
+
+### 主要成果
+
+1. **定義三元分類體系**
+   - Core Action (核心動作)
+   - Rules (判斷規則)
+   - Mission (任務/作品)
+
+2. **建立 JSON Schema 規範 v1.1.0**
+
+3. **完成 4 個 Skill 解析範例**
+   - Skill 0: skill_decomposition_parser (解析器本身)
+   - Skill 1: echo (MCP Tool)
+   - Skill 2: get_current_time (MCP Tool)
+   - Skill 3: get-sum (MCP Tool)
+
+---
+
+## 完整對話記錄
+
+### User 1
+我要製作一款能夠解析不同skills它裡面的關於關於判斷關於應用的技術關於軟體之類的關係去解析裡面的成分結構的一款程式的線上程式 先做基礎廣泛的調查確認skill大概種類方式的基礎確認
+
+### Assistant 1
+[進行基礎調查，確認 Skills 類型範圍]
+
+提出確認問題：
+1. Skills 的定義範圍（職業技能、遊戲技能、AI/Chatbot 技能等）
+2. 解析成分結構的目標
+3. 預期的輸出形式
+
+### User 2
+AI/Chatbot 技能（如 Alexa Skills、Copilot Skills）都是 都要 但不需要太精細
+
+### Assistant 2
+[進行 AI/Chatbot Skills 框架調查]
+
+整理了主要平台比較：
+- Alexa Skills
+- Microsoft Copilot Skills  
+- GPT Plugins/Custom GPTs
+- Claude Tools
+- Dialogflow
+- Rasa
+
+### User 3
+更正 特別指 Claude skills為主 之後相關的討論
+
+### Assistant 3
+[針對 Claude Skills / MCP 進行深入調查]
+
+整理了：
+1. MCP (Model Context Protocol) 核心結構
+2. Tool 定義結構 (name, title, description, inputSchema)
+3. Server Capabilities
+4. 呼叫流程 (JSON-RPC 2.0)
+5. MCP 2025-2026 新特性
+
+### User 4
+1. 定義解析：不同skills將內部不可變動/變動將造成效果改變 的部分 整理定義分類出
+   1. core action 核心動作：不具有判斷價值系統（或是現階段無法、不能判斷）的基礎操作
+   2. rules 純粹的判斷：不帶動作只討論分類
+   3. mission 任務/作品：最終朝向的目標方向
+   
+   將上述種類判斷出來後 依照順序輸出，有不同路徑者遍歷所有可能性並呈（可預期/執行後某種判斷）樣態過多者停止解析 先注記
+
+2. 先做前10種熱門mcp範例
+
+3. [未完成]
+
+### Assistant 4
+[建立三元分類定義框架]
+
+1. 定義 Core Action、Rules、Mission 的完整規範
+2. 設計解析輸出 JSON 格式
+3. 整理前 10 種熱門 MCP Server 並進行分類解析：
+   - GitHub MCP Server
+   - Filesystem MCP Server
+   - PostgreSQL MCP Server
+   - Slack MCP Server
+   - Context7
+   - Sequential Thinking
+   - Google Drive MCP Server
+   - Notion MCP Server
+   - Apidog MCP Server
+   - Puppeteer MCP Server
+
+### User 5
+實際上MCP Server 也可以繼續解析 但工程浩大也不一定有結果（內部黑盒子） 就以mcp單元做一個解析暫停點（有需要可以繼續解析，例如skill輸入判斷體系認為相同資料經過某mcp輸出不一致時）
+
+將skill內容根據上述操作，解析所有元素後輸出轉為正式json規範，就是現在的目標
+
+B 程式架構我目前傾向以LLM model去操作輸出純文字的方式
+
+C找3基礎的skill執行
+
+### Assistant 5
+[從官方 MCP Server 倉庫取得實際 Tool 定義]
+
+建立正式 JSON Schema 規範，並完成 3 個基礎 MCP Skill 解析：
+1. echo
+2. get_current_time
+3. get-sum
+
+### User 6
+我這邊的三元分類 是包含Claude skill也需要一併分析的
+
+### Assistant 6
+[完成元解析 - 將解析器本身作為 Skill 進行三元分類]
+
+產出完整的 4 個 Skill 解析：
+
+**Skill 0: skill_decomposition_parser (Claude Skill)**
+- 7 Core Actions
+- 6 Rules
+- 3 Missions
+- 5 Execution Paths
+
+**Skill 1: echo (MCP Tool)**
+- 2 Core Actions
+- 2 Rules
+- 1 Mission
+- 3 Execution Paths
+
+**Skill 2: get_current_time (MCP Tool)**
+- 3 Core Actions
+- 2 Rules
+- 1 Mission
+- 3 Execution Paths
+
+**Skill 3: get-sum (MCP Tool)**
+- 2 Core Actions
+- 4 Rules
+- 1 Mission
+- 5 Execution Paths
+
+---
+
+## JSON Schema 規範 v1.1.0
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-parser.pingqlin.dev/schema/v1.1/skill-decomposition.schema.json",
+  "title": "MCP Skill Decomposition Schema",
+  "version": "1.1.0",
+  
+  "definitions": {
+    "core_action": {
+      "type": "object",
+      "required": ["id", "name", "action_type", "deterministic"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^ca_[0-9]{3}$" },
+        "name": { "type": "string" },
+        "action_type": {
+          "enum": ["transform", "io_read", "io_write", "compute", "external_call", "state_change", "llm_inference"]
+        },
+        "immutable_elements": { "type": "array", "items": { "type": "string" } },
+        "mutable_elements": { "type": "array", "items": { "type": "string" } },
+        "deterministic": { "type": "boolean" }
+      }
+    },
+    
+    "rule": {
+      "type": "object",
+      "required": ["id", "name", "condition_type", "returns", "fail_consequence"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^r_[0-9]{3}$" },
+        "name": { "type": "string" },
+        "condition_type": {
+          "enum": ["validation", "existence_check", "type_check", "range_check", "permission_check", "state_check", "consistency_check", "threshold_check"]
+        },
+        "returns": { "enum": ["boolean", "classification", "enum_value", "score"] },
+        "fail_consequence": { "enum": ["halt", "branch", "default_value", "error_throw", "retry", "escalate"] }
+      }
+    },
+    
+    "mission": {
+      "type": "object",
+      "required": ["id", "name", "goal", "composed_of", "output_type"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^m_[0-9]{3}$" },
+        "name": { "type": "string" },
+        "goal": { "type": "string" },
+        "composed_of": { "type": "array", "items": { "type": "string" } },
+        "output_type": { "type": "string" }
+      }
+    }
+  }
+}
+```
+
+---
+
+## 下一步計畫
+
+1. 將 Schema 正式化並存入 `schema/` 目錄
+2. 將各 Skill 解析結果存入 `parsed/` 目錄
+3. 設計 LLM Prompt 模板讓解析可重複執行
+4. 建立視覺化呈現（流程圖/關係圖）
+
+---
+
+*Generated by Claude on 2026-01-23*
