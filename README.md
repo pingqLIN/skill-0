@@ -42,4 +42,6 @@ skill-0/
 
 MIT
 
-[This documentation is machine translated, please refer to README_zh-tw.md for original content]
+---
+
+**Note:** This documentation is machine translated. Please refer to [README_zh-tw.md](README_zh-tw.md) for the original Chinese content.
