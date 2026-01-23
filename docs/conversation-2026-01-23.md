@@ -146,7 +146,7 @@ Produced complete 4 Skill parsings:
 
 ---
 
-## JSON Schema 規範 v1.1.0
+## JSON Schema Specification v1.1.0
 
 ```json
 {
