@@ -2,37 +2,37 @@
 
 > A general classification program for parsing Claude Skills and MCP Tools into structured components.
 
-## 概述
+## Overview
 
-Skill-0 是一個用於解析 AI/Chatbot Skills（特別是 Claude Skills 和 MCP Tools）內部成分結構的分類系統。
+Skill-0 is a classification system used to parse the internal component structure of AI/Chatbot Skills (especially Claude Skills and MCP Tools).
 
-## 三元分類體系
+## Ternary Classification System
 
-將 Skill 內部不可變動/變動將造成效果改變的部分，整理定義分類為：
+The immutable parts of a Skill—or parts that change the behavior if modified—are organized and defined as:
 
-| 分類 | 定義 | 特徵 |
+| Category | Definition | Characteristics |
 |------|------|------|
-| **Core Action** | 核心動作：不具有判斷價值系統的基礎操作 | 執行結果確定、無條件分支、原子操作 |
-| **Rules** | 純粹的判斷：不帶動作只討論分類 | 回傳布林/分類結果、條件評估 |
-| **Mission** | 任務/作品：最終朝向的目標方向 | 組合多個 Action + Rules、有明確產出 但 此處作為停止條件 不作內部分析|
+| **Core Action** | Core actions: foundational operations that do not carry judgment value systems | Deterministic results, unconditional branching, atomic operations |
+| **Rules** | Pure judgment: discusses classification without actions | Returns boolean/classification results, condition evaluation |
+| **Mission** | Tasks/works: the final target direction | Combines multiple Actions + Rules, has a clear output, but serves as a stopping condition and is not analyzed internally here |
 
-## 專案結構
+## Project Structure
 
 ```
 skill-0/
 ├── README.md
 ├── schema/
-│   └── skill-decomposition.schema.json    # JSON Schema 規範
+│   └── skill-decomposition.schema.json    # JSON Schema specification
 ├── parsed/
-│   ├── skill-0-parser.json                # 解析器自我解析
-│   ├── mcp-echo.json                      # MCP echo tool 解析
-│   ├── mcp-get-current-time.json          # MCP time tool 解析
-│   └── mcp-get-sum.json                   # MCP sum tool 解析
+│   ├── skill-0-parser.json                # Parser self-parsing
+│   ├── mcp-echo.json                      # MCP echo tool parsing
+│   ├── mcp-get-current-time.json          # MCP time tool parsing
+│   └── mcp-get-sum.json                   # MCP sum tool parsing
 └── docs/
-    └── conversation-2026-01-23.md         # 原始對話記錄
+    └── conversation-2026-01-23.md         # Original conversation log
 ```
 
-## 版本
+## Version
 
 - Schema Version: 1.1.0
 - Created: 2026-01-23
