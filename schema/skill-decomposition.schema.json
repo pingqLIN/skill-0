@@ -1,19 +1,24 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://skill-parser.pingqlin.dev/schema/v1.1/skill-decomposition.schema.json",
-  "title": "MCP Skill Decomposition Schema",
-  "description": "解析 Claude Skill 與 MCP Tool 內部成分結構的標準格式",
-  "version": "1.1.0",
+  "$id": "https://skill-parser.pingqlin.dev/schema/v2.0/skill-decomposition.schema.json",
+  "title": "Skill Decomposition Schema",
+  "description": "解析 Claude Skill 與 MCP Tool 內部成分結構的標準格式，採用三元分類法：Action / Rule / Directive",
+  "version": "2.0.0",
   "author": "pingqLIN",
   "created": "2026-01-23",
+  "updated": "2026-01-26",
   
   "definitions": {
-    "core_action": {
+    "action": {
       "type": "object",
-      "description": "核心動作：不具判斷價值系統的基礎操作，執行結果由輸入決定",
+      "description": "動作（Action）：原子操作，不可再分解。回答「做什麼」",
       "required": ["id", "name", "action_type", "deterministic"],
       "properties": {
-        "id": { "type": "string", "pattern": "^ca_[0-9]{3}$" },
+        "id": { 
+          "type": "string", 
+          "pattern": "^a_[0-9]{3}$",
+          "description": "動作識別碼，格式：a_001, a_002..."
+        },
         "name": { "type": "string" },
         "action_type": {
           "type": "string",
@@ -24,8 +29,10 @@
             "compute",
             "external_call",
             "state_change",
-            "llm_inference"
-          ]
+            "llm_inference",
+            "await_input"
+          ],
+          "description": "動作類型：transform=轉換, io_read=讀取, io_write=寫入, compute=計算, external_call=外部呼叫, state_change=狀態改變, llm_inference=LLM推論, await_input=等待輸入"
         },
         "description": { "type": "string" },
         "immutable_elements": {
@@ -52,10 +59,14 @@
     
     "rule": {
       "type": "object",
-      "description": "判斷規則：純粹的條件判斷/分類，本身不執行動作",
-      "required": ["id", "name", "condition_type", "returns", "fail_consequence"],
+      "description": "規則（Rule）：原子判斷，不可再分解。回答「怎麼判斷」",
+      "required": ["id", "name", "condition_type", "returns"],
       "properties": {
-        "id": { "type": "string", "pattern": "^r_[0-9]{3}$" },
+        "id": { 
+          "type": "string", 
+          "pattern": "^r_[0-9]{3}$",
+          "description": "規則識別碼，格式：r_001, r_002..."
+        },
         "name": { "type": "string" },
         "condition_type": {
           "type": "string",
@@ -68,7 +79,8 @@
             "state_check",
             "consistency_check",
             "threshold_check"
-          ]
+          ],
+          "description": "條件類型：validation=驗證, existence_check=存在檢查, type_check=類型檢查, range_check=範圍檢查, permission_check=權限檢查, state_check=狀態檢查, consistency_check=一致性檢查, threshold_check=閾值檢查"
         },
         "condition_expression": {
           "type": "string",
@@ -76,45 +88,70 @@
         },
         "returns": {
           "type": "string",
-          "enum": ["boolean", "classification", "enum_value", "score"]
+          "enum": ["boolean", "classification", "enum_value", "score"],
+          "description": "回傳類型：boolean=布林值, classification=分類, enum_value=列舉值, score=分數"
         },
-        "fail_consequence": {
+        "fail_action": {
           "type": "string",
-          "enum": ["halt", "branch", "default_value", "error_throw", "retry", "escalate"]
+          "enum": ["halt", "branch", "default_value", "error_throw", "retry", "escalate"],
+          "description": "判斷失敗時的動作"
         },
         "branching_targets": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "若 fail_consequence 為 branch，列出可能的分支目標"
+          "description": "若 fail_action 為 branch，列出可能的分支目標"
         }
       }
     },
     
-    "mission": {
+    "directive": {
       "type": "object",
-      "description": "任務/作品：最終朝向的目標方向，由多個 actions 和 rules 組成",
-      "required": ["id", "name", "goal", "composed_of", "output_type"],
+      "description": "指示（Directive）：描述性語句，可分解但在此層次選擇不分解。回答「描述什麼狀態/目標/原則」",
+      "required": ["id", "name", "directive_type", "description"],
       "properties": {
-        "id": { "type": "string", "pattern": "^m_[0-9]{3}$" },
+        "id": { 
+          "type": "string", 
+          "pattern": "^d_[0-9]{3}$",
+          "description": "指示識別碼，格式：d_001, d_002..."
+        },
         "name": { "type": "string" },
-        "goal": { "type": "string" },
-        "composed_of": {
+        "directive_type": {
+          "type": "string",
+          "enum": [
+            "completion",
+            "knowledge",
+            "principle",
+            "constraint",
+            "preference",
+            "strategy"
+          ],
+          "description": "指示類型：completion=完成狀態, knowledge=領域知識, principle=指導原則, constraint=限制條件, preference=偏好設定, strategy=策略方針"
+        },
+        "description": { 
+          "type": "string",
+          "description": "描述性語句內容"
+        },
+        "decomposable": {
+          "type": "boolean",
+          "default": true,
+          "description": "此指示是否可進一步分解為 Action + Rule"
+        },
+        "decomposition_hint": {
+          "type": "string",
+          "description": "若需深入解析，提供分解方向或參考"
+        },
+        "related_elements": {
           "type": "array",
           "items": { "type": "string" },
-          "description": "組成此任務的元素 ID 列表（依執行順序）"
-        },
-        "output_type": { "type": "string" },
-        "success_criteria": { "type": "string" },
-        "failure_modes": {
-          "type": "array",
-          "items": { "type": "string" }
+          "description": "相關聯的其他元素 ID（Actions 或 Rules）"
         }
       }
     },
     
     "execution_path": {
       "type": "object",
-      "required": ["path_id", "sequence", "condition", "expected_outcome"],
+      "description": "執行路徑：描述元素的執行順序與條件",
+      "required": ["path_id", "sequence", "condition"],
       "properties": {
         "path_id": { "type": "integer" },
         "sequence": {
@@ -138,11 +175,11 @@
   },
   
   "type": "object",
-  "required": ["meta", "original_definition", "decomposition", "execution_paths", "parser_meta"],
+  "required": ["meta", "decomposition"],
   "properties": {
     "meta": {
       "type": "object",
-      "required": ["skill_id", "name", "skill_layer", "parse_timestamp"],
+      "required": ["skill_id", "name", "skill_layer", "schema_version", "parse_timestamp"],
       "properties": {
         "skill_id": {
           "type": "string",
@@ -157,6 +194,10 @@
         "server": { "type": "string" },
         "title": { "type": "string" },
         "description": { "type": "string" },
+        "schema_version": { 
+          "type": "string",
+          "description": "使用的 Schema 版本"
+        },
         "parse_timestamp": { "type": "string", "format": "date-time" },
         "parser_version": { "type": "string" },
         "parsed_by": {
@@ -171,35 +212,45 @@
     },
     "decomposition": {
       "type": "object",
+      "description": "三元分類分解結果",
       "properties": {
-        "core_actions": {
+        "actions": {
           "type": "array",
-          "items": { "$ref": "#/definitions/core_action" }
+          "items": { "$ref": "#/definitions/action" },
+          "description": "動作列表：原子操作，不可再分解"
         },
         "rules": {
           "type": "array",
-          "items": { "$ref": "#/definitions/rule" }
+          "items": { "$ref": "#/definitions/rule" },
+          "description": "規則列表：原子判斷，不可再分解"
         },
-        "missions": {
+        "directives": {
           "type": "array",
-          "items": { "$ref": "#/definitions/mission" }
+          "items": { "$ref": "#/definitions/directive" },
+          "description": "指示列表：描述性語句，解析邊界"
         }
       }
     },
     "execution_paths": {
       "type": "array",
-      "items": { "$ref": "#/definitions/execution_path" }
+      "items": { "$ref": "#/definitions/execution_path" },
+      "description": "執行路徑列表"
     },
     "parser_meta": {
       "type": "object",
+      "description": "解析器元資料",
       "properties": {
         "paths_enumerated": { "type": "integer" },
         "max_paths_exceeded": { "type": "boolean" },
         "max_paths_limit": { "type": "integer", "default": 100 },
         "halt_reason": { "type": ["string", "null"] },
-        "blackbox_boundary": {
-          "type": "string",
-          "description": "解析暫停點標記"
+        "decomposition_depth": {
+          "type": "integer",
+          "description": "解析深度層級"
+        },
+        "directives_expandable": {
+          "type": "integer",
+          "description": "可進一步展開的 Directive 數量"
         },
         "requires_deep_parse": { "type": "boolean" },
         "deep_parse_trigger": {
