@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Lint with flake8
+        run: |
+          # Stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Exit-zero treats all errors as warnings
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=120 --statistics
+
+  validate-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON files
+        run: |
+          for file in parsed/*.json schema/*.json analysis/*.json; do
+            if [ -f "$file" ]; then
+              echo "Validating $file..."
+              python -m json.tool "$file" > /dev/null
+            fi
+          done
+          echo "All JSON files are valid!"

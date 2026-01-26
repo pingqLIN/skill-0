@@ -1,55 +1,56 @@
 # Skill-0: Skill Decomposition Parser
 
-> 一個解析 Claude Skills 與 MCP Tools 內部結構的三元分類系統
+[中文版](README.zh-TW.md)
 
-## Overview 概述
+> A ternary classification system for parsing the internal structure of Claude Skills and MCP Tools
 
-Skill-0 是一個分類系統，用於將 AI/Chatbot Skills（特別是 Claude Skills 和 MCP Tools）解析為結構化的組件。
+## Overview
 
-## Ternary Classification System 三元分類法
+Skill-0 is a classification system that parses AI/Chatbot Skills (especially Claude Skills and MCP Tools) into structured components.
 
-將 Skill 中不可變的部分（或修改後會改變行為的部分）組織並定義為三個類別：
+## Ternary Classification System
+
+Organizes and defines the immutable parts of a Skill (or parts that change behavior when modified) into three categories:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Skill 三元分類法                          │
+│              Skill Ternary Classification                   │
 ├─────────────────────────────────────────────────────────────┤
 │                                                             │
 │  ┌─────────────┐   ┌─────────────┐   ┌─────────────────┐   │
 │  │   Action    │   │    Rule     │   │   Directive     │   │
-│  │   (動作)    │   │   (規則)    │   │    (指示)       │   │
 │  ├─────────────┤   ├─────────────┤   ├─────────────────┤   │
-│  │ 原子操作    │   │ 原子判斷    │   │ 描述性語句      │   │
-│  │ 不可分解    │   │ 不可分解    │   │ 可分解但暫停    │   │
-│  │             │   │             │   │                 │   │
-│  │ 回答：      │   │ 回答：      │   │ 回答：          │   │
-│  │ 「做什麼」  │   │「怎麼判斷」 │   │「描述什麼狀態」 │   │
+│  │ Atomic ops  │   │ Atomic      │   │ Descriptive     │   │
+│  │ Indivisible │   │ judgment    │   │ statements      │   │
+│  │             │   │ Indivisible │   │ Decomposable    │   │
+│  │ Answers:    │   │ Answers:    │   │ but paused      │   │
+│  │ "What to do"│   │"How to judge│   │                 │   │
 │  └─────────────┘   └─────────────┘   └─────────────────┘   │
 │        │                 │                    │             │
 │        ▼                 ▼                    ▼             │
-│   🔒 終點            🔒 終點           ⏸️ 暫停點           │
-│                                        (可深入解析)         │
+│   🔒 Terminal       🔒 Terminal        ⏸️ Pause point      │
+│                                        (can deep parse)    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 | Category | Definition | Characteristics |
 |----------|------------|-----------------|
-| **Action** (動作) | 原子操作：不可再分解的基礎操作 | 確定性結果、無條件分支、原子操作 |
-| **Rule** (規則) | 原子判斷：純粹的條件判斷/分類 | 回傳布林值/分類結果、條件評估 |
-| **Directive** (指示) | 描述性語句：可分解但在此層次選擇不分解 | 包含完成狀態、知識、原則、限制等 |
+| **Action** | Atomic operation: indivisible basic operation | Deterministic result, no conditional branching, atomic |
+| **Rule** | Atomic judgment: pure conditional evaluation/classification | Returns boolean/classification result |
+| **Directive** | Descriptive statement: decomposable but chosen not to at this level | Contains completion state, knowledge, principles, constraints, etc. |
 
-### Directive Types 指示類型
+### Directive Types
 
 | Type | Description | Example |
 |------|-------------|---------|
-| `completion` | 完成狀態描述 | 「表格已全部提取」 |
-| `knowledge` | 領域知識 | 「PDF 格式規範」 |
-| `principle` | 指導原則 | 「優化 Context Window」 |
-| `constraint` | 限制條件 | 「最大 25,000 tokens」 |
-| `preference` | 偏好設定 | 「使用者偏好 JSON 格式」 |
-| `strategy` | 策略方針 | 「錯誤時重試三次」 |
+| `completion` | Completion state description | "All tables extracted" |
+| `knowledge` | Domain knowledge | "PDF format specification" |
+| `principle` | Guiding principle | "Optimize Context Window" |
+| `constraint` | Constraint condition | "Max 25,000 tokens" |
+| `preference` | Preference setting | "User prefers JSON format" |
+| `strategy` | Strategy guideline | "Retry three times on error" |
 
-### ID Format ID 格式
+### ID Format
 
 | Element | Pattern | Example |
 |---------|---------|---------|
@@ -57,20 +58,25 @@ Skill-0 是一個分類系統，用於將 AI/Chatbot Skills（特別是 Claude S
 | Rule | `r_XXX` | `r_001`, `r_002` |
 | Directive | `d_XXX` | `d_001`, `d_002` |
 
-## Project Structure 專案結構
+## Project Structure
 
 ```
 skill-0/
-├── README.md
+├── README.md                              # English documentation
+├── README.zh-TW.md                        # Chinese documentation
 ├── schema/
-│   └── skill-decomposition.schema.json    # JSON Schema v2.0
-├── parsed/
-│   └── anthropic-pdf-skill.json           # PDF Skill 解析範例
-└── docs/
-    └── conversation-2026-01-23.md         # 原始對話紀錄
+│   └── skill-decomposition.schema.json   # JSON Schema v2.0
+├── parsed/                                # Parsed skill examples (30 skills)
+├── analysis/                              # Analysis reports
+├── tools/                                 # Analysis tools
+│   ├── analyzer.py                       # Structure analyzer
+│   ├── pattern_extractor.py              # Pattern extractor
+│   ├── evaluate.py                       # Coverage evaluator
+│   └── batch_parse.py                    # Batch parser
+└── docs/                                  # Documentation
 ```
 
-## Quick Example 快速範例
+## Quick Example
 
 ```json
 {
@@ -104,27 +110,36 @@ skill-0/
 }
 ```
 
-## Version 版本
+## Statistics (30 Skills)
+
+- **Actions**: 190
+- **Rules**: 77
+- **Directives**: 107
+- **Action Type Coverage**: 100%
+- **Directive Type Coverage**: 100%
+
+## Version
 
 - Schema Version: 2.0.0
 - Created: 2026-01-23
 - Updated: 2026-01-26
 - Author: pingqLIN
 
-## Changelog 更新紀錄
+## Changelog
 
 ### v2.0.0 (2026-01-26)
-- **Breaking Change**: 重新定義三元分類
+- **Breaking Change**: Redefined ternary classification
   - `core_action` → `action` (ID: `ca_XXX` → `a_XXX`)
   - `mission` → `directive` (ID: `m_XXX` → `d_XXX`)
-- 新增 `directive_type` 支援：completion, knowledge, principle, constraint, preference, strategy
-- 新增 `decomposable` 和 `decomposition_hint` 欄位
-- 新增 `action_type`: `await_input`
-- Schema 結構優化
+- Added `directive_type` support: completion, knowledge, principle, constraint, preference, strategy
+- Added `decomposable` and `decomposition_hint` fields
+- Added `action_type`: `await_input`
+- Schema structure optimization
+- Added 19 new skills from ComposioHQ/awesome-claude-skills
 
 ### v1.1.0 (2026-01-23)
-- 初始版本
+- Initial version
 
-## License 授權
+## License
 
 MIT
