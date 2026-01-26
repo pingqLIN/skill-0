@@ -1,22 +1,25 @@
 {
   "version": "1.0",
-  "generated_at": "2026-01-26T13:15:04.961046",
-  "total_skills": 1,
+  "generated_at": "2026-01-26T13:26:16.758278",
+  "total_skills": 11,
   "summary": {
-    "action_count": 10,
-    "rule_count": 3,
-    "directive_count": 4
+    "action_count": 63,
+    "rule_count": 28,
+    "directive_count": 30
   },
   "action_type_distribution": {
-    "io_read": 1,
-    "transform": 5,
-    "io_write": 3,
-    "external_call": 1
+    "io_read": 13,
+    "transform": 23,
+    "io_write": 18,
+    "external_call": 8,
+    "await_input": 1
   },
   "directive_type_distribution": {
-    "completion": 2,
-    "principle": 1,
-    "constraint": 1
+    "completion": 9,
+    "principle": 12,
+    "constraint": 3,
+    "strategy": 3,
+    "knowledge": 3
   },
   "skills": [
     {
@@ -43,6 +46,215 @@
         "completion",
         "principle",
         "constraint"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__canvas_design",
+      "name": "canvas-design",
+      "source_file": "canvas-design-skill.json",
+      "action_count": 5,
+      "rule_count": 3,
+      "directive_count": 3,
+      "action_types": [
+        "io_write",
+        "transform",
+        "io_write",
+        "io_read",
+        "transform"
+      ],
+      "directive_types": [
+        "principle",
+        "principle",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__docx",
+      "name": "docx",
+      "source_file": "docx-skill.json",
+      "action_count": 6,
+      "rule_count": 3,
+      "directive_count": 2,
+      "action_types": [
+        "io_read",
+        "io_read",
+        "io_write",
+        "transform",
+        "io_write",
+        "transform"
+      ],
+      "directive_types": [
+        "principle",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__file_organizer",
+      "name": "file-organizer",
+      "source_file": "file-organizer-skill.json",
+      "action_count": 6,
+      "rule_count": 3,
+      "directive_count": 3,
+      "action_types": [
+        "io_read",
+        "io_read",
+        "transform",
+        "io_write",
+        "io_write",
+        "io_write"
+      ],
+      "directive_types": [
+        "strategy",
+        "principle",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__image_enhancer",
+      "name": "image-enhancer",
+      "source_file": "image-enhancer-skill.json",
+      "action_count": 5,
+      "rule_count": 2,
+      "directive_count": 2,
+      "action_types": [
+        "io_read",
+        "transform",
+        "transform",
+        "transform",
+        "io_write"
+      ],
+      "directive_types": [
+        "completion",
+        "principle"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__internal_comms",
+      "name": "internal-comms",
+      "source_file": "internal-comms-skill.json",
+      "action_count": 3,
+      "rule_count": 1,
+      "directive_count": 2,
+      "action_types": [
+        "transform",
+        "io_read",
+        "io_write"
+      ],
+      "directive_types": [
+        "knowledge",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__mcp_builder",
+      "name": "mcp-builder",
+      "source_file": "mcp-builder-skill.json",
+      "action_count": 6,
+      "rule_count": 3,
+      "directive_count": 3,
+      "action_types": [
+        "io_read",
+        "io_read",
+        "transform",
+        "io_write",
+        "external_call",
+        "io_write"
+      ],
+      "directive_types": [
+        "principle",
+        "strategy",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__pptx",
+      "name": "pptx",
+      "source_file": "pptx-skill.json",
+      "action_count": 6,
+      "rule_count": 3,
+      "directive_count": 3,
+      "action_types": [
+        "io_read",
+        "transform",
+        "io_write",
+        "transform",
+        "transform",
+        "transform"
+      ],
+      "directive_types": [
+        "principle",
+        "principle",
+        "constraint"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__skill_creator",
+      "name": "skill-creator",
+      "source_file": "skill-creator-skill.json",
+      "action_count": 5,
+      "rule_count": 2,
+      "directive_count": 3,
+      "action_types": [
+        "await_input",
+        "transform",
+        "external_call",
+        "io_write",
+        "external_call"
+      ],
+      "directive_types": [
+        "knowledge",
+        "principle",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__webapp_testing",
+      "name": "webapp-testing",
+      "source_file": "webapp-testing-skill.json",
+      "action_count": 5,
+      "rule_count": 2,
+      "directive_count": 2,
+      "action_types": [
+        "external_call",
+        "external_call",
+        "io_write",
+        "io_read",
+        "external_call"
+      ],
+      "directive_types": [
+        "strategy",
+        "principle"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__xlsx",
+      "name": "xlsx",
+      "source_file": "xlsx-skill.json",
+      "action_count": 6,
+      "rule_count": 3,
+      "directive_count": 3,
+      "action_types": [
+        "io_read",
+        "io_write",
+        "transform",
+        "transform",
+        "transform",
+        "external_call"
+      ],
+      "directive_types": [
+        "principle",
+        "constraint",
+        "knowledge"
       ],
       "has_flow": false
     }

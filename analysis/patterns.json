@@ -1,32 +1,9 @@
 {
   "version": "1.0",
-  "generated_at": "2026-01-26T13:15:11.629646",
-  "total_patterns": 4,
-  "source_skills_count": 1,
+  "generated_at": "2026-01-26T13:26:17.016455",
+  "total_patterns": 16,
+  "source_skills_count": 11,
   "patterns": [
-    {
-      "id": "pat_dir_completion",
-      "name": "Directive: completion",
-      "description": "使用 completion 類型的 directive",
-      "pattern_type": "directive_usage",
-      "structure": {
-        "directive_type": "completion"
-      },
-      "found_in": [
-        "claude__anthropic__pdf"
-      ],
-      "frequency": 2.0,
-      "examples": [
-        {
-          "skill": "claude__anthropic__pdf",
-          "description": "Form fields populated and saved successfully"
-        },
-        {
-          "skill": "claude__anthropic__pdf",
-          "description": "All tables extracted from PDF and exported to Excel file"
-        }
-      ]
-    },
     {
       "id": "pat_dir_principle",
       "name": "Directive: principle",
@@ -36,32 +13,141 @@
         "directive_type": "principle"
       },
       "found_in": [
-        "claude__anthropic__pdf"
+        "claude__docx",
+        "claude__mcp_builder",
+        "claude__image_enhancer",
+        "claude__xlsx",
+        "claude__webapp_testing",
+        "claude__skill_creator",
+        "claude__file_organizer",
+        "claude__anthropic__pdf",
+        "claude__pptx",
+        "claude__canvas_design"
       ],
-      "frequency": 1.0,
+      "frequency": 1.091,
       "examples": [
         {
           "skill": "claude__anthropic__pdf",
           "description": "Use pypdf for basic operations, pdfplumber for text/table extraction, reportlab for PDF creation"
+        },
+        {
+          "skill": "claude__canvas_design",
+          "description": "Create art movements, not layouts - emphasize craftsmanship repeatedly"
+        },
+        {
+          "skill": "claude__canvas_design",
+          "description": "Subtle reference embedded within art, not literal"
         }
       ]
     },
     {
-      "id": "pat_dir_constraint",
-      "name": "Directive: constraint",
-      "description": "使用 constraint 類型的 directive",
-      "pattern_type": "directive_usage",
+      "id": "pat_act_io_read_io_write",
+      "name": "io_read + io_write 組合",
+      "description": "同時包含 io_read 和 io_write 類型的動作",
+      "pattern_type": "action_combination",
       "structure": {
-        "directive_type": "constraint"
+        "action_types": [
+          "io_read",
+          "io_write"
+        ]
       },
       "found_in": [
-        "claude__anthropic__pdf"
+        "claude__anthropic__pdf",
+        "claude__canvas_design",
+        "claude__docx",
+        "claude__file_organizer",
+        "claude__image_enhancer",
+        "claude__internal_comms",
+        "claude__mcp_builder",
+        "claude__pptx",
+        "claude__webapp_testing",
+        "claude__xlsx"
       ],
-      "frequency": 1.0,
+      "frequency": 0.909,
+      "examples": []
+    },
+    {
+      "id": "pat_act_io_write_transform",
+      "name": "io_write + transform 組合",
+      "description": "同時包含 io_write 和 transform 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "io_write",
+          "transform"
+        ]
+      },
+      "found_in": [
+        "claude__anthropic__pdf",
+        "claude__canvas_design",
+        "claude__docx",
+        "claude__file_organizer",
+        "claude__image_enhancer",
+        "claude__internal_comms",
+        "claude__mcp_builder",
+        "claude__pptx",
+        "claude__skill_creator",
+        "claude__xlsx"
+      ],
+      "frequency": 0.909,
+      "examples": []
+    },
+    {
+      "id": "pat_act_io_read_transform",
+      "name": "io_read + transform 組合",
+      "description": "同時包含 io_read 和 transform 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "io_read",
+          "transform"
+        ]
+      },
+      "found_in": [
+        "claude__anthropic__pdf",
+        "claude__canvas_design",
+        "claude__docx",
+        "claude__file_organizer",
+        "claude__image_enhancer",
+        "claude__internal_comms",
+        "claude__mcp_builder",
+        "claude__pptx",
+        "claude__xlsx"
+      ],
+      "frequency": 0.818,
+      "examples": []
+    },
+    {
+      "id": "pat_dir_completion",
+      "name": "Directive: completion",
+      "description": "使用 completion 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "completion"
+      },
+      "found_in": [
+        "claude__docx",
+        "claude__internal_comms",
+        "claude__mcp_builder",
+        "claude__image_enhancer",
+        "claude__skill_creator",
+        "claude__file_organizer",
+        "claude__anthropic__pdf",
+        "claude__canvas_design"
+      ],
+      "frequency": 0.818,
       "examples": [
         {
           "skill": "claude__anthropic__pdf",
-          "description": "OCR requires pytesseract and appropriate language packs installed"
+          "description": "Form fields populated and saved successfully"
+        },
+        {
+          "skill": "claude__anthropic__pdf",
+          "description": "All tables extracted from PDF and exported to Excel file"
+        },
+        {
+          "skill": "claude__canvas_design",
+          "description": "Output as single PDF or PNG alongside philosophy .md file"
         }
       ]
     },
@@ -74,9 +160,229 @@
         "category": "file_operation"
       },
       "found_in": [
-        "claude__anthropic__pdf"
+        "claude__docx",
+        "claude__mcp_builder",
+        "claude__skill_creator",
+        "claude__file_organizer",
+        "claude__anthropic__pdf",
+        "claude__pptx",
+        "claude__canvas_design"
       ],
-      "frequency": 1.0,
+      "frequency": 0.636,
+      "examples": []
+    },
+    {
+      "id": "pat_struct_balanced",
+      "name": "平衡結構",
+      "description": "action 和 rule 比例平衡的 skill",
+      "pattern_type": "structure",
+      "structure": {
+        "type": "balanced"
+      },
+      "found_in": [
+        "claude__canvas_design",
+        "claude__file_organizer",
+        "claude__mcp_builder",
+        "claude__pptx",
+        "claude__skill_creator",
+        "claude__xlsx"
+      ],
+      "frequency": 0.545,
+      "examples": []
+    },
+    {
+      "id": "pat_act_external_call_io_write",
+      "name": "external_call + io_write 組合",
+      "description": "同時包含 external_call 和 io_write 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "external_call",
+          "io_write"
+        ]
+      },
+      "found_in": [
+        "claude__anthropic__pdf",
+        "claude__mcp_builder",
+        "claude__skill_creator",
+        "claude__webapp_testing",
+        "claude__xlsx"
+      ],
+      "frequency": 0.455,
+      "examples": []
+    },
+    {
+      "id": "pat_act_external_call_io_read",
+      "name": "external_call + io_read 組合",
+      "description": "同時包含 external_call 和 io_read 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "external_call",
+          "io_read"
+        ]
+      },
+      "found_in": [
+        "claude__anthropic__pdf",
+        "claude__mcp_builder",
+        "claude__webapp_testing",
+        "claude__xlsx"
+      ],
+      "frequency": 0.364,
+      "examples": []
+    },
+    {
+      "id": "pat_act_external_call_transform",
+      "name": "external_call + transform 組合",
+      "description": "同時包含 external_call 和 transform 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "external_call",
+          "transform"
+        ]
+      },
+      "found_in": [
+        "claude__anthropic__pdf",
+        "claude__mcp_builder",
+        "claude__skill_creator",
+        "claude__xlsx"
+      ],
+      "frequency": 0.364,
+      "examples": []
+    },
+    {
+      "id": "pat_kw_validation",
+      "name": "關鍵字模式: validation",
+      "description": "包含 validation 相關操作的 skill",
+      "pattern_type": "keyword",
+      "structure": {
+        "category": "validation"
+      },
+      "found_in": [
+        "claude__xlsx",
+        "claude__skill_creator",
+        "claude__pptx",
+        "claude__image_enhancer"
+      ],
+      "frequency": 0.364,
+      "examples": []
+    },
+    {
+      "id": "pat_dir_constraint",
+      "name": "Directive: constraint",
+      "description": "使用 constraint 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "constraint"
+      },
+      "found_in": [
+        "claude__anthropic__pdf",
+        "claude__pptx",
+        "claude__xlsx"
+      ],
+      "frequency": 0.273,
+      "examples": [
+        {
+          "skill": "claude__anthropic__pdf",
+          "description": "OCR requires pytesseract and appropriate language packs installed"
+        },
+        {
+          "skill": "claude__pptx",
+          "description": "Nothing falls off page, nothing overlaps"
+        },
+        {
+          "skill": "claude__xlsx",
+          "description": "Every model must have zero formula errors"
+        }
+      ]
+    },
+    {
+      "id": "pat_dir_strategy",
+      "name": "Directive: strategy",
+      "description": "使用 strategy 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "strategy"
+      },
+      "found_in": [
+        "claude__webapp_testing",
+        "claude__file_organizer",
+        "claude__mcp_builder"
+      ],
+      "frequency": 0.273,
+      "examples": [
+        {
+          "skill": "claude__file_organizer",
+          "description": "Start small (one folder), build trust, then expand"
+        },
+        {
+          "skill": "claude__mcp_builder",
+          "description": "Follow 4-phase workflow: Research, Implement, Review, Evaluate"
+        },
+        {
+          "skill": "claude__webapp_testing",
+          "description": "Reconnaissance-then-action pattern: inspect, identify, execute"
+        }
+      ]
+    },
+    {
+      "id": "pat_dir_knowledge",
+      "name": "Directive: knowledge",
+      "description": "使用 knowledge 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "knowledge"
+      },
+      "found_in": [
+        "claude__xlsx",
+        "claude__internal_comms",
+        "claude__skill_creator"
+      ],
+      "frequency": 0.273,
+      "examples": [
+        {
+          "skill": "claude__internal_comms",
+          "description": "Communication types: 3P updates, newsletters, FAQs, status reports"
+        },
+        {
+          "skill": "claude__skill_creator",
+          "description": "Skills have 3-level loading: metadata, SKILL.md, bundled resources"
+        },
+        {
+          "skill": "claude__xlsx",
+          "description": "Blue text for inputs, black for formulas, green for links"
+        }
+      ]
+    },
+    {
+      "id": "pat_kw_output",
+      "name": "關鍵字模式: output",
+      "description": "包含 output 相關操作的 skill",
+      "pattern_type": "keyword",
+      "structure": {
+        "category": "output"
+      },
+      "found_in": [
+        "claude__pptx",
+        "claude__canvas_design"
+      ],
+      "frequency": 0.182,
+      "examples": []
+    },
+    {
+      "id": "pat_kw_transformation",
+      "name": "關鍵字模式: transformation",
+      "description": "包含 transformation 相關操作的 skill",
+      "pattern_type": "keyword",
+      "structure": {
+        "category": "transformation"
+      },
+      "found_in": [
+        "claude__docx",
+        "claude__pptx"
+      ],
+      "frequency": 0.182,
       "examples": []
     }
   ]

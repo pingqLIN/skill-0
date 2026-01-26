@@ -1,0 +1,97 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__skill_creator",
+    "name": "skill-creator",
+    "skill_layer": "claude_skill",
+    "title": "Skill-Creator Skill",
+    "description": "Guide for creating effective skills that extend Claude's capabilities.",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T13:25:10.979640Z",
+    "parser_version": "skill-0 v2.0",
+    "parsed_by": "skill-0-batch"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "skill-creator",
+    "skill_description": "Guide for creating effective skills that extend Claude's capabilities."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Gather Examples",
+        "action_type": "await_input",
+        "description": "Understand concrete examples of skill usage",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Plan Contents",
+        "action_type": "transform",
+        "description": "Identify scripts, references, assets needed",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Initialize Skill",
+        "action_type": "external_call",
+        "description": "Run init_skill.py to create structure",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Write SKILL.md",
+        "action_type": "io_write",
+        "description": "Create skill documentation",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Package Skill",
+        "action_type": "external_call",
+        "description": "Validate and package using package_skill.py",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "description": "Use imperative form, not second person",
+        "condition": "when_writing",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_002",
+        "description": "Don't overwhelm users with questions",
+        "condition": "when_gathering_info",
+        "output": "proceed_or_halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "directive_type": "knowledge",
+        "description": "Skills have 3-level loading: metadata, SKILL.md, bundled resources",
+        "decomposable": true
+      },
+      {
+        "id": "d_002",
+        "directive_type": "principle",
+        "description": "Avoid duplication between SKILL.md and references",
+        "decomposable": true
+      },
+      {
+        "id": "d_003",
+        "directive_type": "completion",
+        "description": "Skill packaged and validated successfully",
+        "decomposable": true
+      }
+    ]
+  }
+}
