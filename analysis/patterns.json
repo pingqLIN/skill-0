@@ -1,0 +1,83 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-01-26T13:15:11.629646",
+  "total_patterns": 4,
+  "source_skills_count": 1,
+  "patterns": [
+    {
+      "id": "pat_dir_completion",
+      "name": "Directive: completion",
+      "description": "使用 completion 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "completion"
+      },
+      "found_in": [
+        "claude__anthropic__pdf"
+      ],
+      "frequency": 2.0,
+      "examples": [
+        {
+          "skill": "claude__anthropic__pdf",
+          "description": "Form fields populated and saved successfully"
+        },
+        {
+          "skill": "claude__anthropic__pdf",
+          "description": "All tables extracted from PDF and exported to Excel file"
+        }
+      ]
+    },
+    {
+      "id": "pat_dir_principle",
+      "name": "Directive: principle",
+      "description": "使用 principle 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "principle"
+      },
+      "found_in": [
+        "claude__anthropic__pdf"
+      ],
+      "frequency": 1.0,
+      "examples": [
+        {
+          "skill": "claude__anthropic__pdf",
+          "description": "Use pypdf for basic operations, pdfplumber for text/table extraction, reportlab for PDF creation"
+        }
+      ]
+    },
+    {
+      "id": "pat_dir_constraint",
+      "name": "Directive: constraint",
+      "description": "使用 constraint 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "constraint"
+      },
+      "found_in": [
+        "claude__anthropic__pdf"
+      ],
+      "frequency": 1.0,
+      "examples": [
+        {
+          "skill": "claude__anthropic__pdf",
+          "description": "OCR requires pytesseract and appropriate language packs installed"
+        }
+      ]
+    },
+    {
+      "id": "pat_kw_file_operation",
+      "name": "關鍵字模式: file_operation",
+      "description": "包含 file_operation 相關操作的 skill",
+      "pattern_type": "keyword",
+      "structure": {
+        "category": "file_operation"
+      },
+      "found_in": [
+        "claude__anthropic__pdf"
+      ],
+      "frequency": 1.0,
+      "examples": []
+    }
+  ]
+}

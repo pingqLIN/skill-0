@@ -1,0 +1,53 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-01-26T13:15:04.961046",
+  "total_skills": 1,
+  "summary": {
+    "action_count": 10,
+    "rule_count": 3,
+    "directive_count": 4
+  },
+  "action_type_distribution": {
+    "io_read": 1,
+    "transform": 5,
+    "io_write": 3,
+    "external_call": 1
+  },
+  "directive_type_distribution": {
+    "completion": 2,
+    "principle": 1,
+    "constraint": 1
+  },
+  "skills": [
+    {
+      "skill_id": "claude__anthropic__pdf",
+      "name": "pdf",
+      "source_file": "anthropic-pdf-skill.json",
+      "action_count": 10,
+      "rule_count": 3,
+      "directive_count": 4,
+      "action_types": [
+        "io_read",
+        "transform",
+        "transform",
+        "io_write",
+        "io_write",
+        "io_write",
+        "transform",
+        "transform",
+        "transform",
+        "external_call"
+      ],
+      "directive_types": [
+        "completion",
+        "completion",
+        "principle",
+        "constraint"
+      ],
+      "has_flow": false
+    }
+  ],
+  "common_patterns": {
+    "action_sequences": []
+  }
+}
