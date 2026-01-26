@@ -1,0 +1,123 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__connect_apps_plugin",
+    "name": "connect-apps-plugin",
+    "skill_layer": "claude_skill",
+    "title": "Connect Apps Plugin Skill",
+    "description": "Claude Skill",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T16:21:07.268933Z",
+    "parser_version": "skill-0 v2.0-advanced",
+    "parsed_by": "parse-v2-advanced"
+  },
+  "original_definition": {
+    "source": "C:\\Dev\\Projects\\skill-0\\temp_input\\connect-apps-plugin.md",
+    "skill_name": "connect-apps-plugin",
+    "skill_description": ""
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Io Read",
+        "action_type": "io_read",
+        "description": "Read/Extract data",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Io Read",
+        "action_type": "io_read",
+        "description": "Read/Extract data",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Io Read",
+        "action_type": "io_read",
+        "description": "Read/Extract data",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Io Write",
+        "action_type": "io_write",
+        "description": "Write/Create output",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "External Call",
+        "action_type": "external_call",
+        "description": "External API call",
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "External Call",
+        "action_type": "external_call",
+        "description": "External API call",
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_007",
+        "name": "External Call",
+        "action_type": "external_call",
+        "description": "External API call",
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_008",
+        "name": "External Call",
+        "action_type": "external_call",
+        "description": "External API call",
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_009",
+        "name": "Await Input",
+        "action_type": "await_input",
+        "description": "Await user input",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "State Check Rule",
+        "condition_type": "state_check",
+        "condition_expression": "Check state_check",
+        "returns": "boolean",
+        "fail_action": "halt",
+        "branching_targets": []
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Operational Principle",
+        "directive_type": "principle",
+        "description": "Primary operational principle for connect-apps-plugin skill",
+        "decomposable": true,
+        "related_elements": []
+      }
+    ]
+  },
+  "parser_meta": {
+    "paths_enumerated": 1,
+    "max_paths_exceeded": false,
+    "decomposition_depth": 2,
+    "directives_expandable": 1,
+    "requires_deep_parse": false
+  }
+}
