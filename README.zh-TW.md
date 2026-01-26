@@ -1,10 +1,16 @@
 # Skill-0: Skill Decomposition Parser
 
+[English](README.md)
+
 > 一個解析 Claude Skills 與 MCP Tools 內部結構的三元分類系統
+
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Schema Version](https://img.shields.io/badge/schema-v2.0.0-green.svg)](schema/skill-decomposition.schema.json)
 
 ## Overview 概述
 
-Skill-0 是一個分類系統，用於將 AI/Chatbot Skills（特別是 Claude Skills 和 MCP Tools）解析為結構化的組件。
+Skill-0 是一個分類系統，用於將 AI/Chatbot Skills（特別是 Claude Skills 和 MCP Tools）解析為結構化的組件。包含**語義搜尋**功能，透過向量嵌入實現智慧 skill 探索。
 
 ## Ternary Classification System 三元分類法
 
@@ -61,13 +67,96 @@ Skill-0 是一個分類系統，用於將 AI/Chatbot Skills（特別是 Claude S
 
 ```
 skill-0/
-├── README.md
+├── README.md                              # 英文文件
+├── README.zh-TW.md                        # 中文文件
 ├── schema/
-│   └── skill-decomposition.schema.json    # JSON Schema v2.0
-├── parsed/
-│   └── anthropic-pdf-skill.json           # PDF Skill 解析範例
-└── docs/
-    └── conversation-2026-01-23.md         # 原始對話紀錄
+│   └── skill-decomposition.schema.json   # JSON Schema v2.0
+├── parsed/                                # 已解析的 skill 範例 (32 skills)
+├── analysis/                              # 分析報告
+├── tools/                                 # 分析工具
+│   ├── analyzer.py                       # 結構分析器
+│   ├── pattern_extractor.py              # 模式提取器
+│   ├── evaluate.py                       # 覆蓋率評估
+│   └── batch_parse.py                    # 批次解析器
+├── vector_db/                             # 向量資料庫模組
+│   ├── embedder.py                       # 嵌入產生器
+│   ├── vector_store.py                   # SQLite-vec 儲存
+│   └── search.py                         # 語義搜尋 CLI
+├── skills.db                              # 向量資料庫
+└── docs/                                  # 文件
+```
+
+## Installation 安裝
+
+```bash
+# 克隆儲存庫
+git clone https://github.com/<owner>/skill-0.git
+cd skill-0
+
+# 安裝依賴
+pip install sqlite-vec sentence-transformers scikit-learn
+
+# 索引 skills（首次使用）
+python -m vector_db.search --db skills.db --parsed-dir parsed index
+```
+
+## Semantic Search 語義搜尋
+
+Skill-0 包含強大的語義搜尋引擎，由 `all-MiniLM-L6-v2` 嵌入模型和 `SQLite-vec` 驅動。
+
+### CLI Commands CLI 命令
+
+```bash
+# 索引所有 skills
+python -m vector_db.search --db skills.db --parsed-dir parsed index
+
+# 自然語言搜尋
+python -m vector_db.search --db skills.db search "PDF 文件處理"
+
+# 找相似的 skills
+python -m vector_db.search --db skills.db similar "Docx Skill"
+
+# 聚類分析（自動分群）
+python -m vector_db.search --db skills.db cluster -n 5
+
+# 顯示統計
+python -m vector_db.search --db skills.db stats
+```
+
+### Search Examples 搜尋範例
+
+```bash
+$ python -m vector_db.search search "創意設計視覺藝術"
+
+🔍 Searching for: 創意設計視覺藝術
+--------------------------------------------------
+1. Canvas-Design Skill (53.36%)
+2. Theme Factory (46.14%)
+3. Anthropic Brand Styling (45.54%)
+4. Slack GIF Creator (45.44%)
+5. Pptx Skill (45.08%)
+
+Search completed in 72.6ms
+```
+
+### Python API
+
+```python
+from vector_db import SemanticSearch
+
+# 初始化搜尋引擎
+search = SemanticSearch(db_path='skills.db')
+
+# 語義搜尋
+results = search.search("PDF 處理", limit=5)
+for r in results:
+    print(f"{r['name']}: {r['similarity']:.2%}")
+
+# 找相似 skills
+similar = search.find_similar("Docx Skill", limit=5)
+
+# 聚類分析
+clusters = search.cluster_skills(n_clusters=5)
 ```
 
 ## Quick Example 快速範例
@@ -104,6 +193,36 @@ skill-0/
 }
 ```
 
+## Statistics 統計 (32 Skills)
+
+| Metric 指標 | Count 數量 |
+|--------|-------|
+| **Skills** | 32 |
+| **Actions** | 266 |
+| **Rules** | 84 |
+| **Directives** | 120 |
+| **Action Type Coverage** | 100% |
+| **Directive Type Coverage** | 100% |
+
+### Cluster Distribution 聚類分布
+
+| Cluster | Skills | Description 描述 |
+|---------|--------|-------------|
+| 1 | 10 | 開發工具 (MCP, Testing) |
+| 2 | 5 | 文件處理 (PDF, DOCX) |
+| 3 | 7 | 創意設計 (Canvas, Theme) |
+| 4 | 2 | 數據分析 (Excel, Raffle) |
+| 5 | 8 | 研究助理 (Leads, Resume) |
+
+## Performance 效能
+
+| Metric 指標 | Value 數值 |
+|--------|-------|
+| Index Time 索引時間 | 0.88s (32 skills) |
+| Search Latency 搜尋延遲 | ~75ms |
+| Embedding Dimension 向量維度 | 384 |
+| Database 資料庫 | SQLite-vec |
+
 ## Version 版本
 
 - Schema Version: 2.0.0
@@ -112,6 +231,15 @@ skill-0/
 - Author: Project Maintainer
 
 ## Changelog 更新紀錄
+
+### v2.1.0 (2026-01-26) - Stage 2
+- **新功能**: 向量嵌入語義搜尋
+  - `vector_db` 模組與 SQLite-vec 整合
+  - `all-MiniLM-L6-v2` 嵌入模型 (384 維)
+  - K-Means 聚類 skill 分群
+  - CLI 工具: `python -m vector_db.search`
+- 擴展至 32 skills (+21 來自 awesome-claude-skills)
+- 效能: 0.88s 索引, ~75ms 搜尋
 
 ### v2.0.0 (2026-01-26)
 - **Breaking Change**: 重新定義三元分類

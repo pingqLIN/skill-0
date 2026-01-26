@@ -1,0 +1,17 @@
+# Skill-0 Dependencies
+# Core
+sqlite-vec>=0.1.0
+sentence-transformers>=2.2.0
+numpy>=1.21.0
+
+# Analysis
+scikit-learn>=1.0.0
+
+# API (optional)
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+pydantic>=2.0.0
+
+# Development (optional)
+pytest>=7.0.0
+httpx>=0.24.0
