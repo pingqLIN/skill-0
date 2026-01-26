@@ -4,9 +4,13 @@
 
 > A ternary classification system for parsing the internal structure of Claude Skills and MCP Tools
 
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Schema Version](https://img.shields.io/badge/schema-v2.0.0-green.svg)](schema/skill-decomposition.schema.json)
+
 ## Overview
 
-Skill-0 is a classification system that parses AI/Chatbot Skills (especially Claude Skills and MCP Tools) into structured components.
+Skill-0 is a classification system that parses AI/Chatbot Skills (especially Claude Skills and MCP Tools) into structured components. It includes **semantic search** powered by vector embeddings for intelligent skill discovery.
 
 ## Ternary Classification System
 
@@ -66,14 +70,92 @@ skill-0/
 ├── README.zh-TW.md                        # Chinese documentation
 ├── schema/
 │   └── skill-decomposition.schema.json   # JSON Schema v2.0
-├── parsed/                                # Parsed skill examples (30 skills)
+├── parsed/                                # Parsed skill examples (32 skills)
 ├── analysis/                              # Analysis reports
 ├── tools/                                 # Analysis tools
 │   ├── analyzer.py                       # Structure analyzer
 │   ├── pattern_extractor.py              # Pattern extractor
 │   ├── evaluate.py                       # Coverage evaluator
 │   └── batch_parse.py                    # Batch parser
+├── vector_db/                             # Vector database module
+│   ├── embedder.py                       # Embedding generator
+│   ├── vector_store.py                   # SQLite-vec storage
+│   └── search.py                         # Semantic search CLI
+├── skills.db                              # Vector database
 └── docs/                                  # Documentation
+```
+
+## Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/pingqLIN/skill-0.git
+cd skill-0
+
+# Install dependencies
+pip install sqlite-vec sentence-transformers scikit-learn
+
+# Index skills (first time)
+python -m vector_db.search --db skills.db --parsed-dir parsed index
+```
+
+## Semantic Search
+
+Skill-0 includes a powerful semantic search engine powered by `all-MiniLM-L6-v2` embeddings and `SQLite-vec`.
+
+### CLI Commands
+
+```bash
+# Index all skills
+python -m vector_db.search --db skills.db --parsed-dir parsed index
+
+# Search by natural language
+python -m vector_db.search --db skills.db search "PDF document processing"
+
+# Find similar skills
+python -m vector_db.search --db skills.db similar "Docx Skill"
+
+# Cluster analysis (auto-grouping)
+python -m vector_db.search --db skills.db cluster -n 5
+
+# Show statistics
+python -m vector_db.search --db skills.db stats
+```
+
+### Search Examples
+
+```bash
+$ python -m vector_db.search search "creative design visual art"
+
+🔍 Searching for: creative design visual art
+--------------------------------------------------
+1. Canvas-Design Skill (53.36%)
+2. Theme Factory (46.14%)
+3. Anthropic Brand Styling (45.54%)
+4. Slack GIF Creator (45.44%)
+5. Pptx Skill (45.08%)
+
+Search completed in 72.6ms
+```
+
+### Python API
+
+```python
+from vector_db import SemanticSearch
+
+# Initialize search engine
+search = SemanticSearch(db_path='skills.db')
+
+# Semantic search
+results = search.search("PDF processing", limit=5)
+for r in results:
+    print(f"{r['name']}: {r['similarity']:.2%}")
+
+# Find similar skills
+similar = search.find_similar("Docx Skill", limit=5)
+
+# Cluster analysis
+clusters = search.cluster_skills(n_clusters=5)
 ```
 
 ## Quick Example
@@ -110,13 +192,35 @@ skill-0/
 }
 ```
 
-## Statistics (30 Skills)
+## Statistics (32 Skills)
 
-- **Actions**: 190
-- **Rules**: 77
-- **Directives**: 107
-- **Action Type Coverage**: 100%
-- **Directive Type Coverage**: 100%
+| Metric | Count |
+|--------|-------|
+| **Skills** | 32 |
+| **Actions** | 266 |
+| **Rules** | 84 |
+| **Directives** | 120 |
+| **Action Type Coverage** | 100% |
+| **Directive Type Coverage** | 100% |
+
+### Cluster Distribution
+
+| Cluster | Skills | Description |
+|---------|--------|-------------|
+| 1 | 10 | Development Tools (MCP, Testing) |
+| 2 | 5 | Document Processing (PDF, DOCX) |
+| 3 | 7 | Creative Design (Canvas, Theme) |
+| 4 | 2 | Data Analysis (Excel, Raffle) |
+| 5 | 8 | Research Assistant (Leads, Resume) |
+
+## Performance
+
+| Metric | Value |
+|--------|-------|
+| Index Time | 0.88s (32 skills) |
+| Search Latency | ~75ms |
+| Embedding Dimension | 384 |
+| Database | SQLite-vec |
 
 ## Version
 
@@ -126,6 +230,15 @@ skill-0/
 - Author: pingqLIN
 
 ## Changelog
+
+### v2.1.0 (2026-01-26) - Stage 2
+- **New Feature**: Semantic search with vector embeddings
+  - `vector_db` module with SQLite-vec integration
+  - `all-MiniLM-L6-v2` embedding model (384 dimensions)
+  - K-Means clustering for skill grouping
+  - CLI tool: `python -m vector_db.search`
+- Expanded to 32 skills (+21 from awesome-claude-skills)
+- Performance: 0.88s indexing, ~75ms search
 
 ### v2.0.0 (2026-01-26)
 - **Breaking Change**: Redefined ternary classification
