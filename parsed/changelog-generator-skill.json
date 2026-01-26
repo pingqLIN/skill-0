@@ -1,0 +1,173 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__changelog_generator",
+    "name": "changelog-generator",
+    "skill_layer": "claude_skill",
+    "title": "Changelog Generator",
+    "description": "Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T05:45:00Z",
+    "parser_version": "skill-0 v2.0",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "changelog-generator",
+    "skill_description": "Automatically creates user-facing changelogs from git commits by analyzing commit history, categorizing changes, and transforming technical commits into clear, customer-friendly release notes. Turns hours of manual changelog writing into minutes of automated generation."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Scan Git History",
+        "action_type": "io_read",
+        "description": "Analyze commits from a specific time period or between versions",
+        "immutable_elements": ["git log command", "commit parsing logic"],
+        "mutable_elements": ["date range", "version tags", "branch selection"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Categorize Changes",
+        "action_type": "transform",
+        "description": "Group commits into logical categories (features, improvements, bug fixes, breaking changes, security)",
+        "immutable_elements": ["category definitions", "classification rules"],
+        "mutable_elements": ["commit messages", "category assignment"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Translate Technical to User-Friendly",
+        "action_type": "llm_inference",
+        "description": "Convert developer commit messages into customer language",
+        "immutable_elements": ["translation prompt structure"],
+        "mutable_elements": ["input commit messages", "output language style", "brand voice"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Format Changelog",
+        "action_type": "transform",
+        "description": "Create clean, structured changelog entries with proper formatting",
+        "immutable_elements": ["markdown structure", "section headers"],
+        "mutable_elements": ["date format", "category ordering", "emoji usage"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Filter Internal Commits",
+        "action_type": "transform",
+        "description": "Exclude internal commits (refactoring, tests, etc.) from user-facing changelog",
+        "immutable_elements": ["filter patterns", "exclusion keywords"],
+        "mutable_elements": ["commit list", "exclusion rules"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "Write Changelog File",
+        "action_type": "io_write",
+        "description": "Save the generated changelog to CHANGELOG.md or specified output",
+        "immutable_elements": ["file write operation"],
+        "mutable_elements": ["output path", "file format"],
+        "deterministic": true,
+        "side_effects": ["creates or modifies file on disk"]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Git Repository",
+        "condition_type": "existence_check",
+        "condition_expression": "Current directory is a git repository",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_002",
+        "name": "Check Commits Exist",
+        "condition_type": "existence_check",
+        "condition_expression": "Commits exist in specified date range or version",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": ["report no changes found"]
+      },
+      {
+        "id": "r_003",
+        "name": "Validate Style Guidelines",
+        "condition_type": "existence_check",
+        "condition_expression": "CHANGELOG_STYLE.md exists for custom formatting",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": ["use default formatting"]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Changelog Generation Complete",
+        "directive_type": "completion",
+        "description": "Full changelog generated with categorized, user-friendly entries",
+        "decomposable": true,
+        "decomposition_hint": "Can be decomposed into: r_001 → a_001 → a_005 → a_002 → a_003 → a_004 → a_006",
+        "related_elements": ["a_001", "a_002", "a_003", "a_004", "a_005", "a_006", "r_001"]
+      },
+      {
+        "id": "d_002",
+        "name": "User-Centric Language Principle",
+        "directive_type": "principle",
+        "description": "Always translate technical jargon into language end-users understand",
+        "decomposable": false
+      },
+      {
+        "id": "d_003",
+        "name": "Category Best Practices",
+        "directive_type": "knowledge",
+        "description": "Standard categories: Features (new), Improvements (enhancements), Bug Fixes, Breaking Changes, Security",
+        "decomposable": false
+      },
+      {
+        "id": "d_004",
+        "name": "Brand Voice Preference",
+        "directive_type": "preference",
+        "description": "Match changelog tone to company brand voice when style guidelines available",
+        "decomposable": false,
+        "related_elements": ["r_003"]
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": ["r_001", "a_001", "r_002", "a_005", "a_002", "a_003", "a_004", "a_006"],
+      "condition": "User requests changelog from commits since last release",
+      "expected_outcome": "Changelog file created with categorized changes"
+    },
+    {
+      "path_id": 2,
+      "sequence": ["r_001", "a_001", "r_002", "r_003", "a_005", "a_002", "a_003", "a_004", "a_006"],
+      "condition": "User requests changelog with custom style guidelines",
+      "expected_outcome": "Changelog file created matching brand voice"
+    },
+    {
+      "path_id": 3,
+      "sequence": ["r_001", "a_001", "r_002"],
+      "condition": "No commits found in range",
+      "expected_outcome": "Report no changes found"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 3,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 1,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}

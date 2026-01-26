@@ -1,0 +1,149 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__connect",
+    "name": "connect",
+    "skill_layer": "claude_skill",
+    "title": "Connect",
+    "description": "Connect Claude to any app. Send emails, create issues, post messages, update databases - take real actions across Gmail, Slack, GitHub, Notion, and 1000+ services",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T05:45:00Z",
+    "parser_version": "skill-0 v2.0",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "connect",
+    "skill_description": "Connect Claude to any app. Send emails, create issues, post messages, update databases - take real actions across Gmail, Slack, GitHub, Notion, and 1000+ services."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Create Composio Session",
+        "action_type": "external_call",
+        "description": "Initialize Composio client with API key and create user session",
+        "immutable_elements": ["Composio initialization"],
+        "mutable_elements": ["API key", "user ID"],
+        "deterministic": true,
+        "side_effects": ["creates session"]
+      },
+      {
+        "id": "a_002",
+        "name": "Configure MCP Server",
+        "action_type": "state_change",
+        "description": "Set up MCP server configuration for Claude agent",
+        "immutable_elements": ["MCP config structure"],
+        "mutable_elements": ["session URL", "headers"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Route to Tool",
+        "action_type": "external_call",
+        "description": "Tool Router identifies correct integration from 1000+ options",
+        "immutable_elements": ["routing logic"],
+        "mutable_elements": ["user request", "target service"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Handle Authorization",
+        "action_type": "await_input",
+        "description": "Present OAuth link and wait for user to authorize",
+        "immutable_elements": ["OAuth flow"],
+        "mutable_elements": ["service", "permissions"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Execute External Action",
+        "action_type": "external_call",
+        "description": "Perform the actual action in external service",
+        "immutable_elements": ["API execution"],
+        "mutable_elements": ["service", "action", "parameters"],
+        "deterministic": false,
+        "side_effects": ["modifies external service state"]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate API Key",
+        "condition_type": "existence_check",
+        "condition_expression": "COMPOSIO_API_KEY environment variable is set",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_002",
+        "name": "Check Service Authorization",
+        "condition_type": "existence_check",
+        "condition_expression": "User has authorized target service",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": ["trigger authorization flow"]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Action Complete",
+        "directive_type": "completion",
+        "description": "External action successfully executed",
+        "decomposable": true,
+        "decomposition_hint": "r_001 → a_001 → a_002 → a_003 → r_002 → a_005",
+        "related_elements": ["a_003", "a_005"]
+      },
+      {
+        "id": "d_002",
+        "name": "Authorization Complete",
+        "directive_type": "completion",
+        "description": "User authorized new service connection",
+        "decomposable": true,
+        "decomposition_hint": "a_004",
+        "related_elements": ["a_004"]
+      },
+      {
+        "id": "d_003",
+        "name": "Supported Frameworks",
+        "directive_type": "knowledge",
+        "description": "Claude Agent SDK, OpenAI Agents, Vercel AI, LangChain, any MCP Client",
+        "decomposable": false
+      },
+      {
+        "id": "d_004",
+        "name": "Service Categories",
+        "directive_type": "knowledge",
+        "description": "Email (Gmail, Outlook), Chat (Slack, Discord), Dev (GitHub, GitLab), Docs (Notion), Data (Sheets, Airtable), CRM (HubSpot), Storage (Drive, S3)",
+        "decomposable": false
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": ["r_001", "a_001", "a_002", "a_003", "r_002", "a_005"],
+      "condition": "User requests action with authorized service",
+      "expected_outcome": "Action executed and result returned"
+    },
+    {
+      "path_id": 2,
+      "sequence": ["r_001", "a_001", "a_002", "a_003", "r_002", "a_004", "a_005"],
+      "condition": "First-time use of service",
+      "expected_outcome": "OAuth flow then action executed"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 2,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 2,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}

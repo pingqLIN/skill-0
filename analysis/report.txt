@@ -1,28 +1,32 @@
 ============================================================
 📊 Skill-0 結構分析報告
 ============================================================
-產生時間: 2026-01-26T13:25:19.526116
-分析 Skills 數量: 11
+產生時間: 2026-01-26T14:17:05.202293
+分析 Skills 數量: 30
 
 📈 元素統計
 ----------------------------------------
-  Action 總數: 63
-  Rule 總數: 28
-  Directive 總數: 30
+  Action 總數: 190
+  Rule 總數: 77
+  Directive 總數: 107
 
 🎬 Action 類型分布:
-  - transform: 23
-  - io_write: 18
-  - io_read: 13
-  - external_call: 8
-  - await_input: 1
+  - transform: 53
+  - llm_inference: 37
+  - external_call: 31
+  - io_write: 30
+  - io_read: 20
+  - compute: 10
+  - await_input: 7
+  - state_change: 2
 
 📌 Directive 類型分布:
-  - principle: 12
-  - completion: 9
-  - constraint: 3
-  - strategy: 3
-  - knowledge: 3
+  - completion: 34
+  - knowledge: 32
+  - principle: 20
+  - constraint: 9
+  - strategy: 9
+  - preference: 3
 
 📋 各 Skill 摘要
 ----------------------------------------
@@ -30,12 +34,44 @@
     Actions: 10, Rules: 3, Directives: 4
     有執行流程: ✗
 
+  [claude__composio__brand_guidelines] brand-guidelines
+    Actions: 5, Rules: 2, Directives: 4
+    有執行流程: ✗
+
   [claude__canvas_design] canvas-design
     Actions: 5, Rules: 3, Directives: 3
     有執行流程: ✗
 
+  [claude__composio__changelog_generator] changelog-generator
+    Actions: 6, Rules: 3, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__competitive_ads_extractor] competitive-ads-extractor
+    Actions: 7, Rules: 2, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__connect_apps] connect-apps
+    Actions: 5, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__connect] connect
+    Actions: 5, Rules: 2, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__content_research_writer] content-research-writer
+    Actions: 7, Rules: 1, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__developer_growth_analysis] developer-growth-analysis
+    Actions: 6, Rules: 2, Directives: 3
+    有執行流程: ✗
+
   [claude__docx] docx
     Actions: 6, Rules: 3, Directives: 2
+    有執行流程: ✗
+
+  [claude__composio__domain_name_brainstormer] domain-name-brainstormer
+    Actions: 8, Rules: 3, Directives: 6
     有執行流程: ✗
 
   [claude__file_organizer] file-organizer
@@ -50,16 +86,56 @@
     Actions: 3, Rules: 1, Directives: 2
     有執行流程: ✗
 
+  [claude__composio__invoice_organizer] invoice-organizer
+    Actions: 8, Rules: 4, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__langsmith_fetch] langsmith-fetch
+    Actions: 6, Rules: 4, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__lead_research_assistant] lead-research-assistant
+    Actions: 6, Rules: 1, Directives: 3
+    有執行流程: ✗
+
   [claude__mcp_builder] mcp-builder
     Actions: 6, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__meeting_insights_analyzer] meeting-insights-analyzer
+    Actions: 7, Rules: 2, Directives: 3
     有執行流程: ✗
 
   [claude__pptx] pptx
     Actions: 6, Rules: 3, Directives: 3
     有執行流程: ✗
 
+  [claude__composio__raffle_winner_picker] raffle-winner-picker
+    Actions: 9, Rules: 4, Directives: 5
+    有執行流程: ✗
+
   [claude__skill_creator] skill-creator
     Actions: 5, Rules: 2, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__skill_share] skill-share
+    Actions: 8, Rules: 4, Directives: 5
+    有執行流程: ✗
+
+  [claude__composio__slack_gif_creator] slack-gif-creator
+    Actions: 7, Rules: 3, Directives: 5
+    有執行流程: ✗
+
+  [claude__composio__tailored_resume_generator] tailored-resume-generator
+    Actions: 8, Rules: 3, Directives: 5
+    有執行流程: ✗
+
+  [claude__composio__theme_factory] theme-factory
+    Actions: 6, Rules: 2, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__twitter_algorithm_optimizer] twitter-algorithm-optimizer
+    Actions: 6, Rules: 1, Directives: 5
     有執行流程: ✗
 
   [claude__webapp_testing] webapp-testing
@@ -68,6 +144,10 @@
 
   [claude__xlsx] xlsx
     Actions: 6, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__youtube_downloader] youtube-downloader
+    Actions: 7, Rules: 3, Directives: 4
     有執行流程: ✗
 
 ============================================================

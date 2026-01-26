@@ -1,0 +1,152 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__theme_factory",
+    "name": "theme-factory",
+    "skill_layer": "claude_skill",
+    "title": "Theme Factory",
+    "description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact, or generate a new theme on-the-fly",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T05:45:00Z",
+    "parser_version": "skill-0 v2.0",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "theme-factory",
+    "skill_description": "Toolkit for styling artifacts with a theme. These artifacts can be slides, docs, reportings, HTML landing pages, etc. There are 10 pre-set themes with colors/fonts that you can apply to any artifact that has been creating, or can generate a new theme on-the-fly."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Display Theme Showcase",
+        "action_type": "io_read",
+        "description": "Show theme-showcase.pdf for user to see all available themes",
+        "immutable_elements": ["showcase file path"],
+        "mutable_elements": [],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Get Theme Selection",
+        "action_type": "await_input",
+        "description": "Ask user which theme to apply",
+        "immutable_elements": ["theme options"],
+        "mutable_elements": ["user selection"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Load Theme Definition",
+        "action_type": "io_read",
+        "description": "Read theme specification from themes/ directory",
+        "immutable_elements": ["theme file structure"],
+        "mutable_elements": ["selected theme"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Apply Theme Colors",
+        "action_type": "transform",
+        "description": "Apply theme color palette to artifact",
+        "immutable_elements": ["color application logic"],
+        "mutable_elements": ["target elements", "color assignments"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Apply Theme Fonts",
+        "action_type": "transform",
+        "description": "Apply theme font pairings to artifact",
+        "immutable_elements": ["font application logic"],
+        "mutable_elements": ["target elements", "font assignments"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "Generate Custom Theme",
+        "action_type": "llm_inference",
+        "description": "Create new theme based on user description",
+        "immutable_elements": ["theme structure"],
+        "mutable_elements": ["color palette", "font pairings", "theme name"],
+        "deterministic": false,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Theme Selection",
+        "condition_type": "validation",
+        "condition_expression": "Selected theme exists in themes/ directory or is custom",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": ["generate custom theme"]
+      },
+      {
+        "id": "r_002",
+        "name": "Validate Artifact Supports Theming",
+        "condition_type": "validation",
+        "condition_expression": "Artifact type supports color and font styling",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Theme Applied",
+        "directive_type": "completion",
+        "description": "Theme successfully applied to artifact",
+        "decomposable": true,
+        "decomposition_hint": "a_001 → a_002 → r_001 → a_003 → a_004 → a_005",
+        "related_elements": ["a_003", "a_004", "a_005"]
+      },
+      {
+        "id": "d_002",
+        "name": "Custom Theme Created",
+        "directive_type": "completion",
+        "description": "New theme generated and applied",
+        "decomposable": true,
+        "decomposition_hint": "a_006 → a_004 → a_005",
+        "related_elements": ["a_006"]
+      },
+      {
+        "id": "d_003",
+        "name": "Available Themes",
+        "directive_type": "knowledge",
+        "description": "Ocean Depths, Sunset Boulevard, Forest Canopy, Modern Minimalist, Golden Hour, Arctic Frost, Desert Rose, Tech Innovation, Botanical Garden, Midnight Galaxy",
+        "decomposable": false
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": ["a_001", "a_002", "r_001", "a_003", "r_002", "a_004", "a_005"],
+      "condition": "User selects pre-set theme",
+      "expected_outcome": "Artifact styled with selected theme"
+    },
+    {
+      "path_id": 2,
+      "sequence": ["a_001", "a_002", "r_001", "a_006", "r_002", "a_004", "a_005"],
+      "condition": "User requests custom theme",
+      "expected_outcome": "Custom theme created and applied"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 2,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 2,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}

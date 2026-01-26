@@ -1,0 +1,202 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__domain_name_brainstormer",
+    "name": "domain-name-brainstormer",
+    "skill_layer": "claude_skill",
+    "title": "Domain Name Brainstormer",
+    "description": "Generates creative domain name ideas for your project and checks availability across multiple TLDs (.com, .io, .dev, .ai, etc.). Saves hours of brainstorming and manual checking.",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T05:50:00Z",
+    "parser_version": "skill-0 v2.0",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "domain-name-brainstormer",
+    "skill_description": "Generates creative domain name ideas for your project and checks availability across multiple TLDs (.com, .io, .dev, .ai, etc.). Saves hours of brainstorming and manual checking."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Analyze Project Context",
+        "action_type": "llm_inference",
+        "description": "Understand what user is building, target audience, and key features",
+        "immutable_elements": ["analysis framework"],
+        "mutable_elements": ["project description", "target audience", "key features"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Extract Keywords",
+        "action_type": "llm_inference",
+        "description": "Identify relevant keywords, themes, and naming patterns from project context",
+        "immutable_elements": ["keyword extraction rules"],
+        "mutable_elements": ["project context", "extracted keywords"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Generate Domain Candidates",
+        "action_type": "llm_inference",
+        "description": "Create creative, memorable domain name options using keywords and naming best practices",
+        "immutable_elements": ["naming guidelines", "TLD knowledge"],
+        "mutable_elements": ["keywords", "generated names"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Check Domain Availability",
+        "action_type": "external_call",
+        "description": "Verify domain availability across multiple TLDs (.com, .io, .dev, .ai, .app, .co, .xyz)",
+        "immutable_elements": ["TLD list", "availability API"],
+        "mutable_elements": ["domain candidates", "availability status"],
+        "deterministic": true,
+        "side_effects": ["external API call"]
+      },
+      {
+        "id": "a_005",
+        "name": "Categorize Results",
+        "action_type": "transform",
+        "description": "Organize domains into available (.com), alternative TLDs, and premium/taken categories",
+        "immutable_elements": ["categorization rules"],
+        "mutable_elements": ["availability results", "categorized list"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "Provide Branding Insights",
+        "action_type": "llm_inference",
+        "description": "Explain why certain names work well, including memorability, brandability, and pronunciation",
+        "immutable_elements": ["branding principles"],
+        "mutable_elements": ["domain names", "branding explanations"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_007",
+        "name": "Rank and Recommend",
+        "action_type": "llm_inference",
+        "description": "Provide top pick and runner-up recommendations with reasoning",
+        "immutable_elements": ["ranking criteria"],
+        "mutable_elements": ["available domains", "recommendations"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_008",
+        "name": "Output Formatted Results",
+        "action_type": "io_write",
+        "description": "Present results with emojis, categorization, pricing context, and next steps",
+        "immutable_elements": ["output format template"],
+        "mutable_elements": ["recommendations", "formatted output"],
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Project Description",
+        "condition_type": "existence_check",
+        "condition_expression": "User provided project/business description",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": ["ask for project description"]
+      },
+      {
+        "id": "r_002",
+        "name": "Check Domain Length",
+        "condition_type": "range_check",
+        "condition_expression": "Domain name length < 15 characters",
+        "returns": "boolean",
+        "fail_action": "flag",
+        "branching_targets": []
+      },
+      {
+        "id": "r_003",
+        "name": "Validate No Hyphens",
+        "condition_type": "validation",
+        "condition_expression": "Domain contains no hyphens for verbal shareability",
+        "returns": "boolean",
+        "fail_action": "flag",
+        "branching_targets": []
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Domain Names Generated",
+        "directive_type": "completion",
+        "description": "Creative domain options with availability status and recommendations",
+        "decomposable": true,
+        "decomposition_hint": "r_001 → a_001 → a_002 → a_003 → a_004 → a_005 → a_006 → a_007 → a_008",
+        "related_elements": ["a_003", "a_004", "a_007"]
+      },
+      {
+        "id": "d_002",
+        "name": "TLD Knowledge",
+        "directive_type": "knowledge",
+        "description": ".com (universal), .io (tech startups), .dev (developers), .ai (AI/ML), .app (applications), .co (alternative .com), .xyz (modern/creative), .design (creative), .tech (technology)",
+        "decomposable": false
+      },
+      {
+        "id": "d_003",
+        "name": "Good Domain Criteria",
+        "directive_type": "knowledge",
+        "description": "Short (<15 chars), memorable, pronounceable, descriptive, brandable, no hyphens",
+        "decomposable": false
+      },
+      {
+        "id": "d_004",
+        "name": "Pricing Context",
+        "directive_type": "knowledge",
+        "description": "Standard: $10-15/year, Premium TLDs (.io, .ai): $30-50/year, Taken domains: market price",
+        "decomposable": false
+      },
+      {
+        "id": "d_005",
+        "name": "Act Fast Principle",
+        "directive_type": "principle",
+        "description": "Good domains get taken quickly; encourage immediate registration of favorites",
+        "decomposable": false
+      },
+      {
+        "id": "d_006",
+        "name": "Brand Protection Strategy",
+        "directive_type": "strategy",
+        "description": "Recommend registering multiple TLD variations to protect brand",
+        "decomposable": false,
+        "related_elements": ["a_007"]
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": ["r_001", "a_001", "a_002", "a_003", "a_004", "a_005", "a_006", "a_007", "a_008"],
+      "condition": "User provides project description",
+      "expected_outcome": "Categorized domain suggestions with availability and recommendations"
+    },
+    {
+      "path_id": 2,
+      "sequence": ["a_004", "a_005", "a_008"],
+      "condition": "User provides specific domain names to check",
+      "expected_outcome": "Availability status for specified domains"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 2,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 1,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}

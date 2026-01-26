@@ -1,0 +1,147 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__brand_guidelines",
+    "name": "brand-guidelines",
+    "skill_layer": "claude_skill",
+    "title": "Anthropic Brand Styling",
+    "description": "Applies Anthropic's official brand colors and typography to any artifact that may benefit from having Anthropic's look-and-feel",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T05:45:00Z",
+    "parser_version": "skill-0 v2.0",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "brand-guidelines",
+    "skill_description": "Applies Anthropic's official brand colors and typography to any sort of artifact that may benefit from having Anthropic's look-and-feel. Use it when brand colors or style guidelines, visual formatting, or company design standards apply."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Apply Heading Fonts",
+        "action_type": "transform",
+        "description": "Apply Poppins font to headings (24pt and larger)",
+        "immutable_elements": ["font family", "size threshold"],
+        "mutable_elements": ["target elements"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Apply Body Fonts",
+        "action_type": "transform",
+        "description": "Apply Lora font to body text",
+        "immutable_elements": ["font family"],
+        "mutable_elements": ["target elements"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Apply Brand Colors",
+        "action_type": "transform",
+        "description": "Apply Anthropic brand color palette to elements",
+        "immutable_elements": ["color hex values"],
+        "mutable_elements": ["target elements", "color assignments"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Apply Accent Colors",
+        "action_type": "transform",
+        "description": "Cycle through orange, blue, green accents for non-text shapes",
+        "immutable_elements": ["accent color values"],
+        "mutable_elements": ["shape elements"],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Handle Font Fallback",
+        "action_type": "transform",
+        "description": "Fall back to Arial (headings) and Georgia (body) if custom fonts unavailable",
+        "immutable_elements": ["fallback fonts"],
+        "mutable_elements": [],
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Check Font Availability",
+        "condition_type": "existence_check",
+        "condition_expression": "Poppins and Lora fonts are installed",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": ["use fallback fonts"]
+      },
+      {
+        "id": "r_002",
+        "name": "Validate Artifact Type",
+        "condition_type": "validation",
+        "condition_expression": "Artifact supports styling (slides, docs, HTML)",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Brand Styling Complete",
+        "directive_type": "completion",
+        "description": "Artifact styled with Anthropic brand identity",
+        "decomposable": true,
+        "decomposition_hint": "r_002 → r_001 → a_001 → a_002 → a_003 → a_004",
+        "related_elements": ["a_001", "a_002", "a_003", "a_004"]
+      },
+      {
+        "id": "d_002",
+        "name": "Main Colors Knowledge",
+        "directive_type": "knowledge",
+        "description": "Dark: #141413, Light: #faf9f5, Mid Gray: #b0aea5, Light Gray: #e8e6dc",
+        "decomposable": false
+      },
+      {
+        "id": "d_003",
+        "name": "Accent Colors Knowledge",
+        "directive_type": "knowledge",
+        "description": "Orange: #d97757, Blue: #6a9bcc, Green: #788c5d",
+        "decomposable": false
+      },
+      {
+        "id": "d_004",
+        "name": "Typography Knowledge",
+        "directive_type": "knowledge",
+        "description": "Headings: Poppins (Arial fallback), Body: Lora (Georgia fallback)",
+        "decomposable": false
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": ["r_002", "r_001", "a_001", "a_002", "a_003", "a_004"],
+      "condition": "User requests Anthropic brand styling",
+      "expected_outcome": "Artifact styled with brand colors and fonts"
+    },
+    {
+      "path_id": 2,
+      "sequence": ["r_002", "r_001", "a_005", "a_001", "a_002", "a_003", "a_004"],
+      "condition": "Custom fonts not available",
+      "expected_outcome": "Artifact styled with fallback fonts"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 2,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 1,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}
