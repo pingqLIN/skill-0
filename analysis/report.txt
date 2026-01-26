@@ -1,30 +1,73 @@
 ============================================================
 📊 Skill-0 結構分析報告
 ============================================================
-產生時間: 2026-01-26T13:15:04.961046
-分析 Skills 數量: 1
+產生時間: 2026-01-26T13:25:19.526116
+分析 Skills 數量: 11
 
 📈 元素統計
 ----------------------------------------
-  Action 總數: 10
-  Rule 總數: 3
-  Directive 總數: 4
+  Action 總數: 63
+  Rule 總數: 28
+  Directive 總數: 30
 
 🎬 Action 類型分布:
-  - transform: 5
-  - io_write: 3
-  - io_read: 1
-  - external_call: 1
+  - transform: 23
+  - io_write: 18
+  - io_read: 13
+  - external_call: 8
+  - await_input: 1
 
 📌 Directive 類型分布:
-  - completion: 2
-  - principle: 1
-  - constraint: 1
+  - principle: 12
+  - completion: 9
+  - constraint: 3
+  - strategy: 3
+  - knowledge: 3
 
 📋 各 Skill 摘要
 ----------------------------------------
   [claude__anthropic__pdf] pdf
     Actions: 10, Rules: 3, Directives: 4
+    有執行流程: ✗
+
+  [claude__canvas_design] canvas-design
+    Actions: 5, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__docx] docx
+    Actions: 6, Rules: 3, Directives: 2
+    有執行流程: ✗
+
+  [claude__file_organizer] file-organizer
+    Actions: 6, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__image_enhancer] image-enhancer
+    Actions: 5, Rules: 2, Directives: 2
+    有執行流程: ✗
+
+  [claude__internal_comms] internal-comms
+    Actions: 3, Rules: 1, Directives: 2
+    有執行流程: ✗
+
+  [claude__mcp_builder] mcp-builder
+    Actions: 6, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__pptx] pptx
+    Actions: 6, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__skill_creator] skill-creator
+    Actions: 5, Rules: 2, Directives: 3
+    有執行流程: ✗
+
+  [claude__webapp_testing] webapp-testing
+    Actions: 5, Rules: 2, Directives: 2
+    有執行流程: ✗
+
+  [claude__xlsx] xlsx
+    Actions: 6, Rules: 3, Directives: 3
     有執行流程: ✗
 
 ============================================================

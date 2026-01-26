@@ -1,0 +1,111 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pptx",
+    "name": "pptx",
+    "skill_layer": "claude_skill",
+    "title": "Pptx Skill",
+    "description": "Presentation creation, editing, and analysis with support for layouts, comments, and speaker notes.",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T13:25:10.973364Z",
+    "parser_version": "skill-0 v2.0",
+    "parsed_by": "skill-0-batch"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "pptx",
+    "skill_description": "Presentation creation, editing, and analysis with support for layouts, comments, and speaker notes."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Extract Text",
+        "action_type": "io_read",
+        "description": "Convert presentation to markdown",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Create Thumbnails",
+        "action_type": "transform",
+        "description": "Generate thumbnail grid of slides",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Create from HTML",
+        "action_type": "io_write",
+        "description": "Convert HTML slides to PPTX using html2pptx",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Edit OOXML",
+        "action_type": "transform",
+        "description": "Modify slide XML directly",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Rearrange Slides",
+        "action_type": "transform",
+        "description": "Duplicate and reorder slides using script",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "Replace Text",
+        "action_type": "transform",
+        "description": "Replace placeholder text in templates",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "description": "State design approach before writing code",
+        "condition": "before_creation",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_002",
+        "description": "Match layout structure to actual content count",
+        "condition": "when_selecting_layout",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_003",
+        "description": "Visual validate after creation",
+        "condition": "after_creation",
+        "output": "proceed_or_halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "directive_type": "principle",
+        "description": "Use web-safe fonts only",
+        "decomposable": true
+      },
+      {
+        "id": "d_002",
+        "directive_type": "principle",
+        "description": "Create clear visual hierarchy through size, weight, color",
+        "decomposable": true
+      },
+      {
+        "id": "d_003",
+        "directive_type": "constraint",
+        "description": "Nothing falls off page, nothing overlaps",
+        "decomposable": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "generated_at": "2026-01-26T13:26:17.053623",
+  "coverage": {
+    "total_skills": 11,
+    "coverage_by_type": {},
+    "uncovered_elements": [],
+    "action_type_coverage": {
+      "expected": [
+        "io_read",
+        "io_write",
+        "await_input",
+        "transform",
+        "external_call"
+      ],
+      "found": [
+        "await_input",
+        "transform",
+        "external_call",
+        "io_read",
+        "io_write"
+      ],
+      "missing": [],
+      "coverage_rate": 1.0
+    },
+    "directive_type_coverage": {
+      "expected": [
+        "knowledge",
+        "constraint",
+        "preference",
+        "completion",
+        "strategy",
+        "principle"
+      ],
+      "found": [
+        "knowledge",
+        "constraint",
+        "completion",
+        "strategy",
+        "principle"
+      ],
+      "missing": [
+        "preference"
+      ],
+      "coverage_rate": 0.8333333333333334
+    }
+  },
+  "category_stats": {
+    "document_processing": {
+      "skills": 4,
+      "actions": 28,
+      "rules": 12,
+      "directives": 12,
+      "avg_actions": 7.0,
+      "avg_rules": 3.0,
+      "avg_directives": 3.0
+    },
+    "development_tools": {
+      "skills": 3,
+      "actions": 16,
+      "rules": 7,
+      "directives": 8,
+      "avg_actions": 5.3,
+      "avg_rules": 2.3,
+      "avg_directives": 2.7
+    },
+    "creative": {
+      "skills": 1,
+      "actions": 5,
+      "rules": 3,
+      "directives": 3,
+      "avg_actions": 5.0,
+      "avg_rules": 3.0,
+      "avg_directives": 3.0
+    },
+    "utility": {
+      "skills": 3,
+      "actions": 14,
+      "rules": 6,
+      "directives": 7,
+      "avg_actions": 4.7,
+      "avg_rules": 2.0,
+      "avg_directives": 2.3
+    }
+  },
+  "performance": {
+    "tests": [
+      {
+        "name": "analyzer.py",
+        "duration_seconds": 0.263,
+        "status": "pass"
+      },
+      {
+        "name": "pattern_extractor.py",
+        "duration_seconds": 0.257,
+        "status": "pass"
+      }
+    ],
+    "total_time_seconds": 0.52,
+    "average_per_test": 0.26
+  },
+  "overall_coverage_rate": 0.9166666666666667
+}

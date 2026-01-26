@@ -1,0 +1,91 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__webapp_testing",
+    "name": "webapp-testing",
+    "skill_layer": "claude_skill",
+    "title": "Webapp-Testing Skill",
+    "description": "Toolkit for testing local web applications using Playwright.",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T13:25:10.977467Z",
+    "parser_version": "skill-0 v2.0",
+    "parsed_by": "skill-0-batch"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "webapp-testing",
+    "skill_description": "Toolkit for testing local web applications using Playwright."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Start Server",
+        "action_type": "external_call",
+        "description": "Launch dev server using with_server.py",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Navigate Page",
+        "action_type": "external_call",
+        "description": "Open URL and wait for networkidle",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Take Screenshot",
+        "action_type": "io_write",
+        "description": "Capture page screenshot",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Inspect DOM",
+        "action_type": "io_read",
+        "description": "Get page content and locate elements",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Execute Actions",
+        "action_type": "external_call",
+        "description": "Click, type, select using discovered selectors",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "description": "Wait for networkidle before DOM inspection",
+        "condition": "on_dynamic_pages",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_002",
+        "description": "Use scripts as black boxes - run --help first",
+        "condition": "when_using_helpers",
+        "output": "proceed_or_halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "directive_type": "strategy",
+        "description": "Reconnaissance-then-action pattern: inspect, identify, execute",
+        "decomposable": true
+      },
+      {
+        "id": "d_002",
+        "directive_type": "principle",
+        "description": "Always close browser when done",
+        "decomposable": true
+      }
+    ]
+  }
+}
