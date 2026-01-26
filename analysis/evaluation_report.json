@@ -1,22 +1,25 @@
 {
-  "generated_at": "2026-01-26T13:26:17.053623",
+  "generated_at": "2026-01-26T14:17:15.638324",
   "coverage": {
-    "total_skills": 11,
+    "total_skills": 30,
     "coverage_by_type": {},
     "uncovered_elements": [],
     "action_type_coverage": {
       "expected": [
-        "io_read",
-        "io_write",
         "await_input",
+        "io_read",
+        "external_call",
         "transform",
-        "external_call"
+        "io_write"
       ],
       "found": [
         "await_input",
-        "transform",
+        "state_change",
         "external_call",
+        "transform",
+        "compute",
         "io_read",
+        "llm_inference",
         "io_write"
       ],
       "missing": [],
@@ -24,24 +27,23 @@
     },
     "directive_type_coverage": {
       "expected": [
-        "knowledge",
-        "constraint",
+        "principle",
         "preference",
-        "completion",
+        "constraint",
         "strategy",
-        "principle"
+        "completion",
+        "knowledge"
       ],
       "found": [
-        "knowledge",
-        "constraint",
         "completion",
-        "strategy",
-        "principle"
+        "knowledge",
+        "principle",
+        "preference",
+        "constraint",
+        "strategy"
       ],
-      "missing": [
-        "preference"
-      ],
-      "coverage_rate": 0.8333333333333334
+      "missing": [],
+      "coverage_rate": 1.0
     }
   },
   "category_stats": {
@@ -86,17 +88,17 @@
     "tests": [
       {
         "name": "analyzer.py",
-        "duration_seconds": 0.263,
+        "duration_seconds": 0.28,
         "status": "pass"
       },
       {
         "name": "pattern_extractor.py",
-        "duration_seconds": 0.257,
+        "duration_seconds": 0.27,
         "status": "pass"
       }
     ],
-    "total_time_seconds": 0.52,
-    "average_per_test": 0.26
+    "total_time_seconds": 0.55,
+    "average_per_test": 0.275
   },
-  "overall_coverage_rate": 0.9166666666666667
+  "overall_coverage_rate": 1.0
 }

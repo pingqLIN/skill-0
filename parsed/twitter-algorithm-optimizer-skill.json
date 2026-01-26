@@ -1,0 +1,151 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__twitter_algorithm_optimizer",
+    "name": "twitter-algorithm-optimizer",
+    "skill_layer": "claude_skill",
+    "title": "Twitter Algorithm Optimizer",
+    "description": "Analyze and optimize tweets for maximum reach using Twitter's open-source algorithm insights. Rewrite and edit user tweets to improve engagement and visibility",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-26T05:45:00Z",
+    "parser_version": "skill-0 v2.0",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "twitter-algorithm-optimizer",
+    "skill_description": "Analyze and optimize tweets for maximum reach using Twitter's open-source algorithm insights. Rewrite and edit user tweets to improve engagement and visibility based on how the recommendation system ranks content."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Identify Core Message",
+        "action_type": "llm_inference",
+        "description": "Extract the single most important thing the tweet communicates and target action",
+        "immutable_elements": ["analysis framework"],
+        "mutable_elements": ["original tweet", "core message"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Map to Algorithm Strategy",
+        "action_type": "llm_inference",
+        "description": "Determine Real-graph (followers), SimClusters (community), TwHIN (identity), Tweepcred (authority) fit",
+        "immutable_elements": ["algorithm models"],
+        "mutable_elements": ["tweet content", "strategy mapping"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Optimize for Engagement Signals",
+        "action_type": "llm_inference",
+        "description": "Enhance for likes, replies, retweets, bookmarks triggers",
+        "immutable_elements": ["signal optimization rules"],
+        "mutable_elements": ["tweet content", "engagement hooks"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Check Against Negatives",
+        "action_type": "llm_inference",
+        "description": "Verify no block/report risks, identity confusion, engagement bait, inflammatory language",
+        "immutable_elements": ["negative signal checklist"],
+        "mutable_elements": ["tweet content", "risk assessment"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Generate Optimized Tweet",
+        "action_type": "llm_inference",
+        "description": "Rewrite tweet applying all optimization strategies",
+        "immutable_elements": ["optimization principles"],
+        "mutable_elements": ["original tweet", "optimized version"],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "Explain Optimization",
+        "action_type": "llm_inference",
+        "description": "Explain why changes improve algorithmic ranking",
+        "immutable_elements": ["explanation framework"],
+        "mutable_elements": ["changes made", "reasoning"],
+        "deterministic": false,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Tweet Provided",
+        "condition_type": "existence_check",
+        "condition_expression": "User provided tweet draft to optimize",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": ["ask for tweet draft"]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Tweet Optimized",
+        "directive_type": "completion",
+        "description": "Tweet rewritten with algorithm optimization and explanation",
+        "decomposable": true,
+        "decomposition_hint": "r_001 → a_001 → a_002 → a_003 → a_004 → a_005 → a_006",
+        "related_elements": ["a_002", "a_005", "a_006"]
+      },
+      {
+        "id": "d_002",
+        "name": "Algorithm Models Knowledge",
+        "directive_type": "knowledge",
+        "description": "Real-graph (follower interaction), SimClusters (community detection), TwHIN (user-content mapping), Tweepcred (reputation scoring)",
+        "decomposable": false
+      },
+      {
+        "id": "d_003",
+        "name": "Engagement Signals Knowledge",
+        "directive_type": "knowledge",
+        "description": "Explicit: likes, replies, retweets, quotes. Implicit: profile visits, clicks, time spent, bookmarks. Negative: blocks, mutes, unfollows",
+        "decomposable": false
+      },
+      {
+        "id": "d_004",
+        "name": "Reply Trigger Strategy",
+        "directive_type": "strategy",
+        "description": "Ask direct questions, create debate, request opinions, share incomplete thoughts",
+        "decomposable": false,
+        "related_elements": ["a_003"]
+      },
+      {
+        "id": "d_005",
+        "name": "Authenticity Principle",
+        "directive_type": "principle",
+        "description": "Algorithm rewards genuine engagement, not manipulation. Quality over virality.",
+        "decomposable": false
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": ["r_001", "a_001", "a_002", "a_003", "a_004", "a_005", "a_006"],
+      "condition": "User provides tweet to optimize",
+      "expected_outcome": "Optimized tweet with explanation"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 1,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 1,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}

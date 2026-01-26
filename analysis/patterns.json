@@ -1,9 +1,144 @@
 {
   "version": "1.0",
-  "generated_at": "2026-01-26T13:26:17.016455",
-  "total_patterns": 16,
-  "source_skills_count": 11,
+  "generated_at": "2026-01-26T14:17:15.612764",
+  "total_patterns": 21,
+  "source_skills_count": 30,
   "patterns": [
+    {
+      "id": "pat_dir_completion",
+      "name": "Directive: completion",
+      "description": "使用 completion 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "completion"
+      },
+      "found_in": [
+        "claude__composio__tailored_resume_generator",
+        "claude__composio__lead_research_assistant",
+        "claude__composio__connect",
+        "claude__file_organizer",
+        "claude__composio__raffle_winner_picker",
+        "claude__canvas_design",
+        "claude__composio__meeting_insights_analyzer",
+        "claude__docx",
+        "claude__composio__developer_growth_analysis",
+        "claude__composio__brand_guidelines",
+        "claude__anthropic__pdf",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__changelog_generator",
+        "claude__composio__slack_gif_creator",
+        "claude__composio__competitive_ads_extractor",
+        "claude__image_enhancer",
+        "claude__composio__langsmith_fetch",
+        "claude__composio__skill_share",
+        "claude__internal_comms",
+        "claude__composio__invoice_organizer",
+        "claude__composio__youtube_downloader",
+        "claude__composio__connect_apps",
+        "claude__mcp_builder",
+        "claude__composio__content_research_writer",
+        "claude__composio__theme_factory",
+        "claude__skill_creator",
+        "claude__composio__twitter_algorithm_optimizer"
+      ],
+      "frequency": 1.133,
+      "examples": [
+        {
+          "skill": "claude__anthropic__pdf",
+          "description": "Form fields populated and saved successfully"
+        },
+        {
+          "skill": "claude__anthropic__pdf",
+          "description": "All tables extracted from PDF and exported to Excel file"
+        },
+        {
+          "skill": "claude__composio__brand_guidelines",
+          "description": "Artifact styled with Anthropic brand identity"
+        }
+      ]
+    },
+    {
+      "id": "pat_dir_knowledge",
+      "name": "Directive: knowledge",
+      "description": "使用 knowledge 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "knowledge"
+      },
+      "found_in": [
+        "claude__composio__lead_research_assistant",
+        "claude__composio__connect",
+        "claude__composio__meeting_insights_analyzer",
+        "claude__composio__developer_growth_analysis",
+        "claude__composio__brand_guidelines",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__slack_gif_creator",
+        "claude__composio__changelog_generator",
+        "claude__composio__competitive_ads_extractor",
+        "claude__composio__langsmith_fetch",
+        "claude__composio__skill_share",
+        "claude__internal_comms",
+        "claude__composio__invoice_organizer",
+        "claude__composio__connect_apps",
+        "claude__composio__content_research_writer",
+        "claude__composio__theme_factory",
+        "claude__skill_creator",
+        "claude__composio__twitter_algorithm_optimizer",
+        "claude__xlsx"
+      ],
+      "frequency": 1.067,
+      "examples": [
+        {
+          "skill": "claude__composio__brand_guidelines",
+          "description": "Dark: #141413, Light: #faf9f5, Mid Gray: #b0aea5, Light Gray: #e8e6dc"
+        },
+        {
+          "skill": "claude__composio__brand_guidelines",
+          "description": "Orange: #d97757, Blue: #6a9bcc, Green: #788c5d"
+        },
+        {
+          "skill": "claude__composio__brand_guidelines",
+          "description": "Headings: Poppins (Arial fallback), Body: Lora (Georgia fallback)"
+        }
+      ]
+    },
+    {
+      "id": "pat_kw_file_operation",
+      "name": "關鍵字模式: file_operation",
+      "description": "包含 file_operation 相關操作的 skill",
+      "pattern_type": "keyword",
+      "structure": {
+        "category": "file_operation"
+      },
+      "found_in": [
+        "claude__composio__tailored_resume_generator",
+        "claude__composio__lead_research_assistant",
+        "claude__composio__connect",
+        "claude__file_organizer",
+        "claude__composio__raffle_winner_picker",
+        "claude__canvas_design",
+        "claude__composio__meeting_insights_analyzer",
+        "claude__docx",
+        "claude__composio__developer_growth_analysis",
+        "claude__anthropic__pdf",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__changelog_generator",
+        "claude__composio__slack_gif_creator",
+        "claude__composio__competitive_ads_extractor",
+        "claude__composio__langsmith_fetch",
+        "claude__composio__skill_share",
+        "claude__pptx",
+        "claude__composio__invoice_organizer",
+        "claude__composio__connect_apps",
+        "claude__mcp_builder",
+        "claude__composio__content_research_writer",
+        "claude__composio__theme_factory",
+        "claude__skill_creator",
+        "claude__composio__twitter_algorithm_optimizer"
+      ],
+      "frequency": 0.8,
+      "examples": []
+    },
     {
       "id": "pat_dir_principle",
       "name": "Directive: principle",
@@ -13,18 +148,25 @@
         "directive_type": "principle"
       },
       "found_in": [
-        "claude__docx",
-        "claude__mcp_builder",
         "claude__image_enhancer",
-        "claude__xlsx",
+        "claude__docx",
         "claude__webapp_testing",
-        "claude__skill_creator",
+        "claude__mcp_builder",
+        "claude__composio__tailored_resume_generator",
+        "claude__composio__content_research_writer",
+        "claude__xlsx",
         "claude__file_organizer",
-        "claude__anthropic__pdf",
         "claude__pptx",
-        "claude__canvas_design"
+        "claude__anthropic__pdf",
+        "claude__skill_creator",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__twitter_algorithm_optimizer",
+        "claude__canvas_design",
+        "claude__composio__raffle_winner_picker",
+        "claude__composio__changelog_generator",
+        "claude__composio__invoice_organizer"
       ],
-      "frequency": 1.091,
+      "frequency": 0.667,
       "examples": [
         {
           "skill": "claude__anthropic__pdf",
@@ -41,32 +183,6 @@
       ]
     },
     {
-      "id": "pat_act_io_read_io_write",
-      "name": "io_read + io_write 組合",
-      "description": "同時包含 io_read 和 io_write 類型的動作",
-      "pattern_type": "action_combination",
-      "structure": {
-        "action_types": [
-          "io_read",
-          "io_write"
-        ]
-      },
-      "found_in": [
-        "claude__anthropic__pdf",
-        "claude__canvas_design",
-        "claude__docx",
-        "claude__file_organizer",
-        "claude__image_enhancer",
-        "claude__internal_comms",
-        "claude__mcp_builder",
-        "claude__pptx",
-        "claude__webapp_testing",
-        "claude__xlsx"
-      ],
-      "frequency": 0.909,
-      "examples": []
-    },
-    {
       "id": "pat_act_io_write_transform",
       "name": "io_write + transform 組合",
       "description": "同時包含 io_write 和 transform 類型的動作",
@@ -80,16 +196,23 @@
       "found_in": [
         "claude__anthropic__pdf",
         "claude__canvas_design",
+        "claude__composio__changelog_generator",
+        "claude__composio__competitive_ads_extractor",
         "claude__docx",
+        "claude__composio__domain_name_brainstormer",
         "claude__file_organizer",
         "claude__image_enhancer",
         "claude__internal_comms",
+        "claude__composio__invoice_organizer",
+        "claude__composio__langsmith_fetch",
         "claude__mcp_builder",
         "claude__pptx",
+        "claude__composio__raffle_winner_picker",
         "claude__skill_creator",
+        "claude__composio__slack_gif_creator",
         "claude__xlsx"
       ],
-      "frequency": 0.909,
+      "frequency": 0.567,
       "examples": []
     },
     {
@@ -106,69 +229,21 @@
       "found_in": [
         "claude__anthropic__pdf",
         "claude__canvas_design",
+        "claude__composio__changelog_generator",
+        "claude__composio__developer_growth_analysis",
         "claude__docx",
         "claude__file_organizer",
         "claude__image_enhancer",
         "claude__internal_comms",
+        "claude__composio__invoice_organizer",
         "claude__mcp_builder",
+        "claude__composio__meeting_insights_analyzer",
         "claude__pptx",
+        "claude__composio__raffle_winner_picker",
+        "claude__composio__theme_factory",
         "claude__xlsx"
       ],
-      "frequency": 0.818,
-      "examples": []
-    },
-    {
-      "id": "pat_dir_completion",
-      "name": "Directive: completion",
-      "description": "使用 completion 類型的 directive",
-      "pattern_type": "directive_usage",
-      "structure": {
-        "directive_type": "completion"
-      },
-      "found_in": [
-        "claude__docx",
-        "claude__internal_comms",
-        "claude__mcp_builder",
-        "claude__image_enhancer",
-        "claude__skill_creator",
-        "claude__file_organizer",
-        "claude__anthropic__pdf",
-        "claude__canvas_design"
-      ],
-      "frequency": 0.818,
-      "examples": [
-        {
-          "skill": "claude__anthropic__pdf",
-          "description": "Form fields populated and saved successfully"
-        },
-        {
-          "skill": "claude__anthropic__pdf",
-          "description": "All tables extracted from PDF and exported to Excel file"
-        },
-        {
-          "skill": "claude__canvas_design",
-          "description": "Output as single PDF or PNG alongside philosophy .md file"
-        }
-      ]
-    },
-    {
-      "id": "pat_kw_file_operation",
-      "name": "關鍵字模式: file_operation",
-      "description": "包含 file_operation 相關操作的 skill",
-      "pattern_type": "keyword",
-      "structure": {
-        "category": "file_operation"
-      },
-      "found_in": [
-        "claude__docx",
-        "claude__mcp_builder",
-        "claude__skill_creator",
-        "claude__file_organizer",
-        "claude__anthropic__pdf",
-        "claude__pptx",
-        "claude__canvas_design"
-      ],
-      "frequency": 0.636,
+      "frequency": 0.5,
       "examples": []
     },
     {
@@ -181,54 +256,50 @@
       },
       "found_in": [
         "claude__canvas_design",
+        "claude__composio__changelog_generator",
+        "claude__composio__connect_apps",
         "claude__file_organizer",
+        "claude__composio__invoice_organizer",
+        "claude__composio__langsmith_fetch",
         "claude__mcp_builder",
         "claude__pptx",
+        "claude__composio__raffle_winner_picker",
         "claude__skill_creator",
-        "claude__xlsx"
+        "claude__composio__skill_share",
+        "claude__composio__slack_gif_creator",
+        "claude__xlsx",
+        "claude__composio__youtube_downloader"
       ],
-      "frequency": 0.545,
+      "frequency": 0.467,
       "examples": []
     },
     {
-      "id": "pat_act_external_call_io_write",
-      "name": "external_call + io_write 組合",
-      "description": "同時包含 external_call 和 io_write 類型的動作",
+      "id": "pat_act_io_read_io_write",
+      "name": "io_read + io_write 組合",
+      "description": "同時包含 io_read 和 io_write 類型的動作",
       "pattern_type": "action_combination",
       "structure": {
         "action_types": [
-          "external_call",
+          "io_read",
           "io_write"
         ]
       },
       "found_in": [
         "claude__anthropic__pdf",
+        "claude__canvas_design",
+        "claude__composio__changelog_generator",
+        "claude__docx",
+        "claude__file_organizer",
+        "claude__image_enhancer",
+        "claude__internal_comms",
+        "claude__composio__invoice_organizer",
         "claude__mcp_builder",
-        "claude__skill_creator",
+        "claude__pptx",
+        "claude__composio__raffle_winner_picker",
         "claude__webapp_testing",
         "claude__xlsx"
       ],
-      "frequency": 0.455,
-      "examples": []
-    },
-    {
-      "id": "pat_act_external_call_io_read",
-      "name": "external_call + io_read 組合",
-      "description": "同時包含 external_call 和 io_read 類型的動作",
-      "pattern_type": "action_combination",
-      "structure": {
-        "action_types": [
-          "external_call",
-          "io_read"
-        ]
-      },
-      "found_in": [
-        "claude__anthropic__pdf",
-        "claude__mcp_builder",
-        "claude__webapp_testing",
-        "claude__xlsx"
-      ],
-      "frequency": 0.364,
+      "frequency": 0.433,
       "examples": []
     },
     {
@@ -244,28 +315,95 @@
       },
       "found_in": [
         "claude__anthropic__pdf",
+        "claude__composio__competitive_ads_extractor",
+        "claude__composio__content_research_writer",
+        "claude__composio__developer_growth_analysis",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__langsmith_fetch",
+        "claude__composio__lead_research_assistant",
         "claude__mcp_builder",
+        "claude__composio__raffle_winner_picker",
         "claude__skill_creator",
-        "claude__xlsx"
+        "claude__xlsx",
+        "claude__composio__youtube_downloader"
       ],
-      "frequency": 0.364,
+      "frequency": 0.4,
       "examples": []
     },
     {
-      "id": "pat_kw_validation",
-      "name": "關鍵字模式: validation",
-      "description": "包含 validation 相關操作的 skill",
-      "pattern_type": "keyword",
+      "id": "pat_act_llm_inference_transform",
+      "name": "llm_inference + transform 組合",
+      "description": "同時包含 llm_inference 和 transform 類型的動作",
+      "pattern_type": "action_combination",
       "structure": {
-        "category": "validation"
+        "action_types": [
+          "llm_inference",
+          "transform"
+        ]
       },
       "found_in": [
-        "claude__xlsx",
-        "claude__skill_creator",
-        "claude__pptx",
-        "claude__image_enhancer"
+        "claude__composio__changelog_generator",
+        "claude__composio__competitive_ads_extractor",
+        "claude__composio__content_research_writer",
+        "claude__composio__developer_growth_analysis",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__langsmith_fetch",
+        "claude__composio__lead_research_assistant",
+        "claude__composio__meeting_insights_analyzer",
+        "claude__composio__raffle_winner_picker",
+        "claude__composio__tailored_resume_generator",
+        "claude__composio__theme_factory"
       ],
-      "frequency": 0.364,
+      "frequency": 0.367,
+      "examples": []
+    },
+    {
+      "id": "pat_act_external_call_io_write",
+      "name": "external_call + io_write 組合",
+      "description": "同時包含 external_call 和 io_write 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "external_call",
+          "io_write"
+        ]
+      },
+      "found_in": [
+        "claude__anthropic__pdf",
+        "claude__composio__competitive_ads_extractor",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__langsmith_fetch",
+        "claude__mcp_builder",
+        "claude__composio__raffle_winner_picker",
+        "claude__skill_creator",
+        "claude__composio__skill_share",
+        "claude__webapp_testing",
+        "claude__xlsx"
+      ],
+      "frequency": 0.333,
+      "examples": []
+    },
+    {
+      "id": "pat_kw_output",
+      "name": "關鍵字模式: output",
+      "description": "包含 output 相關操作的 skill",
+      "pattern_type": "keyword",
+      "structure": {
+        "category": "output"
+      },
+      "found_in": [
+        "claude__composio__youtube_downloader",
+        "claude__composio__developer_growth_analysis",
+        "claude__composio__lead_research_assistant",
+        "claude__composio__theme_factory",
+        "claude__composio__skill_share",
+        "claude__pptx",
+        "claude__canvas_design",
+        "claude__composio__raffle_winner_picker",
+        "claude__composio__changelog_generator",
+        "claude__composio__invoice_organizer"
+      ],
+      "frequency": 0.333,
       "examples": []
     },
     {
@@ -277,23 +415,29 @@
         "directive_type": "constraint"
       },
       "found_in": [
-        "claude__anthropic__pdf",
+        "claude__composio__tailored_resume_generator",
+        "claude__composio__developer_growth_analysis",
+        "claude__composio__skill_share",
         "claude__pptx",
-        "claude__xlsx"
+        "claude__anthropic__pdf",
+        "claude__composio__raffle_winner_picker",
+        "claude__xlsx",
+        "claude__composio__competitive_ads_extractor",
+        "claude__composio__invoice_organizer"
       ],
-      "frequency": 0.273,
+      "frequency": 0.3,
       "examples": [
         {
           "skill": "claude__anthropic__pdf",
           "description": "OCR requires pytesseract and appropriate language packs installed"
         },
         {
-          "skill": "claude__pptx",
-          "description": "Nothing falls off page, nothing overlaps"
+          "skill": "claude__composio__competitive_ads_extractor",
+          "description": "Only use for research and inspiration, don't copy ads directly, respect intellectual property"
         },
         {
-          "skill": "claude__xlsx",
-          "description": "Every model must have zero formula errors"
+          "skill": "claude__composio__developer_growth_analysis",
+          "description": "Improvements must be specific, evidence-based, actionable, and prioritized"
         }
       ]
     },
@@ -306,68 +450,141 @@
         "directive_type": "strategy"
       },
       "found_in": [
+        "claude__composio__youtube_downloader",
         "claude__webapp_testing",
+        "claude__mcp_builder",
+        "claude__composio__langsmith_fetch",
+        "claude__composio__tailored_resume_generator",
         "claude__file_organizer",
-        "claude__mcp_builder"
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__twitter_algorithm_optimizer",
+        "claude__composio__raffle_winner_picker"
       ],
-      "frequency": 0.273,
+      "frequency": 0.3,
       "examples": [
+        {
+          "skill": "claude__composio__domain_name_brainstormer",
+          "description": "Recommend registering multiple TLD variations to protect brand"
+        },
         {
           "skill": "claude__file_organizer",
           "description": "Start small (one folder), build trust, then expand"
         },
         {
-          "skill": "claude__mcp_builder",
-          "description": "Follow 4-phase workflow: Research, Implement, Review, Evaluate"
-        },
-        {
-          "skill": "claude__webapp_testing",
-          "description": "Reconnaissance-then-action pattern: inspect, identify, execute"
+          "skill": "claude__composio__langsmith_fetch",
+          "description": "Activate on: debug my agent, show traces, check for errors, analyze memory operations, review perfor"
         }
       ]
     },
     {
-      "id": "pat_dir_knowledge",
-      "name": "Directive: knowledge",
-      "description": "使用 knowledge 類型的 directive",
-      "pattern_type": "directive_usage",
-      "structure": {
-        "directive_type": "knowledge"
-      },
-      "found_in": [
-        "claude__xlsx",
-        "claude__internal_comms",
-        "claude__skill_creator"
-      ],
-      "frequency": 0.273,
-      "examples": [
-        {
-          "skill": "claude__internal_comms",
-          "description": "Communication types: 3P updates, newsletters, FAQs, status reports"
-        },
-        {
-          "skill": "claude__skill_creator",
-          "description": "Skills have 3-level loading: metadata, SKILL.md, bundled resources"
-        },
-        {
-          "skill": "claude__xlsx",
-          "description": "Blue text for inputs, black for formulas, green for links"
-        }
-      ]
-    },
-    {
-      "id": "pat_kw_output",
-      "name": "關鍵字模式: output",
-      "description": "包含 output 相關操作的 skill",
+      "id": "pat_kw_validation",
+      "name": "關鍵字模式: validation",
+      "description": "包含 validation 相關操作的 skill",
       "pattern_type": "keyword",
       "structure": {
-        "category": "output"
+        "category": "validation"
       },
       "found_in": [
+        "claude__image_enhancer",
+        "claude__composio__langsmith_fetch",
+        "claude__xlsx",
+        "claude__composio__skill_share",
         "claude__pptx",
-        "claude__canvas_design"
+        "claude__skill_creator",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__twitter_algorithm_optimizer",
+        "claude__composio__slack_gif_creator"
       ],
-      "frequency": 0.182,
+      "frequency": 0.3,
+      "examples": []
+    },
+    {
+      "id": "pat_act_external_call_llm_inference",
+      "name": "external_call + llm_inference 組合",
+      "description": "同時包含 external_call 和 llm_inference 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "external_call",
+          "llm_inference"
+        ]
+      },
+      "found_in": [
+        "claude__composio__competitive_ads_extractor",
+        "claude__composio__content_research_writer",
+        "claude__composio__developer_growth_analysis",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__langsmith_fetch",
+        "claude__composio__lead_research_assistant",
+        "claude__composio__raffle_winner_picker",
+        "claude__composio__skill_share"
+      ],
+      "frequency": 0.267,
+      "examples": []
+    },
+    {
+      "id": "pat_act_external_call_io_read",
+      "name": "external_call + io_read 組合",
+      "description": "同時包含 external_call 和 io_read 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "external_call",
+          "io_read"
+        ]
+      },
+      "found_in": [
+        "claude__anthropic__pdf",
+        "claude__composio__developer_growth_analysis",
+        "claude__mcp_builder",
+        "claude__composio__raffle_winner_picker",
+        "claude__webapp_testing",
+        "claude__xlsx"
+      ],
+      "frequency": 0.2,
+      "examples": []
+    },
+    {
+      "id": "pat_act_io_write_llm_inference",
+      "name": "io_write + llm_inference 組合",
+      "description": "同時包含 io_write 和 llm_inference 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "io_write",
+          "llm_inference"
+        ]
+      },
+      "found_in": [
+        "claude__composio__changelog_generator",
+        "claude__composio__competitive_ads_extractor",
+        "claude__composio__domain_name_brainstormer",
+        "claude__composio__langsmith_fetch",
+        "claude__composio__raffle_winner_picker",
+        "claude__composio__skill_share"
+      ],
+      "frequency": 0.2,
+      "examples": []
+    },
+    {
+      "id": "pat_act_io_read_llm_inference",
+      "name": "io_read + llm_inference 組合",
+      "description": "同時包含 io_read 和 llm_inference 類型的動作",
+      "pattern_type": "action_combination",
+      "structure": {
+        "action_types": [
+          "io_read",
+          "llm_inference"
+        ]
+      },
+      "found_in": [
+        "claude__composio__changelog_generator",
+        "claude__composio__developer_growth_analysis",
+        "claude__composio__meeting_insights_analyzer",
+        "claude__composio__raffle_winner_picker",
+        "claude__composio__theme_factory"
+      ],
+      "frequency": 0.167,
       "examples": []
     },
     {
@@ -379,11 +596,43 @@
         "category": "transformation"
       },
       "found_in": [
+        "claude__composio__youtube_downloader",
         "claude__docx",
-        "claude__pptx"
+        "claude__pptx",
+        "claude__composio__raffle_winner_picker",
+        "claude__composio__changelog_generator"
       ],
-      "frequency": 0.182,
+      "frequency": 0.167,
       "examples": []
+    },
+    {
+      "id": "pat_dir_preference",
+      "name": "Directive: preference",
+      "description": "使用 preference 類型的 directive",
+      "pattern_type": "directive_usage",
+      "structure": {
+        "directive_type": "preference"
+      },
+      "found_in": [
+        "claude__composio__tailored_resume_generator",
+        "claude__composio__changelog_generator",
+        "claude__composio__youtube_downloader"
+      ],
+      "frequency": 0.1,
+      "examples": [
+        {
+          "skill": "claude__composio__changelog_generator",
+          "description": "Match changelog tone to company brand voice when style guidelines available"
+        },
+        {
+          "skill": "claude__composio__tailored_resume_generator",
+          "description": "Include numbers, percentages, timeframes, scale in achievements"
+        },
+        {
+          "skill": "claude__composio__youtube_downloader",
+          "description": "Save to /mnt/user-data/outputs/ by default"
+        }
+      ]
     }
   ]
 }
