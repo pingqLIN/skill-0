@@ -1,6 +1,6 @@
 """
 Skill-0 REST API
-FastAPI 整合向量搜尋與分析功能
+FastAPI integration with vector search and analysis features
 """
 
 from fastapi import FastAPI, HTTPException, Query
@@ -10,20 +10,20 @@ from typing import List, Optional, Dict, Any
 import os
 from pathlib import Path
 
-# 確保可以找到 vector_db 模組
+# Ensure vector_db module can be found
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from vector_db import SemanticSearch
 
-# 配置
+# Configuration
 DB_PATH = os.getenv('SKILL0_DB_PATH', 'skills.db')
 PARSED_DIR = os.getenv('SKILL0_PARSED_DIR', 'parsed')
 
-# FastAPI 應用
+# FastAPI application
 app = FastAPI(
     title="Skill-0 API",
-    description="Claude Skills & MCP Tools 語義搜尋 API",
+    description="Claude Skills & MCP Tools Semantic Search API",
     version="2.1.0",
     docs_url="/docs",
     redoc_url="/redoc"
@@ -38,12 +38,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 全域搜尋引擎 (延遲初始化)
+# Global search engine (lazy initialization)
 search_engine: Optional[SemanticSearch] = None
 
 
 def get_search_engine() -> SemanticSearch:
-    """取得或初始化搜尋引擎"""
+    """Get or initialize search engine"""
     global search_engine
     if search_engine is None:
         search_engine = SemanticSearch(db_path=DB_PATH)
@@ -53,7 +53,7 @@ def get_search_engine() -> SemanticSearch:
 # ==================== Models ====================
 
 class SkillResult(BaseModel):
-    """Skill 搜尋結果"""
+    """Skill search result"""
     id: int
     name: str
     filename: str
@@ -67,13 +67,13 @@ class SkillResult(BaseModel):
 
 
 class SearchRequest(BaseModel):
-    """搜尋請求"""
-    query: str = Field(..., description="搜尋查詢", min_length=1)
-    limit: int = Field(5, description="返回數量", ge=1, le=50)
+    """Search request"""
+    query: str = Field(..., description="Search query", min_length=1)
+    limit: int = Field(5, description="Number of results", ge=1, le=50)
 
 
 class SearchResponse(BaseModel):
-    """搜尋回應"""
+    """Search response"""
     query: str
     results: List[SkillResult]
     count: int
@@ -81,20 +81,20 @@ class SearchResponse(BaseModel):
 
 
 class SimilarRequest(BaseModel):
-    """相似搜尋請求"""
-    skill_name: str = Field(..., description="Skill 名稱")
-    limit: int = Field(5, description="返回數量", ge=1, le=50)
+    """Similar search request"""
+    skill_name: str = Field(..., description="Skill name")
+    limit: int = Field(5, description="Number of results", ge=1, le=50)
 
 
 class ClusterResponse(BaseModel):
-    """聚類回應"""
+    """Cluster response"""
     clusters: Dict[int, List[SkillResult]]
     total_skills: int
     n_clusters: int
 
 
 class StatsResponse(BaseModel):
-    """統計回應"""
+    """Statistics response"""
     total_skills: int
     total_actions: int
     total_rules: int
@@ -105,12 +105,12 @@ class StatsResponse(BaseModel):
 
 
 class IndexRequest(BaseModel):
-    """索引請求"""
-    parsed_dir: str = Field(PARSED_DIR, description="Parsed 目錄路徑")
+    """Index request"""
+    parsed_dir: str = Field(PARSED_DIR, description="Parsed directory path")
 
 
 class IndexResponse(BaseModel):
-    """索引回應"""
+    """Index response"""
     indexed_count: int
     elapsed_seconds: float
     message: str
@@ -120,11 +120,11 @@ class IndexResponse(BaseModel):
 
 @app.get("/", tags=["Root"])
 async def root():
-    """API 根路徑"""
+    """API root path"""
     return {
         "name": "Skill-0 API",
         "version": "2.1.0",
-        "description": "Claude Skills & MCP Tools 語義搜尋 API",
+        "description": "Claude Skills & MCP Tools Semantic Search API",
         "endpoints": {
             "search": "/api/search",
             "similar": "/api/similar",
@@ -138,7 +138,7 @@ async def root():
 
 @app.get("/health", tags=["Health"])
 async def health_check():
-    """健康檢查"""
+    """Health check"""
     try:
         engine = get_search_engine()
         stats = engine.get_statistics()
@@ -154,9 +154,9 @@ async def health_check():
 @app.post("/api/search", response_model=SearchResponse, tags=["Search"])
 async def search_skills(request: SearchRequest):
     """
-    語義搜尋 Skills
+    Semantic search for Skills
     
-    使用自然語言查詢找到相關的 skills。
+    Use natural language query to find relevant skills.
     """
     import time
     start = time.time()
@@ -176,13 +176,13 @@ async def search_skills(request: SearchRequest):
 
 @app.get("/api/search", response_model=SearchResponse, tags=["Search"])
 async def search_skills_get(
-    q: str = Query(..., description="搜尋查詢", min_length=1),
-    limit: int = Query(5, description="返回數量", ge=1, le=50)
+    q: str = Query(..., description="Search query", min_length=1),
+    limit: int = Query(5, description="Number of results", ge=1, le=50)
 ):
     """
-    語義搜尋 Skills (GET)
+    Semantic search for Skills (GET)
     
-    使用自然語言查詢找到相關的 skills。
+    Use natural language query to find relevant skills.
     """
     import time
     start = time.time()
@@ -203,9 +203,9 @@ async def search_skills_get(
 @app.post("/api/similar", response_model=SearchResponse, tags=["Search"])
 async def find_similar_skills(request: SimilarRequest):
     """
-    找相似 Skills
+    Find similar Skills
     
-    根據指定的 skill 名稱找出功能相似的其他 skills。
+    Find other skills with similar functionality based on the specified skill name.
     """
     import time
     start = time.time()
@@ -229,10 +229,10 @@ async def find_similar_skills(request: SimilarRequest):
 @app.get("/api/similar/{skill_name}", response_model=SearchResponse, tags=["Search"])
 async def find_similar_skills_get(
     skill_name: str,
-    limit: int = Query(5, description="返回數量", ge=1, le=50)
+    limit: int = Query(5, description="Number of results", ge=1, le=50)
 ):
     """
-    找相似 Skills (GET)
+    Find similar Skills (GET)
     """
     import time
     start = time.time()
@@ -255,17 +255,17 @@ async def find_similar_skills_get(
 
 @app.get("/api/cluster", response_model=ClusterResponse, tags=["Analysis"])
 async def cluster_skills(
-    n: int = Query(5, description="聚類數量", ge=2, le=20)
+    n: int = Query(5, description="Number of clusters", ge=2, le=20)
 ):
     """
-    Skills 聚類分析
+    Skills cluster analysis
     
-    使用 K-Means 將所有 skills 自動分群。
+    Automatically group all skills using K-Means clustering.
     """
     engine = get_search_engine()
     clusters = engine.cluster_skills(n_clusters=n)
     
-    # 轉換格式
+    # Convert format
     formatted_clusters = {}
     total = 0
     for cluster_id, skills in clusters.items():
@@ -281,7 +281,7 @@ async def cluster_skills(
 
 @app.get("/api/stats", response_model=StatsResponse, tags=["Info"])
 async def get_statistics():
-    """取得資料庫統計"""
+    """Get database statistics"""
     engine = get_search_engine()
     stats = engine.get_statistics()
     
@@ -293,11 +293,11 @@ async def list_all_skills(
     page: int = Query(1, ge=1),
     per_page: int = Query(20, ge=1, le=100)
 ):
-    """列出所有 Skills（分頁）"""
+    """List all Skills (paginated)"""
     engine = get_search_engine()
     all_skills = engine.store.get_all_skills()
     
-    # 分頁
+    # Pagination
     start = (page - 1) * per_page
     end = start + per_page
     paginated = all_skills[start:end]
@@ -314,9 +314,9 @@ async def list_all_skills(
 @app.get("/api/skills/{skill_id}", tags=["Info"])
 async def get_skill_by_id(
     skill_id: int,
-    include_json: bool = Query(False, description="是否包含原始 JSON")
+    include_json: bool = Query(False, description="Include original JSON")
 ):
-    """根據 ID 取得 Skill 詳情"""
+    """Get Skill details by ID"""
     engine = get_search_engine()
     skill = engine.store.get_skill_by_id(skill_id, include_json=include_json)
     
@@ -329,16 +329,16 @@ async def get_skill_by_id(
 @app.post("/api/index", response_model=IndexResponse, tags=["Admin"])
 async def index_skills(request: IndexRequest):
     """
-    重新索引 Skills
+    Re-index Skills
     
-    從 parsed 目錄重新建立向量索引。
+    Rebuild vector index from parsed directory.
     """
     import time
     start = time.time()
     
     engine = get_search_engine()
     
-    # 清空並重新索引
+    # Clear and re-index
     engine.store.clear()
     count = engine.index_skills(request.parsed_dir, show_progress=False)
     
@@ -351,13 +351,13 @@ async def index_skills(request: IndexRequest):
     )
 
 
-# ==================== 啟動 ====================
+# ==================== Startup ====================
 
 def main():
-    """啟動 API 伺服器"""
+    """Start API server"""
     import uvicorn
     
-    # 確保資料庫存在
+    # Ensure database exists
     if not Path(DB_PATH).exists():
         print(f"Database not found at {DB_PATH}, indexing skills...")
         engine = get_search_engine()
