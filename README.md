@@ -1,7 +1,5 @@
 # Skill-0: Skill Decomposition Parser
 
-[中文版](README.zh-TW.md)
-
 > A ternary classification system for parsing the internal structure of Claude Skills and MCP Tools
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -66,8 +64,7 @@ Organizes and defines the immutable parts of a Skill (or parts that change behav
 
 ```
 skill-0/
-├── README.md                              # English documentation
-├── README.zh-TW.md                        # Chinese documentation
+├── README.md                              # Documentation
 ├── schema/
 │   └── skill-decomposition.schema.json   # JSON Schema v2.0
 ├── parsed/                                # Parsed skill examples (32 skills)
