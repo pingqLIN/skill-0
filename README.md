@@ -78,12 +78,6 @@ skill-0/
 │   ├── embedder.py                       # Embedding generator
 │   ├── vector_store.py                   # SQLite-vec storage
 │   └── search.py                         # Semantic search CLI
-├── monitor/                               # Moltbot Monitor Extension (NEW)
-│   ├── risk_classifier.py                # Risk assessment engine
-│   ├── sequence_analyzer.py              # Command sequence analysis
-│   ├── alert_manager.py                  # Real-time alert system
-│   ├── risk_logger.py                    # Risk logging system
-│   └── monitor_engine.py                 # Main monitor engine
 ├── skills.db                              # Vector database
 └── docs/                                  # Documentation
 ```
@@ -225,39 +219,6 @@ clusters = search.cluster_skills(n_clusters=5)
 | Embedding Dimension | 384 |
 | Database | SQLite-vec |
 
-## Moltbot Monitor Extension
-
-A lightweight real-time supervision program for Moltbot using Skill-0's ternary classification technology.
-
-### Quick Start
-
-```python
-from monitor import MoltbotMonitor, CommandInput, RiskLevel
-
-# Create monitor
-monitor = MoltbotMonitor()
-
-# Check command risk
-command = CommandInput(
-    command_id='cmd_001',
-    command_name='delete_files',
-    actions=[{'action_type': 'io_write', 'name': 'Delete', 'description': 'Delete files'}]
-)
-
-result = monitor.check_command(command)
-if not result.is_safe:
-    print(f"Blocked: {result.block_reason}")
-```
-
-### Features
-
-- **Risk Classification**: Assess command risk based on action types
-- **Sequence Analysis**: Detect dangerous command patterns (data exfiltration, privilege escalation)
-- **Real-time Alerts**: Immediate notifications for critical threats
-- **Risk Logging**: Comprehensive audit trail
-
-See [monitor/README.md](monitor/README.md) for full documentation.
-
 ## Version
 
 - Schema Version: 2.0.0
@@ -266,15 +227,6 @@ See [monitor/README.md](monitor/README.md) for full documentation.
 - Author: pingqLIN
 
 ## Changelog
-
-### v2.2.0 (2026-01-28) - Moltbot Monitor
-- **New Feature**: Moltbot Monitor Extension
-  - `monitor` module for real-time command supervision
-  - Risk classification engine based on Skill-0 action types
-  - Sequence pattern analysis for detecting dangerous command chains
-  - Alert management with async processing
-  - Comprehensive risk logging system
-  - 22 unit tests with 100% pass rate
 
 ### v2.1.0 (2026-01-26) - Stage 2
 - **New Feature**: Semantic search with vector embeddings
