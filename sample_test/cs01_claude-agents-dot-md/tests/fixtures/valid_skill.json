@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "skill_id": "test__sample-skill",
+    "name": "sample-skill",
+    "skill_layer": "claude_skill",
+    "title": "Sample Test Skill",
+    "description": "A sample skill for testing purposes",
+    "schema_version": "2.0.0",
+    "parse_timestamp": "2026-01-28T00:00:00Z",
+    "parser_version": "test-v1.0",
+    "parsed_by": "test-fixture"
+  },
+  "original_definition": {
+    "source": "test-fixture",
+    "skill_name": "Sample Skill",
+    "skill_description": "Test description"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Read Input",
+        "action_type": "io_read",
+        "description": "Reads input from user",
+        "deterministic": true,
+        "immutable_elements": [],
+        "mutable_elements": ["input_source"],
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Process Data",
+        "action_type": "transform",
+        "description": "Transforms input data",
+        "deterministic": true,
+        "immutable_elements": [],
+        "mutable_elements": [],
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Input",
+        "condition_type": "validation",
+        "condition": "Input is not empty",
+        "output": "boolean",
+        "description": "Checks if input is valid"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "directive_type": "completion",
+        "description": "Processing completed successfully",
+        "decomposable": false
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_name": "Happy Path",
+      "sequence": ["a_001", "r_001", "a_002", "d_001"],
+      "description": "Normal execution flow"
+    }
+  ]
+}
