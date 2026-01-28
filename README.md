@@ -219,6 +219,35 @@ clusters = search.cluster_skills(n_clusters=5)
 | Embedding Dimension | 384 |
 | Database | SQLite-vec |
 
+## Documentation
+
+Comprehensive documentation is available:
+
+- **[CLAUDE.md](CLAUDE.md)** - Best practices for Claude AI integration and skill decomposition
+- **[SKILL.md](SKILL.md)** - Complete tool portal and workflow guide
+- **[reference.md](reference.md)** - Schema reference and format specifications
+- **[examples.md](examples.md)** - 7 detailed skill examples across different domains
+- **[AGENTS.md](AGENTS.md)** - Guidelines for AI agents working on this project
+- **[scripts/helper.py](scripts/helper.py)** - Helper utilities for validation, conversion, and testing
+
+### Quick Start Guide
+
+```bash
+# Generate a new skill template
+python scripts/helper.py template -o my-skill.json
+
+# Convert markdown to skill JSON
+python scripts/helper.py convert skill.md my-skill.json
+
+# Validate skill against schema
+python scripts/helper.py validate my-skill.json
+
+# Test execution paths
+python scripts/helper.py test my-skill.json --analyze
+```
+
+See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test results and examples.
+
 ## Version
 
 - Schema Version: 2.0.0
@@ -227,6 +256,22 @@ clusters = search.cluster_skills(n_clusters=5)
 - Author: pingqLIN
 
 ## Changelog
+
+### v2.2.0 (2026-01-28) - Documentation & Tooling
+- **New Feature**: Comprehensive documentation suite
+  - `CLAUDE.md` - Claude best practices guide
+  - `SKILL.md` - Complete tool portal and workflow
+  - `reference.md` - Full schema reference
+  - `examples.md` - 7 detailed skill examples
+  - `AGENTS.md` - AI agent guidelines
+- **New Tool**: `scripts/helper.py` - Utility for validation, conversion, and testing
+  - Template generation
+  - Markdown to JSON conversion
+  - Schema validation
+  - Execution path testing
+  - Complexity analysis
+- Integration with agents.md format standard
+- Test results documentation in `docs/helper-test-results.md`
 
 ### v2.1.0 (2026-01-26) - Stage 2
 - **New Feature**: Semantic search with vector embeddings
