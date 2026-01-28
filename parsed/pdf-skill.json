@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "Pdf Skill",
     "description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scal",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T16:21:07.310494Z",
-    "parser_version": "skill-0 v2.0-advanced",
+    "parser_version": "skill-0 v2.1-advanced",
     "parsed_by": "parse-v2-advanced"
   },
   "original_definition": {

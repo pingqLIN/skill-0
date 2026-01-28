@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "Competitive Ads Extractor",
     "description": "Extracts and analyzes competitors' ads from ad libraries (Facebook, LinkedIn, etc.) to understand what messaging, problems, and creative approaches are working",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T05:45:00Z",
-    "parser_version": "skill-0 v2.0",
+    "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
   },
   "original_definition": {
@@ -23,8 +23,14 @@
         "name": "Search Ad Library",
         "action_type": "external_call",
         "description": "Search Facebook Ad Library, LinkedIn, etc. for competitor ads",
-        "immutable_elements": ["ad library API/scraping"],
-        "mutable_elements": ["competitor name", "platform", "date range"],
+        "immutable_elements": [
+          "ad library API/scraping"
+        ],
+        "mutable_elements": [
+          "competitor name",
+          "platform",
+          "date range"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -33,18 +39,30 @@
         "name": "Capture Screenshots",
         "action_type": "io_write",
         "description": "Save visual copies of all found ads",
-        "immutable_elements": ["screenshot capture"],
-        "mutable_elements": ["ad URLs", "output folder"],
+        "immutable_elements": [
+          "screenshot capture"
+        ],
+        "mutable_elements": [
+          "ad URLs",
+          "output folder"
+        ],
         "deterministic": true,
-        "side_effects": ["creates image files"]
+        "side_effects": [
+          "creates image files"
+        ]
       },
       {
         "id": "a_003",
         "name": "Analyze Messaging",
         "action_type": "llm_inference",
         "description": "Identify problems, use cases, value propositions from ad copy",
-        "immutable_elements": ["analysis framework"],
-        "mutable_elements": ["ad content", "analysis depth"],
+        "immutable_elements": [
+          "analysis framework"
+        ],
+        "mutable_elements": [
+          "ad content",
+          "analysis depth"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -53,8 +71,13 @@
         "name": "Categorize Ads",
         "action_type": "transform",
         "description": "Group ads by theme, audience, or format",
-        "immutable_elements": ["categorization rules"],
-        "mutable_elements": ["category definitions", "ad assignments"],
+        "immutable_elements": [
+          "categorization rules"
+        ],
+        "mutable_elements": [
+          "category definitions",
+          "ad assignments"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -63,8 +86,13 @@
         "name": "Identify Patterns",
         "action_type": "llm_inference",
         "description": "Find common successful approaches across ads",
-        "immutable_elements": ["pattern detection"],
-        "mutable_elements": ["ad corpus", "pattern types"],
+        "immutable_elements": [
+          "pattern detection"
+        ],
+        "mutable_elements": [
+          "ad corpus",
+          "pattern types"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -73,8 +101,13 @@
         "name": "Generate Insights Report",
         "action_type": "llm_inference",
         "description": "Create comprehensive analysis with recommendations",
-        "immutable_elements": ["report structure"],
-        "mutable_elements": ["findings", "recommendations"],
+        "immutable_elements": [
+          "report structure"
+        ],
+        "mutable_elements": [
+          "findings",
+          "recommendations"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -83,10 +116,17 @@
         "name": "Save Analysis Artifacts",
         "action_type": "io_write",
         "description": "Save screenshots, analysis.md, and CSV spreadsheet",
-        "immutable_elements": ["file formats"],
-        "mutable_elements": ["output paths", "file contents"],
+        "immutable_elements": [
+          "file formats"
+        ],
+        "mutable_elements": [
+          "output paths",
+          "file contents"
+        ],
         "deterministic": true,
-        "side_effects": ["creates files on disk"]
+        "side_effects": [
+          "creates files on disk"
+        ]
       }
     ],
     "rules": [
@@ -97,7 +137,9 @@
         "condition_expression": "Competitor name is searchable in ad library",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["request clarification"]
+        "branching_targets": [
+          "request clarification"
+        ]
       },
       {
         "id": "r_002",
@@ -106,7 +148,9 @@
         "condition_expression": "Ads found for competitor",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["report no ads found"]
+        "branching_targets": [
+          "report no ads found"
+        ]
       }
     ],
     "directives": [
@@ -117,7 +161,12 @@
         "description": "All competitor ads extracted with screenshots and analysis",
         "decomposable": true,
         "decomposition_hint": "a_001 → r_002 → a_002 → a_003 → a_004 → a_005 → a_006 → a_007",
-        "related_elements": ["a_001", "a_002", "a_006", "a_007"]
+        "related_elements": [
+          "a_001",
+          "a_002",
+          "a_006",
+          "a_007"
+        ]
       },
       {
         "id": "d_002",
@@ -138,13 +187,27 @@
   "execution_paths": [
     {
       "path_id": 1,
-      "sequence": ["r_001", "a_001", "r_002", "a_002", "a_003", "a_004", "a_005", "a_006", "a_007"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "r_002",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006",
+        "a_007"
+      ],
       "condition": "User requests competitor ad analysis",
       "expected_outcome": "Full analysis with screenshots and recommendations"
     },
     {
       "path_id": 2,
-      "sequence": ["r_001", "a_001", "r_002"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "r_002"
+      ],
       "condition": "No ads found for competitor",
       "expected_outcome": "Report no ads found"
     }

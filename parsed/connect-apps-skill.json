@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "Connect Apps",
     "description": "Connect Claude to external apps like Gmail, Slack, GitHub. Use this skill when the user wants to send emails, create issues, post messages, or take actions in external services",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T05:45:00Z",
-    "parser_version": "skill-0 v2.0",
+    "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
   },
   "original_definition": {
@@ -23,28 +23,43 @@
         "name": "Install Composio Plugin",
         "action_type": "external_call",
         "description": "Install composio-toolrouter plugin",
-        "immutable_elements": ["/plugin install command"],
+        "immutable_elements": [
+          "/plugin install command"
+        ],
         "mutable_elements": [],
         "deterministic": true,
-        "side_effects": ["installs plugin"]
+        "side_effects": [
+          "installs plugin"
+        ]
       },
       {
         "id": "a_002",
         "name": "Run Setup",
         "action_type": "external_call",
         "description": "Configure Claude's connection to 1000+ apps with API key",
-        "immutable_elements": ["/composio-toolrouter:setup command"],
-        "mutable_elements": ["API key"],
+        "immutable_elements": [
+          "/composio-toolrouter:setup command"
+        ],
+        "mutable_elements": [
+          "API key"
+        ],
         "deterministic": false,
-        "side_effects": ["configures integration"]
+        "side_effects": [
+          "configures integration"
+        ]
       },
       {
         "id": "a_003",
         "name": "Route Tool Request",
         "action_type": "external_call",
         "description": "Tool Router finds the right tool from 1000+ options",
-        "immutable_elements": ["routing algorithm"],
-        "mutable_elements": ["user request", "target app"],
+        "immutable_elements": [
+          "routing algorithm"
+        ],
+        "mutable_elements": [
+          "user request",
+          "target app"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -53,8 +68,13 @@
         "name": "Trigger OAuth Authorization",
         "action_type": "await_input",
         "description": "Present OAuth link for first-time app authorization",
-        "immutable_elements": ["OAuth flow"],
-        "mutable_elements": ["target app", "permissions"],
+        "immutable_elements": [
+          "OAuth flow"
+        ],
+        "mutable_elements": [
+          "target app",
+          "permissions"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -63,10 +83,17 @@
         "name": "Execute Action",
         "action_type": "external_call",
         "description": "Execute the actual action in external app (send email, create issue, etc.)",
-        "immutable_elements": ["API call execution"],
-        "mutable_elements": ["action type", "parameters"],
+        "immutable_elements": [
+          "API call execution"
+        ],
+        "mutable_elements": [
+          "action type",
+          "parameters"
+        ],
         "deterministic": false,
-        "side_effects": ["performs action in external service"]
+        "side_effects": [
+          "performs action in external service"
+        ]
       }
     ],
     "rules": [
@@ -77,7 +104,9 @@
         "condition_expression": "composio-toolrouter plugin is installed",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["install plugin"]
+        "branching_targets": [
+          "install plugin"
+        ]
       },
       {
         "id": "r_002",
@@ -86,7 +115,9 @@
         "condition_expression": "Composio setup has been run",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["run setup"]
+        "branching_targets": [
+          "run setup"
+        ]
       },
       {
         "id": "r_003",
@@ -95,7 +126,9 @@
         "condition_expression": "Target app has been authorized via OAuth",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["trigger OAuth"]
+        "branching_targets": [
+          "trigger OAuth"
+        ]
       }
     ],
     "directives": [
@@ -106,7 +139,10 @@
         "description": "External action successfully performed",
         "decomposable": true,
         "decomposition_hint": "r_001 → r_002 → a_003 → r_003 → a_005",
-        "related_elements": ["a_003", "a_005"]
+        "related_elements": [
+          "a_003",
+          "a_005"
+        ]
       },
       {
         "id": "d_002",
@@ -115,7 +151,10 @@
         "description": "Plugin installed and configured",
         "decomposable": true,
         "decomposition_hint": "a_001 → a_002",
-        "related_elements": ["a_001", "a_002"]
+        "related_elements": [
+          "a_001",
+          "a_002"
+        ]
       },
       {
         "id": "d_003",
@@ -129,19 +168,36 @@
   "execution_paths": [
     {
       "path_id": 1,
-      "sequence": ["r_001", "r_002", "a_003", "r_003", "a_005"],
+      "sequence": [
+        "r_001",
+        "r_002",
+        "a_003",
+        "r_003",
+        "a_005"
+      ],
       "condition": "User requests action in already-authorized app",
       "expected_outcome": "Action executed successfully"
     },
     {
       "path_id": 2,
-      "sequence": ["r_001", "r_002", "a_003", "r_003", "a_004", "a_005"],
+      "sequence": [
+        "r_001",
+        "r_002",
+        "a_003",
+        "r_003",
+        "a_004",
+        "a_005"
+      ],
       "condition": "First-time use of specific app",
       "expected_outcome": "OAuth completed then action executed"
     },
     {
       "path_id": 3,
-      "sequence": ["r_001", "a_001", "a_002"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_002"
+      ],
       "condition": "First-time plugin setup",
       "expected_outcome": "Plugin installed and configured"
     }

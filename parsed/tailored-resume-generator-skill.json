@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "Tailored Resume Generator",
     "description": "Analyzes job descriptions and generates tailored resumes that highlight relevant experience, skills, and achievements to maximize interview chances",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T05:45:00Z",
-    "parser_version": "skill-0 v2.0",
+    "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
   },
   "original_definition": {
@@ -23,8 +23,13 @@
         "name": "Analyze Job Description",
         "action_type": "transform",
         "description": "Extract key requirements, skills, qualifications, and keywords from job posting",
-        "immutable_elements": ["extraction patterns"],
-        "mutable_elements": ["job description text", "priority classification"],
+        "immutable_elements": [
+          "extraction patterns"
+        ],
+        "mutable_elements": [
+          "job description text",
+          "priority classification"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -33,8 +38,13 @@
         "name": "Gather Candidate Background",
         "action_type": "await_input",
         "description": "Collect work history, education, skills, achievements from user or existing resume",
-        "immutable_elements": ["required fields"],
-        "mutable_elements": ["user input", "resume content"],
+        "immutable_elements": [
+          "required fields"
+        ],
+        "mutable_elements": [
+          "user input",
+          "resume content"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -43,8 +53,13 @@
         "name": "Map Experience to Requirements",
         "action_type": "llm_inference",
         "description": "Match candidate experience to job requirements, identify transferable skills and gaps",
-        "immutable_elements": ["matching algorithm"],
-        "mutable_elements": ["experience entries", "requirement priorities"],
+        "immutable_elements": [
+          "matching algorithm"
+        ],
+        "mutable_elements": [
+          "experience entries",
+          "requirement priorities"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -53,8 +68,13 @@
         "name": "Generate Professional Summary",
         "action_type": "llm_inference",
         "description": "Create 3-4 line summary highlighting years of experience and top required skills",
-        "immutable_elements": ["summary structure"],
-        "mutable_elements": ["content focus", "skill emphasis"],
+        "immutable_elements": [
+          "summary structure"
+        ],
+        "mutable_elements": [
+          "content focus",
+          "skill emphasis"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -63,8 +83,13 @@
         "name": "Reorder Experience Bullets",
         "action_type": "transform",
         "description": "Prioritize bullet points based on relevance to job requirements",
-        "immutable_elements": ["relevance scoring"],
-        "mutable_elements": ["bullet order", "emphasis"],
+        "immutable_elements": [
+          "relevance scoring"
+        ],
+        "mutable_elements": [
+          "bullet order",
+          "emphasis"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -73,8 +98,13 @@
         "name": "Optimize for ATS",
         "action_type": "transform",
         "description": "Incorporate keywords naturally for Applicant Tracking System compatibility",
-        "immutable_elements": ["ATS best practices"],
-        "mutable_elements": ["keyword placement", "formatting"],
+        "immutable_elements": [
+          "ATS best practices"
+        ],
+        "mutable_elements": [
+          "keyword placement",
+          "formatting"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -83,8 +113,13 @@
         "name": "Format Resume Output",
         "action_type": "transform",
         "description": "Create clean, professional resume layout in requested format",
-        "immutable_elements": ["section structure"],
-        "mutable_elements": ["format type", "styling"],
+        "immutable_elements": [
+          "section structure"
+        ],
+        "mutable_elements": [
+          "format type",
+          "styling"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -93,8 +128,13 @@
         "name": "Generate Recommendations",
         "action_type": "llm_inference",
         "description": "Provide gap analysis and interview preparation tips",
-        "immutable_elements": ["recommendation structure"],
-        "mutable_elements": ["gaps identified", "strengths found"],
+        "immutable_elements": [
+          "recommendation structure"
+        ],
+        "mutable_elements": [
+          "gaps identified",
+          "strengths found"
+        ],
         "deterministic": false,
         "side_effects": []
       }
@@ -107,7 +147,9 @@
         "condition_expression": "Job description text is provided",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["request job description"]
+        "branching_targets": [
+          "request job description"
+        ]
       },
       {
         "id": "r_002",
@@ -116,7 +158,9 @@
         "condition_expression": "Sufficient background info provided",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["request more information"]
+        "branching_targets": [
+          "request more information"
+        ]
       },
       {
         "id": "r_003",
@@ -125,7 +169,9 @@
         "condition_expression": "Candidate years of experience within job requirements",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["note experience gap"]
+        "branching_targets": [
+          "note experience gap"
+        ]
       }
     ],
     "directives": [
@@ -136,7 +182,11 @@
         "description": "Tailored resume created with recommendations",
         "decomposable": true,
         "decomposition_hint": "r_001 → a_001 → r_002 → a_002 → a_003 → a_004 → a_005 → a_006 → a_007 → a_008",
-        "related_elements": ["a_001", "a_003", "a_007"]
+        "related_elements": [
+          "a_001",
+          "a_003",
+          "a_007"
+        ]
       },
       {
         "id": "d_002",
@@ -151,7 +201,9 @@
         "directive_type": "principle",
         "description": "Use action verbs: Led, Developed, Implemented, Optimized, Managed, Created, Analyzed",
         "decomposable": false,
-        "related_elements": ["a_005"]
+        "related_elements": [
+          "a_005"
+        ]
       },
       {
         "id": "d_004",
@@ -159,7 +211,9 @@
         "directive_type": "preference",
         "description": "Include numbers, percentages, timeframes, scale in achievements",
         "decomposable": false,
-        "related_elements": ["a_005"]
+        "related_elements": [
+          "a_005"
+        ]
       },
       {
         "id": "d_005",
@@ -167,20 +221,44 @@
         "directive_type": "strategy",
         "description": "1 page for <10 years experience, 2 pages for 10+ years",
         "decomposable": false,
-        "related_elements": ["a_007"]
+        "related_elements": [
+          "a_007"
+        ]
       }
     ]
   },
   "execution_paths": [
     {
       "path_id": 1,
-      "sequence": ["r_001", "a_001", "r_002", "a_002", "a_003", "a_004", "a_005", "a_006", "a_007", "a_008"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "r_002",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006",
+        "a_007",
+        "a_008"
+      ],
       "condition": "User provides job description and background",
       "expected_outcome": "Tailored resume with recommendations"
     },
     {
       "path_id": 2,
-      "sequence": ["r_001", "a_001", "a_002", "a_003", "r_003", "a_004", "a_005", "a_006", "a_007", "a_008"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_002",
+        "a_003",
+        "r_003",
+        "a_004",
+        "a_005",
+        "a_006",
+        "a_007",
+        "a_008"
+      ],
       "condition": "Career transition with experience gap",
       "expected_outcome": "Resume emphasizing transferable skills with gap notes"
     }
