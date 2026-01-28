@@ -90,11 +90,34 @@ git clone https://github.com/pingqLIN/skill-0.git
 cd skill-0
 
 # Install dependencies
-pip install sqlite-vec sentence-transformers scikit-learn
+pip install -r requirements.txt
 
 # Index skills (first time)
 python -m vector_db.search --db skills.db --parsed-dir parsed index
 ```
+
+## Testing
+
+The project includes a comprehensive test suite for tool and code equivalence verification:
+
+```bash
+# Run all tests
+python3 -m pytest tests/ -v
+
+# Run specific test categories
+python3 -m pytest tests/test_helper.py::TestSkillValidator -v
+python3 -m pytest tests/test_helper.py::TestIntegrationWorkflows -v
+```
+
+**Test Coverage**: 32 tests covering:
+- ✅ Schema validation (tool equivalence)
+- ✅ Format conversion (code equivalence)
+- ✅ Execution path testing
+- ✅ Template generation
+- ✅ Error handling
+- ✅ Integration workflows
+
+See [tests/README.md](tests/README.md) for detailed test documentation.
 
 ## Semantic Search
 
@@ -256,6 +279,17 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 - Author: pingqLIN
 
 ## Changelog
+
+### v2.3.0 (2026-01-28) - Testing & Quality Assurance
+- **New Feature**: Comprehensive automated test suite
+  - 32 tests covering all helper utilities
+  - Tool equivalence verification (validator consistency)
+  - Code equivalence verification (converter determinism)
+  - Integration workflow testing
+  - Error handling and edge case coverage
+- Test fixtures and documentation in `tests/`
+- pytest configuration in `pyproject.toml`
+- CI/CD ready test infrastructure
 
 ### v2.2.0 (2026-01-28) - Documentation & Tooling
 - **New Feature**: Comprehensive documentation suite

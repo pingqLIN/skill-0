@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "skill_id": "test__invalid-skill",
+    "name": "invalid-skill",
+    "skill_layer": "invalid_layer"
+  }
+}
