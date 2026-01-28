@@ -223,7 +223,7 @@ clusters = search.cluster_skills(n_clusters=5)
 
 - Schema Version: 2.0.0
 - Created: 2026-01-23
-- Updated: 2026-01-28
+- Updated: 2026-01-26
 - Author: pingqLIN
 
 ## Changelog
