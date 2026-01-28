@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "LangSmith Fetch - Agent Debugging Skill",
     "description": "Debug LangChain and LangGraph agents by fetching execution traces from LangSmith Studio. Use when debugging agent behavior, investigating errors, analyzing tool calls, checking memory operations, or examining agent performance",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T05:45:00Z",
-    "parser_version": "skill-0 v2.0",
+    "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
   },
   "original_definition": {
@@ -23,8 +23,14 @@
         "name": "Fetch Recent Traces",
         "action_type": "external_call",
         "description": "Retrieve traces from LangSmith for specified time period",
-        "immutable_elements": ["langsmith-fetch traces command"],
-        "mutable_elements": ["time range", "limit", "format"],
+        "immutable_elements": [
+          "langsmith-fetch traces command"
+        ],
+        "mutable_elements": [
+          "time range",
+          "limit",
+          "format"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -33,8 +39,13 @@
         "name": "Fetch Specific Trace",
         "action_type": "external_call",
         "description": "Deep dive into a specific trace by ID",
-        "immutable_elements": ["langsmith-fetch trace command"],
-        "mutable_elements": ["trace ID", "format"],
+        "immutable_elements": [
+          "langsmith-fetch trace command"
+        ],
+        "mutable_elements": [
+          "trace ID",
+          "format"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -43,8 +54,13 @@
         "name": "Analyze Execution Flow",
         "action_type": "llm_inference",
         "description": "Analyze trace data to identify agent goals, tool calls, and results",
-        "immutable_elements": ["analysis framework"],
-        "mutable_elements": ["trace data", "analysis depth"],
+        "immutable_elements": [
+          "analysis framework"
+        ],
+        "mutable_elements": [
+          "trace data",
+          "analysis depth"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -53,8 +69,14 @@
         "name": "Detect Errors",
         "action_type": "transform",
         "description": "Search traces for errors, failures, and exceptions",
-        "immutable_elements": ["error patterns", "grep command"],
-        "mutable_elements": ["trace data", "error filters"],
+        "immutable_elements": [
+          "error patterns",
+          "grep command"
+        ],
+        "mutable_elements": [
+          "trace data",
+          "error filters"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -63,8 +85,13 @@
         "name": "Generate Debug Report",
         "action_type": "llm_inference",
         "description": "Create comprehensive report with root cause analysis and suggested fixes",
-        "immutable_elements": ["report structure"],
-        "mutable_elements": ["findings", "recommendations"],
+        "immutable_elements": [
+          "report structure"
+        ],
+        "mutable_elements": [
+          "findings",
+          "recommendations"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -73,10 +100,18 @@
         "name": "Export Debug Session",
         "action_type": "io_write",
         "description": "Save traces and analysis to timestamped folder",
-        "immutable_elements": ["export command", "folder structure"],
-        "mutable_elements": ["output directory", "file selection"],
+        "immutable_elements": [
+          "export command",
+          "folder structure"
+        ],
+        "mutable_elements": [
+          "output directory",
+          "file selection"
+        ],
         "deterministic": true,
-        "side_effects": ["creates files on disk"]
+        "side_effects": [
+          "creates files on disk"
+        ]
       }
     ],
     "rules": [
@@ -111,7 +146,9 @@
         "condition_expression": "Traces exist in specified time range",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["expand time range or check tracing enabled"]
+        "branching_targets": [
+          "expand time range or check tracing enabled"
+        ]
       }
     ],
     "directives": [
@@ -122,7 +159,11 @@
         "description": "Recent activity analyzed with summary report",
         "decomposable": true,
         "decomposition_hint": "r_001 → r_002 → r_003 → a_001 → a_003 → a_005",
-        "related_elements": ["a_001", "a_003", "a_005"]
+        "related_elements": [
+          "a_001",
+          "a_003",
+          "a_005"
+        ]
       },
       {
         "id": "d_002",
@@ -131,7 +172,11 @@
         "description": "Specific trace fully analyzed with root cause",
         "decomposable": true,
         "decomposition_hint": "r_001 → r_002 → a_002 → a_003 → a_005",
-        "related_elements": ["a_002", "a_003", "a_005"]
+        "related_elements": [
+          "a_002",
+          "a_003",
+          "a_005"
+        ]
       },
       {
         "id": "d_003",
@@ -152,25 +197,52 @@
   "execution_paths": [
     {
       "path_id": 1,
-      "sequence": ["r_001", "r_002", "r_003", "a_001", "r_004", "a_003", "a_005"],
+      "sequence": [
+        "r_001",
+        "r_002",
+        "r_003",
+        "a_001",
+        "r_004",
+        "a_003",
+        "a_005"
+      ],
       "condition": "User asks to debug recent agent activity",
       "expected_outcome": "Summary report of recent traces with issues identified"
     },
     {
       "path_id": 2,
-      "sequence": ["r_001", "r_002", "a_002", "a_003", "a_005"],
+      "sequence": [
+        "r_001",
+        "r_002",
+        "a_002",
+        "a_003",
+        "a_005"
+      ],
       "condition": "User provides specific trace ID",
       "expected_outcome": "Deep analysis of specific trace with root cause"
     },
     {
       "path_id": 3,
-      "sequence": ["r_001", "r_002", "r_003", "a_001", "a_004", "a_005"],
+      "sequence": [
+        "r_001",
+        "r_002",
+        "r_003",
+        "a_001",
+        "a_004",
+        "a_005"
+      ],
       "condition": "User asks about errors",
       "expected_outcome": "Error detection report with frequencies and patterns"
     },
     {
       "path_id": 4,
-      "sequence": ["r_001", "r_002", "r_003", "a_001", "a_006"],
+      "sequence": [
+        "r_001",
+        "r_002",
+        "r_003",
+        "a_001",
+        "a_006"
+      ],
       "condition": "User requests export",
       "expected_outcome": "Debug session saved to timestamped folder"
     }

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-批次解析 Claude Skills 為 Skill-0 v2.0 格式
+批次解析 Claude Skills 為 Skill-0 v2.1 格式
 """
 
 import json
@@ -17,9 +17,9 @@ def create_skill_template(skill_id, name, description, source):
             "skill_layer": "claude_skill",
             "title": f"{name.title()} Skill",
             "description": description[:200] if len(description) > 200 else description,
-            "schema_version": "2.0.0",
+            "schema_version": "2.1.0",
             "parse_timestamp": datetime.now().isoformat() + "Z",
-            "parser_version": "skill-0 v2.0",
+            "parser_version": "skill-0 v2.1",
             "parsed_by": "skill-0-batch"
         },
         "original_definition": {

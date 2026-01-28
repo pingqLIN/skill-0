@@ -4,7 +4,7 @@
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Schema Version](https://img.shields.io/badge/schema-v2.0.0-green.svg)](schema/skill-decomposition.schema.json)
+[![Schema Version](https://img.shields.io/badge/schema-v2.1.0-green.svg)](schema/skill-decomposition.schema.json)
 
 ## Overview
 
@@ -52,6 +52,35 @@ Organizes and defines the immutable parts of a Skill (or parts that change behav
 | `preference` | Preference setting | "User prefers JSON format" |
 | `strategy` | Strategy guideline | "Retry three times on error" |
 
+### Directive Provenance (Optional)
+
+Skills/Tools may come from diverse sources where the original intent cannot be fully verified. To preserve the original spirit, a `Directive` can optionally include `provenance` in two tiers:
+
+- `basic`: minimal traceability + verbatim excerpt
+- `full`: adds location + extraction/translation metadata (backend can encode based on this)
+
+**Basic**
+
+```json
+"provenance": {
+  "level": "basic",
+  "source": { "kind": "mcp_tool", "ref": "example-tool" },
+  "original_text": "Prefer concise output"
+}
+```
+
+**Full**
+
+```json
+"provenance": {
+  "level": "full",
+  "source": { "kind": "claude_skill", "ref": "converted-skills/docx/SKILL.md", "version": "v1" },
+  "original_text": "Keep changes minimal",
+  "location": { "locator": "SKILL.md#L120" },
+  "extraction": { "method": "llm", "inferred": true, "confidence": 0.7 }
+}
+```
+
 ### ID Format
 
 | Element | Pattern | Example |
@@ -66,7 +95,7 @@ Organizes and defines the immutable parts of a Skill (or parts that change behav
 skill-0/
 ├── README.md                              # Documentation
 ├── schema/
-│   └── skill-decomposition.schema.json   # JSON Schema v2.0
+│   └── skill-decomposition.schema.json   # JSON Schema v2.1
 ├── parsed/                                # Parsed skill examples (32 skills)
 ├── analysis/                              # Analysis reports
 ├── tools/                                 # Analysis tools

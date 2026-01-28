@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "Meeting Insights Analyzer",
     "description": "Analyzes meeting transcripts and recordings to uncover behavioral patterns, communication insights, and actionable feedback. Identifies conflict avoidance, filler words, conversation dominance, and listening opportunities",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T05:45:00Z",
-    "parser_version": "skill-0 v2.0",
+    "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
   },
   "original_definition": {
@@ -23,8 +23,13 @@
         "name": "Discover Transcript Files",
         "action_type": "io_read",
         "description": "Scan folder for transcript files (.txt, .md, .vtt, .srt, .docx)",
-        "immutable_elements": ["file type filters"],
-        "mutable_elements": ["folder path", "date range"],
+        "immutable_elements": [
+          "file type filters"
+        ],
+        "mutable_elements": [
+          "folder path",
+          "date range"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -33,8 +38,12 @@
         "name": "Identify User in Transcripts",
         "action_type": "transform",
         "description": "Find user's name/identifier in speaker labels",
-        "immutable_elements": ["speaker detection"],
-        "mutable_elements": ["user identifier"],
+        "immutable_elements": [
+          "speaker detection"
+        ],
+        "mutable_elements": [
+          "user identifier"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -43,8 +52,13 @@
         "name": "Analyze Conflict Avoidance",
         "action_type": "llm_inference",
         "description": "Detect hedging language, indirect phrasing, subject changes, non-committal agreement",
-        "immutable_elements": ["avoidance patterns"],
-        "mutable_elements": ["transcript text", "examples found"],
+        "immutable_elements": [
+          "avoidance patterns"
+        ],
+        "mutable_elements": [
+          "transcript text",
+          "examples found"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -53,8 +67,13 @@
         "name": "Calculate Speaking Ratios",
         "action_type": "compute",
         "description": "Calculate percentage speaking, interruptions, turn lengths, question vs statement ratio",
-        "immutable_elements": ["calculation formulas"],
-        "mutable_elements": ["transcript data", "statistics"],
+        "immutable_elements": [
+          "calculation formulas"
+        ],
+        "mutable_elements": [
+          "transcript data",
+          "statistics"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -63,8 +82,13 @@
         "name": "Count Filler Words",
         "action_type": "transform",
         "description": "Count um, uh, like, you know, actually and frequency per minute",
-        "immutable_elements": ["filler word list"],
-        "mutable_elements": ["counts", "contexts"],
+        "immutable_elements": [
+          "filler word list"
+        ],
+        "mutable_elements": [
+          "counts",
+          "contexts"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -73,8 +97,12 @@
         "name": "Evaluate Active Listening",
         "action_type": "llm_inference",
         "description": "Find references to others' points, paraphrasing, building on ideas, clarifying questions",
-        "immutable_elements": ["listening indicators"],
-        "mutable_elements": ["examples found"],
+        "immutable_elements": [
+          "listening indicators"
+        ],
+        "mutable_elements": [
+          "examples found"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -83,8 +111,13 @@
         "name": "Generate Insights Report",
         "action_type": "llm_inference",
         "description": "Create comprehensive report with patterns, examples, and recommendations",
-        "immutable_elements": ["report structure"],
-        "mutable_elements": ["findings", "recommendations"],
+        "immutable_elements": [
+          "report structure"
+        ],
+        "mutable_elements": [
+          "findings",
+          "recommendations"
+        ],
         "deterministic": false,
         "side_effects": []
       }
@@ -105,7 +138,9 @@
         "condition_expression": "Transcripts contain speaker labels",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["limited analysis without speaker attribution"]
+        "branching_targets": [
+          "limited analysis without speaker attribution"
+        ]
       }
     ],
     "directives": [
@@ -116,7 +151,11 @@
         "description": "Full behavioral analysis with patterns and recommendations",
         "decomposable": true,
         "decomposition_hint": "r_001 → a_001 → a_002 → a_003 → a_004 → a_005 → a_006 → a_007",
-        "related_elements": ["a_001", "a_003", "a_007"]
+        "related_elements": [
+          "a_001",
+          "a_003",
+          "a_007"
+        ]
       },
       {
         "id": "d_002",
@@ -124,7 +163,9 @@
         "directive_type": "knowledge",
         "description": "Pattern name, finding, frequency, examples with meeting/timestamp, what happened, why it matters, better approach",
         "decomposable": false,
-        "related_elements": ["a_007"]
+        "related_elements": [
+          "a_007"
+        ]
       },
       {
         "id": "d_003",
@@ -132,20 +173,39 @@
         "directive_type": "knowledge",
         "description": "Hedging (maybe, kind of), indirect phrasing, subject changes, yeah but..., not addressing problems",
         "decomposable": false,
-        "related_elements": ["a_003"]
+        "related_elements": [
+          "a_003"
+        ]
       }
     ]
   },
   "execution_paths": [
     {
       "path_id": 1,
-      "sequence": ["r_001", "a_001", "r_002", "a_002", "a_003", "a_004", "a_005", "a_006", "a_007"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "r_002",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006",
+        "a_007"
+      ],
       "condition": "User requests meeting analysis",
       "expected_outcome": "Comprehensive behavioral insights report"
     },
     {
       "path_id": 2,
-      "sequence": ["r_001", "a_001", "r_002", "a_002", "a_003", "a_007"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "r_002",
+        "a_002",
+        "a_003",
+        "a_007"
+      ],
       "condition": "User asks specifically about conflict avoidance",
       "expected_outcome": "Focused conflict avoidance analysis"
     }

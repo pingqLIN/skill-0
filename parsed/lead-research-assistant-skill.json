@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "Lead Research Assistant",
     "description": "Identifies high-quality leads for your product or service by analyzing your business, searching for target companies, and providing actionable contact strategies",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T05:45:00Z",
-    "parser_version": "skill-0 v2.0",
+    "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
   },
   "original_definition": {
@@ -23,8 +23,14 @@
         "name": "Understand Product/Service",
         "action_type": "llm_inference",
         "description": "Analyze codebase or user input to understand value proposition and problems solved",
-        "immutable_elements": ["analysis framework"],
-        "mutable_elements": ["product description", "features", "benefits"],
+        "immutable_elements": [
+          "analysis framework"
+        ],
+        "mutable_elements": [
+          "product description",
+          "features",
+          "benefits"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -33,8 +39,12 @@
         "name": "Define Ideal Customer Profile",
         "action_type": "llm_inference",
         "description": "Determine target industries, company size, geography, pain points, technology requirements",
-        "immutable_elements": ["ICP framework"],
-        "mutable_elements": ["criteria values"],
+        "immutable_elements": [
+          "ICP framework"
+        ],
+        "mutable_elements": [
+          "criteria values"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -43,8 +53,13 @@
         "name": "Search for Companies",
         "action_type": "external_call",
         "description": "Find companies matching ICP criteria via web search and databases",
-        "immutable_elements": ["search APIs"],
-        "mutable_elements": ["search criteria", "filters"],
+        "immutable_elements": [
+          "search APIs"
+        ],
+        "mutable_elements": [
+          "search criteria",
+          "filters"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -53,8 +68,13 @@
         "name": "Score and Prioritize Leads",
         "action_type": "llm_inference",
         "description": "Create fit score (1-10) based on ICP alignment, need signals, budget indicators",
-        "immutable_elements": ["scoring criteria"],
-        "mutable_elements": ["company data", "scores"],
+        "immutable_elements": [
+          "scoring criteria"
+        ],
+        "mutable_elements": [
+          "company data",
+          "scores"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -63,8 +83,14 @@
         "name": "Generate Contact Strategy",
         "action_type": "llm_inference",
         "description": "Create personalized outreach approach for each lead",
-        "immutable_elements": ["strategy template"],
-        "mutable_elements": ["company context", "value proposition", "conversation starters"],
+        "immutable_elements": [
+          "strategy template"
+        ],
+        "mutable_elements": [
+          "company context",
+          "value proposition",
+          "conversation starters"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -73,8 +99,12 @@
         "name": "Format Lead Report",
         "action_type": "transform",
         "description": "Create structured output with company details, fit scores, and strategies",
-        "immutable_elements": ["report structure"],
-        "mutable_elements": ["lead data"],
+        "immutable_elements": [
+          "report structure"
+        ],
+        "mutable_elements": [
+          "lead data"
+        ],
         "deterministic": true,
         "side_effects": []
       }
@@ -87,7 +117,9 @@
         "condition_expression": "Product/service description or codebase available",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["ask for product details"]
+        "branching_targets": [
+          "ask for product details"
+        ]
       }
     ],
     "directives": [
@@ -98,7 +130,11 @@
         "description": "Prioritized lead list with contact strategies",
         "decomposable": true,
         "decomposition_hint": "r_001 → a_001 → a_002 → a_003 → a_004 → a_005 → a_006",
-        "related_elements": ["a_003", "a_004", "a_006"]
+        "related_elements": [
+          "a_003",
+          "a_004",
+          "a_006"
+        ]
       },
       {
         "id": "d_002",
@@ -106,7 +142,9 @@
         "directive_type": "knowledge",
         "description": "Company name, website, priority score, why good fit, target decision maker, LinkedIn URL, value proposition, outreach strategy, conversation starters",
         "decomposable": false,
-        "related_elements": ["a_006"]
+        "related_elements": [
+          "a_006"
+        ]
       },
       {
         "id": "d_003",
@@ -114,20 +152,37 @@
         "directive_type": "knowledge",
         "description": "ICP alignment, immediate need signals, budget availability, competitive landscape, timing indicators",
         "decomposable": false,
-        "related_elements": ["a_004"]
+        "related_elements": [
+          "a_004"
+        ]
       }
     ]
   },
   "execution_paths": [
     {
       "path_id": 1,
-      "sequence": ["r_001", "a_001", "a_002", "a_003", "a_004", "a_005", "a_006"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006"
+      ],
       "condition": "User requests lead research",
       "expected_outcome": "Prioritized lead list with outreach strategies"
     },
     {
       "path_id": 2,
-      "sequence": ["a_001", "a_002", "a_003", "a_004", "a_005", "a_006"],
+      "sequence": [
+        "a_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006"
+      ],
       "condition": "Running from product codebase",
       "expected_outcome": "Leads based on codebase analysis"
     }

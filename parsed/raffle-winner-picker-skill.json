@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "Raffle Winner Picker",
     "description": "Picks random winners from lists, spreadsheets, or Google Sheets for giveaways, raffles, and contests. Ensures fair, unbiased selection with transparency.",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T05:50:00Z",
-    "parser_version": "skill-0 v2.0",
+    "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
   },
   "original_definition": {
@@ -23,8 +23,13 @@
         "name": "Identify Data Source",
         "action_type": "llm_inference",
         "description": "Determine if input is Google Sheet URL, local file (CSV/Excel), or inline list",
-        "immutable_elements": ["source type detection rules"],
-        "mutable_elements": ["user input", "identified source type"],
+        "immutable_elements": [
+          "source type detection rules"
+        ],
+        "mutable_elements": [
+          "user input",
+          "identified source type"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -33,18 +38,30 @@
         "name": "Access Google Sheet",
         "action_type": "external_call",
         "description": "Connect to and read data from Google Sheet URL",
-        "immutable_elements": ["Google Sheets API"],
-        "mutable_elements": ["sheet URL", "raw data"],
+        "immutable_elements": [
+          "Google Sheets API"
+        ],
+        "mutable_elements": [
+          "sheet URL",
+          "raw data"
+        ],
         "deterministic": true,
-        "side_effects": ["external API call"]
+        "side_effects": [
+          "external API call"
+        ]
       },
       {
         "id": "a_003",
         "name": "Read Local File",
         "action_type": "io_read",
         "description": "Parse CSV, Excel, or other spreadsheet formats from local file",
-        "immutable_elements": ["file parsing libraries"],
-        "mutable_elements": ["file path", "parsed data"],
+        "immutable_elements": [
+          "file parsing libraries"
+        ],
+        "mutable_elements": [
+          "file path",
+          "parsed data"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -53,8 +70,13 @@
         "name": "Parse Inline List",
         "action_type": "transform",
         "description": "Extract entries from user-provided inline list",
-        "immutable_elements": ["list parsing rules"],
-        "mutable_elements": ["inline text", "parsed entries"],
+        "immutable_elements": [
+          "list parsing rules"
+        ],
+        "mutable_elements": [
+          "inline text",
+          "parsed entries"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -63,8 +85,14 @@
         "name": "Apply Exclusions",
         "action_type": "transform",
         "description": "Remove excluded entries (previous winners, ineligible participants)",
-        "immutable_elements": ["exclusion logic"],
-        "mutable_elements": ["entry list", "exclusion list", "filtered entries"],
+        "immutable_elements": [
+          "exclusion logic"
+        ],
+        "mutable_elements": [
+          "entry list",
+          "exclusion list",
+          "filtered entries"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -73,8 +101,14 @@
         "name": "Apply Weighting",
         "action_type": "compute",
         "description": "Calculate weighted probabilities if entries have multiple tickets/weights",
-        "immutable_elements": ["weighting algorithm"],
-        "mutable_elements": ["entries", "weight column", "weighted pool"],
+        "immutable_elements": [
+          "weighting algorithm"
+        ],
+        "mutable_elements": [
+          "entries",
+          "weight column",
+          "weighted pool"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -83,8 +117,14 @@
         "name": "Perform Random Selection",
         "action_type": "compute",
         "description": "Use cryptographically secure random number generation to select winner(s)",
-        "immutable_elements": ["CSPRNG algorithm"],
-        "mutable_elements": ["entry pool", "winner count", "selected winners"],
+        "immutable_elements": [
+          "CSPRNG algorithm"
+        ],
+        "mutable_elements": [
+          "entry pool",
+          "winner count",
+          "selected winners"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -93,18 +133,30 @@
         "name": "Record Selection Metadata",
         "action_type": "state_change",
         "description": "Capture timestamp, selection method, and seed for verification",
-        "immutable_elements": ["metadata schema"],
-        "mutable_elements": ["selection event", "recorded metadata"],
+        "immutable_elements": [
+          "metadata schema"
+        ],
+        "mutable_elements": [
+          "selection event",
+          "recorded metadata"
+        ],
         "deterministic": true,
-        "side_effects": ["internal state update"]
+        "side_effects": [
+          "internal state update"
+        ]
       },
       {
         "id": "a_009",
         "name": "Output Winner Details",
         "action_type": "io_write",
         "description": "Display winner information with row number, all relevant fields, and selection metadata",
-        "immutable_elements": ["output format template"],
-        "mutable_elements": ["winner data", "formatted output"],
+        "immutable_elements": [
+          "output format template"
+        ],
+        "mutable_elements": [
+          "winner data",
+          "formatted output"
+        ],
         "deterministic": true,
         "side_effects": []
       }
@@ -117,7 +169,9 @@
         "condition_expression": "User provided sheet URL, file, or list",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["ask for data source"]
+        "branching_targets": [
+          "ask for data source"
+        ]
       },
       {
         "id": "r_002",
@@ -135,7 +189,9 @@
         "condition_expression": "Requested winners <= total entries after exclusions",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["reduce winner count"]
+        "branching_targets": [
+          "reduce winner count"
+        ]
       },
       {
         "id": "r_004",
@@ -155,7 +211,10 @@
         "description": "Random winner(s) selected with full details and verification metadata",
         "decomposable": true,
         "decomposition_hint": "r_001 → a_001 → [a_002|a_003|a_004] → a_005 → a_006? → r_002 → r_003 → a_007 → r_004 → a_008 → a_009",
-        "related_elements": ["a_007", "a_009"]
+        "related_elements": [
+          "a_007",
+          "a_009"
+        ]
       },
       {
         "id": "d_002",
@@ -170,7 +229,9 @@
         "directive_type": "principle",
         "description": "Document process with timestamp and method for public verification",
         "decomposable": false,
-        "related_elements": ["a_008"]
+        "related_elements": [
+          "a_008"
+        ]
       },
       {
         "id": "d_004",
@@ -178,7 +239,9 @@
         "directive_type": "strategy",
         "description": "Always pick runner-ups in case winner is ineligible",
         "decomposable": false,
-        "related_elements": ["a_007"]
+        "related_elements": [
+          "a_007"
+        ]
       },
       {
         "id": "d_005",
@@ -192,25 +255,70 @@
   "execution_paths": [
     {
       "path_id": 1,
-      "sequence": ["r_001", "a_001", "a_002", "a_005", "r_002", "r_003", "a_007", "r_004", "a_008", "a_009"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_002",
+        "a_005",
+        "r_002",
+        "r_003",
+        "a_007",
+        "r_004",
+        "a_008",
+        "a_009"
+      ],
       "condition": "User provides Google Sheet URL",
       "expected_outcome": "Winner selected from Google Sheet"
     },
     {
       "path_id": 2,
-      "sequence": ["r_001", "a_001", "a_003", "a_005", "r_002", "r_003", "a_007", "r_004", "a_008", "a_009"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_003",
+        "a_005",
+        "r_002",
+        "r_003",
+        "a_007",
+        "r_004",
+        "a_008",
+        "a_009"
+      ],
       "condition": "User provides local CSV/Excel file",
       "expected_outcome": "Winner selected from local file"
     },
     {
       "path_id": 3,
-      "sequence": ["r_001", "a_001", "a_004", "a_005", "r_002", "r_003", "a_007", "r_004", "a_008", "a_009"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_004",
+        "a_005",
+        "r_002",
+        "r_003",
+        "a_007",
+        "r_004",
+        "a_008",
+        "a_009"
+      ],
       "condition": "User provides inline list",
       "expected_outcome": "Winner selected from inline list"
     },
     {
       "path_id": 4,
-      "sequence": ["r_001", "a_001", "a_002", "a_005", "a_006", "r_002", "r_003", "a_007", "r_004", "a_008", "a_009"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_002",
+        "a_005",
+        "a_006",
+        "r_002",
+        "r_003",
+        "a_007",
+        "r_004",
+        "a_008",
+        "a_009"
+      ],
       "condition": "User requests weighted selection",
       "expected_outcome": "Winner selected with weighted probability"
     }

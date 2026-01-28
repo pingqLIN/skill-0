@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "Domain Name Brainstormer",
     "description": "Generates creative domain name ideas for your project and checks availability across multiple TLDs (.com, .io, .dev, .ai, etc.). Saves hours of brainstorming and manual checking.",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T05:50:00Z",
-    "parser_version": "skill-0 v2.0",
+    "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
   },
   "original_definition": {
@@ -23,8 +23,14 @@
         "name": "Analyze Project Context",
         "action_type": "llm_inference",
         "description": "Understand what user is building, target audience, and key features",
-        "immutable_elements": ["analysis framework"],
-        "mutable_elements": ["project description", "target audience", "key features"],
+        "immutable_elements": [
+          "analysis framework"
+        ],
+        "mutable_elements": [
+          "project description",
+          "target audience",
+          "key features"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -33,8 +39,13 @@
         "name": "Extract Keywords",
         "action_type": "llm_inference",
         "description": "Identify relevant keywords, themes, and naming patterns from project context",
-        "immutable_elements": ["keyword extraction rules"],
-        "mutable_elements": ["project context", "extracted keywords"],
+        "immutable_elements": [
+          "keyword extraction rules"
+        ],
+        "mutable_elements": [
+          "project context",
+          "extracted keywords"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -43,8 +54,14 @@
         "name": "Generate Domain Candidates",
         "action_type": "llm_inference",
         "description": "Create creative, memorable domain name options using keywords and naming best practices",
-        "immutable_elements": ["naming guidelines", "TLD knowledge"],
-        "mutable_elements": ["keywords", "generated names"],
+        "immutable_elements": [
+          "naming guidelines",
+          "TLD knowledge"
+        ],
+        "mutable_elements": [
+          "keywords",
+          "generated names"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -53,18 +70,31 @@
         "name": "Check Domain Availability",
         "action_type": "external_call",
         "description": "Verify domain availability across multiple TLDs (.com, .io, .dev, .ai, .app, .co, .xyz)",
-        "immutable_elements": ["TLD list", "availability API"],
-        "mutable_elements": ["domain candidates", "availability status"],
+        "immutable_elements": [
+          "TLD list",
+          "availability API"
+        ],
+        "mutable_elements": [
+          "domain candidates",
+          "availability status"
+        ],
         "deterministic": true,
-        "side_effects": ["external API call"]
+        "side_effects": [
+          "external API call"
+        ]
       },
       {
         "id": "a_005",
         "name": "Categorize Results",
         "action_type": "transform",
         "description": "Organize domains into available (.com), alternative TLDs, and premium/taken categories",
-        "immutable_elements": ["categorization rules"],
-        "mutable_elements": ["availability results", "categorized list"],
+        "immutable_elements": [
+          "categorization rules"
+        ],
+        "mutable_elements": [
+          "availability results",
+          "categorized list"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -73,8 +103,13 @@
         "name": "Provide Branding Insights",
         "action_type": "llm_inference",
         "description": "Explain why certain names work well, including memorability, brandability, and pronunciation",
-        "immutable_elements": ["branding principles"],
-        "mutable_elements": ["domain names", "branding explanations"],
+        "immutable_elements": [
+          "branding principles"
+        ],
+        "mutable_elements": [
+          "domain names",
+          "branding explanations"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -83,8 +118,13 @@
         "name": "Rank and Recommend",
         "action_type": "llm_inference",
         "description": "Provide top pick and runner-up recommendations with reasoning",
-        "immutable_elements": ["ranking criteria"],
-        "mutable_elements": ["available domains", "recommendations"],
+        "immutable_elements": [
+          "ranking criteria"
+        ],
+        "mutable_elements": [
+          "available domains",
+          "recommendations"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -93,8 +133,13 @@
         "name": "Output Formatted Results",
         "action_type": "io_write",
         "description": "Present results with emojis, categorization, pricing context, and next steps",
-        "immutable_elements": ["output format template"],
-        "mutable_elements": ["recommendations", "formatted output"],
+        "immutable_elements": [
+          "output format template"
+        ],
+        "mutable_elements": [
+          "recommendations",
+          "formatted output"
+        ],
         "deterministic": true,
         "side_effects": []
       }
@@ -107,7 +152,9 @@
         "condition_expression": "User provided project/business description",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["ask for project description"]
+        "branching_targets": [
+          "ask for project description"
+        ]
       },
       {
         "id": "r_002",
@@ -136,7 +183,11 @@
         "description": "Creative domain options with availability status and recommendations",
         "decomposable": true,
         "decomposition_hint": "r_001 → a_001 → a_002 → a_003 → a_004 → a_005 → a_006 → a_007 → a_008",
-        "related_elements": ["a_003", "a_004", "a_007"]
+        "related_elements": [
+          "a_003",
+          "a_004",
+          "a_007"
+        ]
       },
       {
         "id": "d_002",
@@ -172,20 +223,36 @@
         "directive_type": "strategy",
         "description": "Recommend registering multiple TLD variations to protect brand",
         "decomposable": false,
-        "related_elements": ["a_007"]
+        "related_elements": [
+          "a_007"
+        ]
       }
     ]
   },
   "execution_paths": [
     {
       "path_id": 1,
-      "sequence": ["r_001", "a_001", "a_002", "a_003", "a_004", "a_005", "a_006", "a_007", "a_008"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006",
+        "a_007",
+        "a_008"
+      ],
       "condition": "User provides project description",
       "expected_outcome": "Categorized domain suggestions with availability and recommendations"
     },
     {
       "path_id": 2,
-      "sequence": ["a_004", "a_005", "a_008"],
+      "sequence": [
+        "a_004",
+        "a_005",
+        "a_008"
+      ],
       "condition": "User provides specific domain names to check",
       "expected_outcome": "Availability status for specified domains"
     }

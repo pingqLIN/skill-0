@@ -6,9 +6,9 @@
     "skill_layer": "claude_skill",
     "title": "Content Research Writer",
     "description": "Assists in writing high-quality content by conducting research, adding citations, improving hooks, iterating on outlines, and providing real-time feedback on each section",
-    "schema_version": "2.0.0",
+    "schema_version": "2.1.0",
     "parse_timestamp": "2026-01-26T05:45:00Z",
-    "parser_version": "skill-0 v2.0",
+    "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
   },
   "original_definition": {
@@ -23,8 +23,12 @@
         "name": "Understand Writing Project",
         "action_type": "await_input",
         "description": "Gather topic, audience, length, format, goal, and style preferences",
-        "immutable_elements": ["clarification questions"],
-        "mutable_elements": ["user responses"],
+        "immutable_elements": [
+          "clarification questions"
+        ],
+        "mutable_elements": [
+          "user responses"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -33,8 +37,13 @@
         "name": "Create Collaborative Outline",
         "action_type": "llm_inference",
         "description": "Structure content into hook, intro, main sections, conclusion, with research needs marked",
-        "immutable_elements": ["outline structure"],
-        "mutable_elements": ["section content", "research to-dos"],
+        "immutable_elements": [
+          "outline structure"
+        ],
+        "mutable_elements": [
+          "section content",
+          "research to-dos"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -43,8 +52,13 @@
         "name": "Conduct Research",
         "action_type": "external_call",
         "description": "Search for relevant information and credible sources",
-        "immutable_elements": ["search APIs"],
-        "mutable_elements": ["search queries", "source selection"],
+        "immutable_elements": [
+          "search APIs"
+        ],
+        "mutable_elements": [
+          "search queries",
+          "source selection"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -53,8 +67,13 @@
         "name": "Improve Hook",
         "action_type": "llm_inference",
         "description": "Analyze and strengthen opening with alternative options",
-        "immutable_elements": ["hook analysis framework"],
-        "mutable_elements": ["original hook", "alternatives"],
+        "immutable_elements": [
+          "hook analysis framework"
+        ],
+        "mutable_elements": [
+          "original hook",
+          "alternatives"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -63,8 +82,13 @@
         "name": "Provide Section Feedback",
         "action_type": "llm_inference",
         "description": "Review section for clarity, flow, evidence, style with specific suggestions",
-        "immutable_elements": ["feedback structure"],
-        "mutable_elements": ["section content", "feedback points"],
+        "immutable_elements": [
+          "feedback structure"
+        ],
+        "mutable_elements": [
+          "section content",
+          "feedback points"
+        ],
         "deterministic": false,
         "side_effects": []
       },
@@ -73,8 +97,13 @@
         "name": "Manage Citations",
         "action_type": "transform",
         "description": "Add and format references in requested citation style",
-        "immutable_elements": ["citation formats"],
-        "mutable_elements": ["sources", "format selection"],
+        "immutable_elements": [
+          "citation formats"
+        ],
+        "mutable_elements": [
+          "sources",
+          "format selection"
+        ],
         "deterministic": true,
         "side_effects": []
       },
@@ -83,8 +112,13 @@
         "name": "Final Review and Polish",
         "action_type": "llm_inference",
         "description": "Comprehensive review for structure, flow, content quality, readability",
-        "immutable_elements": ["review checklist"],
-        "mutable_elements": ["full draft", "polish suggestions"],
+        "immutable_elements": [
+          "review checklist"
+        ],
+        "mutable_elements": [
+          "full draft",
+          "polish suggestions"
+        ],
         "deterministic": false,
         "side_effects": []
       }
@@ -97,7 +131,9 @@
         "condition_expression": "Topic and main argument are defined",
         "returns": "boolean",
         "fail_action": "branch",
-        "branching_targets": ["ask clarifying questions"]
+        "branching_targets": [
+          "ask clarifying questions"
+        ]
       }
     ],
     "directives": [
@@ -108,7 +144,11 @@
         "description": "Full draft with research, citations, and polish",
         "decomposable": true,
         "decomposition_hint": "a_001 → a_002 → a_003 → a_004 → a_005 (iterative) → a_006 → a_007",
-        "related_elements": ["a_002", "a_005", "a_007"]
+        "related_elements": [
+          "a_002",
+          "a_005",
+          "a_007"
+        ]
       },
       {
         "id": "d_002",
@@ -116,7 +156,9 @@
         "directive_type": "principle",
         "description": "Suggest don't replace, match tone, respect choices, enhance don't override",
         "decomposable": false,
-        "related_elements": ["a_005"]
+        "related_elements": [
+          "a_005"
+        ]
       },
       {
         "id": "d_003",
@@ -124,7 +166,9 @@
         "directive_type": "knowledge",
         "description": "What Works Well, Suggestions (Clarity, Flow, Evidence, Style), Specific Line Edits, Questions to Consider",
         "decomposable": false,
-        "related_elements": ["a_005"]
+        "related_elements": [
+          "a_005"
+        ]
       },
       {
         "id": "d_004",
@@ -132,26 +176,41 @@
         "directive_type": "knowledge",
         "description": "Inline (Author, Year), Numbered [1], Footnote ^1",
         "decomposable": false,
-        "related_elements": ["a_006"]
+        "related_elements": [
+          "a_006"
+        ]
       }
     ]
   },
   "execution_paths": [
     {
       "path_id": 1,
-      "sequence": ["r_001", "a_001", "a_002", "a_003", "a_004", "a_005", "a_006", "a_007"],
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006",
+        "a_007"
+      ],
       "condition": "Full writing workflow",
       "expected_outcome": "Polished, well-researched content with citations"
     },
     {
       "path_id": 2,
-      "sequence": ["a_004"],
+      "sequence": [
+        "a_004"
+      ],
       "condition": "User just wants hook improvement",
       "expected_outcome": "Multiple hook alternatives with analysis"
     },
     {
       "path_id": 3,
-      "sequence": ["a_005"],
+      "sequence": [
+        "a_005"
+      ],
       "condition": "User submits section for feedback",
       "expected_outcome": "Detailed section feedback with line edits"
     }
