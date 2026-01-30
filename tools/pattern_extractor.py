@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Skill-0 模式提取工具
-從多個 skills 中歸納共通模式，建立模式庫
+Skill-0 Pattern Extraction Tool
+Extracts common patterns from multiple skills and builds a pattern library
 """
 
 import json
@@ -15,7 +15,7 @@ from datetime import datetime
 
 @dataclass
 class Pattern:
-    """歸納出的模式"""
+    """Extracted pattern"""
     id: str
     name: str
     description: str
@@ -27,7 +27,7 @@ class Pattern:
 
 
 class PatternExtractor:
-    """模式提取器"""
+    """Pattern extractor"""
     
     def __init__(self, parsed_dir: str):
         self.parsed_dir = Path(parsed_dir)
@@ -35,7 +35,7 @@ class PatternExtractor:
         self.patterns: List[Pattern] = []
         
     def load_skills(self) -> int:
-        """載入所有已解析的 skills"""
+        """Load all parsed skills"""
         self.skills = []
         
         for json_file in self.parsed_dir.glob("*.json"):
@@ -45,31 +45,31 @@ class PatternExtractor:
                     skill_data['_source_file'] = json_file.stem
                     self.skills.append(skill_data)
             except Exception as e:
-                print(f"⚠️ 載入失敗 {json_file.name}: {e}")
+                print(f"⚠️ Failed to load {json_file.name}: {e}")
                 
         return len(self.skills)
     
     def extract_all_patterns(self) -> List[Pattern]:
-        """提取所有類型的模式"""
+        """Extract all pattern types"""
         self.patterns = []
         
-        # 1. 提取動作類型模式
+        # 1. Extract action type patterns
         self._extract_action_type_patterns()
         
-        # 2. 提取 directive 類型模式
+        # 2. Extract directive type patterns
         self._extract_directive_patterns()
         
-        # 3. 提取結構模式 (action-rule 組合)
+        # 3. Extract structure patterns (action-rule combinations)
         self._extract_structure_patterns()
         
-        # 4. 提取描述文字模式 (關鍵字)
+        # 4. Extract description text patterns (keywords)
         self._extract_keyword_patterns()
         
         return self.patterns
     
     def _extract_action_type_patterns(self):
-        """提取常見的 action 類型組合"""
-        # 收集每個 skill 的 action_type 集合
+        """Extract common action type combinations"""
+        # Collect action_type sets for each skill
         skill_action_sets: Dict[str, Set[str]] = {}
         
         for skill in self.skills:
@@ -77,11 +77,11 @@ class PatternExtractor:
             skill_id = meta.get('skill_id', skill.get('skill_id', skill.get('_source_file')))
             action_types = set()
             
-            # 支援 v2.0 schema 結構
+            # Support v2.0 schema structure
             decomposition = skill.get('decomposition', {})
             actions = decomposition.get('actions', [])
             
-            # 也支援舊的 elements 格式
+            # Also support legacy elements format
             if not actions:
                 actions = [e for e in skill.get('elements', []) if e.get('type') == 'action']
             
@@ -91,11 +91,11 @@ class PatternExtractor:
             if action_types:
                 skill_action_sets[skill_id] = action_types
         
-        # 找出共通的 action 組合
+        # Find common action combinations
         if len(skill_action_sets) < 2:
             return
             
-        # 計算每對 action_type 的共現頻率
+        # Calculate co-occurrence frequency for each action_type pair
         cooccurrence = Counter()
         for skill_id, actions in skill_action_sets.items():
             action_list = sorted(actions)
@@ -103,9 +103,9 @@ class PatternExtractor:
                 for a2 in action_list[i+1:]:
                     cooccurrence[(a1, a2)] += 1
         
-        # 建立模式
+        # Build patterns
         for (a1, a2), count in cooccurrence.most_common(10):
-            if count >= 2:  # 至少出現在 2 個 skills
+            if count >= 2:  # Appears in at least 2 skills
                 found_skills = [
                     sid for sid, actions in skill_action_sets.items()
                     if a1 in actions and a2 in actions
@@ -113,8 +113,8 @@ class PatternExtractor:
                 
                 pattern = Pattern(
                     id=f"pat_act_{a1}_{a2}",
-                    name=f"{a1} + {a2} 組合",
-                    description=f"同時包含 {a1} 和 {a2} 類型的動作",
+                    name=f"{a1} + {a2} combination",
+                    description=f"Contains both {a1} and {a2} action types",
                     pattern_type="action_combination",
                     structure={"action_types": [a1, a2]},
                     found_in=found_skills,
@@ -123,18 +123,18 @@ class PatternExtractor:
                 self.patterns.append(pattern)
     
     def _extract_directive_patterns(self):
-        """提取 directive 使用模式"""
+        """Extract directive usage patterns"""
         directive_by_type = defaultdict(list)
         
         for skill in self.skills:
             meta = skill.get('meta', {})
             skill_id = meta.get('skill_id', skill.get('skill_id', skill.get('_source_file')))
             
-            # 支援 v2.0 schema 結構
+            # Support v2.0 schema structure
             decomposition = skill.get('decomposition', {})
             directives = decomposition.get('directives', [])
             
-            # 也支援舊的 elements 格式
+            # Also support legacy elements format
             if not directives:
                 directives = [e for e in skill.get('elements', []) if e.get('type') == 'directive']
             
@@ -145,13 +145,13 @@ class PatternExtractor:
                     'description': elem.get('description', '')[:100]
                 })
         
-        # 為每種常見的 directive 類型建立模式
+        # Create patterns for each common directive type
         for dtype, items in directive_by_type.items():
             if len(items) >= 1:
                 pattern = Pattern(
                     id=f"pat_dir_{dtype}",
                     name=f"Directive: {dtype}",
-                    description=f"使用 {dtype} 類型的 directive",
+                    description=f"Uses {dtype} type directive",
                     pattern_type="directive_usage",
                     structure={"directive_type": dtype},
                     found_in=list(set(item['skill'] for item in items)),
@@ -161,15 +161,15 @@ class PatternExtractor:
                 self.patterns.append(pattern)
     
     def _extract_structure_patterns(self):
-        """提取結構模式 (元素組合)"""
-        # 分析每個 skill 的元素比例
+        """Extract structure patterns (element combinations)"""
+        # Analyze element ratios for each skill
         structures = []
         
         for skill in self.skills:
             meta = skill.get('meta', {})
             skill_id = meta.get('skill_id', skill.get('skill_id', skill.get('_source_file')))
             
-            # 支援 v2.0 schema 結構
+            # Support v2.0 schema structure
             decomposition = skill.get('decomposition', {})
             elements = (
                 decomposition.get('actions', []) + 
@@ -177,11 +177,11 @@ class PatternExtractor:
                 decomposition.get('directives', [])
             )
             
-            # 也支援舊的 elements 格式
+            # Also support legacy elements format
             if not elements:
                 elements = skill.get('elements', [])
             
-            # 為元素添加 type 標記 (v2.0 格式中需要根據來源判斷)
+            # Add type tags to elements (v2.0 format requires type determination from source)
             counts = Counter()
             for e in decomposition.get('actions', []):
                 counts['action'] += 1
@@ -190,7 +190,7 @@ class PatternExtractor:
             for e in decomposition.get('directives', []):
                 counts['directive'] += 1
             
-            # 舊格式
+            # Legacy format
             if not counts:
                 counts = Counter(e.get('type') for e in elements)
             
@@ -206,7 +206,7 @@ class PatternExtractor:
                 }
                 structures.append(structure)
         
-        # 識別結構類型
+        # Identify structure types
         action_heavy = [s for s in structures if s['action_ratio'] > 0.6]
         rule_heavy = [s for s in structures if s['rule_ratio'] > 0.4]
         balanced = [s for s in structures if 0.2 <= s['action_ratio'] <= 0.5 
@@ -215,8 +215,8 @@ class PatternExtractor:
         if action_heavy:
             self.patterns.append(Pattern(
                 id="pat_struct_action_heavy",
-                name="動作導向結構",
-                description="以 action 為主的 skill，動作佔比超過 60%",
+                name="Action-oriented structure",
+                description="Action-dominant skill with actions exceeding 60%",
                 pattern_type="structure",
                 structure={"dominant": "action", "ratio_threshold": 0.6},
                 found_in=[s['skill'] for s in action_heavy],
@@ -226,8 +226,8 @@ class PatternExtractor:
         if rule_heavy:
             self.patterns.append(Pattern(
                 id="pat_struct_rule_heavy",
-                name="規則導向結構",
-                description="以 rule 為主的 skill，規則佔比超過 40%",
+                name="Rule-oriented structure",
+                description="Rule-dominant skill with rules exceeding 40%",
                 pattern_type="structure",
                 structure={"dominant": "rule", "ratio_threshold": 0.4},
                 found_in=[s['skill'] for s in rule_heavy],
@@ -237,8 +237,8 @@ class PatternExtractor:
         if balanced:
             self.patterns.append(Pattern(
                 id="pat_struct_balanced",
-                name="平衡結構",
-                description="action 和 rule 比例平衡的 skill",
+                name="Balanced structure",
+                description="Skill with balanced action and rule ratios",
                 pattern_type="structure",
                 structure={"type": "balanced"},
                 found_in=[s['skill'] for s in balanced],
@@ -246,13 +246,13 @@ class PatternExtractor:
             ))
     
     def _extract_keyword_patterns(self):
-        """從描述文字提取關鍵字模式"""
-        # 常見動作關鍵字
+        """Extract keyword patterns from description text"""
+        # Common action keywords
         action_keywords = [
-            ('file_operation', ['讀取', '寫入', '建立', '刪除', 'read', 'write', 'create', 'delete']),
-            ('validation', ['驗證', '檢查', '確認', 'validate', 'check', 'verify']),
-            ('transformation', ['轉換', '處理', '解析', 'convert', 'transform', 'parse']),
-            ('output', ['輸出', '產生', '顯示', 'output', 'generate', 'display']),
+            ('file_operation', ['read', 'write', 'create', 'delete', 'load', 'save']),
+            ('validation', ['validate', 'check', 'verify', 'confirm', 'test']),
+            ('transformation', ['convert', 'transform', 'parse', 'process', 'format']),
+            ('output', ['output', 'generate', 'display', 'render', 'produce']),
         ]
         
         keyword_matches = defaultdict(list)
@@ -261,10 +261,10 @@ class PatternExtractor:
             meta = skill.get('meta', {})
             skill_id = meta.get('skill_id', skill.get('skill_id', skill.get('_source_file')))
             
-            # 收集所有描述文字
+            # Collect all description text
             all_text = ""
             
-            # 支援 v2.0 schema 結構
+            # Support v2.0 schema structure
             decomposition = skill.get('decomposition', {})
             for elem in decomposition.get('actions', []):
                 all_text += elem.get('description', '') + " "
@@ -273,27 +273,27 @@ class PatternExtractor:
             for elem in decomposition.get('directives', []):
                 all_text += elem.get('description', '') + " "
             
-            # 也支援舊的 elements 格式
+            # Also support legacy elements format
             for elem in skill.get('elements', []):
                 all_text += elem.get('description', '') + " "
             
             all_text = all_text.lower()
             
-            # 檢查關鍵字
+            # Check keywords
             for category, keywords in action_keywords:
                 for kw in keywords:
                     if kw.lower() in all_text:
                         keyword_matches[category].append(skill_id)
                         break
         
-        # 建立關鍵字模式
+        # Build keyword patterns
         for category, skills in keyword_matches.items():
             unique_skills = list(set(skills))
             if unique_skills:
                 self.patterns.append(Pattern(
                     id=f"pat_kw_{category}",
-                    name=f"關鍵字模式: {category}",
-                    description=f"包含 {category} 相關操作的 skill",
+                    name=f"Keyword pattern: {category}",
+                    description=f"Skills containing {category}-related operations",
                     pattern_type="keyword",
                     structure={"category": category},
                     found_in=unique_skills,
@@ -301,7 +301,7 @@ class PatternExtractor:
                 ))
     
     def save_patterns(self, output_path: str):
-        """儲存模式庫"""
+        """Save pattern library"""
         patterns_dict = {
             "version": "1.0",
             "generated_at": datetime.now().isoformat(),
@@ -322,7 +322,7 @@ class PatternExtractor:
                 "examples": p.examples[:3] if p.examples else []
             })
         
-        # 依頻率排序
+        # Sort by frequency
         patterns_dict["patterns"].sort(key=lambda x: -x["frequency"])
         
         output_path = Path(output_path)
@@ -332,30 +332,30 @@ class PatternExtractor:
             json.dump(patterns_dict, f, ensure_ascii=False, indent=2)
     
     def generate_report(self) -> str:
-        """產生模式報告"""
+        """Generate pattern report"""
         lines = [
             "=" * 60,
-            "🔍 Skill-0 模式提取報告",
+            "🔍 Skill-0 Pattern Extraction Report",
             "=" * 60,
-            f"分析 Skills 數量: {len(self.skills)}",
-            f"提取模式數量: {len(self.patterns)}",
+            f"Skills analyzed: {len(self.skills)}",
+            f"Patterns extracted: {len(self.patterns)}",
             "",
         ]
         
-        # 按類型分組
+        # Group by type
         by_type = defaultdict(list)
         for p in self.patterns:
             by_type[p.pattern_type].append(p)
         
         for ptype, patterns in by_type.items():
-            lines.append(f"📁 {ptype.upper()} 模式 ({len(patterns)} 個)")
+            lines.append(f"📁 {ptype.upper()} patterns ({len(patterns)} total)")
             lines.append("-" * 40)
             
             for p in sorted(patterns, key=lambda x: -x.frequency):
                 freq_pct = f"{p.frequency * 100:.0f}%"
                 lines.append(f"  [{p.id}] {p.name}")
                 lines.append(f"    {p.description}")
-                lines.append(f"    出現頻率: {freq_pct}, 涵蓋: {', '.join(p.found_in[:3])}{'...' if len(p.found_in) > 3 else ''}")
+                lines.append(f"    Frequency: {freq_pct}, Found in: {', '.join(p.found_in[:3])}{'...' if len(p.found_in) > 3 else ''}")
                 lines.append("")
         
         lines.append("=" * 60)
@@ -363,29 +363,29 @@ class PatternExtractor:
 
 
 def main():
-    """主程式"""
+    """Main program"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='Skill-0 模式提取工具')
+    parser = argparse.ArgumentParser(description='Skill-0 Pattern Extraction Tool')
     parser.add_argument('--parsed-dir', '-p', default='parsed',
-                        help='已解析 skills 的目錄 (預設: parsed)')
+                        help='Directory of parsed skills (default: parsed)')
     parser.add_argument('--output', '-o', default='analysis/patterns.json',
-                        help='輸出模式庫路徑 (預設: analysis/patterns.json)')
+                        help='Output pattern library path (default: analysis/patterns.json)')
     
     args = parser.parse_args()
     
     extractor = PatternExtractor(args.parsed_dir)
     
-    print(f"📂 載入 skills 從: {args.parsed_dir}")
+    print(f"📂 Loading skills from: {args.parsed_dir}")
     count = extractor.load_skills()
-    print(f"✓ 載入 {count} 個 skills")
+    print(f"✓ Loaded {count} skills")
     
-    print("🔍 提取模式...")
+    print("🔍 Extracting patterns...")
     extractor.extract_all_patterns()
-    print(f"✓ 提取 {len(extractor.patterns)} 個模式")
+    print(f"✓ Extracted {len(extractor.patterns)} patterns")
     
     extractor.save_patterns(args.output)
-    print(f"✓ 模式庫已儲存: {args.output}")
+    print(f"✓ Pattern library saved: {args.output}")
     
     print("\n" + extractor.generate_report())
 
