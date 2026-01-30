@@ -1,7 +1,8 @@
 # Resource Dependency System
 
 **Schema Version:** 2.2.0  
-**Added:** 2026-01-30  
+**Project Version:** 2.4.0  
+**Feature Added:** 2026-01-30  
 **Status:** Production
 
 ## Overview
@@ -327,11 +328,15 @@ jsonschema.validate(instance=skill, schema=schema)
 
 ## Migration from v2.1
 
-Schema v2.2 is backward compatible with v2.1. To add resources to existing skills:
+Schema v2.2 is backward compatible with v2.1. The resource dependency feature is optional.
+
+To add resources to existing skills:
 
 1. Add `resources` array to `meta` section (optional)
 2. Add `resources` array to individual actions (optional)
 3. Update `schema_version` to "2.2.0"
+
+**Note**: Project version (v2.4.0) and schema version (v2.2.0) are different. Update your skill's `schema_version` field to "2.2.0" when using resource dependencies.
 
 Example migration:
 

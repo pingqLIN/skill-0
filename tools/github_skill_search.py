@@ -79,7 +79,16 @@ class GitHubSkillSearcher:
     def search(self) -> List[Dict[str, Any]]:
         """
         Search GitHub for skills using the GitHub MCP server.
-        This is a placeholder - actual implementation would use github-mcp-server.
+        
+        NOTE: This is a template/placeholder implementation. 
+        The actual search was performed manually using GitHub MCP server tools
+        in the development environment. This tool serves as:
+        1. A template for future automated searches
+        2. Documentation of search queries used
+        3. A starting point for integration with GitHub MCP server
+        
+        Returns:
+            Empty list (actual results documented in generated reports)
         """
         print(f"\n{'='*70}")
         print(f"🔍 Searching GitHub for Skills and MCP Projects")
@@ -101,13 +110,26 @@ class GitHubSkillSearcher:
         return self.results
 
     def check_license(self, license_key: str) -> bool:
-        """Check if license is compatible"""
+        """
+        Check if license is compatible.
+        
+        NOTE: This method is provided for future automated license checking.
+        Currently, license compatibility was verified manually during the
+        GitHub search process.
+        """
         if not license_key:
             return False
         return license_key.lower() in COMPATIBLE_LICENSES
 
     def generate_report(self, output_path: Path) -> None:
-        """Generate markdown report of findings"""
+        """
+        Generate markdown report of findings.
+        
+        NOTE: This generates a template report. The actual statistics and 
+        results were populated manually after performing searches using 
+        GitHub MCP server tools. See docs/github-skills-search-results.json
+        for the actual data collected.
+        """
         
         report_content = f"""# GitHub Skills Search Report
 

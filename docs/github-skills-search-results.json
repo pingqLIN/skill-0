@@ -516,11 +516,13 @@
   },
   "statistics": {
     "total_stars": 350000,
-    "average_stars": 4667,
+    "average_stars_all_repos": 4667,
+    "average_stars_top_30": 11667,
     "projects_over_10k_stars": 11,
     "projects_over_1k_stars": 15,
     "total_forks": 45000,
-    "active_projects_last_week": 28
+    "active_projects_last_week": 28,
+    "note": "Total stars and forks are approximate sums; averages calculated from discovered repositories"
   },
   "recommendations": {
     "schema_enhancements": {

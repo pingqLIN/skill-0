@@ -303,6 +303,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 ## Version
 
 - Schema Version: 2.2.0
+- Project Version: 2.4.0
 - Created: 2026-01-23
 - Updated: 2026-01-30
 - Author: pingqLIN
@@ -310,8 +311,8 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 ## Changelog
 
 ### v2.4.0 (2026-01-30) - GitHub Skills Discovery & Resource Dependencies
-- **New Feature**: Resource dependency definitions in schema v2.2.0
-  - Added `resource_dependency` type with 8 resource categories
+- **Schema Update**: v2.1.0 → v2.2.0
+  - Added `resource_dependency` definition type with 8 resource categories
   - Resources can be defined at meta (global) and action levels
   - Support for database, API, filesystem, GPU, memory, credentials, network, environment
   - Includes specification details, fallback strategies, and required flags

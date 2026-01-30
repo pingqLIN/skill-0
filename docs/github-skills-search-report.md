@@ -249,12 +249,13 @@ Current directive types (`knowledge`, `principle`) are well-suited:
 | Metric | Value |
 |--------|-------|
 | Total Repositories Found | 75+ |
-| Total Stars Combined | 350,000+ |
+| Total Stars Combined (approx.) | ~350,000 |
 | MCP Servers | 30+ |
 | Claude Skills | 25+ |
 | AI Frameworks | 14 |
 | Specialized Tools | 6 |
-| Average Stars per Project | 4,667 |
+| Average Stars (all repos) | ~4,667 |
+| Average Stars (top 30) | ~11,667 |
 | Projects with 10,000+ stars | 11 |
 | Projects with 1,000+ stars | 15 |
 
