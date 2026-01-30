@@ -1,6 +1,6 @@
 """
 Semantic Search - Semantic Search API
-Integrates Embedder and VectorStore to provide complete search functionality
+Integrates SkillEmbedder and VectorStore to provide complete search functionality
 """
 
 import json
