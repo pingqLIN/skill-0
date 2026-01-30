@@ -18,7 +18,7 @@ class SkillEmbedder:
         Initialize embedder
         
         Args:
-            model_name: sentence-transformers model name
+            model_name: sentence-transformers model name.
                        Default: all-MiniLM-L6-v2 (384 dimensions, fast and efficient)
         """
         self.model = SentenceTransformer(model_name)

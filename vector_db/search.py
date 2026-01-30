@@ -1,5 +1,5 @@
 """
-Semantic Search - Semantic Search API
+Semantic Search API
 Integrates SkillEmbedder and VectorStore to provide complete search functionality
 """
 
