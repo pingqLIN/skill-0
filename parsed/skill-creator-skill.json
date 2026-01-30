@@ -7,7 +7,7 @@
     "title": "Skill-Creator Skill",
     "description": "Guide for creating effective skills that extend Claude's capabilities.",
     "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-30T14:17:38.671269Z",
+    "parse_timestamp": "2026-01-30T14:21:34.267362Z",
     "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0-batch"
   },

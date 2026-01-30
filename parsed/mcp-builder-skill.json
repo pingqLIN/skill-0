@@ -7,7 +7,7 @@
     "title": "Mcp-Builder Skill",
     "description": "Guide for creating high-quality MCP servers that enable LLMs to interact with external services.",
     "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-30T14:17:38.670814Z",
+    "parse_timestamp": "2026-01-30T14:21:34.266929Z",
     "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0-batch"
   },
