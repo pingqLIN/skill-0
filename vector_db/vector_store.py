@@ -1,5 +1,5 @@
 """
-Vector Store - SQLite-vec 向量資料庫封裝
+Vector Store - SQLite-vec vector database wrapper
 """
 
 import sqlite3
@@ -16,15 +16,15 @@ except ImportError:
 
 
 class VectorStore:
-    """SQLite-vec 向量資料庫封裝"""
+    """SQLite-vec vector database wrapper"""
     
     def __init__(self, db_path: Union[str, Path] = 'skills.db', dimension: int = 384):
         """
-        初始化向量資料庫
+        Initialize vector database
         
         Args:
-            db_path: 資料庫檔案路徑
-            dimension: 向量維度 (預設 384 for all-MiniLM-L6-v2)
+            db_path: Database file path
+            dimension: Vector dimension (default 384 for all-MiniLM-L6-v2)
         """
         if not SQLITE_VEC_AVAILABLE:
             raise ImportError("sqlite-vec not installed. Run: pip install sqlite-vec")
@@ -35,7 +35,7 @@ class VectorStore:
         self._connect()
         
     def _connect(self):
-        """建立資料庫連線並載入 sqlite-vec 擴充"""
+        """Establish database connection and load sqlite-vec extension"""
         self.conn = sqlite3.connect(str(self.db_path))
         self.conn.enable_load_extension(True)
         sqlite_vec.load(self.conn)
@@ -44,8 +44,8 @@ class VectorStore:
         self._init_schema()
         
     def _init_schema(self):
-        """初始化資料庫 schema"""
-        # 技能元資料表
+        """Initialize database schema"""
+        # Skill metadata table
         self.conn.execute('''
             CREATE TABLE IF NOT EXISTS skills (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,13 +62,13 @@ class VectorStore:
             )
         ''')
         
-        # 向量索引表 (使用 vec0 虛擬表)
+        # Vector index table (using vec0 virtual table)
         self.conn.execute(f'''
             CREATE VIRTUAL TABLE IF NOT EXISTS skill_embeddings
             USING vec0(embedding FLOAT[{self.dimension}])
         ''')
         
-        # 建立索引
+        # Create indexes
         self.conn.execute('CREATE INDEX IF NOT EXISTS idx_skills_name ON skills(name)')
         self.conn.execute('CREATE INDEX IF NOT EXISTS idx_skills_category ON skills(category)')
         
@@ -76,20 +76,20 @@ class VectorStore:
         
     def insert_skill(self, skill: Dict, embedding: np.ndarray) -> int:
         """
-        插入單個 skill 及其向量
+        Insert a single skill with its vector
         
         Args:
-            skill: skill 字典 (v2.0 格式)
-            embedding: 向量 (numpy array)
+            skill: Skill dictionary (v2.0 format)
+            embedding: Vector (numpy array)
             
         Returns:
-            skill_id: 插入的 skill ID
+            skill_id: ID of inserted skill
         """
         filename = skill.get('_filename', 'unknown.json')
         meta = skill.get('meta', {})
         decomp = skill.get('decomposition', {})
         
-        # 檢查是否已存在
+        # Check if already exists
         existing = self.conn.execute(
             'SELECT id FROM skills WHERE filename = ?', (filename,)
         ).fetchone()
@@ -103,7 +103,7 @@ class VectorStore:
         directive_count = len(decomp.get('directives', []))
         
         if existing:
-            # 更新現有記錄
+            # Update existing record
             skill_id = existing['id']
             self.conn.execute('''
                 UPDATE skills SET
@@ -118,13 +118,13 @@ class VectorStore:
                 skill_id
             ))
             
-            # 更新向量
+            # Update vector
             self.conn.execute(
                 'UPDATE skill_embeddings SET embedding = ? WHERE rowid = ?',
                 (embedding, skill_id)
             )
         else:
-            # 插入新記錄
+            # Insert new record
             cursor = self.conn.execute('''
                 INSERT INTO skills (name, filename, description, category, version,
                                    action_count, rule_count, directive_count, raw_json)
@@ -136,7 +136,7 @@ class VectorStore:
             ))
             skill_id = cursor.lastrowid
             
-            # 插入向量 (rowid 必須與 skills.id 匹配)
+            # Insert vector (rowid must match skills.id)
             self.conn.execute(
                 'INSERT INTO skill_embeddings (rowid, embedding) VALUES (?, ?)',
                 (skill_id, embedding)
@@ -147,14 +147,14 @@ class VectorStore:
     
     def insert_skills_batch(self, skills: List[Dict], embeddings: List[np.ndarray]) -> List[int]:
         """
-        批次插入多個 skills
+        Batch insert multiple skills
         
         Args:
-            skills: skill 字典列表
-            embeddings: 向量列表
+            skills: List of skill dictionaries
+            embeddings: List of vectors
             
         Returns:
-            List[int]: 插入的 skill IDs
+            List[int]: List of inserted skill IDs
         """
         ids = []
         for skill, emb in zip(skills, embeddings):
@@ -164,16 +164,16 @@ class VectorStore:
     
     def search(self, query_embedding: np.ndarray, limit: int = 5) -> List[Dict]:
         """
-        向量相似度搜尋
+        Vector similarity search
         
         Args:
-            query_embedding: 查詢向量
-            limit: 返回結果數量
+            query_embedding: Query vector
+            limit: Number of results to return
             
         Returns:
-            List[Dict]: 相似 skills 列表 (含 distance 分數)
+            List[Dict]: List of similar skills (with distance scores)
         """
-        # sqlite-vec 需要使用 k=? 語法進行 KNN 查詢
+        # sqlite-vec requires k=? syntax for KNN queries
         results = self.conn.execute('''
             SELECT 
                 s.id, s.name, s.filename, s.description, s.category,
@@ -188,7 +188,7 @@ class VectorStore:
         return [dict(r) for r in results]
     
     def search_by_category(self, category: str, limit: int = 10) -> List[Dict]:
-        """按類別搜尋 skills"""
+        """Search skills by category"""
         results = self.conn.execute('''
             SELECT id, name, filename, description, category,
                    action_count, rule_count, directive_count
@@ -200,7 +200,7 @@ class VectorStore:
         return [dict(r) for r in results]
     
     def get_all_skills(self) -> List[Dict]:
-        """取得所有 skills 的基本資訊"""
+        """Get basic information of all skills"""
         results = self.conn.execute('''
             SELECT id, name, filename, description, category,
                    action_count, rule_count, directive_count
@@ -211,7 +211,7 @@ class VectorStore:
         return [dict(r) for r in results]
     
     def get_skill_by_id(self, skill_id: int, include_json: bool = False) -> Optional[Dict]:
-        """根據 ID 取得 skill"""
+        """Get skill by ID"""
         if include_json:
             result = self.conn.execute(
                 'SELECT * FROM skills WHERE id = ?', (skill_id,)
@@ -226,7 +226,7 @@ class VectorStore:
         return dict(result) if result else None
     
     def get_embedding(self, skill_id: int) -> Optional[np.ndarray]:
-        """取得 skill 的向量"""
+        """Get skill's vector"""
         result = self.conn.execute(
             'SELECT embedding FROM skill_embeddings WHERE rowid = ?',
             (skill_id,)
@@ -237,15 +237,15 @@ class VectorStore:
         return None
     
     def get_statistics(self) -> Dict:
-        """取得資料庫統計"""
+        """Get database statistics"""
         stats = {}
         
-        # 總數
+        # Total count
         stats['total_skills'] = self.conn.execute(
             'SELECT COUNT(*) FROM skills'
         ).fetchone()[0]
         
-        # 類別分布
+        # Category distribution
         categories = self.conn.execute('''
             SELECT category, COUNT(*) as count
             FROM skills
@@ -254,7 +254,7 @@ class VectorStore:
         ''').fetchall()
         stats['categories'] = {r['category'] or 'uncategorized': r['count'] for r in categories}
         
-        # 元素統計
+        # Element statistics
         totals = self.conn.execute('''
             SELECT 
                 SUM(action_count) as actions,
@@ -269,20 +269,20 @@ class VectorStore:
         return stats
     
     def delete_skill(self, skill_id: int) -> bool:
-        """刪除 skill"""
+        """Delete skill"""
         self.conn.execute('DELETE FROM skill_embeddings WHERE rowid = ?', (skill_id,))
         result = self.conn.execute('DELETE FROM skills WHERE id = ?', (skill_id,))
         self.conn.commit()
         return result.rowcount > 0
     
     def clear(self):
-        """清空資料庫"""
+        """Clear database"""
         self.conn.execute('DELETE FROM skill_embeddings')
         self.conn.execute('DELETE FROM skills')
         self.conn.commit()
         
     def close(self):
-        """關閉資料庫連線"""
+        """Close database connection"""
         if self.conn:
             self.conn.close()
             self.conn = None
@@ -295,7 +295,7 @@ class VectorStore:
 
 
 if __name__ == '__main__':
-    # 測試
+    # Test
     import tempfile
     
     with tempfile.NamedTemporaryFile(suffix='.db', delete=False) as f:
@@ -303,7 +303,7 @@ if __name__ == '__main__':
         
     store = VectorStore(db_path)
     
-    # 測試插入
+    # Test insert
     test_skill = {
         'name': 'Test Skill',
         'description': 'A test skill',
@@ -318,7 +318,7 @@ if __name__ == '__main__':
     skill_id = store.insert_skill(test_skill, test_embedding)
     print(f"Inserted skill with ID: {skill_id}")
     
-    # 測試統計
+    # Test statistics
     stats = store.get_statistics()
     print(f"Statistics: {stats}")
     

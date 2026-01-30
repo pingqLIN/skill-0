@@ -1,6 +1,6 @@
 """
 Skill-0 Vector Database Module
-Stage 2: 向量化索引與語義搜尋
+Stage 2: Vectorization, Indexing, and Semantic Search
 """
 
 from .vector_store import VectorStore

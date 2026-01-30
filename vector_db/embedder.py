@@ -1,6 +1,6 @@
 """
-Skill Embedder - 將 skill 定義轉換為向量嵌入
-使用 sentence-transformers 的 all-MiniLM-L6-v2 模型
+Skill Embedder - Converts skill definitions to vector embeddings
+Uses sentence-transformers' all-MiniLM-L6-v2 model
 """
 
 import json
@@ -11,24 +11,24 @@ import numpy as np
 
 
 class SkillEmbedder:
-    """將 skill JSON 轉換為語義向量"""
+    """Converts skill JSON to semantic vectors"""
     
     def __init__(self, model_name: str = 'all-MiniLM-L6-v2'):
         """
-        初始化 embedder
+        Initialize embedder
         
         Args:
-            model_name: sentence-transformers 模型名稱
-                       預設使用 all-MiniLM-L6-v2 (384 維, 快速且高效)
+            model_name: sentence-transformers model name
+                       Default: all-MiniLM-L6-v2 (384 dimensions, fast and efficient)
         """
         self.model = SentenceTransformer(model_name)
         self.dimension = self.model.get_sentence_embedding_dimension()
         
     def skill_to_text(self, skill: Dict) -> str:
         """
-        將 skill JSON 轉換為可嵌入的文本
+        Convert skill JSON to embeddable text
         
-        提取關鍵語義資訊:
+        Extracts key semantic information:
         - meta.name, meta.description, meta.title
         - decomposition.actions
         - decomposition.rules
@@ -36,7 +36,7 @@ class SkillEmbedder:
         """
         parts = []
         
-        # 從 meta 提取基本資訊
+        # Extract basic information from meta
         meta = skill.get('meta', {})
         if meta.get('title'):
             parts.append(f"Skill: {meta['title']}")
@@ -45,7 +45,7 @@ class SkillEmbedder:
         if meta.get('description'):
             parts.append(f"Description: {meta['description']}")
             
-        # 從 decomposition 提取元素
+        # Extract elements from decomposition
         decomp = skill.get('decomposition', {})
             
         # Actions
@@ -77,7 +77,7 @@ class SkillEmbedder:
             for directive in directives:
                 dir_type = directive.get('type', 'unknown')
                 dir_content = directive.get('content', directive.get('id', ''))
-                # 截斷過長的內容
+                # Truncate overly long content
                 if len(dir_content) > 200:
                     dir_content = dir_content[:200] + '...'
                 directive_texts.append(f"{dir_type}: {dir_content}")
@@ -88,10 +88,10 @@ class SkillEmbedder:
     
     def embed_skill(self, skill: Dict) -> np.ndarray:
         """
-        將單個 skill 轉換為向量
+        Convert a single skill to a vector
         
         Returns:
-            np.ndarray: 384 維向量 (float32)
+            np.ndarray: 384-dimensional vector (float32)
         """
         text = self.skill_to_text(skill)
         embedding = self.model.encode(text, convert_to_numpy=True)
@@ -99,14 +99,14 @@ class SkillEmbedder:
     
     def embed_skills(self, skills: List[Dict], show_progress: bool = True) -> List[np.ndarray]:
         """
-        批次嵌入多個 skills
+        Batch embed multiple skills
         
         Args:
-            skills: skill JSON 列表
-            show_progress: 是否顯示進度條
+            skills: List of skill JSONs
+            show_progress: Whether to display progress bar
             
         Returns:
-            List[np.ndarray]: 向量列表
+            List[np.ndarray]: List of vectors
         """
         texts = [self.skill_to_text(s) for s in skills]
         embeddings = self.model.encode(texts, convert_to_numpy=True, show_progress_bar=show_progress)
@@ -114,26 +114,26 @@ class SkillEmbedder:
     
     def embed_query(self, query: str) -> np.ndarray:
         """
-        將搜尋查詢轉換為向量
+        Convert search query to a vector
         
         Args:
-            query: 自然語言查詢
+            query: Natural language query
             
         Returns:
-            np.ndarray: 384 維向量
+            np.ndarray: 384-dimensional vector
         """
         embedding = self.model.encode(query, convert_to_numpy=True)
         return embedding.astype(np.float32)
     
     def load_skills_from_dir(self, parsed_dir: Union[str, Path]) -> List[Dict]:
         """
-        從目錄載入所有 skill JSON
+        Load all skill JSONs from directory
         
         Args:
-            parsed_dir: parsed/ 目錄路徑
+            parsed_dir: Path to parsed/ directory
             
         Returns:
-            List[Dict]: skill 字典列表 (含 _filename 欄位)
+            List[Dict]: List of skill dictionaries (with _filename field)
         """
         parsed_path = Path(parsed_dir)
         skills = []
@@ -148,11 +148,11 @@ class SkillEmbedder:
 
 
 if __name__ == '__main__':
-    # 測試
+    # Test
     embedder = SkillEmbedder()
     print(f"Model dimension: {embedder.dimension}")
     
-    # 測試查詢嵌入
+    # Test query embedding
     query = "PDF document processing and manipulation"
     vec = embedder.embed_query(query)
     print(f"Query vector shape: {vec.shape}")

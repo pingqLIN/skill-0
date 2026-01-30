@@ -1,6 +1,6 @@
 """
-Semantic Search - 語義搜尋 API
-整合 Embedder 和 VectorStore，提供完整的搜尋功能
+Semantic Search - Semantic Search API
+Integrates Embedder and VectorStore to provide complete search functionality
 """
 
 import json
@@ -13,7 +13,7 @@ from .vector_store import VectorStore
 
 
 class SemanticSearch:
-    """語義搜尋引擎"""
+    """Semantic search engine"""
     
     def __init__(
         self,
@@ -21,25 +21,25 @@ class SemanticSearch:
         model_name: str = 'all-MiniLM-L6-v2'
     ):
         """
-        初始化搜尋引擎
+        Initialize search engine
         
         Args:
-            db_path: 向量資料庫路徑
-            model_name: embedding 模型名稱
+            db_path: Vector database path
+            model_name: Embedding model name
         """
         self.embedder = SkillEmbedder(model_name)
         self.store = VectorStore(db_path, dimension=self.embedder.dimension)
         
     def index_skills(self, parsed_dir: Union[str, Path], show_progress: bool = True) -> int:
         """
-        索引 parsed 目錄中的所有 skills
+        Index all skills in the parsed directory
         
         Args:
-            parsed_dir: parsed/ 目錄路徑
-            show_progress: 是否顯示進度
+            parsed_dir: Path to parsed/ directory
+            show_progress: Whether to display progress
             
         Returns:
-            int: 索引的 skill 數量
+            int: Number of skills indexed
         """
         skills = self.embedder.load_skills_from_dir(parsed_dir)
         
@@ -58,38 +58,38 @@ class SemanticSearch:
     
     def search(self, query: str, limit: int = 5) -> List[Dict]:
         """
-        語義搜尋 skills
+        Semantic search for skills
         
         Args:
-            query: 自然語言查詢
-            limit: 返回結果數量
+            query: Natural language query
+            limit: Number of results to return
             
         Returns:
-            List[Dict]: 匹配的 skills (含相似度分數)
+            List[Dict]: Matched skills (with similarity scores)
         """
         query_embedding = self.embedder.embed_query(query)
         results = self.store.search(query_embedding, limit=limit)
         
-        # 轉換 distance 為 similarity (0-1)
+        # Convert distance to similarity (0-1)
         for r in results:
-            # sqlite-vec 使用 L2 距離，轉換為相似度
-            # 較小的距離 = 較高的相似度
+            # sqlite-vec uses L2 distance, convert to similarity
+            # Smaller distance = higher similarity
             r['similarity'] = 1.0 / (1.0 + r['distance'])
             
         return results
     
     def find_similar(self, skill_name: str, limit: int = 5) -> List[Dict]:
         """
-        找出與指定 skill 相似的其他 skills
+        Find other skills similar to the specified skill
         
         Args:
-            skill_name: skill 名稱
-            limit: 返回數量 (不含自身)
+            skill_name: Skill name
+            limit: Number of results to return (excluding self)
             
         Returns:
-            List[Dict]: 相似 skills
+            List[Dict]: Similar skills
         """
-        # 找到指定 skill
+        # Find specified skill
         all_skills = self.store.get_all_skills()
         target = None
         for s in all_skills:
@@ -100,18 +100,18 @@ class SemanticSearch:
         if not target:
             return []
             
-        # 取得向量
+        # Get vector
         embedding = self.store.get_embedding(target['id'])
         if embedding is None:
             return []
             
-        # 搜尋相似 (多取一個因為會包含自身)
+        # Search for similar (fetch one extra since self will be included)
         results = self.store.search(embedding, limit=limit + 1)
         
-        # 排除自身
+        # Exclude self
         results = [r for r in results if r['id'] != target['id']]
         
-        # 加入相似度
+        # Add similarity
         for r in results:
             r['similarity'] = 1.0 / (1.0 + r['distance'])
             
@@ -119,13 +119,13 @@ class SemanticSearch:
     
     def cluster_skills(self, n_clusters: int = 5) -> Dict[int, List[Dict]]:
         """
-        對 skills 進行聚類分析
+        Perform cluster analysis on skills
         
         Args:
-            n_clusters: 聚類數量
+            n_clusters: Number of clusters
             
         Returns:
-            Dict[int, List[Dict]]: 聚類結果
+            Dict[int, List[Dict]]: Clustering results
         """
         from sklearn.cluster import KMeans
         
@@ -133,7 +133,7 @@ class SemanticSearch:
         if len(all_skills) < n_clusters:
             n_clusters = len(all_skills)
             
-        # 收集所有向量
+        # Collect all vectors
         embeddings = []
         for s in all_skills:
             emb = self.store.get_embedding(s['id'])
@@ -144,11 +144,11 @@ class SemanticSearch:
                 
         embeddings = np.array(embeddings)
         
-        # K-Means 聚類
+        # K-Means clustering
         kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
         labels = kmeans.fit_predict(embeddings)
         
-        # 組織結果
+        # Organize results
         clusters = {}
         for skill, label in zip(all_skills, labels):
             label = int(label)
@@ -159,14 +159,14 @@ class SemanticSearch:
         return clusters
     
     def get_statistics(self) -> Dict:
-        """取得搜尋引擎統計"""
+        """Get search engine statistics"""
         stats = self.store.get_statistics()
         stats['embedding_dimension'] = self.embedder.dimension
         stats['model_name'] = 'all-MiniLM-L6-v2'
         return stats
     
     def close(self):
-        """關閉連線"""
+        """Close connections"""
         self.store.close()
         
     def __enter__(self):
@@ -177,7 +177,7 @@ class SemanticSearch:
 
 
 def main():
-    """CLI 入口"""
+    """CLI entry point"""
     import argparse
     import time
     
@@ -187,24 +187,24 @@ def main():
     
     subparsers = parser.add_subparsers(dest='command', help='Commands')
     
-    # index 子命令
+    # index subcommand
     index_parser = subparsers.add_parser('index', help='Index skills from parsed directory')
     
-    # search 子命令
+    # search subcommand
     search_parser = subparsers.add_parser('search', help='Search for skills')
     search_parser.add_argument('query', help='Search query')
     search_parser.add_argument('-n', '--limit', type=int, default=5, help='Number of results')
     
-    # similar 子命令
+    # similar subcommand
     similar_parser = subparsers.add_parser('similar', help='Find similar skills')
     similar_parser.add_argument('skill_name', help='Skill name to find similar')
     similar_parser.add_argument('-n', '--limit', type=int, default=5, help='Number of results')
     
-    # cluster 子命令
+    # cluster subcommand
     cluster_parser = subparsers.add_parser('cluster', help='Cluster skills')
     cluster_parser.add_argument('-n', '--clusters', type=int, default=5, help='Number of clusters')
     
-    # stats 子命令
+    # stats subcommand
     stats_parser = subparsers.add_parser('stats', help='Show statistics')
     
     args = parser.parse_args()
