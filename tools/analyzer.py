@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Skill-0 結構分析工具
-分析已解析的 skills，產生統計報告與模式識別
+Skill-0 Structure Analysis Tool
+Analyzes parsed skills and generates statistical reports with pattern recognition
 """
 
 import json
@@ -15,7 +15,7 @@ from datetime import datetime
 
 @dataclass
 class ElementStats:
-    """單一元素類型的統計"""
+    """Statistics for a single element type"""
     total_count: int = 0
     type_distribution: Dict[str, int] = field(default_factory=dict)
     common_patterns: List[str] = field(default_factory=list)
@@ -23,7 +23,7 @@ class ElementStats:
 
 @dataclass 
 class SkillSummary:
-    """單一 Skill 的摘要"""
+    """Summary of a single skill"""
     skill_id: str
     name: str
     source_file: str
@@ -37,24 +37,24 @@ class SkillSummary:
 
 @dataclass
 class AnalysisReport:
-    """完整分析報告"""
+    """Complete analysis report"""
     version: str = "1.0"
     generated_at: str = ""
     total_skills: int = 0
     skills: List[SkillSummary] = field(default_factory=list)
     
-    # 全域統計
+    # Global statistics
     action_stats: ElementStats = field(default_factory=ElementStats)
     rule_stats: ElementStats = field(default_factory=ElementStats)
     directive_stats: ElementStats = field(default_factory=ElementStats)
     
-    # 模式分析
+    # Pattern analysis
     common_action_sequences: List[Dict] = field(default_factory=list)
     common_rule_patterns: List[Dict] = field(default_factory=list)
 
 
 class SkillAnalyzer:
-    """Skill 結構分析器"""
+    """Skill structure analyzer"""
     
     def __init__(self, parsed_dir: str):
         self.parsed_dir = Path(parsed_dir)
@@ -62,7 +62,7 @@ class SkillAnalyzer:
         self.report = AnalysisReport()
         
     def load_skills(self) -> int:
-        """載入所有已解析的 skills"""
+        """Load all parsed skills"""
         self.skills = []
         
         for json_file in self.parsed_dir.glob("*.json"):
@@ -72,18 +72,18 @@ class SkillAnalyzer:
                     skill_data['_source_file'] = json_file.name
                     self.skills.append(skill_data)
             except Exception as e:
-                print(f"⚠️ 載入失敗 {json_file.name}: {e}")
+                print(f"⚠️ Failed to load {json_file.name}: {e}")
                 
         return len(self.skills)
     
     def analyze(self) -> AnalysisReport:
-        """執行完整分析"""
+        """Execute complete analysis"""
         self.report = AnalysisReport(
             generated_at=datetime.now().isoformat(),
             total_skills=len(self.skills)
         )
         
-        # 收集器
+        # Collectors
         all_action_types = Counter()
         all_directive_types = Counter()
         all_rule_conditions = []
@@ -93,17 +93,17 @@ class SkillAnalyzer:
             summary = self._analyze_skill(skill)
             self.report.skills.append(summary)
             
-            # 累計統計
+            # Accumulate statistics
             all_action_types.update(summary.action_types)
             all_directive_types.update(summary.directive_types)
             
-            # 提取執行序列
+            # Extract execution sequences
             if 'execution_flow' in skill:
                 seq = self._extract_sequence(skill['execution_flow'])
                 if seq:
                     action_sequences.append(seq)
         
-        # 彙整全域統計
+        # Aggregate global statistics
         self.report.action_stats = ElementStats(
             total_count=sum(s.action_count for s in self.report.skills),
             type_distribution=dict(all_action_types)
@@ -118,14 +118,14 @@ class SkillAnalyzer:
             type_distribution=dict(all_directive_types)
         )
         
-        # 分析常見模式
+        # Analyze common patterns
         self.report.common_action_sequences = self._find_common_sequences(action_sequences)
         
         return self.report
     
     def _analyze_skill(self, skill: Dict) -> SkillSummary:
-        """分析單一 skill"""
-        # 支援 v2.0 schema 結構 (decomposition.actions/rules/directives)
+        """Analyze a single skill"""
+        # Support v2.0 schema structure (decomposition.actions/rules/directives)
         decomposition = skill.get('decomposition', {})
         meta = skill.get('meta', {})
         
@@ -133,7 +133,7 @@ class SkillAnalyzer:
         rules = decomposition.get('rules', [])
         directives = decomposition.get('directives', [])
         
-        # 也支援舊的 elements 陣列格式
+        # Also support legacy elements array format
         if not actions and not rules and not directives:
             elements = skill.get('elements', [])
             actions = [e for e in elements if e.get('type') == 'action']
@@ -153,13 +153,13 @@ class SkillAnalyzer:
         )
     
     def _extract_sequence(self, flow: Dict) -> Optional[List[str]]:
-        """從執行流程提取動作序列"""
+        """Extract action sequence from execution flow"""
         sequence = []
         
         def traverse(node):
             if isinstance(node, dict):
                 if 'step' in node:
-                    # 提取 step 的元素類型
+                    # Extract element type from step
                     elem_id = node.get('element_ref', '')
                     if elem_id.startswith('a_'):
                         sequence.append('action')
@@ -168,7 +168,7 @@ class SkillAnalyzer:
                     elif elem_id.startswith('d_'):
                         sequence.append('directive')
                         
-                # 遞迴處理子節點
+                # Recursively process child nodes
                 for key in ['then', 'next', 'on_true', 'on_false', 'steps']:
                     if key in node:
                         traverse(node[key])
@@ -181,8 +181,8 @@ class SkillAnalyzer:
         return sequence if sequence else None
     
     def _find_common_sequences(self, sequences: List[List[str]]) -> List[Dict]:
-        """找出常見的動作序列模式"""
-        # 轉換為字串以便計數
+        """Find common action sequence patterns"""
+        # Convert to strings for counting
         seq_strings = ['->'.join(s) for s in sequences]
         counter = Counter(seq_strings)
         
@@ -193,62 +193,62 @@ class SkillAnalyzer:
         ]
     
     def generate_report_text(self) -> str:
-        """產生人類可讀的報告"""
+        """Generate human-readable report"""
         r = self.report
         lines = [
             "=" * 60,
-            "📊 Skill-0 結構分析報告",
+            "📊 Skill-0 Structure Analysis Report",
             "=" * 60,
-            f"產生時間: {r.generated_at}",
-            f"分析 Skills 數量: {r.total_skills}",
+            f"Generated at: {r.generated_at}",
+            f"Skills analyzed: {r.total_skills}",
             "",
-            "📈 元素統計",
+            "📈 Element Statistics",
             "-" * 40,
-            f"  Action 總數: {r.action_stats.total_count}",
-            f"  Rule 總數: {r.rule_stats.total_count}",
-            f"  Directive 總數: {r.directive_stats.total_count}",
+            f"  Total Actions: {r.action_stats.total_count}",
+            f"  Total Rules: {r.rule_stats.total_count}",
+            f"  Total Directives: {r.directive_stats.total_count}",
             "",
         ]
         
-        # Action 類型分布
+        # Action type distribution
         if r.action_stats.type_distribution:
-            lines.append("🎬 Action 類型分布:")
+            lines.append("🎬 Action Type Distribution:")
             for atype, count in sorted(r.action_stats.type_distribution.items(), 
                                        key=lambda x: -x[1]):
                 lines.append(f"  - {atype}: {count}")
             lines.append("")
         
-        # Directive 類型分布
+        # Directive type distribution
         if r.directive_stats.type_distribution:
-            lines.append("📌 Directive 類型分布:")
+            lines.append("📌 Directive Type Distribution:")
             for dtype, count in sorted(r.directive_stats.type_distribution.items(),
                                        key=lambda x: -x[1]):
                 lines.append(f"  - {dtype}: {count}")
             lines.append("")
         
-        # 各 Skill 摘要
-        lines.append("📋 各 Skill 摘要")
+        # Per-skill summary
+        lines.append("📋 Per-Skill Summary")
         lines.append("-" * 40)
         for s in r.skills:
             lines.append(f"  [{s.skill_id}] {s.name}")
             lines.append(f"    Actions: {s.action_count}, Rules: {s.rule_count}, Directives: {s.directive_count}")
-            lines.append(f"    有執行流程: {'✓' if s.has_flow else '✗'}")
+            lines.append(f"    Has execution flow: {'✓' if s.has_flow else '✗'}")
             lines.append("")
         
-        # 常見模式
+        # Common patterns
         if r.common_action_sequences:
-            lines.append("🔄 常見執行序列模式")
+            lines.append("🔄 Common Execution Sequence Patterns")
             lines.append("-" * 40)
             for p in r.common_action_sequences:
-                lines.append(f"  {p['pattern']} (出現 {p['count']} 次)")
+                lines.append(f"  {p['pattern']} (appears {p['count']} times)")
             lines.append("")
         
         lines.append("=" * 60)
         return "\n".join(lines)
     
     def save_report(self, output_path: str):
-        """儲存 JSON 報告"""
-        # 轉換 dataclass 為 dict
+        """Save JSON report"""
+        # Convert dataclass to dict
         report_dict = {
             "version": self.report.version,
             "generated_at": self.report.generated_at,
@@ -271,45 +271,45 @@ class SkillAnalyzer:
 
 
 def main():
-    """主程式"""
+    """Main program"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='Skill-0 結構分析工具')
+    parser = argparse.ArgumentParser(description='Skill-0 Structure Analysis Tool')
     parser.add_argument('--parsed-dir', '-p', default='parsed',
-                        help='已解析 skills 的目錄 (預設: parsed)')
+                        help='Directory of parsed skills (default: parsed)')
     parser.add_argument('--output', '-o', default='analysis/report.json',
-                        help='輸出報告路徑 (預設: analysis/report.json)')
+                        help='Output report path (default: analysis/report.json)')
     parser.add_argument('--text', '-t', action='store_true',
-                        help='同時輸出文字報告')
+                        help='Also output text report')
     
     args = parser.parse_args()
     
-    # 確保輸出目錄存在
+    # Ensure output directory exists
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     
-    # 執行分析
+    # Execute analysis
     analyzer = SkillAnalyzer(args.parsed_dir)
     
-    print(f"📂 載入 skills 從: {args.parsed_dir}")
+    print(f"📂 Loading skills from: {args.parsed_dir}")
     count = analyzer.load_skills()
-    print(f"✓ 載入 {count} 個 skills")
+    print(f"✓ Loaded {count} skills")
     
-    print("🔍 執行分析...")
+    print("🔍 Executing analysis...")
     analyzer.analyze()
     
-    # 輸出
+    # Output
     analyzer.save_report(args.output)
-    print(f"✓ JSON 報告已儲存: {args.output}")
+    print(f"✓ JSON report saved: {args.output}")
     
     if args.text:
         text_report = analyzer.generate_report_text()
         text_path = output_path.with_suffix('.txt')
         with open(text_path, 'w', encoding='utf-8') as f:
             f.write(text_report)
-        print(f"✓ 文字報告已儲存: {text_path}")
+        print(f"✓ Text report saved: {text_path}")
     
-    # 顯示摘要
+    # Display summary
     print("\n" + analyzer.generate_report_text())
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Skill-0 分析器覆蓋率與效能評估
+Skill-0 Analyzer Coverage and Performance Evaluation
 """
 
 import json
@@ -10,7 +10,7 @@ from datetime import datetime
 
 
 def evaluate_coverage():
-    """評估框架覆蓋率"""
+    """Evaluate framework coverage"""
     parsed_dir = Path("parsed")
     skills = list(parsed_dir.glob("*.json"))
     
@@ -22,7 +22,7 @@ def evaluate_coverage():
         "directive_type_coverage": {},
     }
     
-    # 定義預期的元素類型
+    # Define expected element types
     expected_action_types = {"io_read", "io_write", "transform", "external_call", "await_input"}
     expected_directive_types = {"completion", "knowledge", "principle", "constraint", "preference", "strategy"}
     
@@ -35,15 +35,15 @@ def evaluate_coverage():
         
         decomp = skill.get("decomposition", {})
         
-        # 收集 action 類型
+        # Collect action types
         for action in decomp.get("actions", []):
             found_action_types.add(action.get("action_type", "unknown"))
         
-        # 收集 directive 類型
+        # Collect directive types
         for directive in decomp.get("directives", []):
             found_directive_types.add(directive.get("directive_type", "unknown"))
     
-    # 計算覆蓋率
+    # Calculate coverage
     coverage_results["action_type_coverage"] = {
         "expected": list(expected_action_types),
         "found": list(found_action_types),
@@ -62,14 +62,14 @@ def evaluate_coverage():
 
 
 def evaluate_performance():
-    """評估分析效能"""
+    """Evaluate analysis performance"""
     import subprocess
     
     performance_results = {
         "tests": []
     }
     
-    # 測試 analyzer.py
+    # Test analyzer.py
     start_time = time.time()
     subprocess.run(["python", "tools/analyzer.py"], capture_output=True)
     analyzer_time = time.time() - start_time
@@ -80,7 +80,7 @@ def evaluate_performance():
         "status": "pass" if analyzer_time < 5 else "slow"
     })
     
-    # 測試 pattern_extractor.py
+    # Test pattern_extractor.py
     start_time = time.time()
     subprocess.run(["python", "tools/pattern_extractor.py"], capture_output=True)
     pattern_time = time.time() - start_time
@@ -91,7 +91,7 @@ def evaluate_performance():
         "status": "pass" if pattern_time < 5 else "slow"
     })
     
-    # 計算平均
+    # Calculate average
     total_time = analyzer_time + pattern_time
     performance_results["total_time_seconds"] = round(total_time, 3)
     performance_results["average_per_test"] = round(total_time / 2, 3)
@@ -100,10 +100,10 @@ def evaluate_performance():
 
 
 def evaluate_skill_types():
-    """評估不同類型 skill 的解析品質"""
+    """Evaluate parsing quality of different skill types"""
     parsed_dir = Path("parsed")
     
-    # 分類 skills
+    # Categorize skills
     skill_categories = {
         "document_processing": ["anthropic-pdf-skill.json", "docx-skill.json", "xlsx-skill.json", "pptx-skill.json"],
         "development_tools": ["mcp-builder-skill.json", "webapp-testing-skill.json", "skill-creator-skill.json"],
@@ -139,50 +139,50 @@ def evaluate_skill_types():
 
 
 def generate_report():
-    """產生完整評估報告"""
+    """Generate complete evaluation report"""
     print("=" * 60)
-    print("📊 Skill-0 分析器覆蓋率與效能評估報告")
+    print("📊 Skill-0 Analyzer Coverage and Performance Evaluation Report")
     print("=" * 60)
-    print(f"評估時間: {datetime.now().isoformat()}")
+    print(f"Evaluation time: {datetime.now().isoformat()}")
     print()
     
-    # 覆蓋率評估
-    print("📈 覆蓋率評估")
+    # Coverage evaluation
+    print("📈 Coverage Evaluation")
     print("-" * 40)
     coverage = evaluate_coverage()
     
-    print(f"分析 Skills 數量: {coverage['total_skills']}")
+    print(f"Skills analyzed: {coverage['total_skills']}")
     print()
     
     action_cov = coverage["action_type_coverage"]
-    print(f"Action 類型覆蓋率: {action_cov['coverage_rate']:.0%}")
-    print(f"  已涵蓋: {', '.join(action_cov['found'])}")
+    print(f"Action type coverage: {action_cov['coverage_rate']:.0%}")
+    print(f"  Covered: {', '.join(action_cov['found'])}")
     if action_cov["missing"]:
-        print(f"  未涵蓋: {', '.join(action_cov['missing'])}")
+        print(f"  Missing: {', '.join(action_cov['missing'])}")
     print()
     
     directive_cov = coverage["directive_type_coverage"]
-    print(f"Directive 類型覆蓋率: {directive_cov['coverage_rate']:.0%}")
-    print(f"  已涵蓋: {', '.join(directive_cov['found'])}")
+    print(f"Directive type coverage: {directive_cov['coverage_rate']:.0%}")
+    print(f"  Covered: {', '.join(directive_cov['found'])}")
     if directive_cov["missing"]:
-        print(f"  未涵蓋: {', '.join(directive_cov['missing'])}")
+        print(f"  Missing: {', '.join(directive_cov['missing'])}")
     print()
     
-    # 分類統計
-    print("📁 按類別統計")
+    # Category statistics
+    print("📁 Statistics by Category")
     print("-" * 40)
     category_stats = evaluate_skill_types()
     
     for category, stats in category_stats.items():
         print(f"\n{category.replace('_', ' ').title()}:")
         print(f"  Skills: {stats['skills']}")
-        print(f"  平均 Actions: {stats.get('avg_actions', 0)}")
-        print(f"  平均 Rules: {stats.get('avg_rules', 0)}")
-        print(f"  平均 Directives: {stats.get('avg_directives', 0)}")
+        print(f"  Avg Actions: {stats.get('avg_actions', 0)}")
+        print(f"  Avg Rules: {stats.get('avg_rules', 0)}")
+        print(f"  Avg Directives: {stats.get('avg_directives', 0)}")
     print()
     
-    # 效能評估
-    print("⚡ 效能評估")
+    # Performance evaluation
+    print("⚡ Performance Evaluation")
     print("-" * 40)
     performance = evaluate_performance()
     
@@ -190,34 +190,34 @@ def generate_report():
         status_icon = "✓" if test["status"] == "pass" else "⚠️"
         print(f"  {status_icon} {test['name']}: {test['duration_seconds']}s")
     
-    print(f"\n總執行時間: {performance['total_time_seconds']}s")
-    print(f"平均每個工具: {performance['average_per_test']}s")
+    print(f"\nTotal execution time: {performance['total_time_seconds']}s")
+    print(f"Average per tool: {performance['average_per_test']}s")
     print()
     
-    # 結論
-    print("📋 評估結論")
+    # Conclusion
+    print("📋 Evaluation Conclusion")
     print("-" * 40)
     
     overall_coverage = (action_cov['coverage_rate'] + directive_cov['coverage_rate']) / 2
     
     if overall_coverage >= 0.8:
-        print("✅ 覆蓋率優良 (≥80%)")
+        print("✅ Coverage is excellent (≥80%)")
     elif overall_coverage >= 0.6:
-        print("⚠️ 覆蓋率尚可 (60-80%)")
+        print("⚠️ Coverage is acceptable (60-80%)")
     else:
-        print("❌ 覆蓋率不足 (<60%)")
+        print("❌ Coverage is insufficient (<60%)")
     
     if performance['total_time_seconds'] < 2:
-        print("✅ 效能優良 (<2s)")
+        print("✅ Performance is excellent (<2s)")
     elif performance['total_time_seconds'] < 5:
-        print("⚠️ 效能尚可 (2-5s)")
+        print("⚠️ Performance is acceptable (2-5s)")
     else:
-        print("❌ 效能需優化 (>5s)")
+        print("❌ Performance needs optimization (>5s)")
     
     print()
     print("=" * 60)
     
-    # 儲存報告
+    # Save report
     report = {
         "generated_at": datetime.now().isoformat(),
         "coverage": coverage,
@@ -230,7 +230,7 @@ def generate_report():
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     
-    print(f"📄 報告已儲存: {output_path}")
+    print(f"📄 Report saved: {output_path}")
 
 
 if __name__ == "__main__":

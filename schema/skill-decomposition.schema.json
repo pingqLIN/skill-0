@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://skill-parser.pingqlin.dev/schema/v2.1/skill-decomposition.schema.json",
   "title": "Skill Decomposition Schema",
-  "description": "解析 Claude Skill 與 MCP Tool 內部成分結構的標準格式，採用三元分類法：Action / Rule / Directive",
+  "description": "Standard format for parsing internal component structure of Claude Skills and MCP Tools, using ternary classification: Action / Rule / Directive",
   "version": "2.1.0",
   "author": "pingqLIN",
   "created": "2026-01-23",
@@ -10,7 +10,7 @@
   "definitions": {
     "provenance_source": {
       "type": "object",
-      "description": "來源資訊（支援不同來源與品質的技能/工具輸入）",
+      "description": "Source information (supports skills/tools input from different sources and quality levels)",
       "required": [
         "kind",
         "ref"
@@ -27,54 +27,54 @@
             "web",
             "unknown"
           ],
-          "description": "來源類型"
+          "description": "Source type"
         },
         "ref": {
           "type": "string",
-          "description": "來源識別（例如：repo/path、tool 名稱、文件 id、URL 等）"
+          "description": "Source identifier (e.g., repo/path, tool name, document id, URL, etc.)"
         },
         "uri": {
           "type": "string",
-          "description": "可選：來源 URI/URL"
+          "description": "Optional: Source URI/URL"
         },
         "version": {
           "type": "string",
-          "description": "可選：來源版本/commit/tag"
+          "description": "Optional: Source version/commit/tag"
         },
         "author": {
           "type": "string",
-          "description": "可選：原始作者/維護者（若可得）"
+          "description": "Optional: Original author/maintainer (if available)"
         },
         "retrieved_at": {
           "type": "string",
           "format": "date-time",
-          "description": "可選：取得/匯入時間"
+          "description": "Optional: Retrieved/imported time"
         },
         "checksum": {
           "type": "string",
-          "description": "可選：內容雜湊（若有）"
+          "description": "Optional: Content checksum (if available)"
         },
         "meta": {
           "type": "object",
-          "description": "可選：其他來源中介資訊"
+          "description": "Optional: Other source metadata"
         }
       },
       "additionalProperties": true
     },
     "provenance_location": {
       "type": "object",
-      "description": "來源位置（可用最小 locator 或更細的結構化欄位）",
+      "description": "Source location (can use minimal locator or more detailed structured fields)",
       "required": [
         "locator"
       ],
       "properties": {
         "locator": {
           "type": "string",
-          "description": "最小定位字串，例如：SKILL.md#L120、docs/spec.md:3、json_pointer:/decomposition/directives/0"
+          "description": "Minimal locator string, e.g., SKILL.md#L120, docs/spec.md:3, json_pointer:/decomposition/directives/0"
         },
         "file": {
           "type": "string",
-          "description": "可選：檔案路徑"
+          "description": "Optional: File path"
         },
         "line_start": {
           "type": "integer",
@@ -86,22 +86,22 @@
         },
         "section": {
           "type": "string",
-          "description": "可選：章節/標題"
+          "description": "Optional: Section/heading"
         },
         "url": {
           "type": "string",
-          "description": "可選：URL（若來源為 web）"
+          "description": "Optional: URL (if source is web)"
         },
         "json_pointer": {
           "type": "string",
-          "description": "可選：JSON Pointer"
+          "description": "Optional: JSON Pointer"
         }
       },
       "additionalProperties": true
     },
     "provenance_extraction": {
       "type": "object",
-      "description": "提取/轉譯方式（保留原精神，同時允許後端進行編碼/編譯）",
+      "description": "Extraction/translation method (preserves original intent while allowing backend encoding/compilation)",
       "required": [
         "method"
       ],
@@ -115,45 +115,45 @@
             "imported",
             "unknown"
           ],
-          "description": "來源內容如何被取得/整理"
+          "description": "How source content was obtained/organized"
         },
         "extracted_at": {
           "type": "string",
           "format": "date-time",
-          "description": "可選：提取時間"
+          "description": "Optional: Extraction time"
         },
         "extracted_by": {
           "type": "string",
-          "description": "可選：提取者/系統"
+          "description": "Optional: Extractor/system"
         },
         "inferred": {
           "type": "boolean",
-          "description": "可選：是否包含推斷/補全（非原文逐字）"
+          "description": "Optional: Whether includes inference/completion (not verbatim from source)"
         },
         "confidence": {
           "type": "number",
           "minimum": 0,
           "maximum": 1,
-          "description": "可選：對轉譯/推斷的信心（0..1）"
+          "description": "Optional: Confidence in translation/inference (0..1)"
         },
         "model": {
           "type": "string",
-          "description": "可選：若為 LLM，使用的模型識別"
+          "description": "Optional: If LLM, the model identifier used"
         },
         "tool_version": {
           "type": "string",
-          "description": "可選：解析/轉譯工具版本"
+          "description": "Optional: Parser/translation tool version"
         },
         "notes": {
           "type": "string",
-          "description": "可選：補充說明"
+          "description": "Optional: Additional notes"
         }
       },
       "additionalProperties": true
     },
     "directive_provenance_basic": {
       "type": "object",
-      "description": "兩層級 provenance（basic）：可追溯 + 保留原句精神（最小填寫）",
+      "description": "Two-level provenance (basic): traceable + preserves original sentence intent (minimal fill)",
       "required": [
         "level",
         "source",
@@ -169,18 +169,18 @@
         },
         "original_text": {
           "type": "string",
-          "description": "來源原句/摘錄（建議逐字）"
+          "description": "Original sentence/excerpt from source (preferably verbatim)"
         },
         "note": {
           "type": "string",
-          "description": "可選：補充背景"
+          "description": "Optional: Additional context"
         }
       },
       "additionalProperties": false
     },
     "directive_provenance_full": {
       "type": "object",
-      "description": "兩層級 provenance（full）：提供位置 + 提取方法，供後端判斷與編碼",
+      "description": "Two-level provenance (full): provides location + extraction method for backend judgment and encoding",
       "required": [
         "level",
         "source",
@@ -198,7 +198,7 @@
         },
         "original_text": {
           "type": "string",
-          "description": "來源原句/摘錄（建議逐字）"
+          "description": "Original sentence/excerpt from source (preferably verbatim)"
         },
         "location": {
           "$ref": "#/definitions/provenance_location"
@@ -208,7 +208,7 @@
         },
         "evidence": {
           "type": "array",
-          "description": "可選：額外證據片段/參考",
+          "description": "Optional: Additional evidence fragments/references",
           "items": {
             "type": "object",
             "properties": {
@@ -230,7 +230,7 @@
       "additionalProperties": false
     },
     "directive_provenance": {
-      "description": "provenance 可依狀況填寫 basic/full；後端可依內容品質決定編碼/轉譯策略",
+      "description": "Provenance can be filled as basic/full depending on the situation; backend can determine encoding/translation strategy based on content quality",
       "oneOf": [
         {
           "$ref": "#/definitions/directive_provenance_basic"
@@ -242,7 +242,7 @@
     },
     "action": {
       "type": "object",
-      "description": "動作（Action）：原子操作，不可再分解。回答「做什麼」",
+      "description": "Action: Atomic operation, indivisible. Answers 'what to do'",
       "required": [
         "id",
         "name",
@@ -253,7 +253,7 @@
         "id": {
           "type": "string",
           "pattern": "^a_[0-9]{3}$",
-          "description": "動作識別碼，格式：a_001, a_002..."
+          "description": "Action identifier, format: a_001, a_002..."
         },
         "name": {
           "type": "string"
@@ -270,7 +270,7 @@
             "llm_inference",
             "await_input"
           ],
-          "description": "動作類型：transform=轉換, io_read=讀取, io_write=寫入, compute=計算, external_call=外部呼叫, state_change=狀態改變, llm_inference=LLM推論, await_input=等待輸入"
+          "description": "Action type: transform=transformation, io_read=read, io_write=write, compute=computation, external_call=external call, state_change=state change, llm_inference=LLM inference, await_input=await input"
         },
         "description": {
           "type": "string"
@@ -280,31 +280,31 @@
           "items": {
             "type": "string"
           },
-          "description": "不可變動元素，變動將導致功能語意改變"
+          "description": "Immutable elements, changing them will alter functional semantics"
         },
         "mutable_elements": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "可變動元素（輸入參數）"
+          "description": "Mutable elements (input parameters)"
         },
         "deterministic": {
           "type": "boolean",
-          "description": "相同輸入是否必然產生相同輸出"
+          "description": "Whether same input necessarily produces same output"
         },
         "side_effects": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "執行此動作產生的副作用"
+          "description": "Side effects produced by executing this action"
         }
       }
     },
     "rule": {
       "type": "object",
-      "description": "規則（Rule）：原子判斷，不可再分解。回答「怎麼判斷」",
+      "description": "Rule: Atomic judgment, indivisible. Answers 'how to judge'",
       "required": [
         "id",
         "name",
@@ -315,7 +315,7 @@
         "id": {
           "type": "string",
           "pattern": "^r_[0-9]{3}$",
-          "description": "規則識別碼，格式：r_001, r_002..."
+          "description": "Rule identifier, format: r_001, r_002..."
         },
         "name": {
           "type": "string"
@@ -332,11 +332,11 @@
             "consistency_check",
             "threshold_check"
           ],
-          "description": "條件類型：validation=驗證, existence_check=存在檢查, type_check=類型檢查, range_check=範圍檢查, permission_check=權限檢查, state_check=狀態檢查, consistency_check=一致性檢查, threshold_check=閾值檢查"
+          "description": "Condition type: validation=validation, existence_check=existence check, type_check=type check, range_check=range check, permission_check=permission check, state_check=state check, consistency_check=consistency check, threshold_check=threshold check"
         },
         "condition_expression": {
           "type": "string",
-          "description": "條件表達式（偽代碼或邏輯描述）"
+          "description": "Condition expression (pseudocode or logical description)"
         },
         "returns": {
           "type": "string",
@@ -346,7 +346,7 @@
             "enum_value",
             "score"
           ],
-          "description": "回傳類型：boolean=布林值, classification=分類, enum_value=列舉值, score=分數"
+          "description": "Return type: boolean=boolean, classification=classification, enum_value=enum value, score=score"
         },
         "fail_action": {
           "type": "string",
@@ -358,20 +358,20 @@
             "retry",
             "escalate"
           ],
-          "description": "判斷失敗時的動作"
+          "description": "Action when judgment fails"
         },
         "branching_targets": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "若 fail_action 為 branch，列出可能的分支目標"
+          "description": "If fail_action is branch, list possible branch targets"
         }
       }
     },
     "directive": {
       "type": "object",
-      "description": "指示（Directive）：描述性語句，可分解但在此層次選擇不分解。回答「描述什麼狀態/目標/原則」",
+      "description": "Directive: Descriptive statement, decomposable but chosen not to decompose at this level. Answers 'what state/goal/principle to describe'",
       "required": [
         "id",
         "name",
@@ -382,7 +382,7 @@
         "id": {
           "type": "string",
           "pattern": "^d_[0-9]{3}$",
-          "description": "指示識別碼，格式：d_001, d_002..."
+          "description": "Directive identifier, format: d_001, d_002..."
         },
         "name": {
           "type": "string"
@@ -397,37 +397,37 @@
             "preference",
             "strategy"
           ],
-          "description": "指示類型：completion=完成狀態, knowledge=領域知識, principle=指導原則, constraint=限制條件, preference=偏好設定, strategy=策略方針"
+          "description": "Directive type: completion=completion state, knowledge=domain knowledge, principle=guiding principle, constraint=constraint, preference=preference, strategy=strategy"
         },
         "description": {
           "type": "string",
-          "description": "描述性語句內容"
+          "description": "Descriptive statement content"
         },
         "decomposable": {
           "type": "boolean",
           "default": true,
-          "description": "此指示是否可進一步分解為 Action + Rule"
+          "description": "Whether this directive can be further decomposed into Action + Rule"
         },
         "decomposition_hint": {
           "type": "string",
-          "description": "若需深入解析，提供分解方向或參考"
+          "description": "If deep parsing is needed, provide decomposition direction or reference"
         },
         "related_elements": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "相關聯的其他元素 ID（Actions 或 Rules）"
+          "description": "Related element IDs (Actions or Rules)"
         },
         "provenance": {
-          "description": "可選：來源追溯與原句保存（兩層級）",
+          "description": "Optional: Source traceability and original sentence preservation (two-level)",
           "$ref": "#/definitions/directive_provenance"
         }
       }
     },
     "execution_path": {
       "type": "object",
-      "description": "執行路徑：描述元素的執行順序與條件",
+      "description": "Execution path: Describes execution order and conditions of elements",
       "required": [
         "path_id",
         "sequence",
@@ -442,18 +442,18 @@
           "items": {
             "type": "string"
           },
-          "description": "執行序列（元素 ID）"
+          "description": "Execution sequence (element IDs)"
         },
         "condition": {
           "type": "string",
-          "description": "觸發此路徑的條件"
+          "description": "Condition that triggers this path"
         },
         "expected_outcome": {
           "type": "string"
         },
         "probability": {
           "type": "string",
-          "description": "此路徑發生的預估機率（若可判斷）"
+          "description": "Estimated probability of this path occurring (if determinable)"
         },
         "_halt": {
           "type": "boolean"
@@ -494,7 +494,7 @@
             "mcp_tool",
             "mcp_server_internal"
           ],
-          "description": "技能所屬層級"
+          "description": "Skill layer"
         },
         "server": {
           "type": "string"
@@ -507,7 +507,7 @@
         },
         "schema_version": {
           "type": "string",
-          "description": "使用的 Schema 版本"
+          "description": "Schema version used"
         },
         "parse_timestamp": {
           "type": "string",
@@ -518,38 +518,38 @@
         },
         "parsed_by": {
           "type": "string",
-          "description": "執行解析的 skill_id"
+          "description": "skill_id that performed the parsing"
         }
       }
     },
     "original_definition": {
       "type": "object",
-      "description": "原始定義（MCP Tool 或 Claude Skill 描述）"
+      "description": "Original definition (MCP Tool or Claude Skill description)"
     },
     "decomposition": {
       "type": "object",
-      "description": "三元分類分解結果",
+      "description": "Ternary classification decomposition result",
       "properties": {
         "actions": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/action"
           },
-          "description": "動作列表：原子操作，不可再分解"
+          "description": "Action list: atomic operations, indivisible"
         },
         "rules": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/rule"
           },
-          "description": "規則列表：原子判斷，不可再分解"
+          "description": "Rule list: atomic judgments, indivisible"
         },
         "directives": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/directive"
           },
-          "description": "指示列表：描述性語句，解析邊界"
+          "description": "Directive list: descriptive statements, parsing boundary"
         }
       }
     },
@@ -558,11 +558,11 @@
       "items": {
         "$ref": "#/definitions/execution_path"
       },
-      "description": "執行路徑列表"
+      "description": "Execution path list"
     },
     "parser_meta": {
       "type": "object",
-      "description": "解析器元資料",
+      "description": "Parser metadata",
       "properties": {
         "paths_enumerated": {
           "type": "integer"
@@ -582,18 +582,18 @@
         },
         "decomposition_depth": {
           "type": "integer",
-          "description": "解析深度層級"
+          "description": "Parsing depth level"
         },
         "directives_expandable": {
           "type": "integer",
-          "description": "可進一步展開的 Directive 數量"
+          "description": "Number of directives that can be further expanded"
         },
         "requires_deep_parse": {
           "type": "boolean"
         },
         "deep_parse_trigger": {
           "type": "string",
-          "description": "觸發深度解析的原因"
+          "description": "Reason that triggered deep parsing"
         },
         "inconsistency_detected": {
           "type": "boolean"

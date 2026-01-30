@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-批次解析 Claude Skills 為 Skill-0 v2.1 格式
+Batch parse Claude Skills to Skill-0 v2.1 format
 """
 
 import json
 from datetime import datetime
 from pathlib import Path
 
-# 基本模板
+# Basic template
 def create_skill_template(skill_id, name, description, source):
     return {
         "$schema": "../schema/skill-decomposition.schema.json",
@@ -34,7 +34,7 @@ def create_skill_template(skill_id, name, description, source):
         }
     }
 
-# Skills 定義
+# Skills definition
 SKILLS = {
     "xlsx": {
         "name": "xlsx",
@@ -263,7 +263,7 @@ SKILLS = {
 
 
 def parse_skill(skill_key, skill_data):
-    """解析單一 skill 為 v2.0 格式"""
+    """Parse a single skill to v2.0 format"""
     template = create_skill_template(
         skill_id=skill_key.replace("-", "_"),
         name=skill_data["name"],
@@ -271,7 +271,7 @@ def parse_skill(skill_key, skill_data):
         source=skill_data["source"]
     )
     
-    # 添加 actions
+    # Add actions
     for action in skill_data.get("actions", []):
         template["decomposition"]["actions"].append({
             "id": action["id"],
@@ -282,7 +282,7 @@ def parse_skill(skill_key, skill_data):
             "side_effects": action.get("side_effects", [])
         })
     
-    # 添加 rules
+    # Add rules
     for rule in skill_data.get("rules", []):
         template["decomposition"]["rules"].append({
             "id": rule["id"],
@@ -291,7 +291,7 @@ def parse_skill(skill_key, skill_data):
             "output": rule.get("output", "proceed_or_halt")
         })
     
-    # 添加 directives
+    # Add directives
     for directive in skill_data.get("directives", []):
         template["decomposition"]["directives"].append({
             "id": directive["id"],
@@ -304,11 +304,11 @@ def parse_skill(skill_key, skill_data):
 
 
 def main():
-    """批次解析所有 skills"""
+    """Batch parse all skills"""
     output_dir = Path("parsed")
     output_dir.mkdir(exist_ok=True)
     
-    print(f"📦 開始批次解析 {len(SKILLS)} 個 skills...")
+    print(f"📦 Starting batch parse of {len(SKILLS)} skills...")
     
     for skill_key, skill_data in SKILLS.items():
         parsed = parse_skill(skill_key, skill_data)
@@ -323,7 +323,7 @@ def main():
         
         print(f"  ✓ {skill_key}: {action_count}A / {rule_count}R / {directive_count}D")
     
-    print(f"\n✅ 完成！已解析 {len(SKILLS)} 個 skills 至 {output_dir}/")
+    print(f"\n✅ Complete! Parsed {len(SKILLS)} skills to {output_dir}/")
 
 
 if __name__ == "__main__":
