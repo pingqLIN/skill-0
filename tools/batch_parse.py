@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-# 基本模板
+# Basic template
 def create_skill_template(skill_id, name, description, source):
     return {
         "$schema": "../schema/skill-decomposition.schema.json",
@@ -34,7 +34,7 @@ def create_skill_template(skill_id, name, description, source):
         }
     }
 
-# Skills 定義
+# Skills definition
 SKILLS = {
     "xlsx": {
         "name": "xlsx",
