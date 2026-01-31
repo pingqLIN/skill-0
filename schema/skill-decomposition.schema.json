@@ -3,10 +3,10 @@
   "$id": "https://skill-parser.pingqlin.dev/schema/v2.1/skill-decomposition.schema.json",
   "title": "Skill Decomposition Schema",
   "description": "解析 Claude Skill 與 MCP Tool 內部成分結構的標準格式，採用三元分類法：Action / Rule / Directive",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "author": "pingqLIN",
   "created": "2026-01-23",
-  "updated": "2026-01-27",
+  "updated": "2026-01-30",
   "definitions": {
     "provenance_source": {
       "type": "object",
@@ -240,6 +240,74 @@
         }
       ]
     },
+    "resource_dependency": {
+      "type": "object",
+      "description": "資源依賴定義：描述技能執行所需的外部資源",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "filesystem",
+            "database",
+            "api",
+            "network",
+            "gpu",
+            "memory",
+            "credentials",
+            "environment"
+          ],
+          "description": "資源類型：filesystem=檔案系統, database=資料庫, api=API服務, network=網路, gpu=GPU, memory=記憶體, credentials=憑證, environment=環境變數"
+        },
+        "name": {
+          "type": "string",
+          "description": "資源名稱或識別"
+        },
+        "required": {
+          "type": "boolean",
+          "default": true,
+          "description": "是否為必需資源"
+        },
+        "description": {
+          "type": "string",
+          "description": "資源描述與用途"
+        },
+        "specification": {
+          "type": "object",
+          "description": "資源規格詳細資訊",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "description": "提供者（例如：PostgreSQL, MongoDB, OpenAI）"
+            },
+            "version": {
+              "type": "string",
+              "description": "版本要求"
+            },
+            "endpoint": {
+              "type": "string",
+              "description": "端點或連接字串"
+            },
+            "permissions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "所需權限清單"
+            }
+          },
+          "additionalProperties": true
+        },
+        "fallback": {
+          "type": "string",
+          "description": "資源不可用時的備用方案"
+        }
+      },
+      "required": [
+        "type",
+        "name"
+      ],
+      "additionalProperties": true
+    },
     "action": {
       "type": "object",
       "description": "動作（Action）：原子操作，不可再分解。回答「做什麼」",
@@ -299,6 +367,13 @@
             "type": "string"
           },
           "description": "執行此動作產生的副作用"
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/resource_dependency"
+          },
+          "description": "執行此動作所需的資源依賴"
         }
       }
     },
@@ -519,6 +594,13 @@
         "parsed_by": {
           "type": "string",
           "description": "執行解析的 skill_id"
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/resource_dependency"
+          },
+          "description": "技能全域資源依賴清單"
         }
       }
     },
