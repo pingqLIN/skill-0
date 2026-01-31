@@ -13,7 +13,7 @@ addopts = [
 
 # Coverage settings (optional)
 [tool.coverage.run]
-source = ["scripts", "tools", "vector_db"]
+source = ["src/tools", "src/vector_db", "src/api"]
 omit = ["*/tests/*", "*/test_*.py"]
 
 [tool.coverage.report]

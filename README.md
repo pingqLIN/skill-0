@@ -1,5 +1,7 @@
 # Skill-0: Skill Decomposition Parser
 
+[中文版](README.zh-TW.md)
+
 > A ternary classification system for parsing the internal structure of Claude Skills and MCP Tools
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -95,19 +97,21 @@ Skills/Tools may come from diverse sources where the original intent cannot be f
 skill-0/
 ├── README.md                              # Documentation
 ├── schema/
-│   └── skill-decomposition.schema.json   # JSON Schema v2.1
-├── parsed/                                # Parsed skill examples (32 skills)
-├── analysis/                              # Analysis reports
-├── tools/                                 # Analysis tools
-│   ├── analyzer.py                       # Structure analyzer
-│   ├── pattern_extractor.py              # Pattern extractor
-│   ├── evaluate.py                       # Coverage evaluator
-│   └── batch_parse.py                    # Batch parser
-├── vector_db/                             # Vector database module
-│   ├── embedder.py                       # Embedding generator
-│   ├── vector_store.py                   # SQLite-vec storage
-│   └── search.py                         # Semantic search CLI
-├── skills.db                              # Vector database
+├── data/
+│   ├── parsed/                            # Parsed skill examples (32 skills)
+│   ├── analysis/                          # Analysis reports
+├── src/                                   # Source code
+│   ├── tools/                             # Analysis tools
+│   │   ├── analyzer.py                    # Structure analyzer
+│   │   ├── pattern_extractor.py           # Pattern extractor
+│   │   ├── evaluate.py                    # Coverage evaluator
+│   │   └── batch_parse.py                 # Batch parser
+│   ├── vector_db/                         # Vector database module
+│   │   ├── embedder.py                    # Embedding generator
+│   │   ├── vector_store.py                # SQLite-vec storage
+│   │   └── search.py                      # Semantic search CLI
+├── db/
+│   └── skills.db                          # Vector database
 └── docs/                                  # Documentation
 ```
 
@@ -122,7 +126,7 @@ cd skill-0
 pip install -r requirements.txt
 
 # Index skills (first time)
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+python -m src.vector_db.search --db db/skills.db --parsed-dir data/parsed index
 ```
 
 ## Testing
@@ -139,6 +143,7 @@ python3 -m pytest tests/test_helper.py::TestIntegrationWorkflows -v
 ```
 
 **Test Coverage**: 32 tests covering:
+
 - ✅ Schema validation (tool equivalence)
 - ✅ Format conversion (code equivalence)
 - ✅ Execution path testing
@@ -156,25 +161,25 @@ Skill-0 includes a powerful semantic search engine powered by `all-MiniLM-L6-v2`
 
 ```bash
 # Index all skills
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+python -m src.vector_db.search --db db/skills.db --parsed-dir data/parsed index
 
 # Search by natural language
-python -m vector_db.search --db skills.db search "PDF document processing"
+python -m src.vector_db.search --db db/skills.db search "PDF document processing"
 
 # Find similar skills
-python -m vector_db.search --db skills.db similar "Docx Skill"
+python -m src.vector_db.search --db db/skills.db similar "Docx Skill"
 
 # Cluster analysis (auto-grouping)
-python -m vector_db.search --db skills.db cluster -n 5
+python -m src.vector_db.search --db db/skills.db cluster -n 5
 
 # Show statistics
-python -m vector_db.search --db skills.db stats
+python -m src.vector_db.search --db db/skills.db stats
 ```
 
 ### Search Examples
 
 ```bash
-$ python -m vector_db.search search "creative design visual art"
+$ python -m src.vector_db.search search "creative design visual art"
 
 🔍 Searching for: creative design visual art
 --------------------------------------------------
@@ -190,10 +195,10 @@ Search completed in 72.6ms
 ### Python API
 
 ```python
-from vector_db import SemanticSearch
+from src.vector_db import SemanticSearch
 
 # Initialize search engine
-search = SemanticSearch(db_path='skills.db')
+search = SemanticSearch(db_path='db/skills.db')
 
 # Semantic search
 results = search.search("PDF processing", limit=5)
@@ -277,25 +282,25 @@ Comprehensive documentation is available:
 
 - **[CLAUDE.md](CLAUDE.md)** - Best practices for Claude AI integration and skill decomposition
 - **[SKILL.md](SKILL.md)** - Complete tool portal and workflow guide
-- **[reference.md](reference.md)** - Schema reference and format specifications
-- **[examples.md](examples.md)** - 7 detailed skill examples across different domains
+- **[reference.md](docs/guides/reference.md)** - Schema reference and format specifications
+- **[examples.md](docs/guides/examples.md)** - 7 detailed skill examples across different domains
 - **[AGENTS.md](AGENTS.md)** - Guidelines for AI agents working on this project
-- **[scripts/helper.py](scripts/helper.py)** - Helper utilities for validation, conversion, and testing
+- **[scripts/helper.py](src/tools/helper.py)** - Helper utilities for validation, conversion, and testing
 
 ### Quick Start Guide
 
 ```bash
 # Generate a new skill template
-python scripts/helper.py template -o my-skill.json
+python src/tools/helper.py template -o my-skill.json
 
 # Convert markdown to skill JSON
-python scripts/helper.py convert skill.md my-skill.json
+python src/tools/helper.py convert skill.md my-skill.json
 
 # Validate skill against schema
-python scripts/helper.py validate my-skill.json
+python src/tools/helper.py validate my-skill.json
 
 # Test execution paths
-python scripts/helper.py test my-skill.json --analyze
+python src/tools/helper.py test my-skill.json --analyze
 ```
 
 See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test results and examples.
@@ -310,6 +315,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 ## Changelog
 
 ### v2.3.0 (2026-01-28) - Testing & Quality Assurance
+
 - **New Feature**: Comprehensive automated test suite
   - 32 tests covering all helper utilities
   - Tool equivalence verification (validator consistency)
@@ -321,6 +327,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 - CI/CD ready test infrastructure
 
 ### v2.2.0 (2026-01-28) - Documentation & Tooling
+
 - **New Feature**: Comprehensive documentation suite
   - `CLAUDE.md` - Claude best practices guide
   - `SKILL.md` - Complete tool portal and workflow
@@ -337,6 +344,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 - Test results documentation in `docs/helper-test-results.md`
 
 ### v2.1.0 (2026-01-26) - Stage 2
+
 - **New Feature**: Semantic search with vector embeddings
   - `vector_db` module with SQLite-vec integration
   - `all-MiniLM-L6-v2` embedding model (384 dimensions)
@@ -346,6 +354,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 - Performance: 0.88s indexing, ~75ms search
 
 ### v2.0.0 (2026-01-26)
+
 - **Breaking Change**: Redefined ternary classification
   - `core_action` → `action` (ID: `ca_XXX` → `a_XXX`)
   - `mission` → `directive` (ID: `m_XXX` → `d_XXX`)
@@ -356,6 +365,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 - Added 19 new skills from ComposioHQ/awesome-claude-skills
 
 ### v1.1.0 (2026-01-23)
+
 - Initial version
 
 ## License
