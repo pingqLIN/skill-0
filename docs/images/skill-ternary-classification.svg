@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="actionGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4f46e5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3730a3;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ruleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#059669;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#047857;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="directiveGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b91c1c;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Main Container -->
+  <rect width="800" height="400" fill="url(#bgGradient)" rx="16"/>
+  
+  <!-- Title -->
+  <text x="400" y="50" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="28" font-weight="700" fill="#ffffff" text-anchor="middle">
+    Skill Ternary Classification
+  </text>
+  <text x="400" y="75" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="14" fill="#94a3b8" text-anchor="middle">
+    技能三元分類系統
+  </text>
+  
+  <!-- Action Box -->
+  <g filter="url(#shadow)">
+    <rect x="50" y="110" width="200" height="200" fill="url(#actionGradient)" rx="12"/>
+    <text x="150" y="150" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="22" font-weight="700" fill="#ffffff" text-anchor="middle">
+      ⚡ Action
+    </text>
+    <text x="150" y="175" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="12" fill="#c7d2fe" text-anchor="middle">
+      動作
+    </text>
+    <line x1="70" y1="190" x2="230" y2="190" stroke="#6366f1" stroke-width="1"/>
+    <text x="150" y="215" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="13" fill="#e0e7ff" text-anchor="middle">
+      Atomic Operations
+    </text>
+    <text x="150" y="235" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="13" fill="#e0e7ff" text-anchor="middle">
+      Indivisible Steps
+    </text>
+    <text x="150" y="265" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="12" fill="#a5b4fc" text-anchor="middle">
+      Answers: "What to do"
+    </text>
+    <text x="150" y="290" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="11" fill="#818cf8" text-anchor="middle">
+      🔒 Terminal
+    </text>
+  </g>
+  
+  <!-- Rule Box -->
+  <g filter="url(#shadow)">
+    <rect x="300" y="110" width="200" height="200" fill="url(#ruleGradient)" rx="12"/>
+    <text x="400" y="150" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="22" font-weight="700" fill="#ffffff" text-anchor="middle">
+      ✓ Rule
+    </text>
+    <text x="400" y="175" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="12" fill="#a7f3d0" text-anchor="middle">
+      規則
+    </text>
+    <line x1="320" y1="190" x2="480" y2="190" stroke="#10b981" stroke-width="1"/>
+    <text x="400" y="215" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="13" fill="#d1fae5" text-anchor="middle">
+      Atomic Judgment
+    </text>
+    <text x="400" y="235" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="13" fill="#d1fae5" text-anchor="middle">
+      Indivisible Evaluation
+    </text>
+    <text x="400" y="265" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="12" fill="#6ee7b7" text-anchor="middle">
+      Answers: "How to judge"
+    </text>
+    <text x="400" y="290" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="11" fill="#34d399" text-anchor="middle">
+      🔒 Terminal
+    </text>
+  </g>
+  
+  <!-- Directive Box -->
+  <g filter="url(#shadow)">
+    <rect x="550" y="110" width="200" height="200" fill="url(#directiveGradient)" rx="12"/>
+    <text x="650" y="150" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="22" font-weight="700" fill="#ffffff" text-anchor="middle">
+      📋 Directive
+    </text>
+    <text x="650" y="175" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="12" fill="#fecaca" text-anchor="middle">
+      指令
+    </text>
+    <line x1="570" y1="190" x2="730" y2="190" stroke="#f87171" stroke-width="1"/>
+    <text x="650" y="215" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="13" fill="#fee2e2" text-anchor="middle">
+      Descriptive Statements
+    </text>
+    <text x="650" y="235" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="13" fill="#fee2e2" text-anchor="middle">
+      Decomposable (paused)
+    </text>
+    <text x="650" y="265" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="12" fill="#fca5a5" text-anchor="middle">
+      Context &amp; Goals
+    </text>
+    <text x="650" y="290" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="11" fill="#f87171" text-anchor="middle">
+      ⏸️ Pause Point
+    </text>
+  </g>
+  
+  <!-- Connecting Arrows -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b"/>
+    </marker>
+  </defs>
+  
+  <!-- Arrows pointing down -->
+  <line x1="150" y1="320" x2="150" y2="350" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="400" y1="320" x2="400" y2="350" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="650" y1="320" x2="650" y2="350" stroke="#64748b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  
+  <!-- Footer Labels -->
+  <text x="150" y="375" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">
+    Cannot decompose further
+  </text>
+  <text x="400" y="375" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">
+    Cannot decompose further
+  </text>
+  <text x="650" y="375" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="11" fill="#94a3b8" text-anchor="middle">
+    Can deep parse later
+  </text>
+  
+  <!-- Attribution -->
+  <text x="790" y="392" font-family="Inter, -apple-system, system-ui, sans-serif" font-size="9" fill="#475569" text-anchor="end">
+    Generated with Gemini 3 Pro via Nano Banana Pro
+  </text>
+</svg>

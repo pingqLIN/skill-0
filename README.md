@@ -16,26 +16,13 @@ Skill-0 is a classification system that parses AI/Chatbot Skills (especially Cla
 
 Organizes and defines the immutable parts of a Skill (or parts that change behavior when modified) into three categories:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              Skill Ternary Classification                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────────┐   │
-│  │   Action    │   │    Rule     │   │   Directive     │   │
-│  ├─────────────┤   ├─────────────┤   ├─────────────────┤   │
-│  │ Atomic ops  │   │ Atomic      │   │ Descriptive     │   │
-│  │ Indivisible │   │ judgment    │   │ statements      │   │
-│  │             │   │ Indivisible │   │ Decomposable    │   │
-│  │ Answers:    │   │ Answers:    │   │ but paused      │   │
-│  │ "What to do"│   │"How to judge│   │                 │   │
-│  └─────────────┘   └─────────────┘   └─────────────────┘   │
-│        │                 │                    │             │
-│        ▼                 ▼                    ▼             │
-│   🔒 Terminal       🔒 Terminal        ⏸️ Pause point      │
-│                                        (can deep parse)    │
-└─────────────────────────────────────────────────────────────┘
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/skill-ternary-classification.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/skill-ternary-classification.svg">
+  <img alt="Skill Ternary Classification Diagram" src="docs/images/skill-ternary-classification.svg" width="800">
+</picture>
+
+> *Visualization generated with Gemini 3 Pro via [Nano Banana Pro](https://nanobananapro.com/)*
 
 | Category | Definition | Characteristics |
 |----------|------------|-----------------|
@@ -93,27 +80,13 @@ Skills/Tools may come from diverse sources where the original intent cannot be f
 
 ## Project Structure
 
-```
-skill-0/
-├── README.md                              # Documentation
-├── schema/
-├── data/
-│   ├── parsed/                            # Parsed skill examples (32 skills)
-│   ├── analysis/                          # Analysis reports
-├── src/                                   # Source code
-│   ├── tools/                             # Analysis tools
-│   │   ├── analyzer.py                    # Structure analyzer
-│   │   ├── pattern_extractor.py           # Pattern extractor
-│   │   ├── evaluate.py                    # Coverage evaluator
-│   │   └── batch_parse.py                 # Batch parser
-│   ├── vector_db/                         # Vector database module
-│   │   ├── embedder.py                    # Embedding generator
-│   │   ├── vector_store.py                # SQLite-vec storage
-│   │   └── search.py                      # Semantic search CLI
-├── db/
-│   └── skills.db                          # Vector database
-└── docs/                                  # Documentation
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/project-structure.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/project-structure.svg">
+  <img alt="Skill-0 Project Structure" src="docs/images/project-structure.svg" width="600">
+</picture>
+
+> *Visualization generated with Gemini 3 Pro via [Nano Banana Pro](https://nanobananapro.com/)*
 
 ## Installation
 
