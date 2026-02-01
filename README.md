@@ -22,7 +22,6 @@ Organizes and defines the immutable parts of a Skill (or parts that change behav
   <img alt="Skill Ternary Classification Diagram" src="docs/images/skill-ternary-classification.svg" width="800">
 </picture>
 
-> *Visualization generated with Gemini 3 Pro via [Nano Banana Pro](https://nanobananapro.com/)*
 
 | Category | Definition | Characteristics |
 |----------|------------|-----------------|
