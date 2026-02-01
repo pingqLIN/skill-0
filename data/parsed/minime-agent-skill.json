@@ -1,0 +1,1127 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "github__global__minime_agent",
+    "name": "minime-agent",
+    "skill_layer": "claude_skill",
+    "title": "MiniMe Agent - Global GitHub File System Operations Agent",
+    "description": "全域 GitHub 代理，可在任何 repository 中召喚。專注於檔案系統操作，具備完整檔案操作權限（建立repository、刪除檔案、審查任務），需明確指令啟動，完成任務後自動關閉。不審查或修改檔案內容，除非程序問題導致無法執行任務。",
+    "schema_version": "2.2.0",
+    "parse_timestamp": "2026-02-01T20:45:00Z",
+    "parser_version": "skill-0 v2.4",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "User requirement",
+    "skill_name": "minime-agent",
+    "skill_description": "我要設計一個minime-agent , 他具備我所有關於檔案操作的權限，包含開設新 repository ，刪除檔案，審查原始指派給我的任務。minime-agent 不會對檔案內容最審查與修改，除非程序本生有問題導致他的任務無法執行。minime-agent 任務主要在於檔案系統操作，必須由我經過訊息或email的管道，明確的只是才可以啟動。minime-agent 在完成執行任務後自動關閉。修正：minime-agent 不限定此專案，他在 GITHUB 上全域可供召喚。"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Create New Repository",
+        "action_type": "external_call",
+        "description": "在 GitHub 上建立新的 repository（可在任何組織或個人帳號下）",
+        "immutable_elements": [
+          "GitHub API repository creation",
+          "git init command"
+        ],
+        "mutable_elements": [
+          "repository name",
+          "repository owner",
+          "visibility (public/private)",
+          "description",
+          "initialization options"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates new GitHub repository",
+          "initializes .git folder",
+          "may create default branch",
+          "generates repository URL"
+        ],
+        "resources": [
+          {
+            "type": "api",
+            "name": "github_api",
+            "required": true,
+            "description": "GitHub API 用於建立 repository",
+            "specification": {
+              "provider": "GitHub",
+              "endpoint": "https://api.github.com",
+              "permissions": [
+                "repo:create"
+              ]
+            }
+          },
+          {
+            "type": "credentials",
+            "name": "github_token",
+            "required": true,
+            "description": "GitHub Personal Access Token 或 OAuth token",
+            "specification": {
+              "permissions": [
+                "repo"
+              ]
+            }
+          },
+          {
+            "type": "network",
+            "name": "internet_connection",
+            "required": true,
+            "description": "網路連線以存取 GitHub API"
+          }
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Delete File",
+        "action_type": "io_write",
+        "description": "刪除指定檔案或目錄",
+        "immutable_elements": [
+          "file deletion operation"
+        ],
+        "mutable_elements": [
+          "file path",
+          "recursive flag",
+          "force flag"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "removes file from filesystem",
+          "may remove directory tree"
+        ],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "target_filesystem",
+            "required": true,
+            "description": "目標檔案系統",
+            "specification": {
+              "permissions": [
+                "read",
+                "write",
+                "delete"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Delete Directory",
+        "action_type": "io_write",
+        "description": "遞迴刪除整個目錄",
+        "immutable_elements": [
+          "recursive deletion"
+        ],
+        "mutable_elements": [
+          "directory path",
+          "safety checks"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "removes all files in directory tree",
+          "removes all subdirectories"
+        ],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "target_filesystem",
+            "required": true,
+            "description": "目標檔案系統",
+            "specification": {
+              "permissions": [
+                "read",
+                "write",
+                "delete"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_004",
+        "name": "Move File or Directory",
+        "action_type": "io_write",
+        "description": "移動或重新命名檔案/目錄",
+        "immutable_elements": [
+          "move operation"
+        ],
+        "mutable_elements": [
+          "source path",
+          "destination path",
+          "overwrite flag"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "changes file location",
+          "may overwrite existing files"
+        ],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "filesystem",
+            "required": true,
+            "description": "檔案系統",
+            "specification": {
+              "permissions": [
+                "read",
+                "write"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_005",
+        "name": "Copy File or Directory",
+        "action_type": "io_write",
+        "description": "複製檔案或目錄",
+        "immutable_elements": [
+          "copy operation"
+        ],
+        "mutable_elements": [
+          "source path",
+          "destination path",
+          "recursive flag",
+          "preserve metadata"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates new file/directory",
+          "consumes disk space"
+        ],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "filesystem",
+            "required": true,
+            "description": "檔案系統",
+            "specification": {
+              "permissions": [
+                "read",
+                "write"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_006",
+        "name": "List Directory Contents",
+        "action_type": "io_read",
+        "description": "列出目錄內容",
+        "immutable_elements": [
+          "directory listing"
+        ],
+        "mutable_elements": [
+          "directory path",
+          "recursive flag",
+          "filter pattern"
+        ],
+        "deterministic": true,
+        "side_effects": [],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "filesystem",
+            "required": true,
+            "description": "檔案系統",
+            "specification": {
+              "permissions": [
+                "read"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_007",
+        "name": "Get File Metadata",
+        "action_type": "io_read",
+        "description": "讀取檔案元資料（大小、權限、修改時間等）",
+        "immutable_elements": [
+          "metadata access"
+        ],
+        "mutable_elements": [
+          "file path"
+        ],
+        "deterministic": true,
+        "side_effects": [],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "filesystem",
+            "required": true,
+            "description": "檔案系統",
+            "specification": {
+              "permissions": [
+                "read"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_008",
+        "name": "Create Directory",
+        "action_type": "io_write",
+        "description": "建立新目錄",
+        "immutable_elements": [
+          "directory creation"
+        ],
+        "mutable_elements": [
+          "directory path",
+          "permissions",
+          "parent creation flag"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates new directory",
+          "may create parent directories"
+        ],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "filesystem",
+            "required": true,
+            "description": "檔案系統",
+            "specification": {
+              "permissions": [
+                "write",
+                "execute"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_009",
+        "name": "Set File Permissions",
+        "action_type": "state_change",
+        "description": "修改檔案或目錄權限",
+        "immutable_elements": [
+          "permission modification"
+        ],
+        "mutable_elements": [
+          "file path",
+          "permission mode",
+          "recursive flag"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "changes file access permissions"
+        ],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "filesystem",
+            "required": true,
+            "description": "檔案系統",
+            "specification": {
+              "permissions": [
+                "read",
+                "write",
+                "chmod"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_010",
+        "name": "Review Task Assignment",
+        "action_type": "io_read",
+        "description": "讀取並解析原始任務指派內容",
+        "immutable_elements": [
+          "task parsing logic"
+        ],
+        "mutable_elements": [
+          "task source",
+          "task format"
+        ],
+        "deterministic": true,
+        "side_effects": [],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "task_storage",
+            "required": true,
+            "description": "任務儲存位置",
+            "specification": {
+              "permissions": [
+                "read"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_011",
+        "name": "Verify Activation Signal",
+        "action_type": "await_input",
+        "description": "等待並驗證來自訊息或 email 的明確啟動指令",
+        "immutable_elements": [
+          "activation verification logic"
+        ],
+        "mutable_elements": [
+          "message source",
+          "activation token",
+          "authentication method"
+        ],
+        "deterministic": false,
+        "side_effects": [
+          "may establish connection to message service",
+          "may log activation attempt"
+        ],
+        "resources": [
+          {
+            "type": "api",
+            "name": "message_service",
+            "required": true,
+            "description": "訊息或 email 服務 API",
+            "specification": {
+              "provider": "Email/Messaging Service",
+              "permissions": [
+                "read_messages"
+              ]
+            }
+          },
+          {
+            "type": "credentials",
+            "name": "auth_credentials",
+            "required": true,
+            "description": "認證憑證",
+            "specification": {
+              "permissions": [
+                "verify_user_identity"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_012",
+        "name": "Read File Content for Diagnosis",
+        "action_type": "io_read",
+        "description": "僅當程序問題導致任務無法執行時，讀取檔案內容進行診斷",
+        "immutable_elements": [
+          "file read operation"
+        ],
+        "mutable_elements": [
+          "file path",
+          "encoding"
+        ],
+        "deterministic": true,
+        "side_effects": [],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "filesystem",
+            "required": true,
+            "description": "檔案系統",
+            "specification": {
+              "permissions": [
+                "read"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_013",
+        "name": "Fix Procedural Issue",
+        "action_type": "io_write",
+        "description": "修正導致任務無法執行的程序性問題（如格式錯誤、缺少標記等）",
+        "immutable_elements": [
+          "procedural fix logic"
+        ],
+        "mutable_elements": [
+          "file path",
+          "fix type",
+          "backup flag"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "modifies file content",
+          "may create backup"
+        ],
+        "resources": [
+          {
+            "type": "filesystem",
+            "name": "filesystem",
+            "required": true,
+            "description": "檔案系統",
+            "specification": {
+              "permissions": [
+                "read",
+                "write"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_014",
+        "name": "Shutdown Agent",
+        "action_type": "state_change",
+        "description": "完成任務後自動關閉代理",
+        "immutable_elements": [
+          "shutdown procedure"
+        ],
+        "mutable_elements": [
+          "cleanup flag",
+          "report generation"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "terminates agent process",
+          "releases resources",
+          "may generate completion report"
+        ]
+      },
+      {
+        "id": "a_015",
+        "name": "Clone Repository",
+        "action_type": "external_call",
+        "description": "從 GitHub clone 任意 repository 到本地或指定位置",
+        "immutable_elements": [
+          "git clone command",
+          "GitHub API"
+        ],
+        "mutable_elements": [
+          "repository URL",
+          "target directory",
+          "branch name",
+          "depth"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates local repository copy",
+          "downloads all files and history"
+        ],
+        "resources": [
+          {
+            "type": "api",
+            "name": "github_api",
+            "required": true,
+            "description": "GitHub API",
+            "specification": {
+              "provider": "GitHub",
+              "endpoint": "https://api.github.com"
+            }
+          },
+          {
+            "type": "network",
+            "name": "internet_connection",
+            "required": true,
+            "description": "網路連線"
+          },
+          {
+            "type": "filesystem",
+            "name": "local_storage",
+            "required": true,
+            "description": "本地儲存空間",
+            "specification": {
+              "permissions": [
+                "write"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_016",
+        "name": "Access Cross-Repository",
+        "action_type": "external_call",
+        "description": "跨 repository 存取，可操作任何有權限的 GitHub repository",
+        "immutable_elements": [
+          "GitHub API cross-repo access"
+        ],
+        "mutable_elements": [
+          "repository owner",
+          "repository name",
+          "operation type"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "may read/write files in target repository",
+          "may trigger webhooks"
+        ],
+        "resources": [
+          {
+            "type": "api",
+            "name": "github_api",
+            "required": true,
+            "description": "GitHub API",
+            "specification": {
+              "provider": "GitHub",
+              "permissions": [
+                "repo:read",
+                "repo:write"
+              ]
+            }
+          },
+          {
+            "type": "credentials",
+            "name": "github_token",
+            "required": true,
+            "description": "具備跨 repository 權限的 GitHub token"
+          }
+        ]
+      },
+      {
+        "id": "a_017",
+        "name": "Commit and Push Changes",
+        "action_type": "external_call",
+        "description": "將變更 commit 並 push 到 GitHub repository",
+        "immutable_elements": [
+          "git commit",
+          "git push"
+        ],
+        "mutable_elements": [
+          "commit message",
+          "branch name",
+          "files to commit"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates commit in repository",
+          "pushes to remote",
+          "may trigger CI/CD"
+        ],
+        "resources": [
+          {
+            "type": "api",
+            "name": "github_api",
+            "required": true,
+            "description": "GitHub API",
+            "specification": {
+              "provider": "GitHub",
+              "permissions": [
+                "repo:write"
+              ]
+            }
+          },
+          {
+            "type": "credentials",
+            "name": "github_token",
+            "required": true,
+            "description": "GitHub authentication token"
+          }
+        ]
+      },
+      {
+        "id": "a_018",
+        "name": "Create Branch",
+        "action_type": "external_call",
+        "description": "在 GitHub repository 中建立新分支",
+        "immutable_elements": [
+          "git branch creation"
+        ],
+        "mutable_elements": [
+          "branch name",
+          "source branch",
+          "repository"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates new branch in repository"
+        ],
+        "resources": [
+          {
+            "type": "api",
+            "name": "github_api",
+            "required": true,
+            "description": "GitHub API"
+          }
+        ]
+      },
+      {
+        "id": "a_019",
+        "name": "Delete Branch",
+        "action_type": "external_call",
+        "description": "刪除 GitHub repository 中的分支",
+        "immutable_elements": [
+          "git branch deletion"
+        ],
+        "mutable_elements": [
+          "branch name",
+          "repository",
+          "force flag"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "removes branch from repository"
+        ],
+        "resources": [
+          {
+            "type": "api",
+            "name": "github_api",
+            "required": true,
+            "description": "GitHub API",
+            "specification": {
+              "permissions": [
+                "repo:write"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "a_020",
+        "name": "Respond to GitHub Webhook",
+        "action_type": "await_input",
+        "description": "接收並處理來自 GitHub 的 webhook 事件（如 push, issue, PR）",
+        "immutable_elements": [
+          "webhook handler"
+        ],
+        "mutable_elements": [
+          "event type",
+          "payload data"
+        ],
+        "deterministic": false,
+        "side_effects": [
+          "may trigger automated actions",
+          "logs webhook event"
+        ],
+        "resources": [
+          {
+            "type": "api",
+            "name": "github_webhooks",
+            "required": true,
+            "description": "GitHub Webhooks API"
+          },
+          {
+            "type": "network",
+            "name": "webhook_endpoint",
+            "required": true,
+            "description": "可接收 webhook 的網路端點"
+          }
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Check Activation Signal Valid",
+        "condition_type": "validation",
+        "condition_expression": "訊息或 email 包含有效的啟動令牌且來自授權使用者",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_002",
+        "name": "Check File Exists",
+        "condition_type": "existence_check",
+        "condition_expression": "目標檔案或目錄存在於檔案系統中",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_003",
+        "name": "Check Write Permission",
+        "condition_type": "permission_check",
+        "condition_expression": "代理具有目標路徑的寫入權限",
+        "returns": "boolean",
+        "fail_action": "escalate"
+      },
+      {
+        "id": "r_004",
+        "name": "Check Delete Safety",
+        "condition_type": "validation",
+        "condition_expression": "刪除操作不會影響系統關鍵檔案或受保護資源",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_005",
+        "name": "Check Repository Name Valid",
+        "condition_type": "validation",
+        "condition_expression": "Repository 名稱符合命名規範且未衝突",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_006",
+        "name": "Detect Procedural Issue",
+        "condition_type": "state_check",
+        "condition_expression": "檔案內容存在程序性問題（格式錯誤、缺少必要標記等）導致任務無法執行",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "a_012",
+          "a_013"
+        ]
+      },
+      {
+        "id": "r_007",
+        "name": "Check Task Complete",
+        "condition_type": "state_check",
+        "condition_expression": "所有指派的檔案系統操作任務已完成",
+        "returns": "boolean",
+        "fail_action": "retry"
+      },
+      {
+        "id": "r_008",
+        "name": "Validate Path Safety",
+        "condition_type": "validation",
+        "condition_expression": "檔案路徑不包含危險模式（如 ../ 或系統目錄）",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_009",
+        "name": "Check Disk Space Available",
+        "condition_type": "threshold_check",
+        "condition_expression": "目標磁碟有足夠空間進行操作",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_010",
+        "name": "Verify GitHub Token Valid",
+        "condition_type": "permission_check",
+        "condition_expression": "GitHub token 有效且具備所需權限",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_011",
+        "name": "Check Repository Access",
+        "condition_type": "permission_check",
+        "condition_expression": "代理具備目標 repository 的存取權限",
+        "returns": "boolean",
+        "fail_action": "escalate"
+      },
+      {
+        "id": "r_012",
+        "name": "Validate Repository Exists",
+        "condition_type": "existence_check",
+        "condition_expression": "目標 GitHub repository 存在且可存取",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Agent Activation Protocol",
+        "directive_type": "principle",
+        "description": "代理必須透過訊息或 email 管道接收明確指令才能啟動，不可自動啟動或回應非授權請求",
+        "decomposable": true,
+        "decomposition_hint": "a_011 → r_001",
+        "related_elements": [
+          "a_011",
+          "r_001"
+        ],
+        "provenance": {
+          "level": "basic",
+          "source": {
+            "kind": "unknown",
+            "ref": "user-requirement-2026-02-01"
+          },
+          "original_text": "必須由我經過訊息或email的管道，明確的指示才可以啟動"
+        }
+      },
+      {
+        "id": "d_002",
+        "name": "File Content Non-Interference",
+        "directive_type": "constraint",
+        "description": "代理不審查或修改檔案內容，除非存在程序性問題導致任務無法執行",
+        "decomposable": true,
+        "decomposition_hint": "r_006 → (if true) → a_012 → a_013",
+        "related_elements": [
+          "r_006",
+          "a_012",
+          "a_013"
+        ],
+        "provenance": {
+          "level": "basic",
+          "source": {
+            "kind": "unknown",
+            "ref": "user-requirement-2026-02-01"
+          },
+          "original_text": "minime-agent 不會對檔案內容最審查與修改，除非程序本生有問題導致他的任務無法執行"
+        }
+      },
+      {
+        "id": "d_003",
+        "name": "File System Operations Focus",
+        "directive_type": "principle",
+        "description": "代理的主要任務在於檔案系統操作，包括建立、刪除、移動、複製檔案和目錄",
+        "decomposable": false,
+        "provenance": {
+          "level": "basic",
+          "source": {
+            "kind": "unknown",
+            "ref": "user-requirement-2026-02-01"
+          },
+          "original_text": "minime-agent 任務主要在於檔案系統操作"
+        }
+      },
+      {
+        "id": "d_004",
+        "name": "Auto-Shutdown on Completion",
+        "directive_type": "principle",
+        "description": "代理在完成執行任務後必須自動關閉，釋放所有資源",
+        "decomposable": true,
+        "decomposition_hint": "r_007 → a_014",
+        "related_elements": [
+          "r_007",
+          "a_014"
+        ],
+        "provenance": {
+          "level": "basic",
+          "source": {
+            "kind": "unknown",
+            "ref": "user-requirement-2026-02-01"
+          },
+          "original_text": "minime-agent 在完成執行任務後自動關閉"
+        }
+      },
+      {
+        "id": "d_005",
+        "name": "Full File Operation Permissions",
+        "directive_type": "knowledge",
+        "description": "代理具備所有關於檔案操作的權限，包含開設新 repository、刪除檔案、審查原始指派任務，且可在 GitHub 上任何有權限的 repository 中操作",
+        "decomposable": false,
+        "provenance": {
+          "level": "basic",
+          "source": {
+            "kind": "unknown",
+            "ref": "user-requirement-2026-02-01"
+          },
+          "original_text": "他具備我所有關於檔案操作的權限，包含開設新 repository ，刪除檔案，審查原始指派給我的任務。minime-agent 不限定此專案，他在 GITHUB 上全域可供召喚"
+        }
+      },
+      {
+        "id": "d_006",
+        "name": "Safety Checks Required",
+        "directive_type": "constraint",
+        "description": "所有檔案操作前必須執行安全檢查，包括路徑驗證、權限確認、磁碟空間檢查",
+        "decomposable": true,
+        "decomposition_hint": "r_002 AND r_003 AND r_008 AND r_009",
+        "related_elements": [
+          "r_002",
+          "r_003",
+          "r_004",
+          "r_008",
+          "r_009"
+        ]
+      },
+      {
+        "id": "d_007",
+        "name": "Task Review Capability",
+        "directive_type": "completion",
+        "description": "代理能夠審查原始指派的任務內容，解析任務需求並規劃執行步驟",
+        "decomposable": true,
+        "decomposition_hint": "a_010 → task planning logic",
+        "related_elements": [
+          "a_010"
+        ]
+      },
+      {
+        "id": "d_008",
+        "name": "Repository Creation Complete",
+        "directive_type": "completion",
+        "description": "新的 repository 已成功建立並初始化",
+        "decomposable": true,
+        "decomposition_hint": "r_005 → r_009 → a_001",
+        "related_elements": [
+          "a_001",
+          "r_005",
+          "r_009"
+        ]
+      },
+      {
+        "id": "d_009",
+        "name": "File Deletion Complete",
+        "directive_type": "completion",
+        "description": "指定檔案或目錄已安全刪除",
+        "decomposable": true,
+        "decomposition_hint": "r_002 → r_004 → r_008 → (a_002 OR a_003)",
+        "related_elements": [
+          "a_002",
+          "a_003",
+          "r_002",
+          "r_004",
+          "r_008"
+        ]
+      },
+      {
+        "id": "d_010",
+        "name": "Global GitHub Availability",
+        "directive_type": "principle",
+        "description": "代理在 GitHub 全域可用，不限定於特定專案，可在任何有權限的 repository 中被召喚並執行任務",
+        "decomposable": true,
+        "decomposition_hint": "a_016 (跨 repository 存取) + r_010 (token 驗證) + r_011 (權限檢查)",
+        "related_elements": [
+          "a_016",
+          "r_010",
+          "r_011",
+          "r_012"
+        ],
+        "provenance": {
+          "level": "basic",
+          "source": {
+            "kind": "unknown",
+            "ref": "user-requirement-2026-02-01-update"
+          },
+          "original_text": "minime-agent 不限定此專案，他在 GITHUB 上全域可供召喚"
+        }
+      },
+      {
+        "id": "d_011",
+        "name": "Cross-Repository Operations",
+        "directive_type": "knowledge",
+        "description": "代理可執行跨 repository 操作，包括 clone、fork、access 不同 owner 的 repositories",
+        "decomposable": false
+      },
+      {
+        "id": "d_012",
+        "name": "GitHub API Integration",
+        "directive_type": "knowledge",
+        "description": "代理完整整合 GitHub API，可執行 repository 管理、branch 操作、commit/push、webhook 處理等操作",
+        "decomposable": true,
+        "decomposition_hint": "a_001 (建立 repo) + a_015 (clone) + a_017 (commit/push) + a_018/a_019 (branch 管理) + a_020 (webhooks)",
+        "related_elements": [
+          "a_001",
+          "a_015",
+          "a_016",
+          "a_017",
+          "a_018",
+          "a_019",
+          "a_020"
+        ]
+      },
+      {
+        "id": "d_013",
+        "name": "Authentication and Authorization",
+        "directive_type": "constraint",
+        "description": "所有 GitHub 操作必須經過適當的認證和授權，使用有效的 GitHub token 並遵守 repository 權限設定",
+        "decomposable": true,
+        "decomposition_hint": "r_010 (驗證 token) + r_011 (檢查權限)",
+        "related_elements": [
+          "r_010",
+          "r_011"
+        ]
+      },
+      {
+        "id": "d_014",
+        "name": "Webhook-Triggered Activation",
+        "directive_type": "strategy",
+        "description": "代理可透過 GitHub webhook 事件觸發啟動，自動回應 repository 中的特定事件（如 push, issue, PR）",
+        "decomposable": true,
+        "decomposition_hint": "a_020 (webhook handler) → a_011 (驗證) → task execution",
+        "related_elements": [
+          "a_020",
+          "a_011"
+        ]
+      }
+    ],
+    "execution_paths": [
+      {
+        "path_name": "Standard Activation",
+        "sequence": [
+          "a_011",
+          "r_001",
+          "a_010"
+        ],
+        "description": "代理啟動標準流程：接收啟動信號 → 驗證授權 → 審查任務"
+      },
+      {
+        "path_name": "Create Repository",
+        "sequence": [
+          "r_005",
+          "r_009",
+          "a_001"
+        ],
+        "description": "建立新 repository：驗證名稱 → 檢查磁碟空間 → 建立 repository"
+      },
+      {
+        "path_name": "Delete File Safely",
+        "sequence": [
+          "r_002",
+          "r_004",
+          "r_008",
+          "r_003",
+          "a_002"
+        ],
+        "description": "安全刪除檔案：檢查存在 → 安全驗證 → 路徑驗證 → 權限檢查 → 執行刪除"
+      },
+      {
+        "path_name": "Handle Procedural Issue",
+        "sequence": [
+          "r_006",
+          "a_012",
+          "a_013"
+        ],
+        "description": "處理程序問題：偵測問題 → 讀取診斷 → 修正問題"
+      },
+      {
+        "path_name": "Complete and Shutdown",
+        "sequence": [
+          "r_007",
+          "a_014"
+        ],
+        "description": "完成任務並關閉：確認完成 → 自動關閉"
+      },
+      {
+        "path_name": "Cross-Repository Access",
+        "sequence": [
+          "r_010",
+          "r_011",
+          "r_012",
+          "a_016"
+        ],
+        "description": "跨 repository 存取：驗證 token → 檢查權限 → 驗證 repository 存在 → 執行存取"
+      },
+      {
+        "path_name": "Clone and Operate",
+        "sequence": [
+          "r_010",
+          "r_011",
+          "a_015",
+          "a_006",
+          "a_002"
+        ],
+        "description": "Clone repository 並操作：驗證 token → 檢查權限 → clone → 列出檔案 → 刪除檔案"
+      },
+      {
+        "path_name": "Create Repository on GitHub",
+        "sequence": [
+          "r_010",
+          "r_005",
+          "a_001",
+          "a_017"
+        ],
+        "description": "在 GitHub 上建立 repository：驗證 token → 驗證名稱 → 建立 repository → commit 初始檔案"
+      },
+      {
+        "path_name": "Webhook-Triggered Operation",
+        "sequence": [
+          "a_020",
+          "r_001",
+          "a_016",
+          "a_002",
+          "a_017"
+        ],
+        "description": "Webhook 觸發操作：接收 webhook → 驗證授權 → 跨 repository 存取 → 刪除檔案 → commit/push 變更"
+      },
+      {
+        "path_name": "Branch Management",
+        "sequence": [
+          "r_010",
+          "r_011",
+          "a_018",
+          "a_017",
+          "a_019"
+        ],
+        "description": "分支管理：驗證 token → 檢查權限 → 建立分支 → commit 變更 → 刪除舊分支"
+      }
+    ]
+  }
+}
