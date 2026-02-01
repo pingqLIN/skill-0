@@ -1,0 +1,109 @@
+{
+  "transfer_info": {
+    "source_repository": "pingqLIN/skill-0",
+    "target_repository": "Hue-Sync",
+    "transfer_date": "2026-02-01",
+    "reason": "Separate LG OLED TV Hue Sync project into dedicated repository"
+  },
+  "files_to_transfer": [
+    {
+      "filename": "lg-oled-tv-hue-sync-quick-start.md",
+      "current_path": "docs/lg-oled-tv-hue-sync-quick-start.md",
+      "suggested_new_path": "docs/quick-start.md",
+      "size_bytes": 9728,
+      "size_kb": 9.5,
+      "line_count": 249,
+      "description": "Quick start guide for developers - 快速開始指南",
+      "content_type": "documentation",
+      "language": "bilingual (English/Chinese)"
+    },
+    {
+      "filename": "lg-oled-tv-hue-sync-executive-summary.md",
+      "current_path": "docs/lg-oled-tv-hue-sync-executive-summary.md",
+      "suggested_new_path": "docs/executive-summary.md",
+      "size_bytes": 12288,
+      "size_kb": 12,
+      "line_count": 310,
+      "description": "Executive summary with project overview, timeline, budget - 執行摘要",
+      "content_type": "documentation",
+      "language": "bilingual (English/Chinese)"
+    },
+    {
+      "filename": "lg-oled-tv-hue-sync-development-plan.md",
+      "current_path": "docs/lg-oled-tv-hue-sync-development-plan.md",
+      "suggested_new_path": "docs/development-plan.md",
+      "size_bytes": 45056,
+      "size_kb": 44,
+      "line_count": 1106,
+      "description": "Complete development plan with technical architecture - 完整開發計畫書",
+      "content_type": "documentation",
+      "language": "bilingual (English/Chinese)"
+    }
+  ],
+  "statistics": {
+    "total_files": 3,
+    "total_size_bytes": 67072,
+    "total_size_kb": 65.5,
+    "total_lines": 1665
+  },
+  "project_summary": {
+    "name": "LG OLED TV Hue Sync App",
+    "name_zh": "LG OLED TV智慧燈光同步應用程式",
+    "description": "Smart lighting synchronization application for LG OLED TVs (2017+)",
+    "platform": "LG webOS SDK",
+    "technologies": [
+      "HTML5",
+      "CSS3",
+      "JavaScript/TypeScript",
+      "webOS.JS",
+      "Luna Service API"
+    ],
+    "supported_webos_versions": [
+      "3.0",
+      "3.5",
+      "4.0",
+      "4.5",
+      "5.0+"
+    ],
+    "supported_smart_lights": [
+      "Philips Hue",
+      "LIFX",
+      "Yeelight"
+    ],
+    "development_timeline": "8-10 months",
+    "estimated_budget": "$96,000 - $178,000",
+    "key_features": [
+      "Real-time video analysis",
+      "Smart light synchronization",
+      "Multiple sync modes (movie, game, music)",
+      "4K/8K, HDR10, Dolby Vision support",
+      "Multi-brand smart light support"
+    ]
+  },
+  "recommended_new_repo_structure": {
+    "root": [
+      "README.md",
+      "LICENSE",
+      "CONTRIBUTING.md",
+      ".gitignore"
+    ],
+    "docs": [
+      "quick-start.md",
+      "executive-summary.md",
+      "development-plan.md"
+    ],
+    "src": [
+      ".gitkeep"
+    ],
+    "tests": [
+      ".gitkeep"
+    ],
+    "assets": [
+      ".gitkeep"
+    ]
+  },
+  "transfer_instructions": {
+    "en": "See docs/TRANSFER_TO_HUE_SYNC_REPO.md for detailed transfer instructions",
+    "zh": "請參閱 docs/TRANSFER_TO_HUE_SYNC_REPO.md 以了解詳細的轉移指示"
+  }
+}
