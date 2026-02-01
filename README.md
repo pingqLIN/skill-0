@@ -261,6 +261,12 @@ Comprehensive documentation is available:
 - **[AGENTS.md](AGENTS.md)** - Guidelines for AI agents working on this project
 - **[scripts/helper.py](src/tools/helper.py)** - Helper utilities for validation, conversion, and testing
 
+### Comparison & Analysis
+
+- **[skill-0-comprehensive-comparison.md](docs/skill-0-comprehensive-comparison.md)** - Comprehensive comparison with similar projects ([中文版](docs/skill-0-comprehensive-comparison.zh-TW.md))
+- **[skill-mcp-tools-comparison.md](docs/skill-mcp-tools-comparison.md)** - Comparison with top 5 skill management tools
+- **[github-skills-search-report.md](docs/github-skills-search-report.md)** - Analysis of 75+ related GitHub projects
+
 ### Quick Start Guide
 
 ```bash

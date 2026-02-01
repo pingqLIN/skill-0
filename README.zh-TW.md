@@ -151,6 +151,12 @@ python -m src.vector_db.search --db db/skills.db stats
 - **[examples.md](docs/guides/examples.md)** - 跨不同領域的 7 個詳細技能範例
 - **[AGENTS.md](AGENTS.md)** - AI 代理工作指南
 
+### 比較與分析
+
+- **[skill-0-comprehensive-comparison.zh-TW.md](docs/skill-0-comprehensive-comparison.zh-TW.md)** - 與相似專案的全面比較 ([English](docs/skill-0-comprehensive-comparison.md))
+- **[skill-mcp-tools-comparison.md](docs/skill-mcp-tools-comparison.md)** - 與前 5 名技能管理工具的比較
+- **[github-skills-search-report.md](docs/github-skills-search-report.md)** - 75+ 相關 GitHub 專案分析
+
 ## 版本
 
 - Schema 版本: 2.0.0
