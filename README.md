@@ -40,6 +40,8 @@ Organizes and defines the immutable parts of a Skill (or parts that change behav
 | `preference` | Preference setting | "User prefers JSON format" |
 | `strategy` | Strategy guideline | "Retry three times on error" |
 
+>
+
 ### Directive Provenance (Optional)
 
 Skills/Tools may come from diverse sources where the original intent cannot be fully verified. To preserve the original spirit, a `Directive` can optionally include `provenance` in two tiers:
@@ -85,7 +87,7 @@ Skills/Tools may come from diverse sources where the original intent cannot be f
   <img alt="Skill-0 Project Structure" src="docs/images/project-structure.svg" width="600">
 </picture>
 
-> *Visualization generated with Gemini 3 Pro via [Nano Banana Pro](https://nanobananapro.com/)*
+> 
 
 ## Installation
 
