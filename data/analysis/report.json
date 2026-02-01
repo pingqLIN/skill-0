@@ -1,341 +1,71 @@
 {
   "version": "1.0",
-  "generated_at": "2026-01-26T14:17:15.340927",
-  "total_skills": 30,
+  "generated_at": "2026-02-01T08:32:22.849176",
+  "total_skills": 32,
   "summary": {
-    "action_count": 190,
-    "rule_count": 77,
-    "directive_count": 107
+    "action_count": 209,
+    "rule_count": 80,
+    "directive_count": 110
   },
   "action_type_distribution": {
-    "io_read": 20,
+    "external_call": 35,
+    "io_write": 31,
+    "io_read": 33,
+    "await_input": 8,
     "transform": 53,
-    "io_write": 30,
-    "external_call": 31,
+    "compute": 10,
     "llm_inference": 37,
-    "await_input": 7,
-    "state_change": 2,
-    "compute": 10
+    "state_change": 2
   },
   "directive_type_distribution": {
-    "completion": 34,
-    "principle": 20,
+    "strategy": 10,
+    "principle": 21,
+    "completion": 35,
     "constraint": 9,
     "knowledge": 32,
-    "preference": 3,
-    "strategy": 9
+    "preference": 3
   },
   "skills": [
     {
-      "skill_id": "claude__anthropic__pdf",
-      "name": "pdf",
-      "source_file": "anthropic-pdf-skill.json",
-      "action_count": 10,
-      "rule_count": 3,
-      "directive_count": 4,
-      "action_types": [
-        "io_read",
-        "transform",
-        "transform",
-        "io_write",
-        "io_write",
-        "io_write",
-        "transform",
-        "transform",
-        "transform",
-        "external_call"
-      ],
-      "directive_types": [
-        "completion",
-        "completion",
-        "principle",
-        "constraint"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__brand_guidelines",
-      "name": "brand-guidelines",
-      "source_file": "brand-guidelines-skill.json",
+      "skill_id": "claude__webapp_testing",
+      "name": "webapp-testing",
+      "source_file": "webapp-testing-skill.json",
       "action_count": 5,
       "rule_count": 2,
-      "directive_count": 4,
-      "action_types": [
-        "transform",
-        "transform",
-        "transform",
-        "transform",
-        "transform"
-      ],
-      "directive_types": [
-        "completion",
-        "knowledge",
-        "knowledge",
-        "knowledge"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__canvas_design",
-      "name": "canvas-design",
-      "source_file": "canvas-design-skill.json",
-      "action_count": 5,
-      "rule_count": 3,
-      "directive_count": 3,
-      "action_types": [
-        "io_write",
-        "transform",
-        "io_write",
-        "io_read",
-        "transform"
-      ],
-      "directive_types": [
-        "principle",
-        "principle",
-        "completion"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__changelog_generator",
-      "name": "changelog-generator",
-      "source_file": "changelog-generator-skill.json",
-      "action_count": 6,
-      "rule_count": 3,
-      "directive_count": 4,
-      "action_types": [
-        "io_read",
-        "transform",
-        "llm_inference",
-        "transform",
-        "transform",
-        "io_write"
-      ],
-      "directive_types": [
-        "completion",
-        "principle",
-        "knowledge",
-        "preference"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__competitive_ads_extractor",
-      "name": "competitive-ads-extractor",
-      "source_file": "competitive-ads-extractor-skill.json",
-      "action_count": 7,
-      "rule_count": 2,
-      "directive_count": 3,
-      "action_types": [
-        "external_call",
-        "io_write",
-        "llm_inference",
-        "transform",
-        "llm_inference",
-        "llm_inference",
-        "io_write"
-      ],
-      "directive_types": [
-        "completion",
-        "constraint",
-        "knowledge"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__connect_apps",
-      "name": "connect-apps",
-      "source_file": "connect-apps-skill.json",
-      "action_count": 5,
-      "rule_count": 3,
-      "directive_count": 3,
-      "action_types": [
-        "external_call",
-        "external_call",
-        "external_call",
-        "await_input",
-        "external_call"
-      ],
-      "directive_types": [
-        "completion",
-        "completion",
-        "knowledge"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__connect",
-      "name": "connect",
-      "source_file": "connect-skill.json",
-      "action_count": 5,
-      "rule_count": 2,
-      "directive_count": 4,
-      "action_types": [
-        "external_call",
-        "state_change",
-        "external_call",
-        "await_input",
-        "external_call"
-      ],
-      "directive_types": [
-        "completion",
-        "completion",
-        "knowledge",
-        "knowledge"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__content_research_writer",
-      "name": "content-research-writer",
-      "source_file": "content-research-writer-skill.json",
-      "action_count": 7,
-      "rule_count": 1,
-      "directive_count": 4,
-      "action_types": [
-        "await_input",
-        "llm_inference",
-        "external_call",
-        "llm_inference",
-        "llm_inference",
-        "transform",
-        "llm_inference"
-      ],
-      "directive_types": [
-        "completion",
-        "principle",
-        "knowledge",
-        "knowledge"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__developer_growth_analysis",
-      "name": "developer-growth-analysis",
-      "source_file": "developer-growth-analysis-skill.json",
-      "action_count": 6,
-      "rule_count": 2,
-      "directive_count": 3,
-      "action_types": [
-        "io_read",
-        "llm_inference",
-        "llm_inference",
-        "transform",
-        "external_call",
-        "external_call"
-      ],
-      "directive_types": [
-        "completion",
-        "constraint",
-        "knowledge"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__docx",
-      "name": "docx",
-      "source_file": "docx-skill.json",
-      "action_count": 6,
-      "rule_count": 3,
       "directive_count": 2,
       "action_types": [
-        "io_read",
-        "io_read",
-        "io_write",
-        "transform",
-        "io_write",
-        "transform"
-      ],
-      "directive_types": [
-        "principle",
-        "completion"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__domain_name_brainstormer",
-      "name": "domain-name-brainstormer",
-      "source_file": "domain-name-brainstormer-skill.json",
-      "action_count": 8,
-      "rule_count": 3,
-      "directive_count": 6,
-      "action_types": [
-        "llm_inference",
-        "llm_inference",
-        "llm_inference",
         "external_call",
-        "transform",
-        "llm_inference",
-        "llm_inference",
-        "io_write"
-      ],
-      "directive_types": [
-        "completion",
-        "knowledge",
-        "knowledge",
-        "knowledge",
-        "principle",
-        "strategy"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__file_organizer",
-      "name": "file-organizer",
-      "source_file": "file-organizer-skill.json",
-      "action_count": 6,
-      "rule_count": 3,
-      "directive_count": 3,
-      "action_types": [
-        "io_read",
-        "io_read",
-        "transform",
+        "external_call",
         "io_write",
-        "io_write",
-        "io_write"
+        "io_read",
+        "external_call"
       ],
       "directive_types": [
         "strategy",
-        "principle",
-        "completion"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__image_enhancer",
-      "name": "image-enhancer",
-      "source_file": "image-enhancer-skill.json",
-      "action_count": 5,
-      "rule_count": 2,
-      "directive_count": 2,
-      "action_types": [
-        "io_read",
-        "transform",
-        "transform",
-        "transform",
-        "io_write"
-      ],
-      "directive_types": [
-        "completion",
         "principle"
       ],
       "has_flow": false
     },
     {
-      "skill_id": "claude__internal_comms",
-      "name": "internal-comms",
-      "source_file": "internal-comms-skill.json",
-      "action_count": 3,
+      "skill_id": "claude__connect_apps_plugin",
+      "name": "connect-apps-plugin",
+      "source_file": "connect-apps-plugin-skill.json",
+      "action_count": 9,
       "rule_count": 1,
-      "directive_count": 2,
+      "directive_count": 1,
       "action_types": [
-        "transform",
         "io_read",
-        "io_write"
+        "io_read",
+        "io_read",
+        "io_write",
+        "external_call",
+        "external_call",
+        "external_call",
+        "external_call",
+        "await_input"
       ],
       "directive_types": [
-        "knowledge",
-        "completion"
+        "principle"
       ],
       "has_flow": false
     },
@@ -365,92 +95,68 @@
       "has_flow": false
     },
     {
-      "skill_id": "claude__composio__langsmith_fetch",
-      "name": "langsmith-fetch",
-      "source_file": "langsmith-fetch-skill.json",
-      "action_count": 6,
-      "rule_count": 4,
-      "directive_count": 4,
+      "skill_id": "claude__composio__slack_gif_creator",
+      "name": "slack-gif-creator",
+      "source_file": "slack-gif-creator-skill.json",
+      "action_count": 7,
+      "rule_count": 3,
+      "directive_count": 5,
       "action_types": [
-        "external_call",
-        "external_call",
-        "llm_inference",
+        "compute",
+        "compute",
+        "compute",
+        "compute",
         "transform",
-        "llm_inference",
+        "compute",
         "io_write"
       ],
       "directive_types": [
         "completion",
         "completion",
         "knowledge",
-        "strategy"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__lead_research_assistant",
-      "name": "lead-research-assistant",
-      "source_file": "lead-research-assistant-skill.json",
-      "action_count": 6,
-      "rule_count": 1,
-      "directive_count": 3,
-      "action_types": [
-        "llm_inference",
-        "llm_inference",
-        "external_call",
-        "llm_inference",
-        "llm_inference",
-        "transform"
-      ],
-      "directive_types": [
-        "completion",
         "knowledge",
         "knowledge"
       ],
       "has_flow": false
     },
     {
-      "skill_id": "claude__mcp_builder",
-      "name": "mcp-builder",
-      "source_file": "mcp-builder-skill.json",
-      "action_count": 6,
-      "rule_count": 3,
-      "directive_count": 3,
-      "action_types": [
-        "io_read",
-        "io_read",
-        "transform",
-        "io_write",
-        "external_call",
-        "io_write"
-      ],
-      "directive_types": [
-        "principle",
-        "strategy",
-        "completion"
-      ],
-      "has_flow": false
-    },
-    {
-      "skill_id": "claude__composio__meeting_insights_analyzer",
-      "name": "meeting-insights-analyzer",
-      "source_file": "meeting-insights-analyzer-skill.json",
+      "skill_id": "claude__composio__competitive_ads_extractor",
+      "name": "competitive-ads-extractor",
+      "source_file": "competitive-ads-extractor-skill.json",
       "action_count": 7,
       "rule_count": 2,
       "directive_count": 3,
       "action_types": [
-        "io_read",
+        "external_call",
+        "io_write",
+        "llm_inference",
         "transform",
         "llm_inference",
-        "compute",
-        "transform",
         "llm_inference",
-        "llm_inference"
+        "io_write"
       ],
       "directive_types": [
         "completion",
-        "knowledge",
+        "constraint",
         "knowledge"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__internal_comms",
+      "name": "internal-comms",
+      "source_file": "internal-comms-skill.json",
+      "action_count": 3,
+      "rule_count": 1,
+      "directive_count": 2,
+      "action_types": [
+        "transform",
+        "io_read",
+        "io_write"
+      ],
+      "directive_types": [
+        "knowledge",
+        "completion"
       ],
       "has_flow": false
     },
@@ -473,6 +179,28 @@
         "principle",
         "principle",
         "constraint"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__composio__theme_factory",
+      "name": "theme-factory",
+      "source_file": "theme-factory-skill.json",
+      "action_count": 6,
+      "rule_count": 2,
+      "directive_count": 3,
+      "action_types": [
+        "io_read",
+        "await_input",
+        "io_read",
+        "transform",
+        "transform",
+        "llm_inference"
+      ],
+      "directive_types": [
+        "completion",
+        "completion",
+        "knowledge"
       ],
       "has_flow": false
     },
@@ -525,53 +253,253 @@
       "has_flow": false
     },
     {
-      "skill_id": "claude__composio__skill_share",
-      "name": "skill-share",
-      "source_file": "skill-share-skill.json",
-      "action_count": 8,
-      "rule_count": 4,
-      "directive_count": 5,
+      "skill_id": "claude__composio__connect_apps",
+      "name": "connect-apps",
+      "source_file": "connect-apps-skill.json",
+      "action_count": 5,
+      "rule_count": 3,
+      "directive_count": 3,
       "action_types": [
+        "external_call",
+        "external_call",
+        "external_call",
+        "await_input",
+        "external_call"
+      ],
+      "directive_types": [
+        "completion",
+        "completion",
+        "knowledge"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__composio__content_research_writer",
+      "name": "content-research-writer",
+      "source_file": "content-research-writer-skill.json",
+      "action_count": 7,
+      "rule_count": 1,
+      "directive_count": 4,
+      "action_types": [
+        "await_input",
         "llm_inference",
-        "io_write",
+        "external_call",
         "llm_inference",
-        "io_write",
-        "compute",
-        "compute",
+        "llm_inference",
+        "transform",
+        "llm_inference"
+      ],
+      "directive_types": [
+        "completion",
+        "principle",
+        "knowledge",
+        "knowledge"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__composio__developer_growth_analysis",
+      "name": "developer-growth-analysis",
+      "source_file": "developer-growth-analysis-skill.json",
+      "action_count": 6,
+      "rule_count": 2,
+      "directive_count": 3,
+      "action_types": [
+        "io_read",
+        "llm_inference",
+        "llm_inference",
+        "transform",
         "external_call",
         "external_call"
       ],
       "directive_types": [
         "completion",
-        "knowledge",
-        "knowledge",
         "constraint",
         "knowledge"
       ],
       "has_flow": false
     },
     {
-      "skill_id": "claude__composio__slack_gif_creator",
-      "name": "slack-gif-creator",
-      "source_file": "slack-gif-creator-skill.json",
-      "action_count": 7,
-      "rule_count": 3,
-      "directive_count": 5,
+      "skill_id": "claude__composio__langsmith_fetch",
+      "name": "langsmith-fetch",
+      "source_file": "langsmith-fetch-skill.json",
+      "action_count": 6,
+      "rule_count": 4,
+      "directive_count": 4,
       "action_types": [
-        "compute",
-        "compute",
-        "compute",
-        "compute",
+        "external_call",
+        "external_call",
+        "llm_inference",
         "transform",
-        "compute",
+        "llm_inference",
         "io_write"
       ],
       "directive_types": [
         "completion",
         "completion",
         "knowledge",
+        "strategy"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__file_organizer",
+      "name": "file-organizer",
+      "source_file": "file-organizer-skill.json",
+      "action_count": 6,
+      "rule_count": 3,
+      "directive_count": 3,
+      "action_types": [
+        "io_read",
+        "io_read",
+        "transform",
+        "io_write",
+        "io_write",
+        "io_write"
+      ],
+      "directive_types": [
+        "strategy",
+        "principle",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__pdf",
+      "name": "pdf",
+      "source_file": "pdf-skill.json",
+      "action_count": 10,
+      "rule_count": 2,
+      "directive_count": 2,
+      "action_types": [
+        "io_read",
+        "io_read",
+        "io_read",
+        "io_read",
+        "io_read",
+        "io_read",
+        "io_read",
+        "io_read",
+        "io_read",
+        "io_read"
+      ],
+      "directive_types": [
+        "strategy",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__canvas_design",
+      "name": "canvas-design",
+      "source_file": "canvas-design-skill.json",
+      "action_count": 5,
+      "rule_count": 3,
+      "directive_count": 3,
+      "action_types": [
+        "io_write",
+        "transform",
+        "io_write",
+        "io_read",
+        "transform"
+      ],
+      "directive_types": [
+        "principle",
+        "principle",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__anthropic__pdf",
+      "name": "pdf",
+      "source_file": "anthropic-pdf-skill.json",
+      "action_count": 10,
+      "rule_count": 3,
+      "directive_count": 4,
+      "action_types": [
+        "io_read",
+        "transform",
+        "transform",
+        "io_write",
+        "io_write",
+        "io_write",
+        "transform",
+        "transform",
+        "transform",
+        "external_call"
+      ],
+      "directive_types": [
+        "completion",
+        "completion",
+        "principle",
+        "constraint"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__composio__brand_guidelines",
+      "name": "brand-guidelines",
+      "source_file": "brand-guidelines-skill.json",
+      "action_count": 5,
+      "rule_count": 2,
+      "directive_count": 4,
+      "action_types": [
+        "transform",
+        "transform",
+        "transform",
+        "transform",
+        "transform"
+      ],
+      "directive_types": [
+        "completion",
+        "knowledge",
         "knowledge",
         "knowledge"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__composio__twitter_algorithm_optimizer",
+      "name": "twitter-algorithm-optimizer",
+      "source_file": "twitter-algorithm-optimizer-skill.json",
+      "action_count": 6,
+      "rule_count": 1,
+      "directive_count": 5,
+      "action_types": [
+        "llm_inference",
+        "llm_inference",
+        "llm_inference",
+        "llm_inference",
+        "llm_inference",
+        "llm_inference"
+      ],
+      "directive_types": [
+        "completion",
+        "knowledge",
+        "knowledge",
+        "strategy",
+        "principle"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__image_enhancer",
+      "name": "image-enhancer",
+      "source_file": "image-enhancer-skill.json",
+      "action_count": 5,
+      "rule_count": 2,
+      "directive_count": 2,
+      "action_types": [
+        "io_read",
+        "transform",
+        "transform",
+        "transform",
+        "io_write"
+      ],
+      "directive_types": [
+        "completion",
+        "principle"
       ],
       "has_flow": false
     },
@@ -602,68 +530,114 @@
       "has_flow": false
     },
     {
-      "skill_id": "claude__composio__theme_factory",
-      "name": "theme-factory",
-      "source_file": "theme-factory-skill.json",
+      "skill_id": "claude__composio__changelog_generator",
+      "name": "changelog-generator",
+      "source_file": "changelog-generator-skill.json",
       "action_count": 6,
-      "rule_count": 2,
-      "directive_count": 3,
+      "rule_count": 3,
+      "directive_count": 4,
       "action_types": [
         "io_read",
-        "await_input",
-        "io_read",
+        "transform",
+        "llm_inference",
         "transform",
         "transform",
-        "llm_inference"
+        "io_write"
       ],
       "directive_types": [
         "completion",
+        "principle",
+        "knowledge",
+        "preference"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__mcp_builder",
+      "name": "mcp-builder",
+      "source_file": "mcp-builder-skill.json",
+      "action_count": 6,
+      "rule_count": 3,
+      "directive_count": 3,
+      "action_types": [
+        "io_read",
+        "io_read",
+        "transform",
+        "io_write",
+        "external_call",
+        "io_write"
+      ],
+      "directive_types": [
+        "principle",
+        "strategy",
+        "completion"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__composio__lead_research_assistant",
+      "name": "lead-research-assistant",
+      "source_file": "lead-research-assistant-skill.json",
+      "action_count": 6,
+      "rule_count": 1,
+      "directive_count": 3,
+      "action_types": [
+        "llm_inference",
+        "llm_inference",
+        "external_call",
+        "llm_inference",
+        "llm_inference",
+        "transform"
+      ],
+      "directive_types": [
         "completion",
+        "knowledge",
         "knowledge"
       ],
       "has_flow": false
     },
     {
-      "skill_id": "claude__composio__twitter_algorithm_optimizer",
-      "name": "twitter-algorithm-optimizer",
-      "source_file": "twitter-algorithm-optimizer-skill.json",
-      "action_count": 6,
-      "rule_count": 1,
-      "directive_count": 5,
+      "skill_id": "claude__composio__meeting_insights_analyzer",
+      "name": "meeting-insights-analyzer",
+      "source_file": "meeting-insights-analyzer-skill.json",
+      "action_count": 7,
+      "rule_count": 2,
+      "directive_count": 3,
       "action_types": [
+        "io_read",
+        "transform",
         "llm_inference",
-        "llm_inference",
-        "llm_inference",
-        "llm_inference",
+        "compute",
+        "transform",
         "llm_inference",
         "llm_inference"
       ],
       "directive_types": [
         "completion",
         "knowledge",
-        "knowledge",
-        "strategy",
-        "principle"
+        "knowledge"
       ],
       "has_flow": false
     },
     {
-      "skill_id": "claude__webapp_testing",
-      "name": "webapp-testing",
-      "source_file": "webapp-testing-skill.json",
+      "skill_id": "claude__composio__connect",
+      "name": "connect",
+      "source_file": "connect-skill.json",
       "action_count": 5,
       "rule_count": 2,
-      "directive_count": 2,
+      "directive_count": 4,
       "action_types": [
         "external_call",
+        "state_change",
         "external_call",
-        "io_write",
-        "io_read",
+        "await_input",
         "external_call"
       ],
       "directive_types": [
-        "strategy",
-        "principle"
+        "completion",
+        "completion",
+        "knowledge",
+        "knowledge"
       ],
       "has_flow": false
     },
@@ -710,6 +684,80 @@
         "completion",
         "preference",
         "strategy"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__composio__skill_share",
+      "name": "skill-share",
+      "source_file": "skill-share-skill.json",
+      "action_count": 8,
+      "rule_count": 4,
+      "directive_count": 5,
+      "action_types": [
+        "llm_inference",
+        "io_write",
+        "llm_inference",
+        "io_write",
+        "compute",
+        "compute",
+        "external_call",
+        "external_call"
+      ],
+      "directive_types": [
+        "completion",
+        "knowledge",
+        "knowledge",
+        "constraint",
+        "knowledge"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__composio__domain_name_brainstormer",
+      "name": "domain-name-brainstormer",
+      "source_file": "domain-name-brainstormer-skill.json",
+      "action_count": 8,
+      "rule_count": 3,
+      "directive_count": 6,
+      "action_types": [
+        "llm_inference",
+        "llm_inference",
+        "llm_inference",
+        "external_call",
+        "transform",
+        "llm_inference",
+        "llm_inference",
+        "io_write"
+      ],
+      "directive_types": [
+        "completion",
+        "knowledge",
+        "knowledge",
+        "knowledge",
+        "principle",
+        "strategy"
+      ],
+      "has_flow": false
+    },
+    {
+      "skill_id": "claude__docx",
+      "name": "docx",
+      "source_file": "docx-skill.json",
+      "action_count": 6,
+      "rule_count": 3,
+      "directive_count": 2,
+      "action_types": [
+        "io_read",
+        "io_read",
+        "io_write",
+        "transform",
+        "io_write",
+        "transform"
+      ],
+      "directive_types": [
+        "principle",
+        "completion"
       ],
       "has_flow": false
     }

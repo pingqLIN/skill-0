@@ -3,15 +3,24 @@
 Skill-0 分析器覆蓋率與效能評估
 """
 
+import argparse
 import json
 import time
 from pathlib import Path
 from datetime import datetime
 
 
+# 全域設定，可由 CLI 參數覆寫
+CONFIG = {
+    "parsed_dir": "parsed",
+    "analysis_dir": "analysis",
+    "tools_dir": "tools"
+}
+
+
 def evaluate_coverage():
     """評估框架覆蓋率"""
-    parsed_dir = Path("parsed")
+    parsed_dir = Path(CONFIG["parsed_dir"])
     skills = list(parsed_dir.glob("*.json"))
     
     coverage_results = {
@@ -69,9 +78,11 @@ def evaluate_performance():
         "tests": []
     }
     
+    tools_dir = CONFIG["tools_dir"]
+    
     # 測試 analyzer.py
     start_time = time.time()
-    subprocess.run(["python", "tools/analyzer.py"], capture_output=True)
+    subprocess.run(["python", f"{tools_dir}/analyzer.py"], capture_output=True)
     analyzer_time = time.time() - start_time
     
     performance_results["tests"].append({
@@ -82,7 +93,7 @@ def evaluate_performance():
     
     # 測試 pattern_extractor.py
     start_time = time.time()
-    subprocess.run(["python", "tools/pattern_extractor.py"], capture_output=True)
+    subprocess.run(["python", f"{tools_dir}/pattern_extractor.py"], capture_output=True)
     pattern_time = time.time() - start_time
     
     performance_results["tests"].append({
@@ -101,7 +112,7 @@ def evaluate_performance():
 
 def evaluate_skill_types():
     """評估不同類型 skill 的解析品質"""
-    parsed_dir = Path("parsed")
+    parsed_dir = Path(CONFIG["parsed_dir"])
     
     # 分類 skills
     skill_categories = {
@@ -226,12 +237,31 @@ def generate_report():
         "overall_coverage_rate": overall_coverage
     }
     
-    output_path = Path("analysis/evaluation_report.json")
+    output_path = Path(CONFIG["analysis_dir"]) / "evaluation_report.json"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(report, f, ensure_ascii=False, indent=2)
     
     print(f"📄 報告已儲存: {output_path}")
 
 
-if __name__ == "__main__":
+def main():
+    parser = argparse.ArgumentParser(description="Skill-0 覆蓋率與效能評估工具")
+    parser.add_argument("--parsed-dir", "-p", default="parsed",
+                        help="已解析 skills 的目錄 (預設: parsed)")
+    parser.add_argument("--analysis-dir", "-a", default="analysis",
+                        help="分析報告輸出目錄 (預設: analysis)")
+    parser.add_argument("--tools-dir", "-t", default="tools",
+                        help="工具目錄 (預設: tools)")
+    args = parser.parse_args()
+    
+    # 更新全域設定
+    CONFIG["parsed_dir"] = args.parsed_dir
+    CONFIG["analysis_dir"] = args.analysis_dir
+    CONFIG["tools_dir"] = args.tools_dir
+    
     generate_report()
+
+
+if __name__ == "__main__":
+    main()
