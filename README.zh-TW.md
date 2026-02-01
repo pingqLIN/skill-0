@@ -153,6 +153,7 @@ python -m src.vector_db.search --db db/skills.db stats
 
 ### 比較與分析
 
+- **[COMPARISON-QUICK-REFERENCE.md](docs/COMPARISON-QUICK-REFERENCE.md)** - 快速參考：Skill-0 與相似專案比較
 - **[skill-0-comprehensive-comparison.zh-TW.md](docs/skill-0-comprehensive-comparison.zh-TW.md)** - 與相似專案的全面比較 ([English](docs/skill-0-comprehensive-comparison.md))
 - **[skill-mcp-tools-comparison.md](docs/skill-mcp-tools-comparison.md)** - 與前 5 名技能管理工具的比較
 - **[github-skills-search-report.md](docs/github-skills-search-report.md)** - 75+ 相關 GitHub 專案分析

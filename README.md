@@ -263,6 +263,7 @@ Comprehensive documentation is available:
 
 ### Comparison & Analysis
 
+- **[COMPARISON-QUICK-REFERENCE.md](docs/COMPARISON-QUICK-REFERENCE.md)** - Quick reference: Skill-0 vs similar projects
 - **[skill-0-comprehensive-comparison.md](docs/skill-0-comprehensive-comparison.md)** - Comprehensive comparison with similar projects ([中文版](docs/skill-0-comprehensive-comparison.zh-TW.md))
 - **[skill-mcp-tools-comparison.md](docs/skill-mcp-tools-comparison.md)** - Comparison with top 5 skill management tools
 - **[github-skills-search-report.md](docs/github-skills-search-report.md)** - Analysis of 75+ related GitHub projects
