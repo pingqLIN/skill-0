@@ -360,6 +360,26 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 
 - Initial version
 
+## Related Projects
+
+### Hue-Sync: LG OLED TV Smart Lighting Sync Application
+
+**Note**: The LG OLED TV Hue Sync project documentation has been moved to a separate repository for better organization.
+
+📦 **Files Moved**: 3 documentation files (~66.5KB) related to developing a Philips Hue Sync-like smart lighting application for LG OLED TVs.
+
+📚 **Transfer Documentation**: See [docs/TRANSFER_TO_HUE_SYNC_REPO.md](docs/TRANSFER_TO_HUE_SYNC_REPO.md) for:
+- Complete file list and metadata
+- Step-by-step transfer instructions (bilingual)
+- Recommended repository structure
+- Sample README content
+
+🚀 **Quick Reference**: [docs/QUICK_REFERENCE_HUE_SYNC_TRANSFER.md](docs/QUICK_REFERENCE_HUE_SYNC_TRANSFER.md)
+
+**Status**: Documentation complete, ready for manual repository creation and file transfer.
+
+---
+
 ## License
 
 MIT
