@@ -14,7 +14,7 @@
   "original_definition": {
     "source": "User requirement",
     "skill_name": "minime-agent",
-    "skill_description": "我要設計一個minime-agent , 他具備我所有關於檔案操作的權限，包含開設新 repository ，刪除檔案，審查原始指派給我的任務。minime-agent 不會對檔案內容最審查與修改，除非程序本生有問題導致他的任務無法執行。minime-agent 任務主要在於檔案系統操作，必須由我經過訊息或email的管道，明確的只是才可以啟動。minime-agent 在完成執行任務後自動關閉。修正：minime-agent 不限定此專案，他在 GITHUB 上全域可供召喚。"
+    "skill_description": "我要設計一個minime-agent , 他具備我所有關於檔案操作的權限，包含開設新 repository ，刪除檔案，審查原始指派給我的任務。minime-agent 不會對檔案內容最審查與修改，除非程序本身有問題導致他的任務無法執行。minime-agent 任務主要在於檔案系統操作，必須由我經過訊息或email的管道，明確的只是才可以啟動。minime-agent 在完成執行任務後自動關閉。修正：minime-agent 不限定此專案，他在 GITHUB 上全域可供召喚。"
   },
   "decomposition": {
     "actions": [
@@ -844,7 +844,7 @@
             "kind": "unknown",
             "ref": "user-requirement-2026-02-01"
           },
-          "original_text": "minime-agent 不會對檔案內容最審查與修改，除非程序本生有問題導致他的任務無法執行"
+          "original_text": "minime-agent 不會對檔案內容最審查與修改，除非程序本身有問題導致他的任務無法執行"
         }
       },
       {
