@@ -158,8 +158,8 @@ Total:        0.099s ✅ (遠低於目標 1.5s)
 ### 階段 5: 提交 (30 分鐘)
 - [x] 整理所有解析文件
 - [x] 更新分析結果
-- [ ] Git commit
-- [ ] 更新 README
+- [x] Git commit
+- [x] 更新 README
 
 ---
 
