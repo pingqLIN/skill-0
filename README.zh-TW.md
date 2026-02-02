@@ -150,6 +150,7 @@ python -m src.vector_db.search --db db/skills.db stats
 - **[reference.md](docs/guides/reference.md)** - Schema 參考與格式規範
 - **[examples.md](docs/guides/examples.md)** - 跨不同領域的 7 個詳細技能範例
 - **[AGENTS.md](AGENTS.md)** - AI 代理工作指南
+- **[vision-agent-alternatives.zh-TW.md](docs/vision-agent-alternatives.zh-TW.md)** - 免費與開源 vision-agent 替代方案指南 ([English](docs/vision-agent-alternatives.md))
 
 ## 版本
 
