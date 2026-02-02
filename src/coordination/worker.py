@@ -159,14 +159,11 @@ class SkillWorker:
         """
         if self.parser is None:
             # Import default parser if none provided
-            from ..tools.advanced_skill_analyzer import SkillAnalyzer
-            self.parser = SkillAnalyzer()
+            from ..parsers import AdvancedSkillParser
+            self.parser = AdvancedSkillParser()
         
-        # Run parser (in thread pool if synchronous)
-        result = await asyncio.to_thread(
-            self.parser.analyze_skill,
-            skill_path
-        )
+        # Use the parser's parse method
+        result = await self.parser.parse(skill_path)
         
         return result
     
