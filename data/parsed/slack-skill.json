@@ -1,0 +1,88 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__slack",
+    "name": "slack",
+    "skill_layer": "claude_skill",
+    "title": "Slack",
+    "description": "Manages Slack workspace updates, message posting, and channel housekeeping.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "slack",
+    "skill_description": "Manages Slack workspace updates, message posting, and channel housekeeping."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Fetch Slack Threads",
+        "action_type": "io_read",
+        "description": "Collect recent Slack threads and messages from selected channels.",
+        "deterministic": false,
+        "side_effects": [
+          "reads Slack messages"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Post Channel Update",
+        "action_type": "io_write",
+        "description": "Send summarized updates into the target Slack channel.",
+        "deterministic": false,
+        "side_effects": [
+          "writes Slack message"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Update Channel Topic",
+        "action_type": "state_change",
+        "description": "Set or refresh the channel topic to reflect current status.",
+        "deterministic": false,
+        "side_effects": [
+          "changes channel metadata"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Workspace Token",
+        "condition_type": "permission_check",
+        "condition_expression": "Slack token grants access to required channels",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_002",
+        "name": "Confirm Channel Exists",
+        "condition_type": "existence_check",
+        "condition_expression": "Target Slack channel ID is present in workspace",
+        "returns": "boolean",
+        "fail_action": "halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Slack Updates Delivered",
+        "directive_type": "completion",
+        "description": "Slack channels receive the intended updates and topic changes.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> r_002 -> a_001 -> a_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Keep Messages Concise",
+        "directive_type": "preference",
+        "description": "Slack updates should be brief and skimmable.",
+        "decomposable": false
+      }
+    ]
+  }
+}

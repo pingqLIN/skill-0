@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__codex_monitor",
+    "name": "codex-monitor",
+    "skill_layer": "claude_skill",
+    "title": "Codex Monitor",
+    "description": "Monitors codebase changes and alerts on risky diffs.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "codex-monitor",
+    "skill_description": "Monitors codebase changes and alerts on risky diffs."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Collect Code Diffs",
+        "action_type": "io_read",
+        "description": "Read recent commit diffs from the repository.",
+        "deterministic": false,
+        "side_effects": [
+          "reads repository diffs"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Evaluate Diff Risk",
+        "action_type": "compute",
+        "description": "Score diff risk based on size and sensitive file changes.",
+        "deterministic": true,
+        "side_effects": [
+          "produces risk score"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Send Risk Alert",
+        "action_type": "io_write",
+        "description": "Notify stakeholders when risky changes are detected.",
+        "deterministic": false,
+        "side_effects": [
+          "sends alert message"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Check Diff Size Threshold",
+        "condition_type": "threshold_check",
+        "condition_expression": "Changed lines exceed configured risk threshold",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "log only",
+          "notify"
+        ]
+      },
+      {
+        "id": "r_002",
+        "name": "Confirm Alert Channel",
+        "condition_type": "existence_check",
+        "condition_expression": "Alert destination channel is configured",
+        "returns": "boolean",
+        "fail_action": "halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Risk Alert Issued",
+        "directive_type": "completion",
+        "description": "Risky code changes are analyzed and alerts delivered.",
+        "decomposable": true,
+        "decomposition_hint": "a_001 -> a_002 -> r_001 -> r_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Limit False Positives",
+        "directive_type": "preference",
+        "description": "Alerting should balance signal with noise to avoid alert fatigue.",
+        "decomposable": false
+      }
+    ]
+  }
+}

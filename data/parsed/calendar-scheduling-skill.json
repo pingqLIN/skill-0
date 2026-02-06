@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__calendar_scheduling",
+    "name": "calendar-scheduling",
+    "skill_layer": "claude_skill",
+    "title": "Calendar Scheduling",
+    "description": "Schedules meetings and manages calendar availability.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "calendar-scheduling",
+    "skill_description": "Schedules meetings and manages calendar availability."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Fetch Availability",
+        "action_type": "external_call",
+        "description": "Retrieve availability windows from connected calendars.",
+        "deterministic": false,
+        "side_effects": [
+          "reads calendar availability"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Propose Meeting Slots",
+        "action_type": "compute",
+        "description": "Compute meeting slot options that satisfy constraints.",
+        "deterministic": true,
+        "side_effects": [
+          "generates slot options"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Book Meeting",
+        "action_type": "io_write",
+        "description": "Create the meeting event on the selected calendar.",
+        "deterministic": false,
+        "side_effects": [
+          "creates calendar event"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Verify Attendee Availability",
+        "condition_type": "validation",
+        "condition_expression": "All required attendees have availability data",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_002",
+        "name": "Check Conflict Free",
+        "condition_type": "consistency_check",
+        "condition_expression": "Proposed slot has no conflicts",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "pick alternate slot",
+          "request override"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Meeting Scheduled",
+        "directive_type": "completion",
+        "description": "Meeting is scheduled and attendees are notified.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> a_002 -> r_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Respect Time Zones",
+        "directive_type": "principle",
+        "description": "Scheduling must respect attendee time zones and working hours.",
+        "decomposable": false
+      }
+    ]
+  }
+}

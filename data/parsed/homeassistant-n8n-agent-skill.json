@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__homeassistant_n8n_agent",
+    "name": "homeassistant-n8n-agent",
+    "skill_layer": "claude_skill",
+    "title": "Homeassistant N8N Agent",
+    "description": "Builds Home Assistant automations through n8n workflows.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "homeassistant-n8n-agent",
+    "skill_description": "Builds Home Assistant automations through n8n workflows."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Read Device States",
+        "action_type": "external_call",
+        "description": "Retrieve current states from Home Assistant devices.",
+        "deterministic": false,
+        "side_effects": [
+          "reads device state"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Generate Automation Workflow",
+        "action_type": "llm_inference",
+        "description": "Create an n8n workflow based on automation requirements.",
+        "deterministic": false,
+        "side_effects": [
+          "creates automation workflow"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Deploy Workflow",
+        "action_type": "io_write",
+        "description": "Deploy the automation workflow to the n8n instance.",
+        "deterministic": false,
+        "side_effects": [
+          "deploys workflow"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Check Device Connectivity",
+        "condition_type": "state_check",
+        "condition_expression": "Target devices report online status",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "retry later",
+          "skip device"
+        ]
+      },
+      {
+        "id": "r_002",
+        "name": "Verify Workflow Permissions",
+        "condition_type": "permission_check",
+        "condition_expression": "n8n credentials allow workflow deployment",
+        "returns": "boolean",
+        "fail_action": "halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Automation Deployed",
+        "directive_type": "completion",
+        "description": "Home Assistant automation workflow is deployed successfully.",
+        "decomposable": true,
+        "decomposition_hint": "r_002 -> a_001 -> r_001 -> a_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Avoid Disruptive Automations",
+        "directive_type": "constraint",
+        "description": "Automations must not interrupt critical home systems.",
+        "decomposable": false
+      }
+    ]
+  }
+}
