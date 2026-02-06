@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__miniflux_news",
+    "name": "miniflux-news",
+    "skill_layer": "claude_skill",
+    "title": "Miniflux News",
+    "description": "Curates Miniflux RSS feed summaries and highlights.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "miniflux-news",
+    "skill_description": "Curates Miniflux RSS feed summaries and highlights."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Fetch RSS Feeds",
+        "action_type": "external_call",
+        "description": "Pull the latest entries from configured Miniflux feeds.",
+        "deterministic": false,
+        "side_effects": [
+          "retrieves feed data"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Summarize Feed Items",
+        "action_type": "llm_inference",
+        "description": "Generate short summaries of unread feed items.",
+        "deterministic": false,
+        "side_effects": [
+          "creates summaries"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Publish News Digest",
+        "action_type": "io_write",
+        "description": "Output the curated digest to the requested destination.",
+        "deterministic": false,
+        "side_effects": [
+          "writes digest"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Verify Feed Configuration",
+        "condition_type": "existence_check",
+        "condition_expression": "At least one Miniflux feed is configured",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_002",
+        "name": "Check Item Freshness",
+        "condition_type": "range_check",
+        "condition_expression": "Unread items are within the freshness window",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "include stale items",
+          "skip stale items"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "News Digest Delivered",
+        "directive_type": "completion",
+        "description": "Miniflux news digest is curated and shared.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> r_002 -> a_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Prioritize Unread Items",
+        "directive_type": "strategy",
+        "description": "Highlight unread and high-signal items before older entries.",
+        "decomposable": false
+      }
+    ]
+  }
+}

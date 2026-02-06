@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__outlook_email",
+    "name": "outlook-email",
+    "skill_layer": "claude_skill",
+    "title": "Outlook Email",
+    "description": "Manages Outlook email triage, prioritization, and responses.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "outlook-email",
+    "skill_description": "Manages Outlook email triage, prioritization, and responses."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Fetch Inbox Messages",
+        "action_type": "external_call",
+        "description": "Retrieve unread Outlook emails from the inbox.",
+        "deterministic": false,
+        "side_effects": [
+          "reads inbox"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Classify Emails",
+        "action_type": "llm_inference",
+        "description": "Categorize emails by urgency and topic.",
+        "deterministic": false,
+        "side_effects": [
+          "creates classifications"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Draft Response",
+        "action_type": "io_write",
+        "description": "Draft reply text for selected emails.",
+        "deterministic": false,
+        "side_effects": [
+          "creates draft response"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Verify Mailbox Access",
+        "condition_type": "permission_check",
+        "condition_expression": "Outlook credentials allow mailbox access",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_002",
+        "name": "Detect Sensitive Sender",
+        "condition_type": "validation",
+        "condition_expression": "Email sender is flagged as sensitive or VIP",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "require approval",
+          "auto-draft"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Inbox Triage Complete",
+        "directive_type": "completion",
+        "description": "Outlook inbox is triaged and drafts are prepared.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> a_002 -> r_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Require Approval Before Sending",
+        "directive_type": "constraint",
+        "description": "Responses should not be sent without user approval.",
+        "decomposable": false
+      }
+    ]
+  }
+}

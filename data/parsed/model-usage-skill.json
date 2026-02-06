@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__model_usage",
+    "name": "model-usage",
+    "skill_layer": "claude_skill",
+    "title": "Model Usage",
+    "description": "Reports AI model usage metrics and cost trends.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "model-usage",
+    "skill_description": "Reports AI model usage metrics and cost trends."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Collect Usage Logs",
+        "action_type": "io_read",
+        "description": "Gather model usage logs and token counts.",
+        "deterministic": false,
+        "side_effects": [
+          "reads usage logs"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Compute Cost Summary",
+        "action_type": "compute",
+        "description": "Calculate cost totals and trend deltas.",
+        "deterministic": true,
+        "side_effects": [
+          "produces cost summary"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Publish Usage Report",
+        "action_type": "io_write",
+        "description": "Share model usage and cost reporting.",
+        "deterministic": false,
+        "side_effects": [
+          "writes usage report"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Confirm Usage Data",
+        "condition_type": "existence_check",
+        "condition_expression": "Usage logs exist for the reporting window",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_002",
+        "name": "Detect Cost Spike",
+        "condition_type": "threshold_check",
+        "condition_expression": "Cost increase exceeds configured threshold",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "highlight spike",
+          "standard report"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Usage Report Delivered",
+        "directive_type": "completion",
+        "description": "Model usage report is generated and shared.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> a_002 -> r_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Highlight Anomalies",
+        "directive_type": "strategy",
+        "description": "Emphasize unusual usage spikes in the report.",
+        "decomposable": false
+      }
+    ]
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__factory_ai",
+    "name": "factory-ai",
+    "skill_layer": "claude_skill",
+    "title": "Factory AI",
+    "description": "Automates factory operations planning and operational alerts.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "factory-ai",
+    "skill_description": "Automates factory operations planning and operational alerts."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Read Production Metrics",
+        "action_type": "io_read",
+        "description": "Collect production line metrics and throughput data.",
+        "deterministic": false,
+        "side_effects": [
+          "reads operational data"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Optimize Production Schedule",
+        "action_type": "compute",
+        "description": "Compute schedule adjustments based on demand and capacity.",
+        "deterministic": true,
+        "side_effects": [
+          "produces schedule plan"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Notify Operators",
+        "action_type": "io_write",
+        "description": "Send scheduling updates and alerts to operators.",
+        "deterministic": false,
+        "side_effects": [
+          "sends operator notifications"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Data Freshness",
+        "condition_type": "range_check",
+        "condition_expression": "Production metrics are within the freshness window",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "use last known data",
+          "pause scheduling"
+        ]
+      },
+      {
+        "id": "r_002",
+        "name": "Confirm Safety Constraints",
+        "condition_type": "consistency_check",
+        "condition_expression": "Schedule complies with safety and maintenance constraints",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Production Plan Delivered",
+        "directive_type": "completion",
+        "description": "Factory schedule and alerts are delivered to operators.",
+        "decomposable": true,
+        "decomposition_hint": "a_001 -> r_001 -> a_002 -> r_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Safety Compliance Required",
+        "directive_type": "constraint",
+        "description": "All recommendations must comply with factory safety policies.",
+        "decomposable": false
+      }
+    ]
+  }
+}

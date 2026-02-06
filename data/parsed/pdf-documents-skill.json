@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__pdf_documents",
+    "name": "pdf-documents",
+    "skill_layer": "claude_skill",
+    "title": "PDF Documents",
+    "description": "Analyzes PDF documents and extracts structured summaries.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "pdf-documents",
+    "skill_description": "Analyzes PDF documents and extracts structured summaries."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Load PDF",
+        "action_type": "io_read",
+        "description": "Open and read the PDF document contents.",
+        "deterministic": true,
+        "side_effects": [
+          "reads PDF file"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Extract Text",
+        "action_type": "transform",
+        "description": "Extract readable text and structure from the PDF.",
+        "deterministic": true,
+        "side_effects": [
+          "creates text extraction"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Summarize Document",
+        "action_type": "llm_inference",
+        "description": "Summarize key points and sections from extracted text.",
+        "deterministic": false,
+        "side_effects": [
+          "generates summary"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate PDF Readability",
+        "condition_type": "validation",
+        "condition_expression": "PDF text is extractable and not corrupted",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_002",
+        "name": "Check Page Limit",
+        "condition_type": "range_check",
+        "condition_expression": "PDF page count within processing limits",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "sample pages",
+          "request smaller file"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "PDF Analysis Complete",
+        "directive_type": "completion",
+        "description": "PDF content is summarized with structured highlights.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> r_002 -> a_001 -> a_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Maintain Extraction Accuracy",
+        "directive_type": "principle",
+        "description": "Summaries should reflect the source text without fabrication.",
+        "decomposable": false
+      }
+    ]
+  }
+}

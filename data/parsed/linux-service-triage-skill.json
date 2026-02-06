@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__linux_service_triage",
+    "name": "linux-service-triage",
+    "skill_layer": "claude_skill",
+    "title": "Linux Service Triage",
+    "description": "Diagnoses Linux service failures and recommends recovery steps.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "linux-service-triage",
+    "skill_description": "Diagnoses Linux service failures and recommends recovery steps."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Collect Service Logs",
+        "action_type": "io_read",
+        "description": "Read systemd journal entries and service logs for the target service.",
+        "deterministic": true,
+        "side_effects": [
+          "reads system logs"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Analyze Service Status",
+        "action_type": "compute",
+        "description": "Interpret service status codes and failure signals.",
+        "deterministic": true,
+        "side_effects": [
+          "produces diagnostic summary"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Recommend Remediation",
+        "action_type": "llm_inference",
+        "description": "Suggest recovery actions based on observed failure patterns.",
+        "deterministic": false,
+        "side_effects": [
+          "creates remediation guidance"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Confirm Service Exists",
+        "condition_type": "existence_check",
+        "condition_expression": "Requested systemd service unit is installed",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_002",
+        "name": "Assess Incident Severity",
+        "condition_type": "threshold_check",
+        "condition_expression": "Failure frequency exceeds acceptable threshold",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "monitor only",
+          "escalate"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Service Triage Completed",
+        "directive_type": "completion",
+        "description": "Service failure diagnostics and remediation steps are delivered.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> a_002 -> r_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Preserve System Safety",
+        "directive_type": "constraint",
+        "description": "Recommendations must avoid actions that could destabilize production systems.",
+        "decomposable": false
+      }
+    ]
+  }
+}

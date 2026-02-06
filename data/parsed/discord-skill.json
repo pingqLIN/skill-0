@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__discord",
+    "name": "discord",
+    "skill_layer": "claude_skill",
+    "title": "Discord",
+    "description": "Manages Discord community messaging, moderation, and announcements.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "discord",
+    "skill_description": "Manages Discord community messaging, moderation, and announcements."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Fetch Channel Messages",
+        "action_type": "io_read",
+        "description": "Retrieve recent messages from specified Discord channels.",
+        "deterministic": false,
+        "side_effects": [
+          "reads channel history"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Post Announcement",
+        "action_type": "io_write",
+        "description": "Publish an announcement to the target Discord channel.",
+        "deterministic": false,
+        "side_effects": [
+          "writes message to channel"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Apply Moderation Action",
+        "action_type": "state_change",
+        "description": "Warn, delete, or restrict users based on policy violations.",
+        "deterministic": false,
+        "side_effects": [
+          "updates moderation state"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Verify Bot Permissions",
+        "condition_type": "permission_check",
+        "condition_expression": "Bot token has required Discord channel permissions",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_002",
+        "name": "Detect Policy Violation",
+        "condition_type": "validation",
+        "condition_expression": "Message content matches moderation policy violations",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "skip moderation",
+          "apply moderation"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Community Updates Delivered",
+        "directive_type": "completion",
+        "description": "Discord channels are updated with approved announcements and moderation actions.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> r_002 -> a_002/a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Respect Discord Rate Limits",
+        "directive_type": "constraint",
+        "description": "All Discord API calls must stay within documented rate limits.",
+        "decomposable": false
+      }
+    ]
+  }
+}

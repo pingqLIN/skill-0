@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__coding_agent",
+    "name": "coding-agent",
+    "skill_layer": "claude_skill",
+    "title": "Coding Agent",
+    "description": "Assists with coding tasks, refactors, and testing workflows.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "coding-agent",
+    "skill_description": "Assists with coding tasks, refactors, and testing workflows."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Capture Coding Request",
+        "action_type": "await_input",
+        "description": "Collect requirements and context for the coding task.",
+        "deterministic": false,
+        "side_effects": [
+          "captures request"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Generate Code Changes",
+        "action_type": "llm_inference",
+        "description": "Draft code changes aligned with requirements.",
+        "deterministic": false,
+        "side_effects": [
+          "creates proposed changes"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Execute Test Suite",
+        "action_type": "external_call",
+        "description": "Run relevant test commands to validate changes.",
+        "deterministic": false,
+        "side_effects": [
+          "runs tests"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Verify Repository Access",
+        "condition_type": "permission_check",
+        "condition_expression": "Agent has access to modify the target repository",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_002",
+        "name": "Validate Tests Passing",
+        "condition_type": "validation",
+        "condition_expression": "Test suite completes without failures",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "iterate fixes",
+          "report failure"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Coding Assistance Complete",
+        "directive_type": "completion",
+        "description": "Code changes are delivered with supporting test results.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> a_002 -> a_003 -> r_002"
+      },
+      {
+        "id": "d_002",
+        "name": "Follow Project Conventions",
+        "directive_type": "principle",
+        "description": "Generated code should align with existing project standards.",
+        "decomposable": false
+      }
+    ]
+  }
+}

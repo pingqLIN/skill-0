@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__deepthink",
+    "name": "deepthink",
+    "skill_layer": "claude_skill",
+    "title": "Deepthink",
+    "description": "Performs deep reasoning analysis on complex prompts.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "deepthink",
+    "skill_description": "Performs deep reasoning analysis on complex prompts."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Capture Prompt Context",
+        "action_type": "await_input",
+        "description": "Collect the full prompt and any required context.",
+        "deterministic": false,
+        "side_effects": [
+          "captures analysis context"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Run Deep Reasoning",
+        "action_type": "llm_inference",
+        "description": "Perform multi-step reasoning to analyze the prompt.",
+        "deterministic": false,
+        "side_effects": [
+          "creates reasoning chain"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Synthesize Conclusion",
+        "action_type": "transform",
+        "description": "Condense the reasoning into a clear final response.",
+        "deterministic": true,
+        "side_effects": [
+          "produces synthesis"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Check Prompt Clarity",
+        "condition_type": "validation",
+        "condition_expression": "Prompt includes a clear question or objective",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_002",
+        "name": "Validate Evidence Sufficiency",
+        "condition_type": "consistency_check",
+        "condition_expression": "Reasoning includes sufficient evidence and assumptions",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "request more context",
+          "proceed"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Deep Analysis Delivered",
+        "directive_type": "completion",
+        "description": "A deep reasoning analysis is delivered with a clear conclusion.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> a_002 -> r_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Cite Assumptions",
+        "directive_type": "principle",
+        "description": "Explicitly surface key assumptions in the analysis.",
+        "decomposable": false
+      }
+    ]
+  }
+}

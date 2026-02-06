@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__telegram_mod",
+    "name": "telegram-mod",
+    "skill_layer": "claude_skill",
+    "title": "Telegram Mod",
+    "description": "Moderates Telegram channels with policy enforcement and alerts.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "telegram-mod",
+    "skill_description": "Moderates Telegram channels with policy enforcement and alerts."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Read Telegram Messages",
+        "action_type": "external_call",
+        "description": "Fetch recent messages from monitored Telegram channels.",
+        "deterministic": false,
+        "side_effects": [
+          "reads channel messages"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Evaluate Policy Match",
+        "action_type": "compute",
+        "description": "Score messages against moderation policies.",
+        "deterministic": true,
+        "side_effects": [
+          "produces policy score"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Enforce Moderation",
+        "action_type": "state_change",
+        "description": "Apply warnings or removal actions in Telegram.",
+        "deterministic": false,
+        "side_effects": [
+          "updates channel moderation state"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Check Moderation Rights",
+        "condition_type": "permission_check",
+        "condition_expression": "Bot has moderation permissions for the channel",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_002",
+        "name": "Confirm Policy Violation",
+        "condition_type": "validation",
+        "condition_expression": "Message meets violation threshold",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "log only",
+          "enforce action"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Channel Moderation Complete",
+        "directive_type": "completion",
+        "description": "Telegram moderation actions are applied and recorded.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> a_002 -> r_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Maintain Transparency",
+        "directive_type": "principle",
+        "description": "Moderation actions should be documented for auditability.",
+        "decomposable": false
+      }
+    ]
+  }
+}

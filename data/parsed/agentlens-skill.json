@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__clawhub__agentlens",
+    "name": "agentlens",
+    "skill_layer": "claude_skill",
+    "title": "AgentLens",
+    "description": "Tracks AI agent performance metrics and operational logs.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-02-06T02:24:25.974Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "clawhub.ai/skills",
+    "skill_name": "agentlens",
+    "skill_description": "Tracks AI agent performance metrics and operational logs."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Collect Run Metrics",
+        "action_type": "io_read",
+        "description": "Gather agent execution metrics and telemetry data.",
+        "deterministic": false,
+        "side_effects": [
+          "reads telemetry"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Compute KPI Summary",
+        "action_type": "compute",
+        "description": "Calculate performance KPIs and trend indicators.",
+        "deterministic": true,
+        "side_effects": [
+          "produces KPI calculations"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Store Monitoring Report",
+        "action_type": "io_write",
+        "description": "Write the summarized metrics to a dashboard or log store.",
+        "deterministic": false,
+        "side_effects": [
+          "updates monitoring report"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Confirm Metrics Availability",
+        "condition_type": "existence_check",
+        "condition_expression": "Required telemetry signals are present",
+        "returns": "boolean",
+        "fail_action": "halt"
+      },
+      {
+        "id": "r_002",
+        "name": "Detect Performance Anomaly",
+        "condition_type": "threshold_check",
+        "condition_expression": "KPI deviation exceeds alert threshold",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "log only",
+          "trigger alert"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Performance Report Ready",
+        "directive_type": "completion",
+        "description": "Agent performance report is generated and stored.",
+        "decomposable": true,
+        "decomposition_hint": "r_001 -> a_001 -> a_002 -> r_002 -> a_003"
+      },
+      {
+        "id": "d_002",
+        "name": "Protect Sensitive Logs",
+        "directive_type": "constraint",
+        "description": "Telemetry data must be handled with privacy safeguards.",
+        "decomposable": false
+      }
+    ]
+  }
+}
