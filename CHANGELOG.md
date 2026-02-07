@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added (2026-02-07)
+- **Vercel Labs Skills Comparison**: Comprehensive analysis comparing skill-0 with Vercel Labs Skills project
+  - Full comparison document in Chinese ([vercel-skills-comparison.md](docs/vercel-skills-comparison.md))
+  - English version ([vercel-skills-comparison.en.md](docs/vercel-skills-comparison.en.md))
+  - Quick reference guide ([vercel-skills-comparison-quick.md](docs/vercel-skills-comparison-quick.md))
+  - Architecture diagram with Mermaid visualization
+  - Key findings: Projects are complementary (Skill-0 = depth, Vercel = breadth)
+  - Proposed integration pathways: SKILL.md converter, Analysis API, Marketplace integration
+  - Updated README files with comparison links
+
 ## [v2.5.0] - 2026-02-02 - Agent-Lightning Inspired Enhancements ⚡
 
 - **New Feature**: Distributed skill processing architecture inspired by [Microsoft Agent-Lightning](https://github.com/microsoft/agent-lightning)
