@@ -151,6 +151,7 @@ python -m src.vector_db.search --db db/skills.db stats
 - **[examples.md](docs/guides/examples.md)** - 跨不同領域的 7 個詳細技能範例
 - **[AGENTS.md](AGENTS.md)** - AI 代理工作指南
 - **[vision-agent-alternatives.zh-TW.md](docs/vision-agent-alternatives.zh-TW.md)** - 免費與開源 vision-agent 替代方案指南 ([English](docs/vision-agent-alternatives.md))
+- **[vercel-skills-comparison.md](docs/vercel-skills-comparison.md)** - 與 Vercel Labs Skills 專案的比較 ([English](docs/vercel-skills-comparison.en.md)) ([快速參考](docs/vercel-skills-comparison-quick.md))
 
 ## 版本
 

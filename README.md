@@ -261,6 +261,7 @@ Comprehensive documentation is available:
 - **[AGENTS.md](AGENTS.md)** - Guidelines for AI agents working on this project
 - **[scripts/helper.py](src/tools/helper.py)** - Helper utilities for validation, conversion, and testing
 - **[vision-agent-alternatives.md](docs/vision-agent-alternatives.md)** - Free & open-source vision-agent alternatives guide ([中文版](docs/vision-agent-alternatives.zh-TW.md))
+- **[vercel-skills-comparison.md](docs/vercel-skills-comparison.md)** - Comparison with Vercel Labs Skills project ([English](docs/vercel-skills-comparison.en.md)) ([Quick Reference](docs/vercel-skills-comparison-quick.md))
 
 ### Agent-Lightning Inspired Enhancements ⚡
 
