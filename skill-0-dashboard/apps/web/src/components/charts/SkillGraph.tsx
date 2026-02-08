@@ -41,6 +41,9 @@ export function SkillGraph({ nodes, edges, width = GRAPH_WIDTH, height = GRAPH_H
   }, [nodes]);
 
   const nodePositions = useMemo(() => {
+    if (nodes.length === 0) {
+      return new Map<string, { x: number; y: number }>();
+    }
     const radius = Math.min(width, height) / 2 - GRAPH_PADDING;
     const centerX = width / 2;
     const centerY = height / 2;
@@ -54,10 +57,10 @@ export function SkillGraph({ nodes, edges, width = GRAPH_WIDTH, height = GRAPH_H
         return [node.id, { x, y }];
       }),
     );
-  }, [nodes]);
+  }, [nodes, width, height]);
 
   const maxLinkCount = useMemo(
-    () => Math.max(1, ...nodes.map((node) => node.link_count)),
+    () => (nodes.length === 0 ? 1 : Math.max(1, ...nodes.map((node) => node.link_count))),
     [nodes],
   );
 
