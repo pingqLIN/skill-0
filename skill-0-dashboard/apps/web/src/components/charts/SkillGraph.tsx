@@ -3,11 +3,10 @@ import type { GraphEdge, GraphNode } from '@/api/types';
 
 const GRAPH_WIDTH = 900;
 const GRAPH_HEIGHT = 520;
-const NODE_COLOR_PALETTE = ['#38bdf8', '#a78bfa', '#fbbf24', '#34d399', '#f87171', '#cbd5f5'];
+const NODE_COLOR_PALETTE = ['#38bdf8', '#a78bfa', '#fbbf24', '#34d399', '#f87171', '#64748b'];
 const MAX_LABEL_LENGTH = 16;
 const MIN_NODE_RADIUS = 6;
 const MAX_NODE_RADIUS = 14;
-const BASE_NODE_RADIUS = 6;
 
 interface Props {
   nodes: GraphNode[];
@@ -79,7 +78,7 @@ export function SkillGraph({ nodes, edges }: Props) {
           }
           const size = Math.max(
             MIN_NODE_RADIUS,
-            Math.min(MAX_NODE_RADIUS, BASE_NODE_RADIUS + node.link_count),
+            Math.min(MAX_NODE_RADIUS, MIN_NODE_RADIUS + node.link_count),
           );
           const color =
             categoryColors.get(node.category || 'uncategorized') ?? NODE_COLOR_PALETTE[0];
@@ -94,6 +93,7 @@ export function SkillGraph({ nodes, edges }: Props) {
                 y={position.y + size + 12}
                 textAnchor="middle"
                 className="fill-slate-700 text-[10px]"
+                aria-label={node.name}
               >
                 {getNodeLabel(node.name)}
               </text>
