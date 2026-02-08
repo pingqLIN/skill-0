@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://skill-parser.pingqlin.dev/schema/v2.1/skill-decomposition.schema.json",
+  "$id": "https://skill-parser.pingqlin.dev/schema/v2.3/skill-decomposition.schema.json",
   "title": "Skill Decomposition Schema",
   "description": "解析 Claude Skill 與 MCP Tool 內部成分結構的標準格式，採用三元分類法：Action / Rule / Directive",
   "version": "2.3.0",

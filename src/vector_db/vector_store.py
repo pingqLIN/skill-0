@@ -292,7 +292,14 @@ class VectorStore:
         return stats
     
     def delete_skill(self, skill_id: int) -> bool:
-        """刪除 skill"""
+        """刪除 skill 及其相關連結"""
+        # 取得 filename stem 以清除相關 skill_links
+        skill = self.get_skill_by_id(skill_id)
+        if skill:
+            skill_key = skill.get('filename', '').replace('.json', '')
+            if skill_key:
+                self.delete_skill_links_by_skill(skill_key)
+        
         self.conn.execute('DELETE FROM skill_embeddings WHERE rowid = ?', (skill_id,))
         result = self.conn.execute('DELETE FROM skills WHERE id = ?', (skill_id,))
         self.conn.commit()
@@ -342,13 +349,20 @@ class VectorStore:
             raise ValueError(f"Invalid link_type '{link_type}'. Must be one of: {VALID_LINK_TYPES}")
         
         cursor = self.conn.execute('''
-            INSERT OR REPLACE INTO skill_links 
+            INSERT INTO skill_links
                 (source_skill_id, target_skill_id, link_type, description, strength, bidirectional)
             VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(source_skill_id, target_skill_id, link_type) DO UPDATE SET
+                description = excluded.description,
+                strength = excluded.strength,
+                bidirectional = excluded.bidirectional
+            RETURNING id
         ''', (source_skill_id, target_skill_id, link_type, description, strength, bidirectional))
         
+        row = cursor.fetchone()
         self.conn.commit()
-        return cursor.lastrowid
+        
+        return row['id'] if row is not None else None
     
     def get_skill_links(self, skill_id: str) -> List[Dict]:
         """
@@ -481,16 +495,22 @@ class VectorStore:
                 'directive_count': skill.get('directive_count', 0),
             })
         
-        # 建立邊列表
+        # 建立節點 ID 集合（用於驗證邊）
+        node_ids = {n['id'] for n in nodes}
+        
+        # 建立邊列表（僅包含兩端節點皆存在的邊）
         edges = []
         for link in links:
-            edges.append({
-                'source': link['source_skill_id'],
-                'target': link['target_skill_id'],
-                'link_type': link['link_type'],
-                'strength': link['strength'],
-                'bidirectional': bool(link['bidirectional']),
-            })
+            src = link['source_skill_id']
+            tgt = link['target_skill_id']
+            if src in node_ids and tgt in node_ids:
+                edges.append({
+                    'source': src,
+                    'target': tgt,
+                    'link_type': link['link_type'],
+                    'strength': link['strength'],
+                    'bidirectional': bool(link['bidirectional']),
+                })
         
         # 統計
         orphan_count = sum(1 for n in nodes if n['link_count'] == 0)

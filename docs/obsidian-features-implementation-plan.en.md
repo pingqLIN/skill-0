@@ -45,7 +45,7 @@ Based on the analysis in "Obsidian Database Architecture Research & Skill-0 Appl
 | Dimension | Assessment |
 |-----------|-----------|
 | **Tech Source** | Obsidian MetadataCache.resolvedLinks concept |
-| **Implementation** | SQLite relational table + reverse link VIEW |
+| **Implementation** | SQLite relational table + Python-computed reverse links |
 | **Relevance** | Directly fills the inter-skill relationship gap |
 | **Compliance** | Pure SQLite, no additional licensing issues |
 | **Appropriateness** | Perfect fit — Skill-0 already uses SQLite, extension cost is minimal |
@@ -131,7 +131,7 @@ Based on the analysis in "Obsidian Database Architecture Research & Skill-0 Appl
 #### Must Have
 1. **skill_links Schema definition**: 7 link types (depends_on, extends, composes_with, alternative_to, related_to, derived_from, parent_of)
 2. **SQLite skill_links table**: With indexes and uniqueness constraints
-3. **Backlink query VIEW**: SQL VIEW for auto-generated reverse links
+3. **Backlink query via Python**: Computed backlinks with automatic reverse type mapping
 4. **CRUD API**: Create/Read/Delete skill links
 5. **Graph data API**: Return JSON format nodes + edges
 

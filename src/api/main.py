@@ -133,8 +133,8 @@ async def root():
             "cluster": "/api/cluster",
             "stats": "/api/stats",
             "skills": "/api/skills",
-            "links": "/api/links",
-            "backlinks": "/api/backlinks/{skill_id}",
+            "links": "/api/links (or /api/links/{skill_key})",
+            "backlinks": "/api/backlinks/{skill_key}",
             "graph": "/api/graph",
             "moc": "/api/moc",
             "docs": "/docs"
@@ -444,30 +444,31 @@ async def list_all_links():
     }
 
 
-@app.get("/api/links/{skill_id}", tags=["Links"])
-async def get_skill_links(skill_id: str):
-    """Get outgoing links for a skill"""
+@app.get("/api/links/{skill_key}", tags=["Links"])
+async def get_skill_links(skill_key: str):
+    """Get outgoing links for a skill (skill_key is the filename stem, e.g. 'docx-skill')"""
     engine = get_search_engine()
-    links = engine.get_links(skill_id)
+    links = engine.get_links(skill_key)
     return {
-        "skill_id": skill_id,
+        "skill_id": skill_key,
         "links": links,
         "count": len(links),
     }
 
 
-@app.get("/api/backlinks/{skill_id}", tags=["Links"])
-async def get_skill_backlinks(skill_id: str):
+@app.get("/api/backlinks/{skill_key}", tags=["Links"])
+async def get_skill_backlinks(skill_key: str):
     """
     Get backlinks for a skill (inspired by Obsidian Backlinks)
     
+    skill_key is the filename stem (e.g. 'docx-skill').
     Returns all skills that link TO this skill, including
     reverse relationships from bidirectional links.
     """
     engine = get_search_engine()
-    backlinks = engine.get_backlinks(skill_id)
+    backlinks = engine.get_backlinks(skill_key)
     return {
-        "skill_id": skill_id,
+        "skill_id": skill_key,
         "backlinks": backlinks,
         "count": len(backlinks),
     }
@@ -539,7 +540,7 @@ def main():
     
     print(f"""
 ╔════════════════════════════════════════════════════════════╗
-║              Skill-0 API Server v2.1.0                     ║
+║              Skill-0 API Server v{app.version:<25s}║
 ╠════════════════════════════════════════════════════════════╣
 ║  API Docs:  http://127.0.0.1:8000/docs                     ║
 ║  ReDoc:     http://127.0.0.1:8000/redoc                    ║

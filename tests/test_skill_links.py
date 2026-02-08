@@ -156,8 +156,8 @@ class TestSkillLinkCache:
 # These tests require sqlite-vec, skip if not available
 
 try:
-    import sqlite_vec
     SQLITE_VEC_AVAILABLE = True
+    import sqlite_vec  # noqa: F401 — needed to check availability
 except ImportError:
     SQLITE_VEC_AVAILABLE = False
 
@@ -177,6 +177,7 @@ class TestVectorStoreSkillLinks:
         store = VectorStore(db_path)
         yield store
         store.close()
+        Path(db_path).unlink(missing_ok=True)
     
     @pytest.fixture
     def store_with_skills(self, store):
@@ -273,13 +274,15 @@ class TestVectorStoreSkillLinks:
         assert count == 3
     
     def test_unique_constraint(self, store):
-        """Test that duplicate links are replaced (UPSERT)"""
-        store.add_skill_link('skill_a', 'skill_b', 'depends_on', strength=0.5)
-        store.add_skill_link('skill_a', 'skill_b', 'depends_on', strength=0.9)
+        """Test that duplicate links are updated in-place (UPSERT preserves ID)"""
+        link_id_1 = store.add_skill_link('skill_a', 'skill_b', 'depends_on', strength=0.5)
+        link_id_2 = store.add_skill_link('skill_a', 'skill_b', 'depends_on', strength=0.9)
         
         links = store.get_skill_links('skill_a')
         assert len(links) == 1
         assert links[0]['strength'] == 0.9
+        # Upsert should preserve the original ID
+        assert link_id_1 == link_id_2
     
     def test_graph_data(self, store_with_skills):
         """Test graph data generation"""

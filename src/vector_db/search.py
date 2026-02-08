@@ -33,6 +33,7 @@ class SemanticSearch:
         self.embedder = SkillEmbedder(model_name)
         self.store = VectorStore(db_path, dimension=self.embedder.dimension)
         self.link_cache = SkillLinkCache(ttl_seconds=cache_ttl)
+        self._model_name = model_name
         
     def index_skills(self, parsed_dir: Union[str, Path], show_progress: bool = True) -> int:
         """
@@ -178,9 +179,8 @@ class SemanticSearch:
             source_skill_id, target_skill_id, link_type,
             description, strength, bidirectional
         )
-        # 失效相關快取
-        self.link_cache.invalidate(source_skill_id)
-        self.link_cache.invalidate(target_skill_id)
+        # 失效相關快取 - 全域失效一次即可避免重複清除
+        self.link_cache.invalidate()
         return link_id
     
     def get_links(self, skill_id: str) -> List[Dict]:
@@ -237,7 +237,7 @@ class SemanticSearch:
         """取得搜尋引擎統計"""
         stats = self.store.get_statistics()
         stats['embedding_dimension'] = self.embedder.dimension
-        stats['model_name'] = 'all-MiniLM-L6-v2'
+        stats['model_name'] = self._model_name
         stats['cache_stats'] = self.link_cache.get_stats()
         return stats
     

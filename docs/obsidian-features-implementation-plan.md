@@ -45,7 +45,7 @@
 | 評估面向 | 說明 |
 |---------|------|
 | **技術來源** | Obsidian MetadataCache.resolvedLinks 概念 |
-| **實作方式** | SQLite 關係表 + 反向連結視圖（VIEW） |
+| **實作方式** | SQLite 關係表 + Python 查詢計算反向連結 |
 | **相關性** | 直接填補 Skill-0 技能間關係的空白 |
 | **合規性** | 使用純 SQLite，無額外授權問題 |
 | **適當性** | 完美契合——Skill-0 已用 SQLite，擴展成本極低 |

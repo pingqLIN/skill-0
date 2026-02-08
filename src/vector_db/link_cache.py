@@ -42,12 +42,19 @@ class SkillLinkCache:
             return True
         return (time.time() - self._timestamps[key]) > self.ttl_seconds
     
+    def _evict(self, key: str):
+        """清除過期的快取項目"""
+        self._cache.pop(key, None)
+        self._timestamps.pop(key, None)
+    
     def get_links(self, skill_id: str) -> Optional[List[Dict]]:
         """取得快取中的出站連結"""
         key = self._make_key('links', skill_id)
-        if key in self._cache and not self._is_expired(key):
-            self._hits += 1
-            return self._cache[key]
+        if key in self._cache:
+            if not self._is_expired(key):
+                self._hits += 1
+                return self._cache[key]
+            self._evict(key)
         self._misses += 1
         return None
     
@@ -60,9 +67,11 @@ class SkillLinkCache:
     def get_backlinks(self, skill_id: str) -> Optional[List[Dict]]:
         """取得快取中的反向連結"""
         key = self._make_key('backlinks', skill_id)
-        if key in self._cache and not self._is_expired(key):
-            self._hits += 1
-            return self._cache[key]
+        if key in self._cache:
+            if not self._is_expired(key):
+                self._hits += 1
+                return self._cache[key]
+            self._evict(key)
         self._misses += 1
         return None
     
@@ -75,9 +84,11 @@ class SkillLinkCache:
     def get_graph(self) -> Optional[Dict]:
         """取得快取中的圖譜資料"""
         key = 'graph:all'
-        if key in self._cache and not self._is_expired(key):
-            self._hits += 1
-            return self._cache[key]
+        if key in self._cache:
+            if not self._is_expired(key):
+                self._hits += 1
+                return self._cache[key]
+            self._evict(key)
         self._misses += 1
         return None
     
@@ -90,9 +101,11 @@ class SkillLinkCache:
     def get_moc(self) -> Optional[Dict]:
         """取得快取中的 MOC 資料"""
         key = 'moc:all'
-        if key in self._cache and not self._is_expired(key):
-            self._hits += 1
-            return self._cache[key]
+        if key in self._cache:
+            if not self._is_expired(key):
+                self._hits += 1
+                return self._cache[key]
+            self._evict(key)
         self._misses += 1
         return None
     
