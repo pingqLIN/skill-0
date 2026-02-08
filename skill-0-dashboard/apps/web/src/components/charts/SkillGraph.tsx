@@ -3,7 +3,11 @@ import type { GraphEdge, GraphNode } from '@/api/types';
 
 const GRAPH_WIDTH = 900;
 const GRAPH_HEIGHT = 520;
-const NODE_COLORS = ['#38bdf8', '#a78bfa', '#fbbf24', '#34d399', '#f87171', '#cbd5f5'];
+const NODE_COLOR_PALETTE = ['#38bdf8', '#a78bfa', '#fbbf24', '#34d399', '#f87171', '#cbd5f5'];
+const MAX_LABEL_LENGTH = 16;
+const MIN_NODE_RADIUS = 6;
+const MAX_NODE_RADIUS = 14;
+const BASE_NODE_RADIUS = 6;
 
 interface Props {
   nodes: GraphNode[];
@@ -16,7 +20,10 @@ export function SkillGraph({ nodes, edges }: Props) {
       new Set(nodes.map((node) => node.category || 'uncategorized')),
     ).sort();
     return new Map(
-      categories.map((category, index) => [category, NODE_COLORS[index % NODE_COLORS.length]]),
+      categories.map((category, index) => [
+        category,
+        NODE_COLOR_PALETTE[index % NODE_COLOR_PALETTE.length],
+      ]),
     );
   }, [nodes]);
 
@@ -36,7 +43,8 @@ export function SkillGraph({ nodes, edges }: Props) {
     );
   }, [nodes]);
 
-  const getNodeLabel = (name: string) => (name.length > 16 ? `${name.slice(0, 16)}…` : name);
+  const getNodeLabel = (name: string) =>
+    name.length > MAX_LABEL_LENGTH ? `${name.slice(0, MAX_LABEL_LENGTH)}…` : name;
 
   return (
     <svg
@@ -69,8 +77,12 @@ export function SkillGraph({ nodes, edges }: Props) {
           if (!position) {
             return null;
           }
-          const size = Math.max(6, Math.min(14, 6 + node.link_count));
-          const color = categoryColors.get(node.category || 'uncategorized') ?? NODE_COLORS[0];
+          const size = Math.max(
+            MIN_NODE_RADIUS,
+            Math.min(MAX_NODE_RADIUS, BASE_NODE_RADIUS + node.link_count),
+          );
+          const color =
+            categoryColors.get(node.category || 'uncategorized') ?? NODE_COLOR_PALETTE[0];
 
           return (
             <g key={node.id}>
