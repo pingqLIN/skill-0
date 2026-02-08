@@ -48,6 +48,9 @@ Thumbs.db
 *.log
 logs/
 
+# Node
+node_modules/
+
 # Coverage
 htmlcov/
 .coverage

@@ -1,8 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, List, CheckCircle, Shield, FileText } from 'lucide-react';
+import { LayoutDashboard, List, CheckCircle, Shield, FileText, Share2 } from 'lucide-react';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { path: '/graph', label: 'Skill Graph', icon: Share2 },
   { path: '/skills', label: 'Skills', icon: List },
   { path: '/review', label: 'Review Queue', icon: CheckCircle },
   { path: '/security', label: 'Security', icon: Shield },
