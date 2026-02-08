@@ -3,10 +3,10 @@
   "$id": "https://skill-parser.pingqlin.dev/schema/v2.1/skill-decomposition.schema.json",
   "title": "Skill Decomposition Schema",
   "description": "解析 Claude Skill 與 MCP Tool 內部成分結構的標準格式，採用三元分類法：Action / Rule / Directive",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "author": "pingqLIN",
   "created": "2026-01-23",
-  "updated": "2026-01-30",
+  "updated": "2026-02-08",
   "definitions": {
     "provenance_source": {
       "type": "object",
@@ -537,6 +537,48 @@
           "type": "string"
         }
       }
+    },
+    "skill_link": {
+      "type": "object",
+      "description": "技能間連結關係（借鑑 Obsidian 雙向連結概念）",
+      "required": [
+        "target_skill_id",
+        "link_type"
+      ],
+      "properties": {
+        "target_skill_id": {
+          "type": "string",
+          "description": "目標技能識別碼"
+        },
+        "link_type": {
+          "type": "string",
+          "enum": [
+            "depends_on",
+            "extends",
+            "composes_with",
+            "alternative_to",
+            "related_to",
+            "derived_from",
+            "parent_of"
+          ],
+          "description": "關係類型：depends_on=執行依賴, extends=功能擴展, composes_with=可組合, alternative_to=替代方案, related_to=主題相關, derived_from=衍生自, parent_of=父技能"
+        },
+        "description": {
+          "type": "string",
+          "description": "關係說明"
+        },
+        "strength": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "關係強度（0=弱關聯, 1=強依賴）"
+        },
+        "bidirectional": {
+          "type": "boolean",
+          "default": false,
+          "description": "是否為雙向關係（自動建立反向連結）"
+        }
+      }
     }
   },
   "type": "object",
@@ -684,6 +726,13 @@
           "type": "string"
         }
       }
+    },
+    "skill_links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/skill_link"
+      },
+      "description": "技能間連結關係列表（借鑑 Obsidian 雙向連結與關係圖譜概念）"
     }
   }
 }

@@ -10,6 +10,7 @@ import numpy as np
 
 from .embedder import SkillEmbedder
 from .vector_store import VectorStore
+from .link_cache import SkillLinkCache
 
 
 class SemanticSearch:
@@ -18,7 +19,8 @@ class SemanticSearch:
     def __init__(
         self,
         db_path: Union[str, Path] = 'skills.db',
-        model_name: str = 'all-MiniLM-L6-v2'
+        model_name: str = 'all-MiniLM-L6-v2',
+        cache_ttl: int = 300
     ):
         """
         初始化搜尋引擎
@@ -26,9 +28,11 @@ class SemanticSearch:
         Args:
             db_path: 向量資料庫路徑
             model_name: embedding 模型名稱
+            cache_ttl: 連結快取 TTL（秒）
         """
         self.embedder = SkillEmbedder(model_name)
         self.store = VectorStore(db_path, dimension=self.embedder.dimension)
+        self.link_cache = SkillLinkCache(ttl_seconds=cache_ttl)
         
     def index_skills(self, parsed_dir: Union[str, Path], show_progress: bool = True) -> int:
         """
@@ -158,11 +162,83 @@ class SemanticSearch:
             
         return clusters
     
+    # ==================== Skill Links (借鑑 Obsidian) ====================
+    
+    def add_link(
+        self,
+        source_skill_id: str,
+        target_skill_id: str,
+        link_type: str,
+        description: str = None,
+        strength: float = 0.5,
+        bidirectional: bool = False
+    ) -> int:
+        """新增技能間連結"""
+        link_id = self.store.add_skill_link(
+            source_skill_id, target_skill_id, link_type,
+            description, strength, bidirectional
+        )
+        # 失效相關快取
+        self.link_cache.invalidate(source_skill_id)
+        self.link_cache.invalidate(target_skill_id)
+        return link_id
+    
+    def get_links(self, skill_id: str) -> List[Dict]:
+        """取得技能的出站連結（含快取）"""
+        cached = self.link_cache.get_links(skill_id)
+        if cached is not None:
+            return cached
+        links = self.store.get_skill_links(skill_id)
+        self.link_cache.set_links(skill_id, links)
+        return links
+    
+    def get_backlinks(self, skill_id: str) -> List[Dict]:
+        """取得技能的反向連結（含快取）"""
+        cached = self.link_cache.get_backlinks(skill_id)
+        if cached is not None:
+            return cached
+        backlinks = self.store.get_skill_backlinks(skill_id)
+        self.link_cache.set_backlinks(skill_id, backlinks)
+        return backlinks
+    
+    def delete_link(self, link_id: int) -> bool:
+        """刪除連結"""
+        result = self.store.delete_skill_link(link_id)
+        self.link_cache.invalidate()  # 全域失效
+        return result
+    
+    def get_graph_data(self) -> Dict:
+        """取得圖譜資料（含快取）"""
+        cached = self.link_cache.get_graph()
+        if cached is not None:
+            return cached
+        graph = self.store.get_graph_data()
+        self.link_cache.set_graph(graph)
+        return graph
+    
+    def get_moc(self) -> Dict:
+        """取得 MOC 索引（含快取）"""
+        cached = self.link_cache.get_moc()
+        if cached is not None:
+            return cached
+        moc = self.store.get_skill_moc()
+        self.link_cache.set_moc(moc)
+        return moc
+    
+    def get_link_statistics(self) -> Dict:
+        """取得連結統計"""
+        return self.store.get_link_statistics()
+    
+    def get_cache_stats(self) -> Dict:
+        """取得快取統計"""
+        return self.link_cache.get_stats()
+    
     def get_statistics(self) -> Dict:
         """取得搜尋引擎統計"""
         stats = self.store.get_statistics()
         stats['embedding_dimension'] = self.embedder.dimension
         stats['model_name'] = 'all-MiniLM-L6-v2'
+        stats['cache_stats'] = self.link_cache.get_stats()
         return stats
     
     def close(self):

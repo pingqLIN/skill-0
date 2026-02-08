@@ -68,9 +68,27 @@ class VectorStore:
             USING vec0(embedding FLOAT[{self.dimension}])
         ''')
         
+        # 技能間連結表（借鑑 Obsidian resolvedLinks）
+        self.conn.execute('''
+            CREATE TABLE IF NOT EXISTS skill_links (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                source_skill_id TEXT NOT NULL,
+                target_skill_id TEXT NOT NULL,
+                link_type TEXT NOT NULL,
+                description TEXT,
+                strength REAL DEFAULT 0.5,
+                bidirectional BOOLEAN DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(source_skill_id, target_skill_id, link_type)
+            )
+        ''')
+        
         # 建立索引
         self.conn.execute('CREATE INDEX IF NOT EXISTS idx_skills_name ON skills(name)')
         self.conn.execute('CREATE INDEX IF NOT EXISTS idx_skills_category ON skills(category)')
+        self.conn.execute('CREATE INDEX IF NOT EXISTS idx_skill_links_source ON skill_links(source_skill_id)')
+        self.conn.execute('CREATE INDEX IF NOT EXISTS idx_skill_links_target ON skill_links(target_skill_id)')
+        self.conn.execute('CREATE INDEX IF NOT EXISTS idx_skill_links_type ON skill_links(link_type)')
         
         self.conn.commit()
         
@@ -266,6 +284,11 @@ class VectorStore:
         stats['total_rules'] = totals['rules'] or 0
         stats['total_directives'] = totals['directives'] or 0
         
+        # 連結統計
+        stats['total_links'] = self.conn.execute(
+            'SELECT COUNT(*) FROM skill_links'
+        ).fetchone()[0]
+        
         return stats
     
     def delete_skill(self, skill_id: int) -> bool:
@@ -275,10 +298,314 @@ class VectorStore:
         self.conn.commit()
         return result.rowcount > 0
     
+    # ==================== Skill Links (借鑑 Obsidian 雙向連結) ====================
+    
+    # 反向連結類型映射
+    REVERSE_LINK_TYPES = {
+        'depends_on': 'depended_by',
+        'extends': 'extended_by',
+        'parent_of': 'child_of',
+        'derived_from': 'derivative_of',
+        'composes_with': 'composes_with',
+        'alternative_to': 'alternative_to',
+        'related_to': 'related_to',
+    }
+    
+    def add_skill_link(
+        self,
+        source_skill_id: str,
+        target_skill_id: str,
+        link_type: str,
+        description: str = None,
+        strength: float = 0.5,
+        bidirectional: bool = False
+    ) -> int:
+        """
+        新增技能間連結（借鑑 Obsidian Internal Links）
+        
+        Args:
+            source_skill_id: 來源技能 ID
+            target_skill_id: 目標技能 ID
+            link_type: 連結類型
+            description: 關係說明
+            strength: 關係強度 (0-1)
+            bidirectional: 是否為雙向連結
+            
+        Returns:
+            int: 連結記錄 ID
+        """
+        VALID_LINK_TYPES = [
+            'depends_on', 'extends', 'composes_with',
+            'alternative_to', 'related_to', 'derived_from', 'parent_of'
+        ]
+        if link_type not in VALID_LINK_TYPES:
+            raise ValueError(f"Invalid link_type '{link_type}'. Must be one of: {VALID_LINK_TYPES}")
+        
+        cursor = self.conn.execute('''
+            INSERT OR REPLACE INTO skill_links 
+                (source_skill_id, target_skill_id, link_type, description, strength, bidirectional)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ''', (source_skill_id, target_skill_id, link_type, description, strength, bidirectional))
+        
+        self.conn.commit()
+        return cursor.lastrowid
+    
+    def get_skill_links(self, skill_id: str) -> List[Dict]:
+        """
+        取得技能的所有出站連結
+        
+        Args:
+            skill_id: 技能識別碼
+            
+        Returns:
+            List[Dict]: 出站連結列表
+        """
+        results = self.conn.execute('''
+            SELECT id, source_skill_id, target_skill_id, link_type,
+                   description, strength, bidirectional, created_at
+            FROM skill_links
+            WHERE source_skill_id = ?
+            ORDER BY link_type, target_skill_id
+        ''', (skill_id,)).fetchall()
+        
+        return [dict(r) for r in results]
+    
+    def get_skill_backlinks(self, skill_id: str) -> List[Dict]:
+        """
+        取得技能的反向連結（借鑑 Obsidian Backlinks）
+        
+        包含：
+        1. 直接指向此技能的連結
+        2. 雙向連結的反向關係（自動反轉 link_type）
+        
+        Args:
+            skill_id: 技能識別碼
+            
+        Returns:
+            List[Dict]: 反向連結列表
+        """
+        # 直接指向此技能的連結
+        direct = self.conn.execute('''
+            SELECT source_skill_id AS linked_from, link_type,
+                   description, strength
+            FROM skill_links
+            WHERE target_skill_id = ?
+        ''', (skill_id,)).fetchall()
+        
+        # 雙向連結的反向（此技能為 source 且標記為 bidirectional）
+        reverse = self.conn.execute('''
+            SELECT target_skill_id AS linked_from, link_type,
+                   description, strength
+            FROM skill_links
+            WHERE source_skill_id = ? AND bidirectional = 1
+        ''', (skill_id,)).fetchall()
+        
+        backlinks = []
+        for r in direct:
+            d = dict(r)
+            d['direction'] = 'incoming'
+            backlinks.append(d)
+        
+        for r in reverse:
+            d = dict(r)
+            d['direction'] = 'bidirectional_reverse'
+            # 反轉連結類型
+            d['link_type'] = self.REVERSE_LINK_TYPES.get(d['link_type'], d['link_type'])
+            backlinks.append(d)
+        
+        return backlinks
+    
+    def get_all_links(self) -> List[Dict]:
+        """取得所有技能連結"""
+        results = self.conn.execute('''
+            SELECT id, source_skill_id, target_skill_id, link_type,
+                   description, strength, bidirectional, created_at
+            FROM skill_links
+            ORDER BY source_skill_id, link_type
+        ''').fetchall()
+        
+        return [dict(r) for r in results]
+    
+    def delete_skill_link(self, link_id: int) -> bool:
+        """刪除特定連結"""
+        result = self.conn.execute('DELETE FROM skill_links WHERE id = ?', (link_id,))
+        self.conn.commit()
+        return result.rowcount > 0
+    
+    def delete_skill_links_by_skill(self, skill_id: str) -> int:
+        """刪除與某技能相關的所有連結"""
+        result = self.conn.execute('''
+            DELETE FROM skill_links 
+            WHERE source_skill_id = ? OR target_skill_id = ?
+        ''', (skill_id, skill_id))
+        self.conn.commit()
+        return result.rowcount
+    
+    def get_graph_data(self) -> Dict:
+        """
+        取得技能關係圖譜資料（借鑑 Obsidian Graph View）
+        
+        回傳 nodes + edges 格式，適用於力導向圖視覺化
+        
+        Returns:
+            Dict: {nodes: [...], edges: [...], stats: {...}}
+        """
+        # 節點：所有技能
+        skills = self.get_all_skills()
+        links = self.get_all_links()
+        
+        # 計算每個技能的連結數量（用於節點大小）
+        link_counts = {}
+        for link in links:
+            src = link['source_skill_id']
+            tgt = link['target_skill_id']
+            link_counts[src] = link_counts.get(src, 0) + 1
+            link_counts[tgt] = link_counts.get(tgt, 0) + 1
+        
+        # 建立節點列表
+        nodes = []
+        linked_skill_ids = set()
+        for link in links:
+            linked_skill_ids.add(link['source_skill_id'])
+            linked_skill_ids.add(link['target_skill_id'])
+        
+        for skill in skills:
+            skill_id = skill.get('filename', '').replace('.json', '')
+            nodes.append({
+                'id': skill_id,
+                'name': skill['name'],
+                'category': skill.get('category', ''),
+                'link_count': link_counts.get(skill_id, 0),
+                'action_count': skill.get('action_count', 0),
+                'rule_count': skill.get('rule_count', 0),
+                'directive_count': skill.get('directive_count', 0),
+            })
+        
+        # 建立邊列表
+        edges = []
+        for link in links:
+            edges.append({
+                'source': link['source_skill_id'],
+                'target': link['target_skill_id'],
+                'link_type': link['link_type'],
+                'strength': link['strength'],
+                'bidirectional': bool(link['bidirectional']),
+            })
+        
+        # 統計
+        orphan_count = sum(1 for n in nodes if n['link_count'] == 0)
+        
+        return {
+            'nodes': nodes,
+            'edges': edges,
+            'stats': {
+                'total_nodes': len(nodes),
+                'total_edges': len(edges),
+                'orphan_nodes': orphan_count,
+                'link_type_distribution': self._get_link_type_distribution(),
+            }
+        }
+    
+    def _get_link_type_distribution(self) -> Dict[str, int]:
+        """取得連結類型分布"""
+        results = self.conn.execute('''
+            SELECT link_type, COUNT(*) as count
+            FROM skill_links
+            GROUP BY link_type
+            ORDER BY count DESC
+        ''').fetchall()
+        return {r['link_type']: r['count'] for r in results}
+    
+    def get_skill_moc(self) -> Dict:
+        """
+        生成技能 Map of Content（借鑑 Obsidian MOC 模式）
+        
+        按類別組織技能，並附加連結統計資訊
+        
+        Returns:
+            Dict: MOC 結構化索引
+        """
+        skills = self.get_all_skills()
+        links = self.get_all_links()
+        
+        # 計算連結統計
+        link_counts = {}
+        for link in links:
+            src = link['source_skill_id']
+            tgt = link['target_skill_id']
+            link_counts[src] = link_counts.get(src, 0) + 1
+            link_counts[tgt] = link_counts.get(tgt, 0) + 1
+        
+        # 按類別分組
+        categories = {}
+        for skill in skills:
+            cat = skill.get('category') or 'uncategorized'
+            if cat not in categories:
+                categories[cat] = {
+                    'category': cat,
+                    'skills': [],
+                    'total_actions': 0,
+                    'total_rules': 0,
+                    'total_directives': 0,
+                    'total_links': 0,
+                }
+            
+            skill_id = skill.get('filename', '').replace('.json', '')
+            skill_link_count = link_counts.get(skill_id, 0)
+            
+            categories[cat]['skills'].append({
+                'name': skill['name'],
+                'skill_id': skill_id,
+                'description': skill.get('description', ''),
+                'action_count': skill.get('action_count', 0),
+                'rule_count': skill.get('rule_count', 0),
+                'directive_count': skill.get('directive_count', 0),
+                'link_count': skill_link_count,
+            })
+            categories[cat]['total_actions'] += skill.get('action_count', 0)
+            categories[cat]['total_rules'] += skill.get('rule_count', 0)
+            categories[cat]['total_directives'] += skill.get('directive_count', 0)
+            categories[cat]['total_links'] += skill_link_count
+        
+        # 排序：按技能數量降序
+        sorted_categories = sorted(
+            categories.values(),
+            key=lambda c: len(c['skills']),
+            reverse=True
+        )
+        
+        return {
+            'categories': sorted_categories,
+            'summary': {
+                'total_skills': len(skills),
+                'total_categories': len(categories),
+                'total_links': len(links),
+                'orphan_skills': sum(
+                    1 for s in skills
+                    if link_counts.get(s.get('filename', '').replace('.json', ''), 0) == 0
+                ),
+            }
+        }
+    
+    def get_link_statistics(self) -> Dict:
+        """取得連結統計"""
+        total_links = self.conn.execute('SELECT COUNT(*) FROM skill_links').fetchone()[0]
+        bidirectional = self.conn.execute(
+            'SELECT COUNT(*) FROM skill_links WHERE bidirectional = 1'
+        ).fetchone()[0]
+        
+        return {
+            'total_links': total_links,
+            'bidirectional_links': bidirectional,
+            'unidirectional_links': total_links - bidirectional,
+            'link_type_distribution': self._get_link_type_distribution(),
+        }
+    
     def clear(self):
         """清空資料庫"""
         self.conn.execute('DELETE FROM skill_embeddings')
         self.conn.execute('DELETE FROM skills')
+        self.conn.execute('DELETE FROM skill_links')
         self.conn.commit()
         
     def close(self):
