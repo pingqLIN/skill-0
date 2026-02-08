@@ -3,7 +3,14 @@ import type { GraphEdge, GraphNode } from '@/api/types';
 
 const GRAPH_WIDTH = 900;
 const GRAPH_HEIGHT = 520;
-const NODE_COLOR_PALETTE = ['#38bdf8', '#a78bfa', '#fbbf24', '#34d399', '#f87171', '#64748b'];
+const CATEGORY_COLOR_PALETTE = [
+  '#38bdf8',
+  '#a78bfa',
+  '#fbbf24',
+  '#34d399',
+  '#f87171',
+  '#64748b',
+];
 const MAX_LABEL_LENGTH = 16;
 const MIN_NODE_RADIUS = 6;
 const MAX_NODE_RADIUS = 14;
@@ -21,7 +28,7 @@ export function SkillGraph({ nodes, edges }: Props) {
     return new Map(
       categories.map((category, index) => [
         category,
-        NODE_COLOR_PALETTE[index % NODE_COLOR_PALETTE.length],
+        CATEGORY_COLOR_PALETTE[index % CATEGORY_COLOR_PALETTE.length],
       ]),
     );
   }, [nodes]);
@@ -47,7 +54,7 @@ export function SkillGraph({ nodes, edges }: Props) {
     [nodes],
   );
 
-  const getNodeLabel = (name: string) =>
+  const truncateNodeLabel = (name: string) =>
     name.length > MAX_LABEL_LENGTH ? `${name.slice(0, MAX_LABEL_LENGTH)}…` : name;
 
   return (
@@ -85,7 +92,7 @@ export function SkillGraph({ nodes, edges }: Props) {
             MIN_NODE_RADIUS +
             (node.link_count / maxLinkCount) * (MAX_NODE_RADIUS - MIN_NODE_RADIUS);
           const color =
-            categoryColors.get(node.category || 'uncategorized') ?? NODE_COLOR_PALETTE[0];
+            categoryColors.get(node.category || 'uncategorized') ?? CATEGORY_COLOR_PALETTE[0];
 
           return (
             <g key={node.id}>
@@ -99,7 +106,7 @@ export function SkillGraph({ nodes, edges }: Props) {
                 className="fill-slate-700 text-[10px]"
                 aria-label={node.name}
               >
-                {getNodeLabel(node.name)}
+                {truncateNodeLabel(node.name)}
               </text>
             </g>
           );
