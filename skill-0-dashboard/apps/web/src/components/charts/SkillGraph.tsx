@@ -14,6 +14,8 @@ const CATEGORY_COLOR_PALETTE = [
 const MAX_LABEL_LENGTH = 16;
 const MIN_NODE_RADIUS = 6;
 const MAX_NODE_RADIUS = 14;
+const GRAPH_PADDING = 60;
+const LABEL_VERTICAL_OFFSET = 12;
 
 const truncateNodeLabel = (name: string) =>
   name.length > MAX_LABEL_LENGTH ? `${name.slice(0, MAX_LABEL_LENGTH)}…` : name;
@@ -39,7 +41,7 @@ export function SkillGraph({ nodes, edges, width = GRAPH_WIDTH, height = GRAPH_H
   }, [nodes]);
 
   const nodePositions = useMemo(() => {
-    const radius = Math.min(width, height) / 2 - 60;
+    const radius = Math.min(width, height) / 2 - GRAPH_PADDING;
     const centerX = width / 2;
     const centerY = height / 2;
     const total = Math.max(nodes.length, 1);
@@ -103,7 +105,7 @@ export function SkillGraph({ nodes, edges, width = GRAPH_WIDTH, height = GRAPH_H
               </circle>
               <text
                 x={position.x}
-                y={position.y + size + 12}
+                y={position.y + size + LABEL_VERTICAL_OFFSET}
                 textAnchor="middle"
                 className="fill-slate-700 text-[10px]"
                 aria-label={node.name}
