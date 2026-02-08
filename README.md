@@ -186,6 +186,10 @@ similar = search.find_similar("Docx Skill", limit=5)
 clusters = search.cluster_skills(n_clusters=5)
 ```
 
+## Visualization
+
+Skill-0 provides graph data for relationship visualization (inspired by Obsidian Graph View) via `/api/graph`. The governance dashboard includes a **Skill Graph** page that renders nodes and links from this endpoint. See the visualization guide for setup details.
+
 ## Quick Example
 
 ```json
@@ -254,10 +258,12 @@ clusters = search.cluster_skills(n_clusters=5)
 
 Comprehensive documentation is available:
 
+- **[documentation index](docs/README.en.md)** - Guide to core docs ([中文版](docs/README.md))
 - **[CLAUDE.md](CLAUDE.md)** - Best practices for Claude AI integration and skill decomposition
 - **[SKILL.md](SKILL.md)** - Complete tool portal and workflow guide
 - **[reference.md](docs/guides/reference.md)** - Schema reference and format specifications
 - **[examples.md](docs/guides/examples.md)** - 7 detailed skill examples across different domains
+- **[visualization guide](docs/guides/visualization.en.md)** - Graph view setup and `/api/graph` mapping ([中文版](docs/guides/visualization.md))
 - **[AGENTS.md](AGENTS.md)** - Guidelines for AI agents working on this project
 - **[scripts/helper.py](src/tools/helper.py)** - Helper utilities for validation, conversion, and testing
 - **[vision-agent-alternatives.md](docs/vision-agent-alternatives.md)** - Free & open-source vision-agent alternatives guide ([中文版](docs/vision-agent-alternatives.zh-TW.md))

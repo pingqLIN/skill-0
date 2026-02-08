@@ -83,3 +83,34 @@ export interface SkillDetail extends SkillSummary {
   test_history: TestSummary[];
   audit_events: AuditEvent[];
 }
+
+export interface GraphNode {
+  id: string;
+  name: string;
+  category: string;
+  link_count: number;
+  action_count: number;
+  rule_count: number;
+  directive_count: number;
+}
+
+export interface GraphEdge {
+  source: string;
+  target: string;
+  link_type: string;
+  strength: number;
+  bidirectional: boolean;
+}
+
+export interface GraphStats {
+  total_nodes: number;
+  total_edges: number;
+  orphan_nodes: number;
+  link_type_distribution: Record<string, number>;
+}
+
+export interface GraphData {
+  nodes: GraphNode[];
+  edges: GraphEdge[];
+  stats: GraphStats;
+}

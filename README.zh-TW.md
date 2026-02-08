@@ -96,6 +96,10 @@ python -m src.vector_db.search --db db/skills.db cluster -n 5
 python -m src.vector_db.search --db db/skills.db stats
 ```
 
+## 視覺化
+
+Skill-0 透過 `/api/graph` 提供技能關係圖譜資料（借鑑 Obsidian Graph View），並在治理儀表板提供 **Skill Graph** 頁面呈現節點與關係線。詳細設定請參考視覺化指南。
+
 ## 快速範例
 
 ```json
@@ -145,10 +149,12 @@ python -m src.vector_db.search --db db/skills.db stats
 
 完整文件可用：
 
+- **[文件索引](docs/README.md)** - 文件地圖與入口 ([English](docs/README.en.md))
 - **[CLAUDE.md](CLAUDE.md)** - Claude AI 整合與技能分解的最佳實踐
 - **[SKILL.md](SKILL.md)** - 完整工具入口與工作流程指南
 - **[reference.md](docs/guides/reference.md)** - Schema 參考與格式規範
 - **[examples.md](docs/guides/examples.md)** - 跨不同領域的 7 個詳細技能範例
+- **[visualization guide](docs/guides/visualization.md)** - Graph 視覺化設定與 `/api/graph` 對應 ([English](docs/guides/visualization.en.md))
 - **[AGENTS.md](AGENTS.md)** - AI 代理工作指南
 - **[vision-agent-alternatives.zh-TW.md](docs/vision-agent-alternatives.zh-TW.md)** - 免費與開源 vision-agent 替代方案指南 ([English](docs/vision-agent-alternatives.md))
 - **[vercel-skills-comparison.md](docs/vercel-skills-comparison.md)** - 與 Vercel Labs Skills 專案的比較 ([English](docs/vercel-skills-comparison.en.md)) ([快速參考](docs/vercel-skills-comparison-quick.md))

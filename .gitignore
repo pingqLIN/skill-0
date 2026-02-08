@@ -11,6 +11,7 @@ downloads/
 eggs/
 .eggs/
 lib/
+!skill-0-dashboard/apps/web/src/lib/
 lib64/
 parts/
 sdist/
@@ -47,6 +48,9 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Node
+node_modules/
 
 # Coverage
 htmlcov/

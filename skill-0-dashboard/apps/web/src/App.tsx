@@ -5,6 +5,7 @@ import { SkillsList } from './pages/SkillsList';
 import { ReviewQueue } from './pages/ReviewQueue';
 import { AuditLog } from './pages/AuditLog';
 import { SkillDetail } from './pages/SkillDetail';
+import { GraphView } from './pages/GraphView';
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/skills" element={<SkillsList />} />
           <Route path="/skills/:skillId" element={<SkillDetail />} />
+          <Route path="/graph" element={<GraphView />} />
           <Route path="/review" element={<ReviewQueue />} />
           <Route path="/audit" element={<AuditLog />} />
         </Routes>
