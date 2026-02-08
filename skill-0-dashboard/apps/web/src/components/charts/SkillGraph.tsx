@@ -15,12 +15,17 @@ const MAX_LABEL_LENGTH = 16;
 const MIN_NODE_RADIUS = 6;
 const MAX_NODE_RADIUS = 14;
 
+const truncateNodeLabel = (name: string) =>
+  name.length > MAX_LABEL_LENGTH ? `${name.slice(0, MAX_LABEL_LENGTH)}…` : name;
+
 interface Props {
   nodes: GraphNode[];
   edges: GraphEdge[];
+  width?: number;
+  height?: number;
 }
 
-export function SkillGraph({ nodes, edges }: Props) {
+export function SkillGraph({ nodes, edges, width = GRAPH_WIDTH, height = GRAPH_HEIGHT }: Props) {
   const categoryColors = useMemo(() => {
     const categories = Array.from(
       new Set(nodes.map((node) => node.category || 'uncategorized')),
@@ -34,9 +39,9 @@ export function SkillGraph({ nodes, edges }: Props) {
   }, [nodes]);
 
   const nodePositions = useMemo(() => {
-    const radius = Math.min(GRAPH_WIDTH, GRAPH_HEIGHT) / 2 - 60;
-    const centerX = GRAPH_WIDTH / 2;
-    const centerY = GRAPH_HEIGHT / 2;
+    const radius = Math.min(width, height) / 2 - 60;
+    const centerX = width / 2;
+    const centerY = height / 2;
     const total = Math.max(nodes.length, 1);
 
     return new Map(
@@ -54,12 +59,9 @@ export function SkillGraph({ nodes, edges }: Props) {
     [nodes],
   );
 
-  const truncateNodeLabel = (name: string) =>
-    name.length > MAX_LABEL_LENGTH ? `${name.slice(0, MAX_LABEL_LENGTH)}…` : name;
-
   return (
     <svg
-      viewBox={`0 0 ${GRAPH_WIDTH} ${GRAPH_HEIGHT}`}
+      viewBox={`0 0 ${width} ${height}`}
       className="w-full h-full"
       role="img"
       aria-label="Skill relationship graph"
