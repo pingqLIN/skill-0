@@ -24,7 +24,7 @@ export function GraphView() {
     );
   }
 
-  const linkTypes = Object.entries(graph.stats.link_type_distribution ?? {});
+  const linkTypes = Object.entries(graph.stats.link_type_distribution);
 
   return (
     <PageLayout>
