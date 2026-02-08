@@ -24,7 +24,7 @@ PARSED_DIR = os.getenv('SKILL0_PARSED_DIR', 'parsed')
 app = FastAPI(
     title="Skill-0 API",
     description="Claude Skills & MCP Tools Semantic Search API",
-    version="2.1.0",
+    version="2.3.0",
     docs_url="/docs",
     redoc_url="/redoc"
 )
@@ -99,9 +99,11 @@ class StatsResponse(BaseModel):
     total_actions: int
     total_rules: int
     total_directives: int
+    total_links: int = 0
     embedding_dimension: int
     model_name: str
     categories: Dict[str, int]
+    cache_stats: Optional[Dict[str, Any]] = None
 
 
 class IndexRequest(BaseModel):
@@ -123,7 +125,7 @@ async def root():
     """API root path"""
     return {
         "name": "Skill-0 API",
-        "version": "2.1.0",
+        "version": "2.3.0",
         "description": "Claude Skills & MCP Tools Semantic Search API",
         "endpoints": {
             "search": "/api/search",
@@ -131,6 +133,10 @@ async def root():
             "cluster": "/api/cluster",
             "stats": "/api/stats",
             "skills": "/api/skills",
+            "links": "/api/links (or /api/links/{skill_key})",
+            "backlinks": "/api/backlinks/{skill_key}",
+            "graph": "/api/graph",
+            "moc": "/api/moc",
             "docs": "/docs"
         }
     }
@@ -351,6 +357,175 @@ async def index_skills(request: IndexRequest):
     )
 
 
+# ==================== Skill Links (借鑑 Obsidian) ====================
+
+class SkillLinkRequest(BaseModel):
+    """Skill link creation request"""
+    source_skill_id: str = Field(..., description="Source skill ID")
+    target_skill_id: str = Field(..., description="Target skill ID")
+    link_type: str = Field(..., description="Link type")
+    description: Optional[str] = Field(None, description="Link description")
+    strength: float = Field(0.5, description="Link strength (0-1)", ge=0, le=1)
+    bidirectional: bool = Field(False, description="Whether bidirectional")
+
+
+class SkillLinkResponse(BaseModel):
+    """Skill link response"""
+    id: Optional[int] = None
+    source_skill_id: str
+    target_skill_id: str
+    link_type: str
+    description: Optional[str] = None
+    strength: float = 0.5
+    bidirectional: bool = False
+    direction: Optional[str] = None
+    linked_from: Optional[str] = None
+    created_at: Optional[str] = None
+
+
+class GraphResponse(BaseModel):
+    """Graph data response"""
+    nodes: List[Dict[str, Any]]
+    edges: List[Dict[str, Any]]
+    stats: Dict[str, Any]
+
+
+class MOCCategory(BaseModel):
+    """MOC category"""
+    category: str
+    skills: List[Dict[str, Any]]
+    total_actions: int
+    total_rules: int
+    total_directives: int
+    total_links: int
+
+
+class MOCResponse(BaseModel):
+    """MOC response"""
+    categories: List[MOCCategory]
+    summary: Dict[str, int]
+
+
+@app.post("/api/links", tags=["Links"])
+async def create_skill_link(request: SkillLinkRequest):
+    """
+    Create a link between two skills (inspired by Obsidian bidirectional links)
+    
+    Link types: depends_on, extends, composes_with, alternative_to, 
+    related_to, derived_from, parent_of
+    """
+    engine = get_search_engine()
+    try:
+        link_id = engine.add_link(
+            source_skill_id=request.source_skill_id,
+            target_skill_id=request.target_skill_id,
+            link_type=request.link_type,
+            description=request.description,
+            strength=request.strength,
+            bidirectional=request.bidirectional,
+        )
+        return {
+            "id": link_id,
+            "message": f"Link created: {request.source_skill_id} --{request.link_type}--> {request.target_skill_id}",
+            "bidirectional": request.bidirectional,
+        }
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.get("/api/links", tags=["Links"])
+async def list_all_links():
+    """List all skill links"""
+    engine = get_search_engine()
+    links = engine.store.get_all_links()
+    return {
+        "links": [SkillLinkResponse(**link) for link in links],
+        "total": len(links),
+    }
+
+
+@app.get("/api/links/{skill_key}", tags=["Links"])
+async def get_skill_links(skill_key: str):
+    """Get outgoing links for a skill (skill_key is the filename stem, e.g. 'docx-skill')"""
+    engine = get_search_engine()
+    links = engine.get_links(skill_key)
+    return {
+        "skill_id": skill_key,
+        "links": links,
+        "count": len(links),
+    }
+
+
+@app.get("/api/backlinks/{skill_key}", tags=["Links"])
+async def get_skill_backlinks(skill_key: str):
+    """
+    Get backlinks for a skill (inspired by Obsidian Backlinks)
+    
+    skill_key is the filename stem (e.g. 'docx-skill').
+    Returns all skills that link TO this skill, including
+    reverse relationships from bidirectional links.
+    """
+    engine = get_search_engine()
+    backlinks = engine.get_backlinks(skill_key)
+    return {
+        "skill_id": skill_key,
+        "backlinks": backlinks,
+        "count": len(backlinks),
+    }
+
+
+@app.delete("/api/links/{link_id}", tags=["Links"])
+async def delete_skill_link(link_id: int):
+    """Delete a skill link by ID"""
+    engine = get_search_engine()
+    success = engine.delete_link(link_id)
+    if not success:
+        raise HTTPException(status_code=404, detail=f"Link with ID {link_id} not found")
+    return {"message": f"Link {link_id} deleted", "success": True}
+
+
+@app.get("/api/graph", response_model=GraphResponse, tags=["Graph"])
+async def get_graph_data():
+    """
+    Get skill relationship graph data (inspired by Obsidian Graph View)
+    
+    Returns nodes (skills) and edges (links) suitable for
+    force-directed graph visualization.
+    """
+    engine = get_search_engine()
+    graph = engine.get_graph_data()
+    return GraphResponse(**graph)
+
+
+@app.get("/api/moc", response_model=MOCResponse, tags=["MOC"])
+async def get_moc():
+    """
+    Get skill Map of Content (inspired by Obsidian MOC pattern)
+    
+    Returns skills organized by category with link statistics,
+    serving as a structured navigation index.
+    """
+    engine = get_search_engine()
+    moc = engine.get_moc()
+    return MOCResponse(**moc)
+
+
+@app.get("/api/links/stats", tags=["Links"])
+async def get_link_statistics():
+    """Get link statistics"""
+    engine = get_search_engine()
+    return engine.get_link_statistics()
+
+
+@app.get("/api/cache/stats", tags=["Cache"])
+async def get_cache_statistics():
+    """
+    Get cache statistics (inspired by Obsidian MetadataCache)
+    """
+    engine = get_search_engine()
+    return engine.get_cache_stats()
+
+
 # ==================== Startup ====================
 
 def main():
@@ -365,7 +540,7 @@ def main():
     
     print(f"""
 ╔════════════════════════════════════════════════════════════╗
-║              Skill-0 API Server v2.1.0                     ║
+║              Skill-0 API Server v{app.version:<25s}║
 ╠════════════════════════════════════════════════════════════╣
 ║  API Docs:  http://127.0.0.1:8000/docs                     ║
 ║  ReDoc:     http://127.0.0.1:8000/redoc                    ║
