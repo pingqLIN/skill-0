@@ -100,3 +100,10 @@
 ## 6. 結論
 
 Skill-0 與 Claude Code Simplifier 分別服務於「技能結構治理」與「程式碼品質整理」兩個層面。若團隊同時需要技能知識的長期累積與日常程式碼品質維護，兩者搭配使用能達到互補效果。
+
+---
+
+## 7. 資料來源
+
+- Claude Code Plugins Directory（插件結構與安裝說明）: https://github.com/anthropics/claude-plugins-official
+- Claude Code Simplifier 官方頁面: https://claude.com/plugins/code-simplifier

@@ -100,3 +100,10 @@ Both relate to AI-assisted development, but their focus diverges. Skill-0 emphas
 ## 6. Conclusion
 
 Skill-0 and Claude Code Simplifier serve different layers: skill governance vs. code quality. Teams that need both long-term skill knowledge and day-to-day code readability can benefit from combining the two.
+
+---
+
+## 7. Sources
+
+- Claude Code Plugins Directory (plugin structure & installation notes): https://github.com/anthropics/claude-plugins-official
+- Claude Code Simplifier plugin page: https://claude.com/plugins/code-simplifier
