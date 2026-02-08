@@ -42,6 +42,11 @@ export function SkillGraph({ nodes, edges }: Props) {
     );
   }, [nodes]);
 
+  const maxLinkCount = useMemo(
+    () => Math.max(1, ...nodes.map((node) => node.link_count)),
+    [nodes],
+  );
+
   const getNodeLabel = (name: string) =>
     name.length > MAX_LABEL_LENGTH ? `${name.slice(0, MAX_LABEL_LENGTH)}…` : name;
 
@@ -53,7 +58,7 @@ export function SkillGraph({ nodes, edges }: Props) {
       aria-label="Skill relationship graph"
     >
       <g stroke="#94a3b8" strokeWidth={1} opacity={0.6}>
-        {edges.map((edge, index) => {
+        {edges.map((edge) => {
           const source = nodePositions.get(edge.source);
           const target = nodePositions.get(edge.target);
           if (!source || !target) {
@@ -61,7 +66,7 @@ export function SkillGraph({ nodes, edges }: Props) {
           }
           return (
             <line
-              key={`${edge.source}-${edge.target}-${index}`}
+              key={`${edge.source}-${edge.target}-${edge.link_type}`}
               x1={source.x}
               y1={source.y}
               x2={target.x}
@@ -76,10 +81,9 @@ export function SkillGraph({ nodes, edges }: Props) {
           if (!position) {
             return null;
           }
-          const size = Math.max(
-            MIN_NODE_RADIUS,
-            Math.min(MAX_NODE_RADIUS, MIN_NODE_RADIUS + node.link_count),
-          );
+          const size =
+            MIN_NODE_RADIUS +
+            (node.link_count / maxLinkCount) * (MAX_NODE_RADIUS - MIN_NODE_RADIUS);
           const color =
             categoryColors.get(node.category || 'uncategorized') ?? NODE_COLOR_PALETTE[0];
 
