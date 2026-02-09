@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpDown } from 'lucide-react';
+import { ArrowUpDown, ExternalLink } from 'lucide-react';
 import type { SkillSummary } from '@/api/types';
 
 const riskColors: Record<string, string> = {
@@ -54,6 +54,7 @@ export function SkillsTable({ data, sortBy, sortOrder, onSort }: Props) {
           <SortHeader column="status" label="Status" />
           <TableHead>Author</TableHead>
           <TableHead>License</TableHead>
+          <TableHead>Source</TableHead>
           <SortHeader column="updated_at" label="Updated" />
         </TableRow>
       </TableHeader>
@@ -82,6 +83,22 @@ export function SkillsTable({ data, sortBy, sortOrder, onSort }: Props) {
             </TableCell>
             <TableCell>{skill.author_name}</TableCell>
             <TableCell>{skill.license_spdx}</TableCell>
+            <TableCell>
+              {skill.source_url ? (
+                <a
+                  href={skill.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                  title={skill.source_url}
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              ) : (
+                <span className="text-muted-foreground">-</span>
+              )}
+            </TableCell>
             <TableCell>{new Date(skill.updated_at).toLocaleDateString()}</TableCell>
           </TableRow>
         ))}

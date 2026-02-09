@@ -4,6 +4,41 @@
 **Commit:** 9d9de81
 **Branch:** main
 
+# Project Guidelines
+
+## Code Style
+
+- Python CLI scripts use `argparse` and write outputs to repo root or `governance/db/` (see `tools/AGENTS.md`).
+- Dashboard API uses FastAPI with Pydantic v2 models and `/api` router prefix (see `skill-0-dashboard/apps/api/AGENTS.md`).
+- Dashboard web uses React + Tailwind + shadcn/ui, `cn()` for class merging, and API base URL in `src/api/client.ts` (see `skill-0-dashboard/apps/web/AGENTS.md`).
+
+## Architecture
+
+- Core parser + vector search live in `tools/`, `vector_db/`, `schema/`, and `parsed/` (see Overview below).
+- Governance dashboard is a monorepo with separate API and web apps under `skill-0-dashboard/apps/`.
+
+## Build and Test
+
+- API server: `python -m api.main` (core API) and `cd skill-0-dashboard/apps/api && uvicorn main:app --reload --port 8001` (dashboard API).
+- Web dev server: `cd skill-0-dashboard/apps/web && npm run dev`.
+- Tests: `python3 -m pytest tests/ -v` (see `tests/README.md`).
+
+## Project Conventions
+
+- Do not edit `parsed/*.json` manually; regenerate with `tools/batch_parse.py`.
+- Do not commit `skills.db` with uncommitted schema changes.
+- Dashboard API and web are independent; no shared dependencies (see `skill-0-dashboard/AGENTS.md`).
+
+## Integration Points
+
+- Vector search uses `skills.db` and `vector_db/` (see `vector_db/search.py`).
+- Dashboard API reads parent `skills.db` via relative path; web proxies API in dev (see `skill-0-dashboard/AGENTS.md`).
+
+## Security
+
+- Security scanning entry point: `tools/batch_security_scan.py`; findings go to `SECURITY_SCAN_REPORT_*.md`.
+- CORS in dashboard API is `allow_origins=["*"]` for dev only; lock down for prod.
+
 ## OVERVIEW
 
 Claude Skills & MCP Tools decomposition parser with semantic search. Parses skill definitions into structured JSON (Actions/Rules/Directives), stores in SQLite with vector embeddings for similarity search.

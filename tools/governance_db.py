@@ -35,13 +35,33 @@ class SkillRecord:
     status: str  # pending, approved, rejected, blocked
     source_type: str
     source_url: str
+    source_commit: Optional[str]
     source_path: str
+    original_format: Optional[str]
+    fetched_at: Optional[str]
     author_name: str
     author_email: Optional[str]
+    author_url: Optional[str]
+    author_org: Optional[str]
     license_spdx: str
+    license_url: Optional[str]
+    requires_attribution: bool
+    commercial_allowed: bool
+    modification_allowed: bool
+    converted_at: Optional[str]
+    converter_version: Optional[str]
+    target_format: Optional[str]
+    security_scanned_at: Optional[str]
+    scanner_version: Optional[str]
     risk_level: str
     risk_score: int
+    approved_by: Optional[str]
+    approved_at: Optional[str]
+    equivalence_tested_at: Optional[str]
     equivalence_score: Optional[float]
+    equivalence_passed: Optional[bool]
+    installed_path: Optional[str]
+    installed_at: Optional[str]
     created_at: str
     updated_at: str
 
@@ -54,13 +74,33 @@ class SkillRecord:
             status=row["status"],
             source_type=row["source_type"],
             source_url=row["source_url"] or "",
+            source_commit=row["source_commit"],
             source_path=row["source_path"] or "",
+            original_format=row["original_format"],
+            fetched_at=row["fetched_at"],
             author_name=row["author_name"] or "Unknown",
             author_email=row["author_email"],
+            author_url=row["author_url"],
+            author_org=row["author_org"],
             license_spdx=row["license_spdx"] or "UNKNOWN",
+            license_url=row["license_url"],
+            requires_attribution=bool(row["requires_attribution"]),
+            commercial_allowed=bool(row["commercial_allowed"]),
+            modification_allowed=bool(row["modification_allowed"]),
+            converted_at=row["converted_at"],
+            converter_version=row["converter_version"],
+            target_format=row["target_format"],
+            security_scanned_at=row["security_scanned_at"],
+            scanner_version=row["scanner_version"],
             risk_level=row["risk_level"] or "unknown",
             risk_score=row["risk_score"] or 0,
+            approved_by=row["approved_by"],
+            approved_at=row["approved_at"],
+            equivalence_tested_at=row["equivalence_tested_at"],
             equivalence_score=row["equivalence_score"],
+            equivalence_passed=bool(row["equivalence_passed"]) if row["equivalence_passed"] is not None else None,
+            installed_path=row["installed_path"],
+            installed_at=row["installed_at"],
             created_at=row["created_at"],
             updated_at=row["updated_at"],
         )
