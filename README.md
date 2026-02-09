@@ -281,6 +281,8 @@ Comprehensive documentation is available:
 - **[examples.md](examples.md)** - 7 detailed skill examples across different domains
 - **[AGENTS.md](AGENTS.md)** - Guidelines for AI agents working on this project
 - **[scripts/helper.py](scripts/helper.py)** - Helper utilities for validation, conversion, and testing
+- **[docs/skill-0-vs-claude-code-simplifier.md](docs/skill-0-vs-claude-code-simplifier.md)** - Comparison with Claude Code Simplifier (EN)
+- **[docs/skill-0-vs-claude-code-simplifier.zh-TW.md](docs/skill-0-vs-claude-code-simplifier.zh-TW.md)** - 與 Claude Code Simplifier 比較 (zh-TW)
 
 ### Quick Start Guide
 

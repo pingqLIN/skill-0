@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Shield, TestTube, FileText, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, Shield, TestTube, FileText, CheckCircle, XCircle, ExternalLink, Scale, Lock, User, Clock, Package } from 'lucide-react';
 
 const riskColors: Record<string, string> = {
   safe: 'bg-green-100 text-green-800',
@@ -107,14 +107,59 @@ export function SkillDetail() {
               <span className="text-muted-foreground">Author</span>
               <span>{skill.author_name}</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">License</span>
-              <span>{skill.license_spdx}</span>
-            </div>
+            {skill.author_email && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Email</span>
+                <a href={`mailto:${skill.author_email}`} className="text-blue-600 hover:text-blue-800">
+                  {skill.author_email}
+                </a>
+              </div>
+            )}
+            {skill.author_org && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Organization</span>
+                <span>{skill.author_org}</span>
+              </div>
+            )}
+            {skill.author_url && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Author URL</span>
+                <a href={skill.author_url} target="_blank" rel="noopener noreferrer"
+                   className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                  Link <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-muted-foreground">Source</span>
-              <span>{skill.source_type}</span>
+              {skill.source_url ? (
+                <a
+                  href={skill.source_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors"
+                >
+                  Original
+                  <ExternalLink className="h-3 w-3" />
+                </a>
+              ) : (
+                <span>{skill.source_type}</span>
+              )}
             </div>
+            {skill.source_path && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Path</span>
+                <span className="text-sm font-mono truncate max-w-[200px]" title={skill.source_path}>
+                  {skill.source_path}
+                </span>
+              </div>
+            )}
+            {skill.source_commit && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Commit</span>
+                <span className="text-sm font-mono">{skill.source_commit.slice(0, 8)}</span>
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-muted-foreground">Version</span>
               <span>{skill.version || '1.0.0'}</span>
@@ -139,10 +184,32 @@ export function SkillDetail() {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {skill.equivalence_score !== null && skill.equivalence_score !== undefined && (
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-muted-foreground">Equivalence Score</span>
+                <span className="text-2xl font-bold">
+                  {Math.round(skill.equivalence_score * 100)}%
+                </span>
+              </div>
+            )}
+            {skill.equivalence_passed !== null && skill.equivalence_passed !== undefined && (
+              <div className="flex justify-between items-center mb-3">
+                <span className="text-muted-foreground">Result</span>
+                {skill.equivalence_passed ? (
+                  <span className="flex items-center gap-1 text-green-600">
+                    <CheckCircle className="h-4 w-4" /> Passed
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 text-red-600">
+                    <XCircle className="h-4 w-4" /> Failed
+                  </span>
+                )}
+              </div>
+            )}
             {skill.test_history && skill.test_history.length > 0 ? (
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Overall Score</span>
+                  <span className="text-muted-foreground">Latest Score</span>
                   <span className="text-2xl font-bold">
                     {Math.round((skill.test_history[0].overall_score || 0) * 100)}%
                   </span>
@@ -179,6 +246,107 @@ export function SkillDetail() {
         </Card>
       </div>
 
+      {/* License & Governance Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        {/* License */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Scale className="h-5 w-5" />
+              License & Rights
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">License</span>
+              <span className="font-medium">{skill.license_spdx}</span>
+            </div>
+            {skill.license_url && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">License URL</span>
+                <a href={skill.license_url} target="_blank" rel="noopener noreferrer"
+                   className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                  View <ExternalLink className="h-3 w-3" />
+                </a>
+              </div>
+            )}
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Attribution Required</span>
+              <Badge className={skill.requires_attribution ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'}>
+                {skill.requires_attribution ? 'Yes' : 'No'}
+              </Badge>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Commercial Use</span>
+              <Badge className={skill.commercial_allowed ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                {skill.commercial_allowed ? 'Allowed' : 'Not Allowed'}
+              </Badge>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Modification</span>
+              <Badge className={skill.modification_allowed ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}>
+                {skill.modification_allowed ? 'Allowed' : 'Not Allowed'}
+              </Badge>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Governance */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Lock className="h-5 w-5" />
+              Governance
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {skill.approved_by && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Approved By</span>
+                <span className="flex items-center gap-1">
+                  <User className="h-3 w-3" /> {skill.approved_by}
+                </span>
+              </div>
+            )}
+            {skill.approved_at && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Approved At</span>
+                <span>{new Date(skill.approved_at).toLocaleString()}</span>
+              </div>
+            )}
+            {skill.security_scanned_at && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Last Scan</span>
+                <span>{new Date(skill.security_scanned_at).toLocaleString()}</span>
+              </div>
+            )}
+            {skill.scanner_version && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Scanner Version</span>
+                <span className="font-mono text-sm">{skill.scanner_version}</span>
+              </div>
+            )}
+            {skill.installed_path && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Installed At</span>
+                <span className="text-sm font-mono truncate max-w-[200px]" title={skill.installed_path}>
+                  {skill.installed_path}
+                </span>
+              </div>
+            )}
+            {skill.installed_at && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Install Date</span>
+                <span>{new Date(skill.installed_at).toLocaleString()}</span>
+              </div>
+            )}
+            {!skill.approved_by && !skill.security_scanned_at && !skill.installed_path && (
+              <p className="text-muted-foreground">No governance data recorded</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Security Findings */}
       <Card className="mb-6">
         <CardHeader>
@@ -194,6 +362,7 @@ export function SkillDetail() {
                 <TableRow>
                   <TableHead>Rule</TableHead>
                   <TableHead>Severity</TableHead>
+                  <TableHead>Context</TableHead>
                   <TableHead>Location</TableHead>
                   <TableHead>Content</TableHead>
                 </TableRow>
@@ -204,11 +373,44 @@ export function SkillDetail() {
                     <TableCell>
                       <div className="font-medium">{finding.rule_id}</div>
                       <div className="text-sm text-muted-foreground">{finding.rule_name}</div>
+                      {finding.detection_standard && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {finding.standard_url ? (
+                            <a href={finding.standard_url} target="_blank" rel="noopener noreferrer"
+                               className="text-blue-600 hover:text-blue-800"
+                               onClick={(e) => e.stopPropagation()}>
+                              {finding.detection_standard}
+                            </a>
+                          ) : (
+                            <span>{finding.detection_standard}</span>
+                          )}
+                        </div>
+                      )}
                     </TableCell>
                     <TableCell>
                       <span className={severityColors[finding.severity] || 'text-gray-600'}>
                         {finding.severity}
                       </span>
+                      {finding.severity_changed && finding.original_severity && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          was: {finding.original_severity}
+                          {finding.adjustment_reason && (
+                            <span className="block">{finding.adjustment_reason}</span>
+                          )}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {finding.context_type && (
+                        <Badge variant="outline" className="text-xs">
+                          {finding.context_type}
+                        </Badge>
+                      )}
+                      {finding.in_code_block && (
+                        <Badge variant="outline" className="text-xs ml-1 bg-slate-50">
+                          {finding.code_block_language || 'code'}
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell>
                       {finding.file_path && (

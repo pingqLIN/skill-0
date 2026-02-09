@@ -59,9 +59,11 @@ class SkillResult(BaseModel):
     filename: str
     description: Optional[str] = None
     category: Optional[str] = None
+    version: Optional[str] = None
     action_count: int = 0
     rule_count: int = 0
     directive_count: int = 0
+    created_at: Optional[str] = None
     similarity: Optional[float] = None
     distance: Optional[float] = None
 
