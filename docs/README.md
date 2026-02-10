@@ -22,5 +22,6 @@
 - [docs/dashboard-design.md](dashboard-design.md) - Dashboard 設計規劃
 - [docs/obsidian-architecture-evaluation.md](obsidian-architecture-evaluation.md) / [.en](obsidian-architecture-evaluation.en.md) - Obsidian 架構評估
 - [docs/vercel-skills-comparison.md](vercel-skills-comparison.md) / [.en](vercel-skills-comparison.en.md) - Vercel Skills 比較
+- [docs/skill-scanner-comparison.md](skill-scanner-comparison.md) / [.en](skill-scanner-comparison.en.md) - Skill Scanner 比較評估
 
 更多分析與報告文件請直接瀏覽 `docs/` 目錄。
