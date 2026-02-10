@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
@@ -306,3 +307,313 @@
     "inconsistency_detected": false
   }
 }
+=======
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__skill_share",
+    "name": "skill-share",
+    "skill_layer": "claude_skill",
+    "title": "Skill Share",
+    "description": "A skill that creates new Claude skills and automatically shares them on Slack using Rube for seamless team collaboration and skill discovery.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-01-26T05:50:00Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "skill-share",
+    "skill_description": "A skill that creates new Claude skills and automatically shares them on Slack using Rube for seamless team collaboration and skill discovery."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Parse Skill Request",
+        "action_type": "llm_inference",
+        "description": "Extract skill name, description, and requirements from user request",
+        "immutable_elements": [
+          "skill naming conventions"
+        ],
+        "mutable_elements": [
+          "user request",
+          "parsed skill metadata"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Create Skill Directory",
+        "action_type": "io_write",
+        "description": "Create properly structured skill directory with SKILL.md, scripts/, references/, assets/",
+        "immutable_elements": [
+          "directory structure template"
+        ],
+        "mutable_elements": [
+          "skill name",
+          "created directory"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "filesystem write"
+        ]
+      },
+      {
+        "id": "a_003",
+        "name": "Generate SKILL.md",
+        "action_type": "llm_inference",
+        "description": "Create SKILL.md with YAML frontmatter and standardized documentation sections",
+        "immutable_elements": [
+          "SKILL.md template",
+          "YAML schema"
+        ],
+        "mutable_elements": [
+          "skill metadata",
+          "generated content"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Write SKILL.md File",
+        "action_type": "io_write",
+        "description": "Write generated SKILL.md content to skill directory",
+        "immutable_elements": [
+          "file path pattern"
+        ],
+        "mutable_elements": [
+          "skill content",
+          "written file"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "filesystem write"
+        ]
+      },
+      {
+        "id": "a_005",
+        "name": "Validate Skill Structure",
+        "action_type": "compute",
+        "description": "Validate SKILL.md format, required fields, naming conventions, and metadata completeness",
+        "immutable_elements": [
+          "validation rules"
+        ],
+        "mutable_elements": [
+          "skill directory",
+          "validation result"
+        ],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "Package Skill",
+        "action_type": "compute",
+        "description": "Create distributable zip file containing all skill assets and documentation",
+        "immutable_elements": [
+          "packaging rules"
+        ],
+        "mutable_elements": [
+          "skill directory",
+          "zip file"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "filesystem write"
+        ]
+      },
+      {
+        "id": "a_007",
+        "name": "Find Slack Channel",
+        "action_type": "external_call",
+        "description": "Use Rube SLACK_FIND_CHANNELS to discover target channel for skill announcement",
+        "immutable_elements": [
+          "Rube Slack API"
+        ],
+        "mutable_elements": [
+          "channel query",
+          "channel ID"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "external API call"
+        ]
+      },
+      {
+        "id": "a_008",
+        "name": "Post to Slack",
+        "action_type": "external_call",
+        "description": "Use Rube SLACK_POST_MESSAGE_WITH_BLOCKS to share rich formatted skill metadata",
+        "immutable_elements": [
+          "Rube Slack API",
+          "message block format"
+        ],
+        "mutable_elements": [
+          "skill metadata",
+          "posted message"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "external API call",
+          "Slack notification"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Skill Name Provided",
+        "condition_type": "existence_check",
+        "condition_expression": "User provided skill name",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "ask for skill name"
+        ]
+      },
+      {
+        "id": "r_002",
+        "name": "Check Naming Convention",
+        "condition_type": "validation",
+        "condition_expression": "Skill name follows hyphen-case convention",
+        "returns": "boolean",
+        "fail_action": "transform",
+        "branching_targets": [
+          "convert to hyphen-case"
+        ]
+      },
+      {
+        "id": "r_003",
+        "name": "Validate Skill Structure",
+        "condition_type": "validation",
+        "condition_expression": "Skill passes all validation checks",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "fix validation errors"
+        ]
+      },
+      {
+        "id": "r_004",
+        "name": "Check Slack Connection",
+        "condition_type": "existence_check",
+        "condition_expression": "Rube Slack integration is configured",
+        "returns": "boolean",
+        "fail_action": "skip",
+        "branching_targets": [
+          "skip Slack notification"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Skill Created and Shared",
+        "directive_type": "completion",
+        "description": "New Claude skill created with proper structure, validated, packaged, and shared on Slack",
+        "decomposable": true,
+        "decomposition_hint": "r_001 → r_002 → a_001 → a_002 → a_003 → a_004 → a_005 → r_003 → a_006 → r_004 → a_007 → a_008",
+        "related_elements": [
+          "a_002",
+          "a_006",
+          "a_008"
+        ]
+      },
+      {
+        "id": "d_002",
+        "name": "Skill Structure Knowledge",
+        "directive_type": "knowledge",
+        "description": "Standard skill directory: SKILL.md (main definition), scripts/ (automation), references/ (documentation), assets/ (media)",
+        "decomposable": false
+      },
+      {
+        "id": "d_003",
+        "name": "YAML Frontmatter Schema",
+        "directive_type": "knowledge",
+        "description": "Required fields: name (hyphen-case), description (concise). Optional: license, version, author",
+        "decomposable": false
+      },
+      {
+        "id": "d_004",
+        "name": "Validate Before Package",
+        "directive_type": "constraint",
+        "description": "Always run validation before packaging or sharing",
+        "decomposable": false,
+        "related_elements": [
+          "a_005",
+          "a_006"
+        ]
+      },
+      {
+        "id": "d_005",
+        "name": "Rube Integration",
+        "directive_type": "knowledge",
+        "description": "Uses SLACK_SEND_MESSAGE, SLACK_POST_MESSAGE_WITH_BLOCKS, SLACK_FIND_CHANNELS via Rube",
+        "decomposable": false,
+        "related_elements": [
+          "a_007",
+          "a_008"
+        ]
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": [
+        "r_001",
+        "r_002",
+        "a_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "r_003",
+        "a_006",
+        "r_004",
+        "a_007",
+        "a_008"
+      ],
+      "condition": "User requests skill creation with Slack sharing",
+      "expected_outcome": "Skill created, validated, packaged, and announced on Slack"
+    },
+    {
+      "path_id": 2,
+      "sequence": [
+        "r_001",
+        "r_002",
+        "a_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "r_003",
+        "a_006"
+      ],
+      "condition": "User requests skill creation without Slack (or Slack unavailable)",
+      "expected_outcome": "Skill created, validated, and packaged locally"
+    },
+    {
+      "path_id": 3,
+      "sequence": [
+        "a_005",
+        "r_003"
+      ],
+      "condition": "User requests validation only",
+      "expected_outcome": "Existing skill validated"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 3,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 1,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}
+>>>>>>> Stashed changes

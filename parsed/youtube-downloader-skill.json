@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
@@ -260,3 +261,267 @@
     "inconsistency_detected": false
   }
 }
+=======
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__youtube_downloader",
+    "name": "youtube-downloader",
+    "skill_layer": "claude_skill",
+    "title": "YouTube Video Downloader",
+    "description": "Download YouTube videos with customizable quality and format options. Supports various quality settings (best, 1080p, 720p, 480p, 360p), multiple formats (mp4, webm, mkv), and audio-only downloads as MP3",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-01-26T05:45:00Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "youtube-downloader",
+    "skill_description": "Download YouTube videos with customizable quality and format options. Use this skill when the user asks to download, save, or grab YouTube videos. Supports various quality settings (best, 1080p, 720p, 480p, 360p), multiple formats (mp4, webm, mkv), and audio-only downloads as MP3."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Install yt-dlp",
+        "action_type": "external_call",
+        "description": "Automatically install yt-dlp if not present",
+        "immutable_elements": [
+          "pip install command"
+        ],
+        "mutable_elements": [],
+        "deterministic": true,
+        "side_effects": [
+          "installs package"
+        ]
+      },
+      {
+        "id": "a_002",
+        "name": "Parse Video URL",
+        "action_type": "transform",
+        "description": "Extract video ID from YouTube URL",
+        "immutable_elements": [
+          "URL parsing regex"
+        ],
+        "mutable_elements": [
+          "input URL"
+        ],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Fetch Video Information",
+        "action_type": "external_call",
+        "description": "Get video metadata including available formats and quality options",
+        "immutable_elements": [
+          "yt-dlp info command"
+        ],
+        "mutable_elements": [
+          "video URL"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Select Quality Stream",
+        "action_type": "transform",
+        "description": "Choose best available stream matching requested quality",
+        "immutable_elements": [
+          "quality selection logic"
+        ],
+        "mutable_elements": [
+          "requested quality",
+          "available formats"
+        ],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Download Video",
+        "action_type": "external_call",
+        "description": "Download video with selected quality and format settings",
+        "immutable_elements": [
+          "yt-dlp download command"
+        ],
+        "mutable_elements": [
+          "quality",
+          "format",
+          "output path"
+        ],
+        "deterministic": false,
+        "side_effects": [
+          "creates file on disk"
+        ]
+      },
+      {
+        "id": "a_006",
+        "name": "Merge Video and Audio",
+        "action_type": "external_call",
+        "description": "Merge separate video and audio streams when needed",
+        "immutable_elements": [
+          "ffmpeg merge command"
+        ],
+        "mutable_elements": [
+          "video stream",
+          "audio stream"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates merged file"
+        ]
+      },
+      {
+        "id": "a_007",
+        "name": "Extract Audio Only",
+        "action_type": "external_call",
+        "description": "Download and convert to MP3 audio only",
+        "immutable_elements": [
+          "audio extraction command"
+        ],
+        "mutable_elements": [
+          "video URL",
+          "output path"
+        ],
+        "deterministic": false,
+        "side_effects": [
+          "creates MP3 file"
+        ]
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate YouTube URL",
+        "condition_type": "validation",
+        "condition_expression": "URL is valid YouTube video link",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_002",
+        "name": "Check yt-dlp Installed",
+        "condition_type": "existence_check",
+        "condition_expression": "yt-dlp is available in environment",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "install yt-dlp"
+        ]
+      },
+      {
+        "id": "r_003",
+        "name": "Check Requested Quality Available",
+        "condition_type": "existence_check",
+        "condition_expression": "Requested quality is available for this video",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "use best available quality"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Video Download Complete",
+        "directive_type": "completion",
+        "description": "Video downloaded to specified location with requested format",
+        "decomposable": true,
+        "decomposition_hint": "r_002 → a_001 → r_001 → a_002 → a_003 → a_004 → a_005 → a_006",
+        "related_elements": [
+          "a_005",
+          "a_006"
+        ]
+      },
+      {
+        "id": "d_002",
+        "name": "Audio Download Complete",
+        "directive_type": "completion",
+        "description": "Audio extracted and saved as MP3",
+        "decomposable": true,
+        "decomposition_hint": "r_001 → a_002 → a_003 → a_007",
+        "related_elements": [
+          "a_007"
+        ]
+      },
+      {
+        "id": "d_003",
+        "name": "Default Output Path",
+        "directive_type": "preference",
+        "description": "Save to /mnt/user-data/outputs/ by default",
+        "decomposable": false,
+        "related_elements": [
+          "a_005",
+          "a_007"
+        ]
+      },
+      {
+        "id": "d_004",
+        "name": "Quality Fallback Strategy",
+        "directive_type": "strategy",
+        "description": "If requested quality unavailable, use best available",
+        "decomposable": false,
+        "related_elements": [
+          "r_003",
+          "a_004"
+        ]
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": [
+        "r_002",
+        "r_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006"
+      ],
+      "condition": "User requests video download with quality",
+      "expected_outcome": "Video file saved to output directory"
+    },
+    {
+      "path_id": 2,
+      "sequence": [
+        "r_002",
+        "r_001",
+        "a_002",
+        "a_003",
+        "a_007"
+      ],
+      "condition": "User requests audio only",
+      "expected_outcome": "MP3 file saved to output directory"
+    },
+    {
+      "path_id": 3,
+      "sequence": [
+        "r_002",
+        "a_001",
+        "r_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005"
+      ],
+      "condition": "yt-dlp not installed",
+      "expected_outcome": "yt-dlp installed then video downloaded"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 3,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 2,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}
+>>>>>>> Stashed changes

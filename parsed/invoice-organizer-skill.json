@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
@@ -278,3 +279,285 @@
     "inconsistency_detected": false
   }
 }
+=======
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__invoice_organizer",
+    "name": "invoice-organizer",
+    "skill_layer": "claude_skill",
+    "title": "Invoice Organizer",
+    "description": "Automatically organizes invoices and receipts for tax preparation by reading messy files, extracting key information, renaming them consistently, and sorting them into logical folders",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-01-26T05:45:00Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "invoice-organizer",
+    "skill_description": "Automatically organizes invoices and receipts for tax preparation by reading messy files, extracting key information, renaming them consistently, and sorting them into logical folders. Turns hours of manual bookkeeping into minutes of automated organization."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Scan Invoice Folder",
+        "action_type": "io_read",
+        "description": "Identify all invoice files (PDFs, images, documents) in target folder",
+        "immutable_elements": [
+          "find command",
+          "file extension filters"
+        ],
+        "mutable_elements": [
+          "folder path",
+          "file types to include"
+        ],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Extract Invoice Information",
+        "action_type": "transform",
+        "description": "Extract vendor name, invoice number, date, amount, description from each file",
+        "immutable_elements": [
+          "extraction patterns",
+          "field definitions"
+        ],
+        "mutable_elements": [
+          "input files",
+          "extraction confidence thresholds"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Generate Standardized Filename",
+        "action_type": "transform",
+        "description": "Create filename in format YYYY-MM-DD Vendor - Invoice - ProductOrService.ext",
+        "immutable_elements": [
+          "filename pattern",
+          "date format"
+        ],
+        "mutable_elements": [
+          "vendor name",
+          "description",
+          "date"
+        ],
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Determine Organization Strategy",
+        "action_type": "await_input",
+        "description": "Ask user preference for folder structure (by vendor, category, date, tax category)",
+        "immutable_elements": [
+          "organization options"
+        ],
+        "mutable_elements": [
+          "user selection"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Create Folder Structure",
+        "action_type": "io_write",
+        "description": "Create organized folder hierarchy based on chosen strategy",
+        "immutable_elements": [
+          "mkdir command"
+        ],
+        "mutable_elements": [
+          "folder paths",
+          "hierarchy depth"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates directories on disk"
+        ]
+      },
+      {
+        "id": "a_006",
+        "name": "Copy/Move Invoices",
+        "action_type": "io_write",
+        "description": "Copy or move files to organized locations with new names",
+        "immutable_elements": [
+          "cp/mv command"
+        ],
+        "mutable_elements": [
+          "source paths",
+          "destination paths",
+          "copy vs move"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates/moves files on disk"
+        ]
+      },
+      {
+        "id": "a_007",
+        "name": "Generate Summary CSV",
+        "action_type": "io_write",
+        "description": "Create CSV spreadsheet with all invoice details for accountant",
+        "immutable_elements": [
+          "CSV structure",
+          "column headers"
+        ],
+        "mutable_elements": [
+          "invoice data rows",
+          "output path"
+        ],
+        "deterministic": true,
+        "side_effects": [
+          "creates CSV file on disk"
+        ]
+      },
+      {
+        "id": "a_008",
+        "name": "Generate Completion Report",
+        "action_type": "transform",
+        "description": "Create summary showing processed files, date range, totals, and folder structure",
+        "immutable_elements": [
+          "report template"
+        ],
+        "mutable_elements": [
+          "statistics",
+          "file counts"
+        ],
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Folder Exists",
+        "condition_type": "existence_check",
+        "condition_expression": "Target folder path exists",
+        "returns": "boolean",
+        "fail_action": "error_throw"
+      },
+      {
+        "id": "r_002",
+        "name": "Check Files Found",
+        "condition_type": "existence_check",
+        "condition_expression": "Invoice files found in folder",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "report no files found"
+        ]
+      },
+      {
+        "id": "r_003",
+        "name": "Validate Extraction Success",
+        "condition_type": "validation",
+        "condition_expression": "Critical info (date, vendor) successfully extracted",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "flag for manual review"
+        ]
+      },
+      {
+        "id": "r_004",
+        "name": "Check Duplicate Invoice",
+        "condition_type": "existence_check",
+        "condition_expression": "Same invoice already exists in destination",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "handle duplicate"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Invoice Organization Complete",
+        "directive_type": "completion",
+        "description": "All invoices organized, renamed, and summary generated",
+        "decomposable": true,
+        "decomposition_hint": "r_001 → a_001 → r_002 → a_002 → a_004 → a_005 → a_003 → a_006 → a_007 → a_008",
+        "related_elements": [
+          "a_001",
+          "a_002",
+          "a_006",
+          "a_007"
+        ]
+      },
+      {
+        "id": "d_002",
+        "name": "Filename Standard",
+        "directive_type": "constraint",
+        "description": "Always use YYYY-MM-DD Vendor - Invoice - Product.ext format",
+        "decomposable": false,
+        "related_elements": [
+          "a_003"
+        ]
+      },
+      {
+        "id": "d_003",
+        "name": "Preserve Originals Principle",
+        "directive_type": "principle",
+        "description": "Default to copying files rather than moving to preserve originals",
+        "decomposable": false,
+        "related_elements": [
+          "a_006"
+        ]
+      },
+      {
+        "id": "d_004",
+        "name": "Tax-Friendly Organization",
+        "directive_type": "knowledge",
+        "description": "Standard categories: Software, Office Supplies, Travel, Professional Services, Hardware",
+        "decomposable": false
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": [
+        "r_001",
+        "a_001",
+        "r_002",
+        "a_002",
+        "a_004",
+        "a_005",
+        "a_003",
+        "a_006",
+        "a_007",
+        "a_008"
+      ],
+      "condition": "User requests invoice organization for tax prep",
+      "expected_outcome": "Organized folder structure with renamed invoices and CSV summary"
+    },
+    {
+      "path_id": 2,
+      "sequence": [
+        "r_001",
+        "a_001",
+        "r_002",
+        "a_002",
+        "r_003"
+      ],
+      "condition": "Some files cannot be parsed",
+      "expected_outcome": "Partially organized with manual review folder"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 2,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 1,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}
+>>>>>>> Stashed changes

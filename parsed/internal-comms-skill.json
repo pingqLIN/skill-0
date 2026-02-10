@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
@@ -67,3 +68,74 @@
     ]
   }
 }
+=======
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__internal_comms",
+    "name": "internal-comms",
+    "skill_layer": "claude_skill",
+    "title": "Internal-Comms Skill",
+    "description": "Resources for writing internal communications like status reports, newsletters, FAQs.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-01-26T13:25:10.987644Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0-batch"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "internal-comms",
+    "skill_description": "Resources for writing internal communications like status reports, newsletters, FAQs."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Identify Type",
+        "action_type": "transform",
+        "description": "Determine communication type from request",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Load Guideline",
+        "action_type": "io_read",
+        "description": "Load appropriate template from examples/ directory",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Write Communication",
+        "action_type": "io_write",
+        "description": "Follow specific instructions for format and tone",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "description": "Match communication type to guideline file",
+        "condition": "always",
+        "output": "proceed_or_halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "directive_type": "knowledge",
+        "description": "Communication types: 3P updates, newsletters, FAQs, status reports",
+        "decomposable": true
+      },
+      {
+        "id": "d_002",
+        "directive_type": "completion",
+        "description": "Communication written following company format",
+        "decomposable": true
+      }
+    ]
+  }
+}
+>>>>>>> Stashed changes

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
@@ -109,3 +110,116 @@
     ]
   }
 }
+=======
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__mcp_builder",
+    "name": "mcp-builder",
+    "skill_layer": "claude_skill",
+    "title": "Mcp-Builder Skill",
+    "description": "Guide for creating high-quality MCP servers that enable LLMs to interact with external services.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-01-26T13:25:10.975437Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0-batch"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "mcp-builder",
+    "skill_description": "Guide for creating high-quality MCP servers that enable LLMs to interact with external services."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Fetch Documentation",
+        "action_type": "io_read",
+        "description": "Load MCP protocol and SDK documentation",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Study API",
+        "action_type": "io_read",
+        "description": "Exhaustively study target API documentation",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Create Plan",
+        "action_type": "transform",
+        "description": "Create comprehensive implementation plan",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Implement Tools",
+        "action_type": "io_write",
+        "description": "Write MCP server code with tool definitions",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Build Project",
+        "action_type": "external_call",
+        "description": "Run npm build or python compile",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "Create Evaluations",
+        "action_type": "io_write",
+        "description": "Write 10 evaluation questions",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "description": "Build for workflows, not just API endpoints",
+        "condition": "always",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_002",
+        "description": "Return high-signal information, not data dumps",
+        "condition": "when_designing_tools",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_003",
+        "description": "Error messages should guide agents toward correct usage",
+        "condition": "when_handling_errors",
+        "output": "proceed_or_halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "directive_type": "principle",
+        "description": "Optimize for limited context - agents have constrained windows",
+        "decomposable": true
+      },
+      {
+        "id": "d_002",
+        "directive_type": "strategy",
+        "description": "Follow 4-phase workflow: Research, Implement, Review, Evaluate",
+        "decomposable": true
+      },
+      {
+        "id": "d_003",
+        "directive_type": "completion",
+        "description": "10 evaluation questions created and verified",
+        "decomposable": true
+      }
+    ]
+  }
+}
+>>>>>>> Stashed changes
