@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
@@ -101,3 +102,108 @@
     ]
   }
 }
+=======
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__canvas_design",
+    "name": "canvas-design",
+    "skill_layer": "claude_skill",
+    "title": "Canvas-Design Skill",
+    "description": "Create beautiful visual art in PNG and PDF documents using design philosophy.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-01-26T13:25:10.981650Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0-batch"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "canvas-design",
+    "skill_description": "Create beautiful visual art in PNG and PDF documents using design philosophy."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Create Philosophy",
+        "action_type": "io_write",
+        "description": "Write design philosophy manifesto as .md file",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Deduce Reference",
+        "action_type": "transform",
+        "description": "Identify subtle conceptual thread from request",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Create Canvas",
+        "action_type": "io_write",
+        "description": "Express philosophy visually as PDF or PNG",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Download Fonts",
+        "action_type": "io_read",
+        "description": "Search and use fonts from canvas-fonts directory",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Refine Output",
+        "action_type": "transform",
+        "description": "Take second pass to polish the masterpiece",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "description": "Text as visual accent only (10% text, 90% visual)",
+        "condition": "always",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_002",
+        "description": "Nothing overlaps, nothing falls off page",
+        "condition": "always",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_003",
+        "description": "Work must appear meticulously crafted",
+        "condition": "always",
+        "output": "proceed_or_halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "directive_type": "principle",
+        "description": "Create art movements, not layouts - emphasize craftsmanship repeatedly",
+        "decomposable": true
+      },
+      {
+        "id": "d_002",
+        "directive_type": "principle",
+        "description": "Subtle reference embedded within art, not literal",
+        "decomposable": true
+      },
+      {
+        "id": "d_003",
+        "directive_type": "completion",
+        "description": "Output as single PDF or PNG alongside philosophy .md file",
+        "decomposable": true
+      }
+    ]
+  }
+}
+>>>>>>> Stashed changes

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
@@ -109,3 +110,116 @@
     ]
   }
 }
+=======
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__xlsx",
+    "name": "xlsx",
+    "skill_layer": "claude_skill",
+    "title": "Xlsx Skill",
+    "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization.",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-01-26T13:25:10.959075Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0-batch"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "xlsx",
+    "skill_description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Read Excel File",
+        "action_type": "io_read",
+        "description": "Load Excel file using pandas or openpyxl",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Write Excel File",
+        "action_type": "io_write",
+        "description": "Save data to Excel format with formatting",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Create Formulas",
+        "action_type": "transform",
+        "description": "Add Excel formulas to cells",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Apply Formatting",
+        "action_type": "transform",
+        "description": "Apply colors, fonts, and cell styles",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Data Analysis",
+        "action_type": "transform",
+        "description": "Analyze data using pandas functions",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "Recalculate Formulas",
+        "action_type": "external_call",
+        "description": "Use LibreOffice to recalculate formula values",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "description": "Use formulas instead of hardcoded values",
+        "condition": "always",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_002",
+        "description": "Verify zero formula errors before delivery",
+        "condition": "on_output",
+        "output": "proceed_or_halt"
+      },
+      {
+        "id": "r_003",
+        "description": "Use proper color coding for financial models",
+        "condition": "when_financial",
+        "output": "proceed_or_halt"
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "directive_type": "principle",
+        "description": "Use Excel formulas instead of calculating in Python",
+        "decomposable": true
+      },
+      {
+        "id": "d_002",
+        "directive_type": "constraint",
+        "description": "Every model must have zero formula errors",
+        "decomposable": true
+      },
+      {
+        "id": "d_003",
+        "directive_type": "knowledge",
+        "description": "Blue text for inputs, black for formulas, green for links",
+        "decomposable": true
+      }
+    ]
+  }
+}
+>>>>>>> Stashed changes

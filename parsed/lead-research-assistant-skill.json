@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
@@ -197,3 +198,204 @@
     "inconsistency_detected": false
   }
 }
+=======
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__composio__lead_research_assistant",
+    "name": "lead-research-assistant",
+    "skill_layer": "claude_skill",
+    "title": "Lead Research Assistant",
+    "description": "Identifies high-quality leads for your product or service by analyzing your business, searching for target companies, and providing actionable contact strategies",
+    "schema_version": "2.1.0",
+    "parse_timestamp": "2026-01-26T05:45:00Z",
+    "parser_version": "skill-0 v2.1",
+    "parsed_by": "skill-0"
+  },
+  "original_definition": {
+    "source": "ComposioHQ/awesome-claude-skills",
+    "skill_name": "lead-research-assistant",
+    "skill_description": "Identifies high-quality leads for your product or service by analyzing your business, searching for target companies, and providing actionable contact strategies. Perfect for sales, business development, and marketing professionals."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "id": "a_001",
+        "name": "Understand Product/Service",
+        "action_type": "llm_inference",
+        "description": "Analyze codebase or user input to understand value proposition and problems solved",
+        "immutable_elements": [
+          "analysis framework"
+        ],
+        "mutable_elements": [
+          "product description",
+          "features",
+          "benefits"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_002",
+        "name": "Define Ideal Customer Profile",
+        "action_type": "llm_inference",
+        "description": "Determine target industries, company size, geography, pain points, technology requirements",
+        "immutable_elements": [
+          "ICP framework"
+        ],
+        "mutable_elements": [
+          "criteria values"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_003",
+        "name": "Search for Companies",
+        "action_type": "external_call",
+        "description": "Find companies matching ICP criteria via web search and databases",
+        "immutable_elements": [
+          "search APIs"
+        ],
+        "mutable_elements": [
+          "search criteria",
+          "filters"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_004",
+        "name": "Score and Prioritize Leads",
+        "action_type": "llm_inference",
+        "description": "Create fit score (1-10) based on ICP alignment, need signals, budget indicators",
+        "immutable_elements": [
+          "scoring criteria"
+        ],
+        "mutable_elements": [
+          "company data",
+          "scores"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_005",
+        "name": "Generate Contact Strategy",
+        "action_type": "llm_inference",
+        "description": "Create personalized outreach approach for each lead",
+        "immutable_elements": [
+          "strategy template"
+        ],
+        "mutable_elements": [
+          "company context",
+          "value proposition",
+          "conversation starters"
+        ],
+        "deterministic": false,
+        "side_effects": []
+      },
+      {
+        "id": "a_006",
+        "name": "Format Lead Report",
+        "action_type": "transform",
+        "description": "Create structured output with company details, fit scores, and strategies",
+        "immutable_elements": [
+          "report structure"
+        ],
+        "mutable_elements": [
+          "lead data"
+        ],
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "id": "r_001",
+        "name": "Validate Product Understanding",
+        "condition_type": "existence_check",
+        "condition_expression": "Product/service description or codebase available",
+        "returns": "boolean",
+        "fail_action": "branch",
+        "branching_targets": [
+          "ask for product details"
+        ]
+      }
+    ],
+    "directives": [
+      {
+        "id": "d_001",
+        "name": "Lead Research Complete",
+        "directive_type": "completion",
+        "description": "Prioritized lead list with contact strategies",
+        "decomposable": true,
+        "decomposition_hint": "r_001 → a_001 → a_002 → a_003 → a_004 → a_005 → a_006",
+        "related_elements": [
+          "a_003",
+          "a_004",
+          "a_006"
+        ]
+      },
+      {
+        "id": "d_002",
+        "name": "Lead Output Structure",
+        "directive_type": "knowledge",
+        "description": "Company name, website, priority score, why good fit, target decision maker, LinkedIn URL, value proposition, outreach strategy, conversation starters",
+        "decomposable": false,
+        "related_elements": [
+          "a_006"
+        ]
+      },
+      {
+        "id": "d_003",
+        "name": "Scoring Factors",
+        "directive_type": "knowledge",
+        "description": "ICP alignment, immediate need signals, budget availability, competitive landscape, timing indicators",
+        "decomposable": false,
+        "related_elements": [
+          "a_004"
+        ]
+      }
+    ]
+  },
+  "execution_paths": [
+    {
+      "path_id": 1,
+      "sequence": [
+        "r_001",
+        "a_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006"
+      ],
+      "condition": "User requests lead research",
+      "expected_outcome": "Prioritized lead list with outreach strategies"
+    },
+    {
+      "path_id": 2,
+      "sequence": [
+        "a_001",
+        "a_002",
+        "a_003",
+        "a_004",
+        "a_005",
+        "a_006"
+      ],
+      "condition": "Running from product codebase",
+      "expected_outcome": "Leads based on codebase analysis"
+    }
+  ],
+  "parser_meta": {
+    "paths_enumerated": 2,
+    "max_paths_exceeded": false,
+    "max_paths_limit": 100,
+    "decomposition_depth": 1,
+    "directives_expandable": 1,
+    "requires_deep_parse": false,
+    "inconsistency_detected": false
+  }
+}
+>>>>>>> Stashed changes
