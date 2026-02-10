@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Skills API router"""
 
 from typing import Optional
@@ -78,6 +79,8 @@ def trigger_test(
         "message": f"Equivalence test queued for {'skill ' + skill_id if skill_id else 'all pending skills'}",
     }
 =======
+=======
+>>>>>>> Stashed changes
 """Skills API router"""
 
 from typing import Optional
@@ -156,4 +159,7 @@ def trigger_test(
         "status": "queued",
         "message": f"Equivalence test queued for {'skill ' + skill_id if skill_id else 'all pending skills'}",
     }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

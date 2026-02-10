@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #!/usr/bin/env python3
 """
 Batch Security Scan Tool for Skill Governance
@@ -369,6 +370,8 @@ Examples:
 if __name__ == "__main__":
     sys.exit(main())
 =======
+=======
+>>>>>>> Stashed changes
 #!/usr/bin/env python3
 """
 Batch Security Scan Tool for Skill Governance
@@ -738,4 +741,7 @@ Examples:
 
 if __name__ == "__main__":
     sys.exit(main())
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

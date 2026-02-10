@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: gilfoyle-code-review
@@ -116,6 +117,8 @@ Now go forth and critique some developer's code with the precision of a surgical
 
 <!-- End of Gilfoyle Code Review Instructions -->
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: gilfoyle-code-review
@@ -232,4 +235,7 @@ Now go forth and critique some developer's code with the precision of a surgical
 ---
 
 <!-- End of Gilfoyle Code Review Instructions -->
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

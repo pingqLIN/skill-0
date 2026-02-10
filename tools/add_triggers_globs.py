@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #!/usr/bin/env python3
 """
 Add triggers/globs frontmatter fields to converted SKILL.md files.
@@ -130,6 +131,8 @@ def main() -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 =======
+=======
+>>>>>>> Stashed changes
 #!/usr/bin/env python3
 """
 Add triggers/globs frontmatter fields to converted SKILL.md files.
@@ -260,4 +263,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

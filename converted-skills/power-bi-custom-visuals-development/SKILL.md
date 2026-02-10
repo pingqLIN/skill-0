@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: power-bi-custom-visuals-development
@@ -811,6 +812,8 @@ export class OptimizedVisual implements IVisual {
 ```
 
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: power-bi-custom-visuals-development
@@ -1622,5 +1625,8 @@ export class OptimizedVisual implements IVisual {
 }
 ```
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 Remember: Custom visual development requires understanding both Power BI's visual framework and modern web development practices. Focus on creating reusable, testable, and performant visualizations that enhance the Power BI ecosystem.

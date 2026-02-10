@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # TOOLS — CLI Utilities
 
 ## OVERVIEW
@@ -45,6 +46,8 @@ python migrate_to_schema_2_1.py           # Schema migration
 python analyzer.py                        # Coverage report
 ```
 =======
+=======
+>>>>>>> Stashed changes
 # TOOLS — CLI Utilities
 
 ## OVERVIEW
@@ -90,4 +93,7 @@ python batch_import.py --dir ../source    # Import skills
 python migrate_to_schema_2_1.py           # Schema migration
 python analyzer.py                        # Coverage report
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

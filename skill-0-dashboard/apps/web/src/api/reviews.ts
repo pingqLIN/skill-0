@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from './client';
 import type { SkillSummary } from './types';
@@ -51,6 +52,8 @@ export function useRejectSkill() {
   });
 }
 =======
+=======
+>>>>>>> Stashed changes
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from './client';
 import type { SkillSummary } from './types';
@@ -102,4 +105,7 @@ export function useRejectSkill() {
     },
   });
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

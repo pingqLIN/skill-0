@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Configuration for the Governance Dashboard API"""
 
 from pathlib import Path
@@ -29,6 +30,8 @@ class Settings(BaseSettings):
 
 settings = Settings()
 =======
+=======
+>>>>>>> Stashed changes
 """Configuration for the Governance Dashboard API"""
 
 from pathlib import Path
@@ -58,4 +61,7 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

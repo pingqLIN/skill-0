@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: playwright-dotnet
@@ -103,6 +104,8 @@ Before finalizing tests, ensure:
 - [ ] Tests follow consistent naming conventions
 - [ ] Code is properly formatted and commented
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: playwright-dotnet
@@ -206,4 +209,7 @@ Before finalizing tests, ensure:
 - [ ] Assertions are meaningful and reflect user expectations
 - [ ] Tests follow consistent naming conventions
 - [ ] Code is properly formatted and commented
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

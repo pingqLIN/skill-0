@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: vsixtoolkit
@@ -690,6 +691,8 @@ Description with screenshot...
 5. **Include keyboard shortcuts** - Users love productivity tips
 6. **Add a "Why" section** - Explain the problem before the solution
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: vsixtoolkit
@@ -1380,4 +1383,7 @@ Description with screenshot...
 4. **Keep the description scannable** - Short paragraphs, bullet points, tables
 5. **Include keyboard shortcuts** - Users love productivity tips
 6. **Add a "Why" section** - Explain the problem before the solution
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: copilot-sdk-nodejs
@@ -718,6 +719,8 @@ const message = await waitForEvent(session, "assistant.message");
 console.log(message.data.content);
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: copilot-sdk-nodejs
@@ -1436,4 +1439,7 @@ async function waitForEvent<T extends SessionEvent["type"]>(
 const message = await waitForEvent(session, "assistant.message");
 console.log(message.data.content);
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dataverse-python-sdk
@@ -103,6 +104,8 @@ client.delete_table("SampleItem")
 - Working with data: https://learn.microsoft.com/en-us/power-apps/developer/data-platform/sdk-python/work-data
 - SDK source/examples: https://github.com/microsoft/PowerPlatform-DataverseClient-Python
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dataverse-python-sdk
@@ -206,4 +209,7 @@ client.delete_table("SampleItem")
 - Getting started: https://learn.microsoft.com/en-us/power-apps/developer/data-platform/sdk-python/get-started
 - Working with data: https://learn.microsoft.com/en-us/power-apps/developer/data-platform/sdk-python/work-data
 - SDK source/examples: https://github.com/microsoft/PowerPlatform-DataverseClient-Python
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

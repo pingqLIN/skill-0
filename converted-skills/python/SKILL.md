@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: python
@@ -58,6 +59,8 @@ def calculate_area(radius: float) -> float:
     return math.pi * radius ** 2
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: python
@@ -116,4 +119,7 @@ def calculate_area(radius: float) -> float:
     import math
     return math.pi * radius ** 2
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

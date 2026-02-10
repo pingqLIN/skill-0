@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: lwc
@@ -428,6 +429,8 @@ Prefer `lwc:if`, `lwc:elseif` and `lwc:else` for conditional rendering (API v58.
 - **Imperative API Calls**: Prefer `@wire` over imperative `import` calls when possible
 - **Memory Leaks**: Always clean up event listeners in `disconnectedCallback()`
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: lwc
@@ -856,4 +859,7 @@ Prefer `lwc:if`, `lwc:elseif` and `lwc:else` for conditional rendering (API v58.
 - **Hardcoded Values**: Use custom labels, custom metadata, or constants
 - **Imperative API Calls**: Prefer `@wire` over imperative `import` calls when possible
 - **Memory Leaks**: Always clean up event listeners in `disconnectedCallback()`
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,6 +60,8 @@
   }
 }
 =======
+=======
+>>>>>>> Stashed changes
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -118,4 +121,7 @@
     @apply bg-background text-foreground;
   }
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dotnet-framework
@@ -115,6 +116,8 @@ globs: "**/*.csproj, **/*.cs"
 - **Lazy initialization**: Use `Lazy<T>` for expensive object creation
 - **Avoid reflection in hot paths**: Cache `MethodInfo`, `PropertyInfo` objects when possible
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dotnet-framework
@@ -230,4 +233,7 @@ globs: "**/*.csproj, **/*.cs"
 - **String interning**: Use `string.Intern()` judiciously for frequently used strings
 - **Lazy initialization**: Use `Lazy<T>` for expensive object creation
 - **Avoid reflection in hot paths**: Cache `MethodInfo`, `PropertyInfo` objects when possible
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: svelte
@@ -208,6 +209,8 @@ Instructions for building high-quality Svelte 5 and SvelteKit applications with 
 - Function bindings (`bind:value={() => value, setValue}`) for two-way binding
 - Avoid `$effect()` for state synchronization - use `$derived()` or callbacks instead
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: svelte
@@ -416,4 +419,7 @@ Instructions for building high-quality Svelte 5 and SvelteKit applications with 
 - Server-side rendering with client-side hydration for optimal performance
 - Function bindings (`bind:value={() => value, setValue}`) for two-way binding
 - Avoid `$effect()` for state synchronization - use `$derived()` or callbacks instead
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

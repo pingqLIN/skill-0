@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """
 Skill-0 Governance Dashboard API
 
@@ -51,6 +52,8 @@ async def health():
     """Health check endpoint"""
     return {"status": "healthy"}
 =======
+=======
+>>>>>>> Stashed changes
 """
 Skill-0 Governance Dashboard API
 
@@ -102,4 +105,7 @@ async def root():
 async def health():
     """Health check endpoint"""
     return {"status": "healthy"}
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

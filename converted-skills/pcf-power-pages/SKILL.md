@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-power-pages
@@ -128,6 +129,8 @@ A code component can be built and added to a webpage that can use the [portal We
 - [Create your first component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/implementing-controls-using-typescript)
 - [Add code components to a column or table in model-driven apps](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/add-custom-controls-to-a-field-or-entity)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-power-pages
@@ -256,4 +259,7 @@ A code component can be built and added to a webpage that can use the [portal We
 - [Power Apps component framework overview](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/overview)
 - [Create your first component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/implementing-controls-using-typescript)
 - [Add code components to a column or table in model-driven apps](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/add-custom-controls-to-a-field-or-entity)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

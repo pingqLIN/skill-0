@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: power-bi-security-rls-best-practices
@@ -505,6 +506,8 @@ RETURN
 ```
 
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: power-bi-security-rls-best-practices
@@ -1010,5 +1013,8 @@ RETURN
     )
 ```
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 Remember: Security is layered - implement defense in depth with proper authentication, authorization, data encryption, network security, and comprehensive auditing. Regularly review and test security implementations to ensure they meet current requirements and compliance standards.

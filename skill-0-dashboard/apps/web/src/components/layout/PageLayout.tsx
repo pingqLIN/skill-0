@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
@@ -16,6 +17,8 @@ export function PageLayout({ children }: { children: React.ReactNode }) {
   );
 }
 =======
+=======
+>>>>>>> Stashed changes
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
@@ -32,4 +35,7 @@ export function PageLayout({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

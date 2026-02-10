@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: powershell-pester-5
@@ -199,6 +200,8 @@ Invoke-Pester -Configuration $config
 
 **Key Sections**: Run (Path, Exit), Filter (Tag, ExcludeTag), Output (Verbosity), TestResult (Enabled, OutputFormat), CodeCoverage (Enabled, Path), Should (ErrorAction), Debug
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: powershell-pester-5
@@ -398,4 +401,7 @@ Invoke-Pester -Configuration $config
 ```
 
 **Key Sections**: Run (Path, Exit), Filter (Tag, ExcludeTag), Output (Verbosity), TestResult (Enabled, OutputFormat), CodeCoverage (Enabled, Path), Should (ErrorAction), Debug
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

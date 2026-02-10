@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: typescript-5-es2022
@@ -116,6 +117,8 @@ globs: "**/*.ts"
 - Write comments that capture intent, and remove stale notes during refactors.
 - Update architecture or design docs when introducing significant patterns.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: typescript-5-es2022
@@ -232,4 +235,7 @@ globs: "**/*.ts"
 - Add JSDoc to public APIs; include `@remarks` or `@example` when helpful.
 - Write comments that capture intent, and remove stale notes during refactors.
 - Update architecture or design docs when introducing significant patterns.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

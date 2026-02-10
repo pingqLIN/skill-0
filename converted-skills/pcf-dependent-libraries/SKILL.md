@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-dependent-libraries
@@ -133,6 +134,8 @@ Try a tutorial that walks you through creating a dependent library:
 
 [Tutorial: Use dependent libraries in a component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/tutorial-use-dependent-libraries)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-dependent-libraries
@@ -266,4 +269,7 @@ To enable on demand loading, you need to:
 Try a tutorial that walks you through creating a dependent library:
 
 [Tutorial: Use dependent libraries in a component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/tutorial-use-dependent-libraries)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

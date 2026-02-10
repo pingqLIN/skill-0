@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 {
   "$schema": "https://ui.shadcn.com/schema.json",
   "style": "default",
@@ -17,6 +18,8 @@
   }
 }
 =======
+=======
+>>>>>>> Stashed changes
 {
   "$schema": "https://ui.shadcn.com/schema.json",
   "style": "default",
@@ -34,4 +37,7 @@
     "utils": "@/lib/utils"
   }
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

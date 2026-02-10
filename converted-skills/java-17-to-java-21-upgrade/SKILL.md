@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: java-17-to-java-21-upgrade
@@ -466,6 +467,8 @@ When reviewing code for Java 21 upgrade:
 
 Remember to enable preview features only when specifically needed and test thoroughly in staging environments before deploying to production.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: java-17-to-java-21-upgrade
@@ -932,4 +935,7 @@ When reviewing code for Java 21 upgrade:
 - Test preview features thoroughly before production use
 
 Remember to enable preview features only when specifically needed and test thoroughly in staging environments before deploying to production.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

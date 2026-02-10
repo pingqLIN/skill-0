@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: power-platform-mcp-development
@@ -89,6 +90,8 @@ globs: "**/*.{json,csx,md}"
 - Test resource access and tool invocation from Copilot Studio interface
 - Validate that transformed schemas produce expected behavior in conversations
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: power-platform-mcp-development
@@ -178,5 +181,8 @@ globs: "**/*.{json,csx,md}"
 - Ensure tool definitions work correctly within Copilot Studio's constraints
 - Test resource access and tool invocation from Copilot Studio interface
 - Validate that transformed schemas produce expected behavior in conversations
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 - Confirm proper integration with Copilot Studio's agent framework

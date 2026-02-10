@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: spec-driven-workflow-v1
@@ -326,6 +327,8 @@ Each requirement must be:
 - **Feasible**: Can be implemented within constraints
 - **Traceable**: Linked to user needs and design elements
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: spec-driven-workflow-v1
@@ -652,4 +655,7 @@ Each requirement must be:
 - **Necessary**: Contributes to the system's purpose
 - **Feasible**: Can be implemented within constraints
 - **Traceable**: Linked to user needs and design elements
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

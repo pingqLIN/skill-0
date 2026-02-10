@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: ruby-mcp-server
@@ -631,6 +632,8 @@ class DynamicPrompt < MCP::Prompt
 end
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: ruby-mcp-server
@@ -1262,4 +1265,7 @@ class DynamicPrompt < MCP::Prompt
   end
 end
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

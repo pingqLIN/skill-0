@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: astro
@@ -184,6 +185,8 @@ const blog = defineCollection({
 - **Type Safety**: Leverage auto-generated types from Content Collections
 - **Performance**: Optimize with built-in image optimization and minimal client bundles
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: astro
@@ -368,4 +371,7 @@ const blog = defineCollection({
 - **View Transitions**: Enable SPA-like navigation with `<ClientRouter />`
 - **Type Safety**: Leverage auto-generated types from Content Collections
 - **Performance**: Optimize with built-in image optimization and minimal client bundles
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

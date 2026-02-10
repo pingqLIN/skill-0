@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: update-code-from-shorthand
@@ -132,6 +133,8 @@ xhttp.open("GET", file, true);
 xhttp.send();
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: update-code-from-shorthand
@@ -264,4 +267,7 @@ xhttp.onreadystatechange = function() {
 xhttp.open("GET", file, true);
 xhttp.send();
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

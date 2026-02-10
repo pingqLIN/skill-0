@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: code-review-generic
@@ -419,6 +420,8 @@ This is a generic template. Customize this section with your project-specific in
 - **Testing**: [e.g., JUnit 5, Jest, pytest]
 - **Code Style**: [e.g., follows Google Style Guide]
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: code-review-generic
@@ -838,4 +841,7 @@ This is a generic template. Customize this section with your project-specific in
 - **Build Tool**: [e.g., Gradle, Maven, npm, pip]
 - **Testing**: [e.g., JUnit 5, Jest, pytest]
 - **Code Style**: [e.g., follows Google Style Guide]
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

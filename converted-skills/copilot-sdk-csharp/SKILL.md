@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: copilot-sdk-csharp
@@ -551,6 +552,8 @@ var session = await client.CreateSessionAsync(new SessionConfig
 ```
 
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: copilot-sdk-csharp
@@ -1102,4 +1105,7 @@ var session = await client.CreateSessionAsync(new SessionConfig
 });
 ```
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

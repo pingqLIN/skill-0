@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: shell
@@ -134,6 +135,8 @@ main "$@"
 
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: shell
@@ -268,4 +271,7 @@ done
 main "$@"
 
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

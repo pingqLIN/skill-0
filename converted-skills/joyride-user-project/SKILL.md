@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: joyride-user-project
@@ -208,6 +209,8 @@ Joyride Flares provide a convenient way to create WebView panels and sidebar vie
 
 Develop using the REPL. Yet, sometimes you need to edit file. And when you do, prefer structural editing tools.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: joyride-user-project
@@ -416,4 +419,7 @@ Joyride Flares provide a convenient way to create WebView panels and sidebar vie
 ## Editing files
 
 Develop using the REPL. Yet, sometimes you need to edit file. And when you do, prefer structural editing tools.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

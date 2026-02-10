@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip } from 'recharts';
 import type { RiskDistribution } from '@/api/types';
 
@@ -45,6 +46,8 @@ export function RiskDistributionChart({ data }: Props) {
   );
 }
 =======
+=======
+>>>>>>> Stashed changes
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip } from 'recharts';
 import type { RiskDistribution } from '@/api/types';
 
@@ -90,4 +93,7 @@ export function RiskDistributionChart({ data }: Props) {
     </ResponsiveContainer>
   );
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

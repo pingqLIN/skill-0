@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """
 GovernanceService - Service layer wrapping the GovernanceDB
 
@@ -457,6 +458,8 @@ class GovernanceService:
             "page_size": page_size,
         }
 =======
+=======
+>>>>>>> Stashed changes
 """
 GovernanceService - Service layer wrapping the GovernanceDB
 
@@ -890,4 +893,7 @@ class GovernanceService:
             "page": page,
             "page_size": page_size,
         }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

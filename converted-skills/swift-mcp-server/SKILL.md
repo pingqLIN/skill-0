@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: swift-mcp-server
@@ -500,6 +501,8 @@ for (index, task) in tasks.enumerated() {
 }
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: swift-mcp-server
@@ -1000,4 +1003,7 @@ for (index, task) in tasks.enumerated() {
     print("\(index): \(result.content)")
 }
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

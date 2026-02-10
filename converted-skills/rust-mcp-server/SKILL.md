@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: rust-mcp-server
@@ -717,6 +718,8 @@ CMD ["my-mcp-server"]
 - [MCP Specification](https://spec.modelcontextprotocol.io/)
 - [Rust Async Book](https://rust-lang.github.io/async-book/)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: rust-mcp-server
@@ -1434,4 +1437,7 @@ CMD ["my-mcp-server"]
 - [Examples Repository](https://github.com/modelcontextprotocol/rust-sdk/tree/main/examples)
 - [MCP Specification](https://spec.modelcontextprotocol.io/)
 - [Rust Async Book](https://rust-lang.github.io/async-book/)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

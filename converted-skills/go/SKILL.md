@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: go
@@ -375,6 +376,8 @@ Follow idiomatic Go practices and community standards when writing Go code. Thes
 - Not considering the zero value of types
 - **Creating duplicate `package` declarations** - this is a compile error; always check existing files before adding package declarations
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: go
@@ -750,4 +753,7 @@ Follow idiomatic Go practices and community standards when writing Go code. Thes
 - Over-using unconstrained types (e.g., `any`); prefer specific types or generic type parameters with constraints. If an unconstrained type is required, use `any` rather than `interface{}`
 - Not considering the zero value of types
 - **Creating duplicate `package` declarations** - this is a compile error; always check existing files before adding package declarations
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: java-mcp-server
@@ -555,6 +556,8 @@ server.addResourceReadHandler((uri) -> {
 9. **Test with synchronous API** for simplicity
 10. **Follow Java naming conventions** (camelCase for methods, PascalCase for classes)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: java-mcp-server
@@ -1110,4 +1113,7 @@ server.addResourceReadHandler((uri) -> {
 8. **Propagate context** for observability in reactive chains
 9. **Test with synchronous API** for simplicity
 10. **Follow Java naming conventions** (camelCase for methods, PascalCase for classes)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # DASHBOARD WEB — React Frontend
 
 ## OVERVIEW
@@ -58,6 +59,8 @@ npm run preview   # Preview production build
 npm run lint      # ESLint check
 ```
 =======
+=======
+>>>>>>> Stashed changes
 # DASHBOARD WEB — React Frontend
 
 ## OVERVIEW
@@ -116,4 +119,7 @@ npm run build     # Production build
 npm run preview   # Preview production build
 npm run lint      # ESLint check
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

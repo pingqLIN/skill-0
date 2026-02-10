@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Statistics schemas for the Governance Dashboard API"""
 
 from pydantic import BaseModel
@@ -44,6 +45,8 @@ class FindingsByRule(BaseModel):
     severity: str
     count: int
 =======
+=======
+>>>>>>> Stashed changes
 """Statistics schemas for the Governance Dashboard API"""
 
 from pydantic import BaseModel
@@ -88,4 +91,7 @@ class FindingsByRule(BaseModel):
     rule_name: str
     severity: str
     count: int
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

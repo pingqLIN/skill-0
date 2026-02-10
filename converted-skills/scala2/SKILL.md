@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: scala2
@@ -836,6 +837,8 @@ val uri = new java.net.URI("http://example.com")
 
 For complete details, see the [Databricks Scala Style Guide](https://github.com/databricks/scala-style-guide).
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: scala2
@@ -1672,4 +1675,7 @@ val uri = new java.net.URI("http://example.com")
 10. **Profile before optimizing** - Measure, don't guess
 
 For complete details, see the [Databricks Scala Style Guide](https://github.com/databricks/scala-style-guide).
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

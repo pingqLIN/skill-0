@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
@@ -24,6 +25,8 @@ Input.displayName = "Input"
 
 export { Input }
 =======
+=======
+>>>>>>> Stashed changes
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
@@ -48,4 +51,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = "Input"
 
 export { Input }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

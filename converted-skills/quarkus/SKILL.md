@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: quarkus
@@ -100,6 +101,8 @@ globs: "*"
 - Implement role-based access control (RBAC) using MicroProfile JWT or OIDC.
 - Validate all input parameters
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: quarkus
@@ -200,4 +203,7 @@ globs: "*"
 - Use Quarkus Security extensions (e.g., `quarkus-smallrye-jwt`, `quarkus-oidc`).
 - Implement role-based access control (RBAC) using MicroProfile JWT or OIDC.
 - Validate all input parameters
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

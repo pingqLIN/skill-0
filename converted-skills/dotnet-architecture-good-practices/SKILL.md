@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dotnet-architecture-good-practices
@@ -281,6 +282,8 @@ public void MethodName_Condition_ExpectedResult()
 
 **FAILURE TO FOLLOW THIS PROCESS IS UNACCEPTABLE** - The user expects rigorous adherence to these guidelines and code standards.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dotnet-architecture-good-practices
@@ -562,4 +565,7 @@ public void MethodName_Condition_ExpectedResult()
 * Stop and ask for clarification if any guideline is unclear.
 
 **FAILURE TO FOLLOW THIS PROCESS IS UNACCEPTABLE** - The user expects rigorous adherence to these guidelines and code standards.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

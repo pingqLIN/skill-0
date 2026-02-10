@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: collections
@@ -56,6 +57,8 @@ When working with collections in the awesome-copilot repository:
 - Main collections overview is generated as README.collections.md
 - VS Code install badges are automatically created for each item
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: collections
@@ -112,4 +115,7 @@ When working with collections in the awesome-copilot repository:
 - Individual collection pages are created in collections/ directory
 - Main collections overview is generated as README.collections.md
 - VS Code install badges are automatically created for each item
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

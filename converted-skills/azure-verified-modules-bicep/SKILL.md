@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: azure-verified-modules-bicep
@@ -207,6 +208,8 @@ Before submitting any Bicep code:
 - [ ] Comments added for complex logic
 - [ ] Follows lowerCamelCase naming convention
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: azure-verified-modules-bicep
@@ -414,4 +417,7 @@ Before submitting any Bicep code:
 - [ ] Types imported/defined where appropriate
 - [ ] Comments added for complex logic
 - [ ] Follows lowerCamelCase naming convention
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

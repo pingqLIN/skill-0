@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: csharp
@@ -116,6 +117,8 @@ globs: "**/*.cs"
 - Show how to implement health checks and readiness probes.
 - Explain environment-specific configurations for different deployment stages.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: csharp
@@ -232,4 +235,7 @@ globs: "**/*.cs"
 - Demonstrate deployment to Azure App Service, Azure Container Apps, or other hosting options.
 - Show how to implement health checks and readiness probes.
 - Explain environment-specific configurations for different deployment stages.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: performance-optimization
@@ -422,6 +423,8 @@ Performance optimization is an ongoing process. Always measure, profile, and ite
 
 <!-- End of Performance Optimization Instructions --> 
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: performance-optimization
@@ -844,4 +847,7 @@ Performance optimization is an ongoing process. Always measure, profile, and ite
 ---
 
 <!-- End of Performance Optimization Instructions --> 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

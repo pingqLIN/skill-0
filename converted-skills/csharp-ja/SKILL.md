@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: csharp-ja
@@ -116,6 +117,8 @@ globs: "**/*.cs"
 - ヘルスチェックと Readiness Probe の実装方法を示します。
 - 各デプロイ段階における環境固有の構成を説明します。
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: csharp-ja
@@ -232,4 +235,7 @@ globs: "**/*.cs"
 - Azure App Service、Azure Container Apps、その他のホスティングオプションへのデプロイを示します。
 - ヘルスチェックと Readiness Probe の実装方法を示します。
 - 各デプロイ段階における環境固有の構成を説明します。
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

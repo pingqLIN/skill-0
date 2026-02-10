@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: wordpress
@@ -188,6 +189,8 @@ require $_tests_dir . '/includes/bootstrap.php';
 - ✅ Code passes PHPCS (WPCS) and ESLint where applicable.  
 - ✅ Avoid direct DB concatenation; always prepare queries.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: wordpress
@@ -376,4 +379,7 @@ require $_tests_dir . '/includes/bootstrap.php';
 - ✅ Tests added/updated for new behaviors.  
 - ✅ Code passes PHPCS (WPCS) and ESLint where applicable.  
 - ✅ Avoid direct DB concatenation; always prepare queries.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

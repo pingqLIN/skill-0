@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: power-platform-connector
@@ -431,6 +432,8 @@ This workspace contains JSON Schema definitions for Power Platform Custom Connec
 
 Remember: These schemas ensure your Power Platform connectors are properly formatted and will work correctly in the Power Platform ecosystem.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: power-platform-connector
@@ -862,4 +865,7 @@ This workspace contains JSON Schema definitions for Power Platform Custom Connec
 - Check that operation responses match expected schemas to prevent runtime errors.
 
 Remember: These schemas ensure your Power Platform connectors are properly formatted and will work correctly in the Power Platform ecosystem.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

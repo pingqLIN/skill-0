@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #!/usr/bin/env python3
 """
 Batch equivalence testing and DB backfill.
@@ -87,6 +88,8 @@ def main() -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 =======
+=======
+>>>>>>> Stashed changes
 #!/usr/bin/env python3
 """
 Batch equivalence testing and DB backfill.
@@ -174,4 +177,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

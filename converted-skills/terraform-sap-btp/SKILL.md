@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: terraform-sap-btp
@@ -197,6 +198,8 @@ Operational:
 
 All changes must flow through Terraform CLI + HCL – never mutate state manually.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: terraform-sap-btp
@@ -394,4 +397,7 @@ Operational:
 - Reading business data from raw `*.tfstate` instead of outputs / data sources.
 
 All changes must flow through Terraform CLI + HCL – never mutate state manually.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

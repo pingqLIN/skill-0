@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dart-n-flutter
@@ -449,6 +450,8 @@ Fakes aren't concerned with the inner workings of any given method as much
 as they're concerned with inputs and outputs. If you have this in mind while writing application code,
 you're forced to write modular, lightweight functions and classes with well defined inputs and outputs.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dart-n-flutter
@@ -898,4 +901,7 @@ It also makes it straightforward and low risk to add new logic and new UI.
 Fakes aren't concerned with the inner workings of any given method as much
 as they're concerned with inputs and outputs. If you have this in mind while writing application code,
 you're forced to write modular, lightweight functions and classes with well defined inputs and outputs.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

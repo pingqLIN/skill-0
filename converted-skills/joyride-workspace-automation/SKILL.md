@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: joyride-workspace-automation
@@ -48,6 +49,8 @@ The main thing is to work step by step to incrementally develop a solution to a 
 Always verify API usage in the REPL before updating files.
 
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: joyride-workspace-automation
@@ -96,4 +99,7 @@ The main thing is to work step by step to incrementally develop a solution to a 
 
 Always verify API usage in the REPL before updating files.
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

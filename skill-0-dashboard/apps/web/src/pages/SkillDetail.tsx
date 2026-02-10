@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useParams, useNavigate } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useSkill } from '@/api/skills';
@@ -505,6 +506,8 @@ export function SkillDetail() {
   );
 }
 =======
+=======
+>>>>>>> Stashed changes
 import { useParams, useNavigate } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { useSkill } from '@/api/skills';
@@ -808,4 +811,7 @@ export function SkillDetail() {
     </PageLayout>
   );
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

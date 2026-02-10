@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dataverse-python-testing-debugging
@@ -489,6 +490,8 @@ def test_handles_missing_record(mock_client):
 - [Azure Functions Testing](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-python#unit-testing)
 - [Dataverse SDK Examples](https://github.com/microsoft/PowerPlatform-DataverseClient-Python/tree/main/examples)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dataverse-python-testing-debugging
@@ -978,4 +981,7 @@ def test_handles_missing_record(mock_client):
 - [unittest.mock Reference](https://docs.python.org/3/library/unittest.mock.html)
 - [Azure Functions Testing](https://learn.microsoft.com/en-us/azure/azure-functions/functions-reference-python#unit-testing)
 - [Dataverse SDK Examples](https://github.com/microsoft/PowerPlatform-DataverseClient-Python/tree/main/examples)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

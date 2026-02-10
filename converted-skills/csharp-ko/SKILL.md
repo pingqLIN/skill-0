@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: csharp-ko
@@ -79,6 +80,8 @@ Entity Framework Core 사용 시, 읽기 전용 쿼리에는 .AsNoTracking()을 
 
 이 규칙들을 프로젝트의 .editorconfig 파일과 팀의 코드 리뷰 프로세스에 통합하여 지속적으로 고품질 코드를 유지하는 것을 목표로 해야 합니다.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: csharp-ko
@@ -158,4 +161,7 @@ Entity Framework Core 사용 시, 읽기 전용 쿼리에는 .AsNoTracking()을 
 | 민감한 데이터 보호 | 구성 관리 도구 사용 | 비밀번호, 연결 문자열, API 키 등은 소스 코드에 하드코딩하지 말고 Secret Manager, Azure Key Vault 등을 사용하세요. |
 
 이 규칙들을 프로젝트의 .editorconfig 파일과 팀의 코드 리뷰 프로세스에 통합하여 지속적으로 고품질 코드를 유지하는 것을 목표로 해야 합니다.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

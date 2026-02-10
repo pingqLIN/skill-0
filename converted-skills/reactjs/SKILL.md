@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: reactjs
@@ -164,6 +165,8 @@ Instructions for building high-quality ReactJS applications with modern patterns
 - Container/Presentational component separation
 - Custom hooks for reusable logic extraction
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: reactjs
@@ -328,4 +331,7 @@ Instructions for building high-quality ReactJS applications with modern patterns
 - Provider pattern for context-based state sharing
 - Container/Presentational component separation
 - Custom hooks for reusable logic extraction
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

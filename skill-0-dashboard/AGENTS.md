@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # SKILL-0-DASHBOARD — Monorepo
 
 ## OVERVIEW
@@ -41,6 +42,8 @@ npm run lint     # ESLint
 - API uses parent's `skills.db` via relative path
 - Web proxies API calls in dev mode
 =======
+=======
+>>>>>>> Stashed changes
 # SKILL-0-DASHBOARD — Monorepo
 
 ## OVERVIEW
@@ -82,4 +85,7 @@ npm run lint     # ESLint
 - API and Web are independent — no shared dependencies
 - API uses parent's `skills.db` via relative path
 - Web proxies API calls in dev mode
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

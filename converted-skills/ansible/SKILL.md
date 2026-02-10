@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: ansible
@@ -90,6 +91,8 @@ These guidelines were based on, or copied from, the following sources:
 - [Whitecloud Ansible Styleguide](https://github.com/whitecloud/ansible-styleguide)
 -->
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: ansible
@@ -180,4 +183,7 @@ These guidelines were based on, or copied from, the following sources:
 - [Ansible Documentation - Tips and Tricks](https://docs.ansible.com/ansible/latest/tips_tricks/index.html)
 - [Whitecloud Ansible Styleguide](https://github.com/whitecloud/ansible-styleguide)
 -->
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

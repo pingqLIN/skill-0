@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: springboot-4-migration
@@ -1503,6 +1504,8 @@ tasks.withType<JavaExec> {
 
 ---
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: springboot-4-migration
@@ -3006,4 +3009,7 @@ tasks.withType<JavaExec> {
 - [Kotlin 2.2 Release Notes](https://kotlinlang.org/docs/whatsnew22.html)
 
 ---
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

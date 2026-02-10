@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: csharp-mcp-server
@@ -97,6 +98,8 @@ public static async Task<string> Analyze(
 }
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: csharp-mcp-server
@@ -194,4 +197,7 @@ public static async Task<string> Analyze(
         .GetResponseAsync(messages, cancellationToken: cancellationToken);
 }
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: memory-bank
@@ -302,6 +303,8 @@ To view tasks, the command **show tasks [filter]** will:
 4. Example usage: **show tasks active** or **show tasks tag:frontend**
 
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: memory-bank
@@ -604,5 +607,8 @@ To view tasks, the command **show tasks [filter]** will:
    - Next pending subtask (if applicable)
 4. Example usage: **show tasks active** or **show tasks tag:frontend**
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 REMEMBER: After every memory reset, I begin completely fresh. The Memory Bank is my only link to previous work. It must be maintained with precision and clarity, as my effectiveness depends entirely on its accuracy.

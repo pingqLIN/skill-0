@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dotnet-upgrade
@@ -289,6 +290,8 @@ For organizations with multiple repositories:
 
 ---
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dotnet-upgrade
@@ -578,4 +581,7 @@ For organizations with multiple repositories:
   >  Ensure all tests pass and CI/CD workflows are updated.
 
 ---
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
