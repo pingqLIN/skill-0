@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # 🔒 Skill Governance Security Scan Report
 **Generated:** 2026-01-27 12:31 UTC
 
@@ -216,6 +217,8 @@ The security scan has successfully completed and populated the skill governance 
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 # 🔒 Skill Governance Security Scan Report
 **Generated:** 2026-01-27 12:31 UTC
 
@@ -430,6 +433,9 @@ The security scan has successfully completed and populated the skill governance 
 **Timestamp:** 2026-01-27T12:31:51.678778 UTC  
 **Database Location:** `C:\Dev\Projects\skill-0\governance\db\governance.db`
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: nestjs
@@ -411,6 +412,8 @@ NestJS provides a powerful, opinionated framework for building scalable Node.js 
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: nestjs
@@ -820,6 +823,9 @@ NestJS provides a powerful, opinionated framework for building scalable Node.js 
 
 <!-- End of NestJS Instructions -->
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

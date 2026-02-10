@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: azure-verified-modules-terraform
@@ -234,6 +235,8 @@ Before submitting any AVM-related code:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: azure-verified-modules-terraform
@@ -466,6 +469,9 @@ Before submitting any AVM-related code:
 - [ ] Documentation is updated
 - [ ] Examples are tested and working
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

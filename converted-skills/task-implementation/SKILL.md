@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: task-implementation
@@ -195,6 +196,8 @@ Replace `{{ }}` with appropriate values. Create this file in `./.copilot-trackin
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: task-implementation
@@ -388,6 +391,9 @@ Replace `{{ }}` with appropriate values. Create this file in `./.copilot-trackin
 ```
 <!-- </changes-template> -->
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

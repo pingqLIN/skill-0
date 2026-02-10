@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: joyride-user-project
@@ -211,6 +212,8 @@ Develop using the REPL. Yet, sometimes you need to edit file. And when you do, p
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: joyride-user-project
@@ -420,6 +423,9 @@ Joyride Flares provide a convenient way to create WebView panels and sidebar vie
 
 Develop using the REPL. Yet, sometimes you need to edit file. And when you do, prefer structural editing tools.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

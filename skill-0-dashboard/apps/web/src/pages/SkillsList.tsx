@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { SkillsTable } from '@/components/tables/SkillsTable';
@@ -146,6 +147,8 @@ export function SkillsList() {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 import { useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { SkillsTable } from '@/components/tables/SkillsTable';
@@ -290,6 +293,9 @@ export function SkillsList() {
   );
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

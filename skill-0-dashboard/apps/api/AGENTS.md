@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # DASHBOARD API — FastAPI Governance Backend
 
 ## OVERVIEW
@@ -47,6 +48,8 @@ uvicorn main:app --reload --port 8001
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 # DASHBOARD API — FastAPI Governance Backend
 
 ## OVERVIEW
@@ -92,6 +95,9 @@ uvicorn main:app --reload --port 8001
 # ReDoc: http://localhost:8001/redoc
 ```
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

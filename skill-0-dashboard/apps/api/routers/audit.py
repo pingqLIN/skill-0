@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Audit API router"""
 
 from typing import Optional
@@ -41,6 +42,8 @@ def get_audit_log(
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 """Audit API router"""
 
 from typing import Optional
@@ -80,6 +83,9 @@ def get_audit_log(
         page_size=data["page_size"],
     )
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

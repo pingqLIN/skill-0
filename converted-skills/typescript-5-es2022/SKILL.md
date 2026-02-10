@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: typescript-5-es2022
@@ -119,6 +120,8 @@ globs: "**/*.ts"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: typescript-5-es2022
@@ -236,6 +239,9 @@ globs: "**/*.ts"
 - Write comments that capture intent, and remove stale notes during refactors.
 - Update architecture or design docs when introducing significant patterns.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

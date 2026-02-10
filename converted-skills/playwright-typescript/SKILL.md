@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: playwright-typescript
@@ -91,6 +92,8 @@ Before finalizing tests, ensure:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: playwright-typescript
@@ -180,6 +183,9 @@ Before finalizing tests, ensure:
 - [ ] Tests follow consistent naming conventions
 - [ ] Code is properly formatted and commented
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

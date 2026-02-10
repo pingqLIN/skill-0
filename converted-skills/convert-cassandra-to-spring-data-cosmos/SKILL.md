@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: convert-cassandra-to-spring-data-cosmos
@@ -1115,6 +1116,8 @@ This guide covers all major aspects of converting from Cassandra to Cosmos DB, i
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: convert-cassandra-to-spring-data-cosmos
@@ -2228,6 +2231,9 @@ Based on real conversion experience, you'll likely encounter these errors in thi
 
 This guide covers all major aspects of converting from Cassandra to Cosmos DB, including all version conflicts and authentication issues encountered in real-world scenarios.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

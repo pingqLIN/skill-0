@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: java-21-to-java-25-upgrade
@@ -316,6 +317,8 @@ Remember to test thoroughly in staging environments before deploying Java 25 upg
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: java-21-to-java-25-upgrade
@@ -630,6 +633,9 @@ When reviewing code for Java 25 upgrade:
 
 Remember to test thoroughly in staging environments before deploying Java 25 upgrades to production systems.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

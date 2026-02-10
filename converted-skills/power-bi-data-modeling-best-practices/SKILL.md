@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: power-bi-data-modeling-best-practices
@@ -643,6 +644,8 @@ plot_relationship_metadata(relationships)
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: power-bi-data-modeling-best-practices
@@ -1284,6 +1287,9 @@ plot_relationship_metadata(relationships)
 ```
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

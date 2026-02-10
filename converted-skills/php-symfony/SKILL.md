@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: php-symfony
@@ -127,6 +128,8 @@ Instructions for developing Symfony applications following the official Symfony 
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: php-symfony
@@ -252,6 +255,9 @@ Instructions for developing Symfony applications following the official Symfony 
 - Avoid premature optimization
 - Use Symfony Demo as a reference implementation
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

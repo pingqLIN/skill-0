@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: markdown
@@ -57,6 +58,8 @@ Ensure compliance with the following validation requirements:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: markdown
@@ -112,6 +115,9 @@ Ensure compliance with the following validation requirements:
 - **Formatting**: Ensure that the content is properly formatted and structured according to the guidelines.
 - **Validation**: Run the validation tools to check for compliance with the rules and guidelines.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

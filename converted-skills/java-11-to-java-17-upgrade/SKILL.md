@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: java-11-to-java-17-upgrade
@@ -798,6 +799,8 @@ This comprehensive guide enables GitHub Copilot to provide contextually appropri
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: java-11-to-java-17-upgrade
@@ -1594,6 +1597,9 @@ java -XX:SharedArchiveFile=myapp.jsa -cp myapp.jar com.example.Main
 
 This comprehensive guide enables GitHub Copilot to provide contextually appropriate suggestions when upgrading Java 11 projects to Java 17, focusing on language enhancements, API improvements, and modern Java development practices.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

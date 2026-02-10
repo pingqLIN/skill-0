@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: update-docs-on-code-change
@@ -554,6 +555,8 @@ Before considering documentation complete, and concluding on the **final procedu
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: update-docs-on-code-change
@@ -1106,6 +1109,9 @@ Before considering documentation complete, and concluding on the **final procedu
 - Review documentation in code reviews
 - Make documentation easy to find and navigate
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

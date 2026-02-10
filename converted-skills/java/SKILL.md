@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: java
@@ -86,6 +87,8 @@ If you run a static analyzer like Sonar or SonarLint — direct Sonar connection
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: java
@@ -170,6 +173,9 @@ If you run a static analyzer like Sonar or SonarLint — direct Sonar connection
 - If the project uses Gradle, run `./gradlew build` (or `gradlew.bat build` on Windows).
 - Ensure all tests pass as part of the build.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

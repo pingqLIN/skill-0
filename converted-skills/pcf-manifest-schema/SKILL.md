@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-manifest-schema
@@ -302,6 +303,8 @@ Most manifest elements are available across all platforms, but some features (li
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-manifest-schema
@@ -602,6 +605,9 @@ Common `of-type` values for properties:
 
 Most manifest elements are available across all platforms, but some features (like certain Device APIs or platform actions) may be platform-specific. Always test in your target environment.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dataverse-python-performance-optimization
@@ -505,6 +506,8 @@ def create_accounts(client, payloads):
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dataverse-python-performance-optimization
@@ -1008,6 +1011,9 @@ def create_accounts(client, payloads):
 - [OData Query Options](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/query-data-web-api)
 - [SDK Working with Data](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/sdk-python/work-data)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

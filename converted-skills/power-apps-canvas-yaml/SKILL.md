@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: power-apps-canvas-yaml
@@ -832,6 +833,8 @@ Remember: This guide provides comprehensive coverage of Power Apps Canvas Apps Y
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: power-apps-canvas-yaml
@@ -1662,6 +1665,9 @@ Properties:
 
 Remember: This guide provides comprehensive coverage of Power Apps Canvas Apps YAML structure and Power Fx formulas. Always validate your YAML against the official schema and test formulas in the Power Apps Studio environment.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

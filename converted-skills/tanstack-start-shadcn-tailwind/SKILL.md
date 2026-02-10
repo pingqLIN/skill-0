@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: tanstack-start-shadcn-tailwind
@@ -217,6 +218,8 @@ npx shadcn@latest add button card input dialog
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: tanstack-start-shadcn-tailwind
@@ -432,6 +435,9 @@ npx shadcn@latest add button card input dialog
 - Use `@/` imports consistently
 - Follow accessibility best practices
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

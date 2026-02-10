@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: sql-sp-generation
@@ -79,6 +80,8 @@ globs: "**/*.sql"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: sql-sp-generation
@@ -156,6 +159,9 @@ globs: "**/*.sql"
 - use batch processing for large data operations
 - include SET NOCOUNT ON for stored procedures that modify data
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

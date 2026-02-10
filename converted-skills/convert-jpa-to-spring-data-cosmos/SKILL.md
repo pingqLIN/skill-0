@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: convert-jpa-to-spring-data-cosmos
@@ -954,6 +955,8 @@ public Set<RelatedEntity> getRelatedEntities() {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: convert-jpa-to-spring-data-cosmos
@@ -1906,6 +1909,9 @@ public Set<RelatedEntity> getRelatedEntities() {
 - **Use service layer** to populate transient relationships before rendering
 - **Never return repository results directly** to templates without relationship population
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

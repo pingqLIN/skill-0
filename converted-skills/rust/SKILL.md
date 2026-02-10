@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: rust
@@ -140,6 +141,8 @@ Before publishing or reviewing Rust code, ensure:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: rust
@@ -278,6 +281,9 @@ Before publishing or reviewing Rust code, ensure:
 - [ ] **Future Proofing**: Private fields in structs, sealed traits where appropriate
 - [ ] **Tooling**: Code passes `cargo fmt`, `cargo clippy`, and `cargo test`
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

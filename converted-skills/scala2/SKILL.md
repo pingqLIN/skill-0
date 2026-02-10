@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: scala2
@@ -839,6 +840,8 @@ For complete details, see the [Databricks Scala Style Guide](https://github.com/
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: scala2
@@ -1676,6 +1679,9 @@ val uri = new java.net.URI("http://example.com")
 
 For complete details, see the [Databricks Scala Style Guide](https://github.com/databricks/scala-style-guide).
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

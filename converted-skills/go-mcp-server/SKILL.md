@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: go-mcp-server
@@ -351,6 +352,8 @@ if err := server.Run(ctx, transport); err != nil {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: go-mcp-server
@@ -700,6 +703,9 @@ if err := server.Run(ctx, transport); err != nil {
 }
 ```
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

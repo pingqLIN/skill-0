@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: genaiscript
@@ -26,6 +27,8 @@ or answer questions about GenAIScript.
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: genaiscript
@@ -50,6 +53,9 @@ or answer questions about GenAIScript.
 - you add TODOs where you are unsure so that the user can review them
 - you use the global types in genaiscript.d.ts are already loaded in the global context, no need to import them.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

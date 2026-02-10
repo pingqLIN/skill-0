@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: quarkus-mcp-server-sse
@@ -55,6 +56,8 @@ quarkus create app --no-code -x rest-client-jackson,qute,mcp-server-sse your-dom
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: quarkus-mcp-server-sse
@@ -108,6 +111,9 @@ quarkus create app --no-code -x rest-client-jackson,qute,mcp-server-sse your-dom
 - Don't forget to validate input parameters
 - Test with edge cases (null, empty inputs)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

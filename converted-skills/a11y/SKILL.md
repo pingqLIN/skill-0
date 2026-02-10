@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: a11y
@@ -374,6 +375,8 @@ Grids should be used for dynamic information that is best represented in a grid 
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: a11y
@@ -746,6 +749,9 @@ Tables should be used for static information that is best represented in a tabul
 
 Grids should be used for dynamic information that is best represented in a grid format. This includes data that is organized into rows and columns, such as date pickers, interactive calendars, spreadsheets, etc.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

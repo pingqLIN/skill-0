@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: power-platform-mcp-development
@@ -92,6 +93,8 @@ globs: "**/*.{json,csx,md}"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: power-platform-mcp-development
@@ -182,6 +185,9 @@ globs: "**/*.{json,csx,md}"
 - Test resource access and tool invocation from Copilot Studio interface
 - Validate that transformed schemas produce expected behavior in conversations
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

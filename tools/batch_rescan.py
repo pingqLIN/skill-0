@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #!/usr/bin/env python3
 """
 Batch Rescan Tool - Context-Aware Security Rescan
@@ -391,6 +392,8 @@ if __name__ == "__main__":
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 #!/usr/bin/env python3
 """
 Batch Rescan Tool - Context-Aware Security Rescan
@@ -780,6 +783,9 @@ def main():
 if __name__ == "__main__":
     exit(main())
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # External Skills Index
 
 > 本文件索引 `C:\Dev\skills` 目錄下所有可用的 AI Agent Skills
@@ -292,6 +293,8 @@ description: Guidelines for building C# applications. Use when writing, reviewin
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 # External Skills Index
 
 > 本文件索引 `C:\Dev\skills` 目錄下所有可用的 AI Agent Skills
@@ -582,6 +585,9 @@ description: Guidelines for building C# applications. Use when writing, reviewin
 - [OpenAI Skills GitHub](https://github.com/openai/skills)
 - [Anthropic Skills GitHub](https://github.com/anthropics/skills)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

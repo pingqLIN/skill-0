@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Audit event schemas for the Governance Dashboard API"""
 
 from datetime import datetime
@@ -30,6 +31,8 @@ class AuditListResponse(BaseModel):
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 """Audit event schemas for the Governance Dashboard API"""
 
 from datetime import datetime
@@ -58,6 +61,9 @@ class AuditListResponse(BaseModel):
     page: int
     page_size: int
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export default {
     plugins: {
       tailwindcss: {},
@@ -9,6 +10,8 @@ export default {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 export default {
     plugins: {
       tailwindcss: {},
@@ -16,6 +19,9 @@ export default {
     },
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

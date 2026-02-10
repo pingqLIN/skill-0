@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: containerization-docker-best-practices
@@ -686,6 +687,8 @@ Effective containerization with Docker is fundamental to modern DevOps. By follo
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: containerization-docker-best-practices
@@ -1370,6 +1373,9 @@ Effective containerization with Docker is fundamental to modern DevOps. By follo
 
 <!-- End of Containerization & Docker Best Practices Instructions --> 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

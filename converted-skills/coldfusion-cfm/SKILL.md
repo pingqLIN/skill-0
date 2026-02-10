@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: coldfusion-cfm
@@ -33,6 +34,8 @@ globs: "**/*.cfm"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: coldfusion-cfm
@@ -64,6 +67,9 @@ globs: "**/*.cfm"
 - Use ternary operators where possible
 - Ensure consistent tab alignment.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

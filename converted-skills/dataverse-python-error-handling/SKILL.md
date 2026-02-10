@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dataverse-python-error-handling
@@ -542,6 +543,8 @@ except DataverseError as e:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dataverse-python-error-handling
@@ -1082,6 +1085,9 @@ except DataverseError as e:
 - [Dataverse SDK Getting Started](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/sdk-python/get-started)
 - [Service Protection API Limits](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/optimize-performance-create-update)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

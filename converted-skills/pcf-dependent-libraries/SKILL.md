@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-dependent-libraries
@@ -136,6 +137,8 @@ Try a tutorial that walks you through creating a dependent library:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-dependent-libraries
@@ -270,6 +273,9 @@ Try a tutorial that walks you through creating a dependent library:
 
 [Tutorial: Use dependent libraries in a component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/tutorial-use-dependent-libraries)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

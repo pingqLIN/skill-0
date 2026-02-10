@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: azure-verified-modules-bicep
@@ -210,6 +211,8 @@ Before submitting any Bicep code:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: azure-verified-modules-bicep
@@ -418,6 +421,9 @@ Before submitting any Bicep code:
 - [ ] Comments added for complex logic
 - [ ] Follows lowerCamelCase naming convention
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

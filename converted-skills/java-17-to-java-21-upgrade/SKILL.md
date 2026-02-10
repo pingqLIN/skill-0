@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: java-17-to-java-21-upgrade
@@ -469,6 +470,8 @@ Remember to enable preview features only when specifically needed and test thoro
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: java-17-to-java-21-upgrade
@@ -936,6 +939,9 @@ When reviewing code for Java 21 upgrade:
 
 Remember to enable preview features only when specifically needed and test thoroughly in staging environments before deploying to production.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

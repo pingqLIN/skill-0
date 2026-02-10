@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: ai-prompt-engineering-safety-best-practices
@@ -872,6 +873,8 @@ Write a story about a successful CEO. The CEO should be male and from a wealthy 
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: ai-prompt-engineering-safety-best-practices
@@ -1742,6 +1745,9 @@ Write a story about a successful CEO. The CEO should be male and from a wealthy 
 
 <!-- End of AI Prompt Engineering & Safety Best Practices Instructions --> 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

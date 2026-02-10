@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #!/usr/bin/env python3
 """
 Batch Import Tool for Skill Governance
@@ -144,6 +145,8 @@ if __name__ == "__main__":
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 #!/usr/bin/env python3
 """
 Batch Import Tool for Skill Governance
@@ -286,6 +289,9 @@ def main():
 if __name__ == "__main__":
     sys.exit(main())
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

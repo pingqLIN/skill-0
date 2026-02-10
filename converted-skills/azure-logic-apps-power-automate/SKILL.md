@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: azure-logic-apps-power-automate
@@ -1948,6 +1949,8 @@ Implement comprehensive security measures for Logic Apps and Power Automate work
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: azure-logic-apps-power-automate
@@ -3894,6 +3897,9 @@ Implement comprehensive security measures for Logic Apps and Power Automate work
 - [API Management and Logic Apps Integration](https://docs.microsoft.com/en-us/azure/api-management/api-management-create-api-logic-app)
 - [Logic Apps Standard Networking](https://docs.microsoft.com/en-us/azure/logic-apps/connect-virtual-network-vnet-isolated-environment)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Scans API router"""
 
 from datetime import datetime
@@ -258,6 +259,8 @@ def _generate_html_report(data: dict) -> str:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 """Scans API router"""
 
 from datetime import datetime
@@ -514,6 +517,9 @@ def _generate_html_report(data: dict) -> str:
 </html>
     """
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

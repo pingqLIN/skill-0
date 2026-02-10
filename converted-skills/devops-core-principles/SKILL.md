@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: devops-core-principles
@@ -172,6 +173,8 @@ DevOps is not just about tools or automation; it's fundamentally about culture a
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: devops-core-principles
@@ -342,6 +345,9 @@ DevOps is not just about tools or automation; it's fundamentally about culture a
 
 <!-- End of DevOps Core Principles Instructions --> 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

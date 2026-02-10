@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: clojure
@@ -354,6 +355,8 @@ Remember to prefer the REPL in your work. Keep in mind that the user does not se
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: clojure
@@ -706,6 +709,9 @@ Guidelines:
 Remember to prefer the REPL in your work. Keep in mind that the user does not see what you evaluate. Nor the results. Communicate with the user in the chat about what you evaluate and what you get back.
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

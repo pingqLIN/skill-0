@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: agent-skills
@@ -266,6 +267,8 @@ This ensures traceability and allows resuming workflows if interrupted.
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: agent-skills
@@ -530,6 +533,9 @@ This ensures traceability and allows resuming workflows if interrupted.
 - [Reference Skills Repository](https://github.com/anthropics/skills)
 - [Awesome Copilot Skills](https://github.com/github/awesome-copilot/blob/main/docs/README.skills.md)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

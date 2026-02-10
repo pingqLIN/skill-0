@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #!/usr/bin/env python3
 """
 Skill Governance CLI
@@ -793,6 +794,8 @@ if __name__ == "__main__":
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 #!/usr/bin/env python3
 """
 Skill Governance CLI
@@ -1584,6 +1587,9 @@ def main():
 if __name__ == "__main__":
     main()
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
