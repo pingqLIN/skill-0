@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: power-apps-code-apps
@@ -603,6 +604,8 @@ Instructions for generating high-quality Power Apps Code Apps using TypeScript, 
 
 10. **Follow proper DevOps and deployment practices**
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: power-apps-code-apps
@@ -1206,4 +1209,7 @@ Instructions for generating high-quality Power Apps Code Apps using TypeScript, 
 9. **Implement comprehensive testing strategies**
 
 10. **Follow proper DevOps and deployment practices**
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

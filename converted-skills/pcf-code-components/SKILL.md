@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-code-components
@@ -113,6 +114,8 @@ More information: [resources element](https://learn.microsoft.com/en-us/power-ap
 - [Create and build a code component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/create-custom-controls-using-pcf)
 - [Learn how to package and distribute extensions using solutions](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-code-components
@@ -226,4 +229,7 @@ More information: [resources element](https://learn.microsoft.com/en-us/power-ap
 
 - [Create and build a code component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/create-custom-controls-using-pcf)
 - [Learn how to package and distribute extensions using solutions](https://learn.microsoft.com/en-us/power-platform/alm/solution-concepts-alm)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

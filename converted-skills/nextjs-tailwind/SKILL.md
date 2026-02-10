@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: nextjs-tailwind
@@ -74,6 +75,8 @@ Instructions for high-quality Next.js applications with Tailwind CSS styling and
 7. Add loading states
 8. Write tests
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: nextjs-tailwind
@@ -148,4 +151,7 @@ Instructions for high-quality Next.js applications with Tailwind CSS styling and
 6. Implement responsive styling
 7. Add loading states
 8. Write tests
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

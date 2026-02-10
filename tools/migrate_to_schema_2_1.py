@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #!/usr/bin/env python3
 """Migrate Skill-0 data/DB from schema v2.0.0 -> v2.1.0.
 
@@ -262,6 +263,8 @@ def main() -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 =======
+=======
+>>>>>>> Stashed changes
 #!/usr/bin/env python3
 """Migrate Skill-0 data/DB from schema v2.0.0 -> v2.1.0.
 
@@ -524,4 +527,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

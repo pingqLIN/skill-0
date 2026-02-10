@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-fluent-modern-theming
@@ -108,6 +109,8 @@ A: You can check if tokens are available: `context.fluentDesignLanguage?.tokenTh
 - [Modern Theming API control](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/sample-controls/modern-theming-api-control)
 - [Use modern themes in canvas apps (preview)](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/controls/modern-controls/modern-theming)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-fluent-modern-theming
@@ -216,4 +219,7 @@ A: You can check if tokens are available: `context.fluentDesignLanguage?.tokenTh
 - [Theming (Power Apps component framework API reference)](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/theming)
 - [Modern Theming API control](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/sample-controls/modern-theming-api-control)
 - [Use modern themes in canvas apps (preview)](https://learn.microsoft.com/en-us/power-apps/maker/canvas-apps/controls/modern-controls/modern-theming)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

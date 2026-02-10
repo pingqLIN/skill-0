@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { ReviewCard } from '@/components/cards/ReviewCard';
@@ -132,6 +133,8 @@ export function ReviewQueue() {
   );
 }
 =======
+=======
+>>>>>>> Stashed changes
 import { useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { ReviewCard } from '@/components/cards/ReviewCard';
@@ -264,4 +267,7 @@ export function ReviewQueue() {
     </PageLayout>
   );
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

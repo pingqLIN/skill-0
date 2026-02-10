@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: convert-jpa-to-spring-data-cosmos
@@ -951,6 +952,8 @@ public Set<RelatedEntity> getRelatedEntities() {
 - **Use service layer** to populate transient relationships before rendering
 - **Never return repository results directly** to templates without relationship population
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: convert-jpa-to-spring-data-cosmos
@@ -1902,4 +1905,7 @@ public Set<RelatedEntity> getRelatedEntities() {
 - **Add transient properties** with `@JsonIgnore` for UI access to related data
 - **Use service layer** to populate transient relationships before rendering
 - **Never return repository results directly** to templates without relationship population
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

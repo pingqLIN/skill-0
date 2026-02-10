@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: kotlin-mcp-server
@@ -483,6 +484,8 @@ class MyServer(
 }
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: kotlin-mcp-server
@@ -966,4 +969,7 @@ class MyServer(
     }
 }
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: oqtane
@@ -88,6 +89,8 @@ globs: "**/*.razor, **/*.razor.cs, **/*.razor.css"
 - Implement Authentication and Authorization using built-in Oqtane base class members like User.Roles.
 - Use HTTPS for all web communication and ensure proper CORS policies are implemented.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: oqtane
@@ -176,4 +179,7 @@ globs: "**/*.razor, **/*.razor.cs, **/*.razor.css"
 
 - Implement Authentication and Authorization using built-in Oqtane base class members like User.Roles.
 - Use HTTPS for all web communication and ensure proper CORS policies are implemented.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

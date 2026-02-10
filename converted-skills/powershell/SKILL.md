@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: powershell
@@ -358,6 +359,8 @@ function New-Resource {
 }
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: powershell
@@ -716,4 +719,7 @@ function New-Resource {
     }
 }
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

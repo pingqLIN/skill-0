@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: nextjs
@@ -181,6 +182,8 @@ Do not create example/demo files (like ModalExample.tsx) in the main codebase un
   - `resolve_library_id` to resolve the package/library name in the docs.
   - `get_library_docs` for up to date documentation.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: nextjs
@@ -362,4 +365,7 @@ Do not create example/demo files (like ModalExample.tsx) in the main codebase un
 - Use the following tools to fetch and search documentation if they are available:
   - `resolve_library_id` to resolve the package/library name in the docs.
   - `get_library_docs` for up to date documentation.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

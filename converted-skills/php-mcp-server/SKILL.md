@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: php-mcp-server
@@ -811,6 +812,8 @@ npx @modelcontextprotocol/inspector php /path/to/server.php
 - [MCP Specification](https://spec.modelcontextprotocol.io/)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: php-mcp-server
@@ -1622,4 +1625,7 @@ npx @modelcontextprotocol/inspector php /path/to/server.php
 - [Examples](https://github.com/modelcontextprotocol/php-sdk/blob/main/docs/examples.md)
 - [MCP Specification](https://spec.modelcontextprotocol.io/)
 - [Model Context Protocol](https://modelcontextprotocol.io/)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

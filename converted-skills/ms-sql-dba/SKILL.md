@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: ms-sql-dba
@@ -27,6 +28,8 @@ These instructions guide GitHub Copilot to provide expert assistance for Microso
 ## Testing
 - Test this chat mode with Copilot to ensure responses align with these instructions and provide actionable, accurate DBA guidance.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: ms-sql-dba
@@ -54,4 +57,7 @@ These instructions guide GitHub Copilot to provide expert assistance for Microso
 
 ## Testing
 - Test this chat mode with Copilot to ensure responses align with these instructions and provide actionable, accurate DBA guidance.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

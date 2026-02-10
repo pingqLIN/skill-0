@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-overview
@@ -89,6 +90,8 @@ Code components that don't connect to external services or data:
 - [Create components with Power Apps Component Framework - Training](https://learn.microsoft.com/en-us/training/paths/create-components-power-apps-component-framework/)
 - [Microsoft Certified: Power Platform Developer Associate](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-developer-associate/)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-overview
@@ -178,4 +181,7 @@ Code components that don't connect to external services or data:
 
 - [Create components with Power Apps Component Framework - Training](https://learn.microsoft.com/en-us/training/paths/create-components-power-apps-component-framework/)
 - [Microsoft Certified: Power Platform Developer Associate](https://learn.microsoft.com/en-us/credentials/certifications/power-platform-developer-associate/)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

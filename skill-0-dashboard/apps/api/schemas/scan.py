@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Security scan schemas for the Governance Dashboard API"""
 
 from datetime import datetime
@@ -68,6 +69,8 @@ class ScanExport(BaseModel):
     export_date: datetime
     export_format: str = "json"
 =======
+=======
+>>>>>>> Stashed changes
 """Security scan schemas for the Governance Dashboard API"""
 
 from datetime import datetime
@@ -136,4 +139,7 @@ class ScanExport(BaseModel):
     detection_standards: List[dict] = []
     export_date: datetime
     export_format: str = "json"
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

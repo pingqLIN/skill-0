@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: instructions
@@ -258,6 +259,8 @@ Description and example
 - [Custom Instructions Documentation](https://code.visualstudio.com/docs/copilot/customization/custom-instructions)
 - [Awesome Copilot Instructions](https://github.com/github/awesome-copilot/tree/main/instructions)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: instructions
@@ -516,4 +519,7 @@ Description and example
 
 - [Custom Instructions Documentation](https://code.visualstudio.com/docs/copilot/customization/custom-instructions)
 - [Awesome Copilot Instructions](https://github.com/github/awesome-copilot/tree/main/instructions)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dataverse-python
@@ -36,6 +37,8 @@ pip install dataverse-sdk
 - Add retries for transient failures.
 - Log requests for troubleshooting.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dataverse-python
@@ -72,4 +75,7 @@ pip install dataverse-sdk
 - Reuse clients; avoid frequent re-auth.
 - Add retries for transient failures.
 - Log requests for troubleshooting.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

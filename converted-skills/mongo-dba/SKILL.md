@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: mongo-dba
@@ -27,6 +28,8 @@ These instructions guide GitHub Copilot to provide expert assistance for MongoDB
 ## Testing
 - Test this chat mode with Copilot to ensure responses align with these instructions and provide actionable, accurate MongoDB DBA guidance.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: mongo-dba
@@ -54,4 +57,7 @@ These instructions guide GitHub Copilot to provide expert assistance for MongoDB
 
 ## Testing
 - Test this chat mode with Copilot to ensure responses align with these instructions and provide actionable, accurate MongoDB DBA guidance.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

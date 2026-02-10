@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # SKILL-0 PROJECT KNOWLEDGE BASE
 
 **Generated:** 2026-01-28
@@ -124,6 +125,8 @@ cd skill-0-dashboard/apps/web && npm run dev                # Frontend
 - Vector search uses L2 distance, converted to similarity as `1/(1+distance)`
 - Dashboard is a separate monorepo with its own package management
 =======
+=======
+>>>>>>> Stashed changes
 # SKILL-0 PROJECT KNOWLEDGE BASE
 
 **Generated:** 2026-01-28
@@ -213,4 +216,7 @@ cd skill-0-dashboard/apps/web && npm run dev                # Frontend
 - `converted-skills/` contains 171 imported skills from GitHub Copilot instructions — not parseable by current analyzer
 - Vector search uses L2 distance, converted to similarity as `1/(1+distance)`
 - Dashboard is a separate monorepo with its own package management
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: apex
@@ -1296,6 +1297,8 @@ public class UserPreferenceCache {
 - Use Salesforce Code Analyzer to check for code quality issues: `sf code-analyzer run --severity-threshold 2`
 - Review violations and address them before deployment.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: apex
@@ -2592,4 +2595,7 @@ public class UserPreferenceCache {
 - Ensure code coverage meets the minimum 75% requirement (aim for 100%).
 - Use Salesforce Code Analyzer to check for code quality issues: `sf code-analyzer run --severity-threshold 2`
 - Review violations and address them before deployment.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

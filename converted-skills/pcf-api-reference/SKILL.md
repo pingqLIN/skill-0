@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-api-reference
@@ -164,6 +165,8 @@ Some APIs are only available in model-driven apps due to platform differences:
 - For detailed documentation on each API, refer to the [Power Apps component framework API reference](https://learn.microsoft.com/power-apps/developer/component-framework/reference/)
 - Sample code for each API is available in the [PowerApps-Samples repository](https://github.com/microsoft/PowerApps-Samples/tree/master/component-framework)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-api-reference
@@ -328,4 +331,7 @@ Some APIs are only available in model-driven apps due to platform differences:
 
 - For detailed documentation on each API, refer to the [Power Apps component framework API reference](https://learn.microsoft.com/power-apps/developer/component-framework/reference/)
 - Sample code for each API is available in the [PowerApps-Samples repository](https://github.com/microsoft/PowerApps-Samples/tree/master/component-framework)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

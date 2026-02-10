@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: copilot-sdk-go
@@ -627,6 +628,8 @@ session, _ := client.CreateSession(&copilot.SessionConfig{
 })
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: copilot-sdk-go
@@ -1254,4 +1257,7 @@ session, _ := client.CreateSession(&copilot.SessionConfig{
     },
 })
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

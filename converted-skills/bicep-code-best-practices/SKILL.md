@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: bicep-code-best-practices
@@ -56,6 +57,8 @@ globs: "**/*.bicep"
 
 -   Include helpful // comments within your Bicep files to improve readability
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: bicep-code-best-practices
@@ -112,4 +115,7 @@ globs: "**/*.bicep"
 ## Documentation
 
 -   Include helpful // comments within your Bicep files to improve readability
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

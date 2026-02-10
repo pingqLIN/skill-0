@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -108,6 +109,8 @@ export function SkillsTable({ data, sortBy, sortOrder, onSort }: Props) {
   );
 }
 =======
+=======
+>>>>>>> Stashed changes
 import { useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -199,4 +202,7 @@ export function SkillsTable({ data, sortBy, sortOrder, onSort }: Props) {
     </Table>
   );
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

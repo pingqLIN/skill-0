@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # Skill Governance System
 
 > skill-0 的 Skill 治理系統規範
@@ -391,6 +392,8 @@ skill-0/
 |------|------|------|
 | 1.0.0 | 2026-01-27 | 初始規範 |
 =======
+=======
+>>>>>>> Stashed changes
 # Skill Governance System
 
 > skill-0 的 Skill 治理系統規範
@@ -782,4 +785,7 @@ skill-0/
 | 版本 | 日期 | 變更 |
 |------|------|------|
 | 1.0.0 | 2026-01-27 | 初始規範 |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

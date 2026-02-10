@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: mcp-m365-copilot
@@ -359,6 +360,8 @@ Maintain:
 - Canva: Design automation
 - Sitecore: Content management
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: mcp-m365-copilot
@@ -718,4 +721,7 @@ Maintain:
 - monday.com: Task management integration
 - Canva: Design automation
 - Sitecore: Content management
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

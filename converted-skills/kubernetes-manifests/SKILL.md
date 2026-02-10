@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: kubernetes-manifests
@@ -138,6 +139,8 @@ Configure appropriate delays, periods, timeouts, and thresholds for each.
 9. Validate manifests before applying
 10. Enable read-only root filesystem when possible
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: kubernetes-manifests
@@ -276,4 +279,7 @@ Configure appropriate delays, periods, timeouts, and thresholds for each.
 8. Use rolling updates with zero unavailability
 9. Validate manifests before applying
 10. Enable read-only root filesystem when possible
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

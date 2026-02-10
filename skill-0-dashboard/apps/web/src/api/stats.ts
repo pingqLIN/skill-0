@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useQuery } from '@tanstack/react-query';
 import { api } from './client';
 import type {
@@ -49,6 +50,8 @@ export function useFindingsByRule() {
   });
 }
 =======
+=======
+>>>>>>> Stashed changes
 import { useQuery } from '@tanstack/react-query';
 import { api } from './client';
 import type { StatsOverview, RiskDistribution, StatusDistribution } from './types';
@@ -83,4 +86,7 @@ export function useStatusDistribution() {
     },
   });
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

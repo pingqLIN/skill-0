@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dotnet-maui
@@ -115,6 +116,8 @@ globs: "**/*.xaml, **/*.cs"
 - Deeply nested layouts hurt performance; flatten the visual hierarchy.
 - Testing only on emulators misses real-device edge cases; test on physical devices.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dotnet-maui
@@ -230,4 +233,7 @@ globs: "**/*.xaml, **/*.cs"
 - Memory leaks from unsubscribed events; always unsubscribe and dispose resources.
 - Deeply nested layouts hurt performance; flatten the visual hierarchy.
 - Testing only on emulators misses real-device edge cases; test on physical devices.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

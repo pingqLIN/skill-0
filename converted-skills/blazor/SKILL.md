@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: blazor
@@ -79,6 +80,8 @@ globs: "**/*.razor, **/*.razor.cs, **/*.razor.css"
 - Use Swagger/OpenAPI for API documentation for your backend API services.
 - Ensure XML documentation for models and API methods for enhancing Swagger documentation.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: blazor
@@ -158,4 +161,7 @@ globs: "**/*.razor, **/*.razor.cs, **/*.razor.css"
 
 - Use Swagger/OpenAPI for API documentation for your backend API services.
 - Ensure XML documentation for models and API methods for enhancing Swagger documentation.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

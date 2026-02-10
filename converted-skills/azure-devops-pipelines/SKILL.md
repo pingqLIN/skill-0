@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: azure-devops-pipelines
@@ -187,6 +188,8 @@ stages:
 - Not using proper naming conventions for clarity
 - Ignoring pipeline security best practices
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: azure-devops-pipelines
@@ -374,4 +377,7 @@ stages:
 - Creating monolithic pipelines that are difficult to maintain
 - Not using proper naming conventions for clarity
 - Ignoring pipeline security best practices
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

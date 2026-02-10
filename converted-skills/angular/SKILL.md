@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: angular
@@ -106,6 +107,8 @@ Instructions for generating high-quality Angular applications with TypeScript, u
 - Keep code DRY by creating reusable utilities and shared modules
 - Use signals consistently for state management to ensure reactive updates
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: angular
@@ -212,4 +215,7 @@ Instructions for generating high-quality Angular applications with TypeScript, u
 - Use Angular's built-in i18n for internationalization (if specified)
 - Keep code DRY by creating reusable utilities and shared modules
 - Use signals consistently for state management to ensure reactive updates
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

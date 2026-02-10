@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dotnet-wpf
@@ -81,6 +82,8 @@ public class MainViewModel : ObservableObject
 </StackPanel>
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dotnet-wpf
@@ -162,4 +165,7 @@ public class MainViewModel : ObservableObject
     <Button Content="Login" Command="{Binding LoginCommand}" />
 </StackPanel>
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

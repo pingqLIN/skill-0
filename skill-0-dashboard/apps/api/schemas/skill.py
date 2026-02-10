@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Skill schemas for the Governance Dashboard API"""
 
 from datetime import datetime
@@ -79,6 +80,8 @@ class SkillListResponse(BaseModel):
     page: int
     page_size: int
 =======
+=======
+>>>>>>> Stashed changes
 """Skill schemas for the Governance Dashboard API"""
 
 from datetime import datetime
@@ -138,4 +141,7 @@ class SkillListResponse(BaseModel):
     total: int
     page: int
     page_size: int
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

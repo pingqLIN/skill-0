@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: copilot-sdk-python
@@ -807,6 +808,8 @@ def handler(event):
     print(event.data.delta_content)  # For assistant.message.delta
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: copilot-sdk-python
@@ -1614,4 +1617,7 @@ def handler(event):
     print(event.data.content)  # For assistant.message
     print(event.data.delta_content)  # For assistant.message.delta
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

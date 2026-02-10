@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: terraform
@@ -115,6 +116,8 @@ globs: "**/*.tf"
   - Write tests to cover both positive and negative scenarios.
   - Ensure tests are idempotent and can be run multiple times without side effects.
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: terraform
@@ -230,4 +233,7 @@ globs: "**/*.tf"
   - Use the `.tftest.hcl` extension for test files.
   - Write tests to cover both positive and negative scenarios.
   - Ensure tests are idempotent and can be run multiple times without side effects.
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

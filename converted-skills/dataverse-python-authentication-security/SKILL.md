@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dataverse-python-authentication-security
@@ -530,6 +531,8 @@ Assign minimal required roles:
 - [Azure Key Vault for Secrets](https://learn.microsoft.com/en-us/azure/key-vault/general/overview)
 - [Dataverse Security Model](https://learn.microsoft.com/en-us/power-platform/admin/security/security-overview)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dataverse-python-authentication-security
@@ -1060,4 +1063,7 @@ Assign minimal required roles:
 - [Authenticate to Azure Services](https://learn.microsoft.com/en-us/azure/developer/python/sdk/authentication/overview)
 - [Azure Key Vault for Secrets](https://learn.microsoft.com/en-us/azure/key-vault/general/overview)
 - [Dataverse Security Model](https://learn.microsoft.com/en-us/power-platform/admin/security/security-overview)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: agent-skills
@@ -263,6 +264,8 @@ This ensures traceability and allows resuming workflows if interrupted.
 - [Reference Skills Repository](https://github.com/anthropics/skills)
 - [Awesome Copilot Skills](https://github.com/github/awesome-copilot/blob/main/docs/README.skills.md)
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: agent-skills
@@ -526,4 +529,7 @@ This ensures traceability and allows resuming workflows if interrupted.
 - [VS Code Agent Skills Documentation](https://code.visualstudio.com/docs/copilot/customization/agent-skills)
 - [Reference Skills Repository](https://github.com/anthropics/skills)
 - [Awesome Copilot Skills](https://github.com/github/awesome-copilot/blob/main/docs/README.skills.md)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

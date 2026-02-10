@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: r
@@ -118,6 +119,8 @@ dplyr::filter(z > 0)
 z_score <- function(x) (x - mean(x, na.rm = TRUE)) / stats::sd(x, na.rm = TRUE)
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: r
@@ -236,4 +239,7 @@ dplyr::filter(z > 0)
 #' @examples z_score(c(1, 2, 3))
 z_score <- function(x) (x - mean(x, na.rm = TRUE)) / stats::sd(x, na.rm = TRUE)
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

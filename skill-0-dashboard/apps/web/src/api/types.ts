@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export interface StatsOverview {
   total_skills: number;
   pending_count: number;
@@ -152,6 +153,8 @@ export interface AuditListResponse {
   page_size: number;
 }
 =======
+=======
+>>>>>>> Stashed changes
 export interface StatsOverview {
   total_skills: number;
   pending_count: number;
@@ -237,4 +240,7 @@ export interface SkillDetail extends SkillSummary {
   test_history: TestSummary[];
   audit_events: AuditEvent[];
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

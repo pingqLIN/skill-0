@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: rust
@@ -137,6 +138,8 @@ Before publishing or reviewing Rust code, ensure:
 - [ ] **Future Proofing**: Private fields in structs, sealed traits where appropriate
 - [ ] **Tooling**: Code passes `cargo fmt`, `cargo clippy`, and `cargo test`
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: rust
@@ -274,4 +277,7 @@ Before publishing or reviewing Rust code, ensure:
 - [ ] **API Design**: Functions are predictable, flexible, and type-safe
 - [ ] **Future Proofing**: Private fields in structs, sealed traits where appropriate
 - [ ] **Tooling**: Code passes `cargo fmt`, `cargo clippy`, and `cargo test`
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -182,6 +183,8 @@ export function AuditLog() {
   );
 }
 =======
+=======
+>>>>>>> Stashed changes
 import { PageLayout } from '@/components/layout/PageLayout';
 
 export function AuditLog() {
@@ -194,4 +197,7 @@ export function AuditLog() {
     </PageLayout>
   );
 }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

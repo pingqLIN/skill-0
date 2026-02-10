@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: springboot
@@ -70,6 +71,8 @@ globs: "**/*.java, **/*.kt"
 | `./gradlew bootJar`       |`./mvnw spring-boot:repackage`     | Package the application as a JAR.             |
 | `./gradlew bootBuildImage`|`./mvnw spring-boot:build-image`   | Package the application as a container image. |
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: springboot
@@ -140,4 +143,7 @@ globs: "**/*.java, **/*.kt"
 | `./gradlew test`          |`./mvnw test`                      | Run tests.                                    |
 | `./gradlew bootJar`       |`./mvnw spring-boot:repackage`     | Package the application as a JAR.             |
 | `./gradlew bootBuildImage`|`./mvnw spring-boot:build-image`   | Package the application as a container image. |
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: generate-modern-terraform-code-for-azure
@@ -84,6 +85,8 @@ Use Terraform modules to group reusable infrastructure components. For any resou
   - Pre-commit hooks
   - Enforce formatting, linting, and basic validation
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: generate-modern-terraform-code-for-azure
@@ -168,4 +171,7 @@ Use Terraform modules to group reusable infrastructure components. For any resou
   - CI pipeline
   - Pre-commit hooks
   - Enforce formatting, linting, and basic validation
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

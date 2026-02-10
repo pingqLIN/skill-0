@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: typescript-mcp-server
@@ -230,6 +231,8 @@ server.registerTool(
 );
 ```
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: typescript-mcp-server
@@ -460,4 +463,7 @@ server.registerTool(
     }
 );
 ```
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

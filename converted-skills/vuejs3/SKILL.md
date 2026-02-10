@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: vuejs3
@@ -155,6 +156,8 @@ Instructions for building high-quality VueJS 3 applications with the Composition
 - Plugin system for global utilities (i18n, analytics)
 - Composable factories for parameterized logic
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: vuejs3
@@ -310,4 +313,7 @@ Instructions for building high-quality VueJS 3 applications with the Composition
 - Teleport for modals and overlays
 - Plugin system for global utilities (i18n, analytics)
 - Composable factories for parameterized logic
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

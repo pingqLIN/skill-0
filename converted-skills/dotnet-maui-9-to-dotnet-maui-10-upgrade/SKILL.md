@@ -1,4 +1,5 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dotnet-maui-9-to-dotnet-maui-10-upgrade
@@ -1924,6 +1925,8 @@ finally { IsLoading = false; }
 **Last Updated:** November 2025  
 **Applies To:** .NET MAUI 10.0.100 and later
 =======
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dotnet-maui-9-to-dotnet-maui-10-upgrade
@@ -3848,4 +3851,7 @@ finally { IsLoading = false; }
 **Document Version:** 2.0  
 **Last Updated:** November 2025  
 **Applies To:** .NET MAUI 10.0.100 and later
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
