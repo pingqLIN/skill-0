@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-sample-components
@@ -134,6 +135,8 @@ Each sample demonstrates different aspects of the Power Apps component framework
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-sample-components
@@ -266,6 +269,9 @@ The repository contains numerous sample components including:
 
 Each sample demonstrates different aspects of the Power Apps component framework and can serve as a learning resource or starting point for your own components.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

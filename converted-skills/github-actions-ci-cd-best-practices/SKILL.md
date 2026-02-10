@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: github-actions-ci-cd-best-practices
@@ -612,6 +613,8 @@ GitHub Actions is a powerful and flexible platform for automating your software 
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: github-actions-ci-cd-best-practices
@@ -1222,6 +1225,9 @@ GitHub Actions is a powerful and flexible platform for automating your software 
 
 <!-- End of GitHub Actions CI/CD Best Practices Instructions --> 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

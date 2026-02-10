@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: astro
@@ -187,6 +188,8 @@ const blog = defineCollection({
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: astro
@@ -372,6 +375,9 @@ const blog = defineCollection({
 - **Type Safety**: Leverage auto-generated types from Content Collections
 - **Performance**: Optimize with built-in image optimization and minimal client bundles
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

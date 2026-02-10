@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: java-mcp-server
@@ -558,6 +559,8 @@ server.addResourceReadHandler((uri) -> {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: java-mcp-server
@@ -1114,6 +1117,9 @@ server.addResourceReadHandler((uri) -> {
 9. **Test with synchronous API** for simplicity
 10. **Follow Java naming conventions** (camelCase for methods, PascalCase for classes)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

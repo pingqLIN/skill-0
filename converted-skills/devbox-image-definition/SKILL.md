@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: devbox-image-definition
@@ -307,6 +308,8 @@ The built-in winget task does not support installing packages from sources other
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: devbox-image-definition
@@ -612,6 +615,9 @@ The built-in winget task does not support installing packages from sources other
 - Solution: Move administrative operations to `tasks` section
 - Ensure you're running customizations with appropriate privileges when testing locally
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

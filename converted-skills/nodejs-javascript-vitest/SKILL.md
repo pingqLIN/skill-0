@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: nodejs-javascript-vitest
@@ -35,6 +36,8 @@ globs: "**/*.js, **/*.mjs, **/*.cjs"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: nodejs-javascript-vitest
@@ -68,6 +71,9 @@ globs: "**/*.js, **/*.mjs, **/*.cjs"
 - Ask questions if you are unsure about the implementation details, design choices, or need clarification on the requirements
 - Always answer in the same language as the question, but use english for the generated content like code, comments or docs
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

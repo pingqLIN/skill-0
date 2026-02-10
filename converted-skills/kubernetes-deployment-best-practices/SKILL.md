@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: kubernetes-deployment-best-practices
@@ -312,6 +313,8 @@ Deploying applications on Kubernetes requires a deep understanding of its core c
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: kubernetes-deployment-best-practices
@@ -622,6 +625,9 @@ Deploying applications on Kubernetes requires a deep understanding of its core c
 
 <!-- End of Kubernetes Deployment Best Practices Instructions --> 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

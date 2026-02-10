@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: quarkus
@@ -103,6 +104,8 @@ globs: "*"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: quarkus
@@ -204,6 +207,9 @@ globs: "*"
 - Implement role-based access control (RBAC) using MicroProfile JWT or OIDC.
 - Validate all input parameters
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

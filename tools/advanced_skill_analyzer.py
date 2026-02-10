@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 #!/usr/bin/env python3
 """
 Advanced Skill Analyzer - Context-Aware Security Scanner
@@ -1075,6 +1076,8 @@ if __name__ == "__main__":
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 #!/usr/bin/env python3
 """
 Advanced Skill Analyzer - Context-Aware Security Scanner
@@ -2148,6 +2151,9 @@ def main():
 if __name__ == "__main__":
     exit(main())
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

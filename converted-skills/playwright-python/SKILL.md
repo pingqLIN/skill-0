@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: playwright-python
@@ -67,6 +68,8 @@ def test_get_started_link(page: Page):
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: playwright-python
@@ -132,6 +135,9 @@ def test_get_started_link(page: Page):
 1. **Execution**: Tests are run from the terminal using the pytest command.
 2. **Debug Failures**: Analyze test failures and identify root causes
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

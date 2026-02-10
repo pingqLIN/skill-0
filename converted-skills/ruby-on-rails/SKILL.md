@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: ruby-on-rails
@@ -129,6 +130,8 @@ globs: "**/*.rb"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: ruby-on-rails
@@ -256,6 +259,9 @@ globs: "**/*.rb"
 - Write integration tests for end-to-end flows across multiple layers (model, view, controller).
 - Keep tests fast, reliable, and as DRY as production code.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

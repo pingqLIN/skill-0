@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: csharp-ko
@@ -82,6 +83,8 @@ Entity Framework Core 사용 시, 읽기 전용 쿼리에는 .AsNoTracking()을 
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: csharp-ko
@@ -162,6 +165,9 @@ Entity Framework Core 사용 시, 읽기 전용 쿼리에는 .AsNoTracking()을 
 
 이 규칙들을 프로젝트의 .editorconfig 파일과 팀의 코드 리뷰 프로세스에 통합하여 지속적으로 고품질 코드를 유지하는 것을 목표로 해야 합니다.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

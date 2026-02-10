@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -23,6 +24,8 @@ export function Header() {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 import { Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -44,6 +47,9 @@ export function Header() {
   );
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dataverse-python-agentic-workflows
@@ -573,6 +574,8 @@ The Dataverse SDK for Python is positioning itself as the go-to platform for bui
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dataverse-python-agentic-workflows
@@ -1144,6 +1147,9 @@ A: Unknown at this time. Check release notes closer to GA.
 
 The Dataverse SDK for Python is positioning itself as the go-to platform for building intelligent, autonomous data systems on the Microsoft Power Platform.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

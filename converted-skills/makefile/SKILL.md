@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: makefile
@@ -415,6 +416,8 @@ clean:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: makefile
@@ -828,6 +831,9 @@ clean:
 - Avoid circular dependencies between targets
 - Don't use recursive make (`$(MAKE) -C subdir`) unless absolutely necessary
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

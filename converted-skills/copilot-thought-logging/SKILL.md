@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: copilot-thought-logging
@@ -67,6 +68,8 @@ globs: "**"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: copilot-thought-logging
@@ -132,6 +135,9 @@ globs: "**"
 - If you catch yourself about to skip a phase, STOP and go back to the correct phase
 - If you catch yourself combining phases, STOP and perform only the current phase
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

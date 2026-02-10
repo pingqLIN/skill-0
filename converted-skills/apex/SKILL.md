@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: apex
@@ -1299,6 +1300,8 @@ public class UserPreferenceCache {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: apex
@@ -2596,6 +2599,9 @@ public class UserPreferenceCache {
 - Use Salesforce Code Analyzer to check for code quality issues: `sf code-analyzer run --severity-threshold 2`
 - Review violations and address them before deployment.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

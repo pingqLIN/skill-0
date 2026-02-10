@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, List, CheckCircle, Shield, FileText } from 'lucide-react';
 
@@ -39,6 +40,8 @@ export function Sidebar() {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, List, CheckCircle, Shield, FileText } from 'lucide-react';
 
@@ -76,6 +79,9 @@ export function Sidebar() {
   );
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

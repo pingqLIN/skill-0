@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: dart-n-flutter
@@ -452,6 +453,8 @@ you're forced to write modular, lightweight functions and classes with well defi
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: dart-n-flutter
@@ -902,6 +905,9 @@ Fakes aren't concerned with the inner workings of any given method as much
 as they're concerned with inputs and outputs. If you have this in mind while writing application code,
 you're forced to write modular, lightweight functions and classes with well defined inputs and outputs.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

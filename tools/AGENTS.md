@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # TOOLS — CLI Utilities
 
 ## OVERVIEW
@@ -48,6 +49,8 @@ python analyzer.py                        # Coverage report
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 # TOOLS — CLI Utilities
 
 ## OVERVIEW
@@ -94,6 +97,9 @@ python migrate_to_schema_2_1.py           # Schema migration
 python analyzer.py                        # Coverage report
 ```
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

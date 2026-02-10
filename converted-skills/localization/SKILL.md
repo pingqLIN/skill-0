@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: localization
@@ -44,6 +45,8 @@ You're an expert of localization for technical documents. Follow the instruction
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: localization
@@ -86,6 +89,9 @@ You're an expert of localization for technical documents. Follow the instruction
 - The disclaimer should also be localized.
 - Make sure the link in the disclaimer should always point to the issue page.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: python-mcp-server
@@ -209,6 +210,8 @@ async def risky_operation(input: str) -> str:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: python-mcp-server
@@ -416,6 +419,9 @@ async def risky_operation(input: str) -> str:
         return f"Error: {str(e)}"
 ```
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

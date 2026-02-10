@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: prompt
@@ -93,6 +94,8 @@ Every prompt file should include YAML frontmatter with the following fields:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: prompt
@@ -184,6 +187,9 @@ Every prompt file should include YAML frontmatter with the following fields:
 - [Awesome Copilot Prompt Files](https://github.com/github/awesome-copilot/tree/main/prompts)
 - [Tool Configuration](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode#_agent-mode-tools)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 # Skill-0 Governance Dashboard 設計文件
 
 > 版本：1.0.0
@@ -850,6 +851,8 @@ services:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 # Skill-0 Governance Dashboard 設計文件
 
 > 版本：1.0.0
@@ -1698,6 +1701,9 @@ services:
 |------|------|------|
 | 1.0.0 | 2026-01-27 | 初始設計文件 |
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

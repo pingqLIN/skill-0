@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: self-explanatory-code-commenting
@@ -167,6 +168,8 @@ Remember: **The best comment is the one you don't need to write because the code
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: self-explanatory-code-commenting
@@ -332,6 +335,9 @@ Before committing, ensure your comments:
 
 Remember: **The best comment is the one you don't need to write because the code is self-documenting.**
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

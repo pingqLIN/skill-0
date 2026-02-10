@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { useQuery } from '@tanstack/react-query';
 import { api } from './client';
 import type { SkillSummary, SkillDetail } from './types';
@@ -44,6 +45,8 @@ export function useSkill(skillId: string) {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 import { useQuery } from '@tanstack/react-query';
 import { api } from './client';
 import type { SkillSummary, SkillDetail } from './types';
@@ -86,6 +89,9 @@ export function useSkill(skillId: string) {
   });
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

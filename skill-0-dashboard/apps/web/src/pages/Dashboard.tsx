@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { PageLayout } from '@/components/layout/PageLayout';
 import { StatCard } from '@/components/cards/StatCard';
 import { RiskDistributionChart } from '@/components/charts/RiskDistributionChart';
@@ -59,6 +60,8 @@ export function Dashboard() {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 import { PageLayout } from '@/components/layout/PageLayout';
 import { StatCard } from '@/components/cards/StatCard';
 import { RiskDistributionChart } from '@/components/charts/RiskDistributionChart';
@@ -116,6 +119,9 @@ export function Dashboard() {
   );
 }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

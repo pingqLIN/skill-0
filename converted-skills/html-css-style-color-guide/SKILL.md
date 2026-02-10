@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: html-css-style-color-guide
@@ -109,6 +110,8 @@ Apply gradients with subtle color transitions to maintain professional aesthetic
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: html-css-style-color-guide
@@ -216,6 +219,9 @@ Apply gradients with subtle color transitions to maintain professional aesthetic
 - [UI Color Palette Best Practices](https://www.interaction-design.org/literature/article/ui-color-palette)
 - [Color Combination Resource](https://www.figma.com/resource-library/color-combinations/)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

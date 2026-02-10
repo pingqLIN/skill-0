@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: typespec-m365-copilot
@@ -445,6 +446,8 @@ op getProjectDetails(
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: typespec-m365-copilot
@@ -888,6 +891,9 @@ op getProjectDetails(
 - [Agents Toolkit](https://aka.ms/M365AgentsToolkit)
 - [Adaptive Cards Designer](https://adaptivecards.io/designer/)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

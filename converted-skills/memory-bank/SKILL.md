@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: memory-bank
@@ -305,6 +306,8 @@ To view tasks, the command **show tasks [filter]** will:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: memory-bank
@@ -608,6 +611,9 @@ To view tasks, the command **show tasks [filter]** will:
 4. Example usage: **show tasks active** or **show tasks tag:frontend**
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

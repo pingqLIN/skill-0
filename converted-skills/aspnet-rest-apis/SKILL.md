@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: aspnet-rest-apis
@@ -115,6 +116,8 @@ globs: "**/*.cs, **/*.json"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: aspnet-rest-apis
@@ -228,6 +231,9 @@ globs: "**/*.cs, **/*.json"
 - Show how to implement health checks and readiness probes.
 - Explain environment-specific configurations for different deployment stages.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

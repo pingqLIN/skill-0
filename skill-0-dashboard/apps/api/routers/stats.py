@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Statistics API router"""
 
 from typing import List
@@ -55,6 +56,8 @@ def get_findings_by_rule(
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 """Statistics API router"""
 
 from typing import List
@@ -108,6 +111,9 @@ def get_findings_by_rule(
     data = service.get_findings_by_rule()
     return [FindingsByRule(**item) for item in data]
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

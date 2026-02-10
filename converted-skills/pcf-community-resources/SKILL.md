@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: pcf-community-resources
@@ -194,6 +195,8 @@ The PCF community is welcoming and eager to help. Don't hesitate to reach out, a
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: pcf-community-resources
@@ -386,6 +389,9 @@ To add your component to PCF Gallery:
 
 The PCF community is welcoming and eager to help. Don't hesitate to reach out, ask questions, and share your own experiences!
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

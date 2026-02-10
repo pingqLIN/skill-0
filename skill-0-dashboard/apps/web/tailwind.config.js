@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ["class"],
@@ -56,6 +57,8 @@ export default {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 /** @type {import('tailwindcss').Config} */
 export default {
     darkMode: ["class"],
@@ -110,6 +113,9 @@ export default {
     plugins: [require("tailwindcss-animate")],
   }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

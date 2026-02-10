@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: azure-devops-pipelines
@@ -190,6 +191,8 @@ stages:
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: azure-devops-pipelines
@@ -378,6 +381,9 @@ stages:
 - Not using proper naming conventions for clarity
 - Ignoring pipeline security best practices
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

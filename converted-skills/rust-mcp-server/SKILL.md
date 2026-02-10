@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: rust-mcp-server
@@ -720,6 +721,8 @@ CMD ["my-mcp-server"]
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: rust-mcp-server
@@ -1438,6 +1441,9 @@ CMD ["my-mcp-server"]
 - [MCP Specification](https://spec.modelcontextprotocol.io/)
 - [Rust Async Book](https://rust-lang.github.io/async-book/)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: csharp
@@ -119,6 +120,8 @@ globs: "**/*.cs"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: csharp
@@ -236,6 +239,9 @@ globs: "**/*.cs"
 - Show how to implement health checks and readiness probes.
 - Explain environment-specific configurations for different deployment stages.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

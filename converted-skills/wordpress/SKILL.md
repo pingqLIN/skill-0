@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: wordpress
@@ -191,6 +192,8 @@ require $_tests_dir . '/includes/bootstrap.php';
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: wordpress
@@ -380,6 +383,9 @@ require $_tests_dir . '/includes/bootstrap.php';
 - ✅ Code passes PHPCS (WPCS) and ESLint where applicable.  
 - ✅ Avoid direct DB concatenation; always prepare queries.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

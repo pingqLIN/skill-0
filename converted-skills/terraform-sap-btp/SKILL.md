@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: terraform-sap-btp
@@ -200,6 +201,8 @@ All changes must flow through Terraform CLI + HCL – never mutate state manuall
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: terraform-sap-btp
@@ -398,6 +401,9 @@ Operational:
 
 All changes must flow through Terraform CLI + HCL – never mutate state manually.
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

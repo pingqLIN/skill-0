@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: csharp-ja
@@ -119,6 +120,8 @@ globs: "**/*.cs"
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: csharp-ja
@@ -236,6 +239,9 @@ globs: "**/*.cs"
 - ヘルスチェックと Readiness Probe の実装方法を示します。
 - 各デプロイ段階における環境固有の構成を説明します。
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

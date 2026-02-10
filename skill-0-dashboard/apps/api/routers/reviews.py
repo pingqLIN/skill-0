@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 """Reviews API router"""
 
 from typing import List
@@ -70,6 +71,8 @@ def reject_skill(
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 """Reviews API router"""
 
 from typing import List
@@ -138,6 +141,9 @@ def reject_skill(
         "reason": action.reason,
     }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes

@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 ---
 
 name: power-bi-devops-alm-best-practices
@@ -627,6 +628,8 @@ function Send-DeploymentNotification {
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 ---
 
 name: power-bi-devops-alm-best-practices
@@ -1252,6 +1255,9 @@ function Send-DeploymentNotification {
    - Missing audit trails
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
