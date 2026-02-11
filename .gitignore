@@ -60,4 +60,4 @@ htmlcov/
 *.tmp
 
 # Diagnostic files
-## *
+*Diagnostics*.md
