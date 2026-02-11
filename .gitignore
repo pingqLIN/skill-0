@@ -53,3 +53,11 @@ htmlcov/
 .coverage
 .coverage.*
 .pytest_cache/
+
+# Backup files
+*.bak
+*.old
+*.tmp
+
+# Diagnostic files
+## *
