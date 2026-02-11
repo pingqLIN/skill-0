@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 {
   "files": [],
   "references": [
@@ -8,22 +5,3 @@
     { "path": "./tsconfig.node.json" }
   ]
 }
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-{
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
-}
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes

@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ---
 
 name: power-bi-dax-best-practices
@@ -797,11 +794,6 @@ RETURN
     "Result: " & Result & " | Duration: " & Duration & "s"
 ```
 
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ---
 
 name: power-bi-dax-best-practices
@@ -1598,11 +1590,4 @@ RETURN
     "Result: " & Result & " | Duration: " & Duration & "s"
 ```
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 Remember: Always validate DAX formulas with business users to ensure calculations match business requirements and expectations. Use Power BI's Performance Analyzer and DAX Studio for performance optimization and debugging.

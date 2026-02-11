@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ---
 
 name: tasksync
@@ -354,11 +351,6 @@ Terminal: Enter your task:
 - **Session tracking**: Maintain accurate task counting and status - PRIMARY DIRECTIVE
 </success_criteria>
 
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ---
 
 name: tasksync
@@ -712,11 +704,4 @@ Terminal: Enter your task:
 - **Session tracking**: Maintain accurate task counting and status - PRIMARY DIRECTIVE
 </success_criteria>
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ---

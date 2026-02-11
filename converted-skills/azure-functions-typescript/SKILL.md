@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ---
 
 name: azure-functions-typescript
@@ -17,11 +14,6 @@ globs: "**/*.ts, **/*.js, **/*.json"
 - The API is built using Azure Functions using `@azure/functions@4` package.
 - Each endpoint should have its own function file, and use the following naming convention: `src/functions/<resource-name>-<http-verb>.ts`
 - When making changes to the API, make sure to update the OpenAPI schema (if it exists) and `README.md` file accordingly.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ---
 
 name: azure-functions-typescript
@@ -38,10 +30,3 @@ globs: "**/*.ts, **/*.js, **/*.json"
 - The API is built using Azure Functions using `@azure/functions@4` package.
 - Each endpoint should have its own function file, and use the following naming convention: `src/functions/<resource-name>-<http-verb>.ts`
 - When making changes to the API, make sure to update the OpenAPI schema (if it exists) and `README.md` file accordingly.
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes

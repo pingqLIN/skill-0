@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ---
 
 name: power-bi-report-design-best-practices
@@ -754,11 +751,6 @@ Continuous Improvement:
 - Non-functional mobile interactions
 ```
 
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ---
 
 name: power-bi-report-design-best-practices
@@ -1512,11 +1504,4 @@ Continuous Improvement:
 - Non-functional mobile interactions
 ```
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 Remember: Always design with your specific users and use cases in mind. Test early and often with real users and realistic data to ensure your reports effectively communicate insights and enable data-driven decision making.
