@@ -199,6 +199,13 @@ Skill-0 專案目前已完成核心功能開發，包含：
 
 **目標**: 解決所有 Critical 安全性問題，達到可部署狀態
 
+**Agent 分派**:
+- A: 安全架構設計（Auth/Rate limit/CI 設計）
+- B: 高風險推理與安全風險評估（CORS/JWT/攻擊面）
+- C: API/部署實作（CORS/JWT/Rate limiting/Docker/CI）
+- D: 文件與配置（.env 模板、部署說明）
+- E/F: 小型修補與腳本整理（低風險）
+
 #### Task 1.1: API 安全性強化
 **預估時間**: 2-3 天  
 **負責模組**: `api/main.py`, `skill-0-dashboard/apps/api/main.py`
@@ -347,6 +354,13 @@ Skill-0 專案目前已完成核心功能開發，包含：
 
 **目標**: 達到 80%+ 程式碼覆蓋率，確保系統穩定性
 
+**Agent 分派**:
+- A: 測試策略與覆蓋率規劃
+- B: 高風險/易碎測試分析與穩定化
+- C: API/後端整合測試實作
+- D: 前端測試架構與文件
+- E/F: 測試案例撰寫、fixtures、mock 資料
+
 #### Task 2.1: API 整合測試
 **預估時間**: 3-4 天  
 **負責模組**: 新建 `tests/integration/`
@@ -458,6 +472,13 @@ Skill-0 專案目前已完成核心功能開發，包含：
 
 **目標**: 建立可靠的監控與告警系統
 
+**Agent 分派**:
+- A: 監控/告警架構設計
+- B: 風險分析與告警門檻校準
+- C: 監控與日誌實作（structlog/Sentry/Prometheus）
+- D: 部署/運維文件與 Runbook
+- E/F: 腳本與設定調整（低風險）
+
 #### Task 3.1: 日誌與監控
 **預估時間**: 2-3 天
 
@@ -536,6 +557,13 @@ Skill-0 專案目前已完成核心功能開發，包含：
 
 **可選項目，視資源與時程決定**
 
+**Agent 分派**:
+- A: 高風險功能設計（Hybrid search/工作流）
+- B: 需求推理與可行性分析
+- C: 功能實作與整合
+- D: 功能規格與使用說明
+- E/F: 原型與快速試驗
+
 #### Task 4.1: 儀表板功能完善
 - [ ] Skill comparison view (side-by-side comparison)
 - [ ] Batch operations (approve/reject multiple skills)
@@ -556,6 +584,90 @@ Skill-0 專案目前已完成核心功能開發，包含：
 
 ---
 
+## 可執行工作清單 / Executable Worklist
+
+### Phase 1 (P0)
+
+**Task 1.1: API 安全性強化**
+- **步驟**: CORS 白名單環境化、JWT 認證端點、Rate limiting、HTTPS reverse proxy 設定
+- **驗收**: 受保護端點需 JWT；CORS 僅允許白名單；Rate limiting 生效
+- **驗證指令**:
+  - `python3 -m pytest tests/ -v`
+  - `python3 -m pytest tests/integration -v` (新增後)
+
+**Task 1.2: 部署配置建置**
+- **步驟**: Dockerfile*3、docker-compose*2、k8s manifests、.env templates、CI workflows
+- **驗收**: `docker-compose up` 可啟動完整堆疊；CI 綠燈
+- **驗證指令**:
+  - `docker compose up --build`
+  - `kubectl apply -f k8s/` (若啟用)
+
+**Task 1.3: 儀表板後端服務完成**
+- **步驟**: 補齊 governance services、Alembic migrations、DB path env 化
+- **驗收**: 所有 router 回傳真實資料；migrations 可跑
+- **驗證指令**:
+  - `python3 -m pytest tests/integration/test_api_dashboard.py -v` (新增後)
+  - `cd skill-0-dashboard/apps/api && uvicorn main:app --reload --port 8001`
+
+**Task 1.4: Vector Search GPU Fallback**
+- **步驟**: CUDA failover、`SKILL0_DEVICE` 支援、單元測試
+- **驗收**: 無 GPU 環境不崩潰；不相容 GPU 自動回退
+- **驗證指令**:
+  - `SKILL0_DEVICE=cpu python -m vector_db.search stats`
+  - `python3 -m pytest tests/ -v`
+
+### Phase 2 (P1)
+
+**Task 2.1: API 整合測試**
+- **步驟**: 建立 `tests/integration/`、覆蓋核心 API/Dashboard API
+- **驗收**: 50+ integration tests 通過
+- **驗證指令**: `python3 -m pytest tests/integration -v`
+
+**Task 2.2: 前端測試**
+- **步驟**: Vitest 單元測試、API mock 整合測試、Playwright E2E
+- **驗收**: 30+ unit、10+ integration、5+ E2E
+- **驗證指令**:
+  - `cd skill-0-dashboard/apps/web && npm run test` (新增後)
+  - `cd skill-0-dashboard/apps/web && npx playwright test` (新增後)
+
+**Task 2.3: 效能測試**
+- **步驟**: Locust 負載測試、SQLite query 分析、Lighthouse
+- **驗收**: p95 < 200ms；Vector search < 100ms；Lighthouse 達標
+- **驗證指令**:
+  - `python3 -m locust -f tests/performance/locustfile.py` (新增後)
+  - `cd skill-0-dashboard/apps/web && npx lighthouse http://localhost:5173`
+
+### Phase 3 (P2)
+
+**Task 3.1: 日誌與監控**
+- **步驟**: structlog/json logger、Sentry/Prometheus、告警規則
+- **驗收**: JSON logs；Grafana dashboard；告警可觸發
+- **驗證指令**: `python3 -m pytest tests/integration -v` (新增監控相關測試後)
+
+**Task 3.2: 資料庫優化**
+- **步驟**: WAL、VACUUM 排程、備份腳本、擴展性評估文件
+- **驗收**: WAL 啟用；備份可還原
+- **驗證指令**: `python - <<'PY'
+import sqlite3
+conn = sqlite3.connect('skills.db')
+print(conn.execute('PRAGMA journal_mode;').fetchone())
+conn.close()
+PY`
+
+**Task 3.3: 文件更新**
+- **步驟**: 部署/運維/架構文件、API examples、README 同步
+- **驗收**: 新人可依文件部署；API docs 完整
+- **驗證指令**:
+  - `python3 -m pytest tests/ -v` (文件與行為一致性回歸)
+  - `cd skill-0-dashboard/apps/web && npm run build`
+
+### Phase 4 (P3)
+
+**Task 4.1~4.3: 功能增強**
+- **步驟**: 依需求拆分子任務，建立最小可用原型
+- **驗收**: 功能可演示、風險可控、效能可接受
+- **驗證指令**: 依功能新增對應 unit/integration/E2E 測試
+
 ## 第三部分：資源需求與時程估算
 ## Part 3: Resource Requirements & Timeline Estimation
 
@@ -570,6 +682,24 @@ Skill-0 專案目前已完成核心功能開發，包含：
 | **Technical Writer** | Documentation, API Specs | 3-5 人日 |
 
 **總計**: 46-64 人日 (約 2-3 個月，2-3 人團隊)
+
+### 多 Agents 分組（目的 / 預算）
+
+> 依 A/B 測試結果重新分組（o4-mini / gpt-5.1-codex-mini / gpt-5.2-codex low+medium）。
+
+| Agent | 目的 / 角色 | 模型 | 預算層級 |
+|------|------------|------|----------|
+| **A** | 架構與關鍵設計 | `gpt-5.2-codex (medium)` | 高 |
+| **B** | 高風險推理 / 根因分析 | `o4-mini` | 高 |
+| **C** | 功能實作 / API 改動 | `gpt-5.2-codex (low)` | 中 |
+| **D** | 文件 / 技術規格 | `gpt-5.2-codex (medium)` | 中 |
+| **E** | 低風險修正 / 小改動 | `gpt-5.1-codex-mini` | 低 |
+| **F** | 探索 / 雜務 / 快速嘗試 | `gpt-5.1-codex-mini` | 低 |
+
+**使用原則**:
+- 高風險與長推理任務優先走 A/B
+- 大量小任務與試探性工作走 E/F
+- API 實作類工作預設走 C
 
 ### 時程規劃 / Timeline
 

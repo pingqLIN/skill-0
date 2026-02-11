@@ -3,12 +3,17 @@ Skill-0 REST API
 FastAPI integration with vector search and analysis features
 """
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import os
+import logging
 from pathlib import Path
+import time
+
+logger = logging.getLogger(__name__)
 
 # Ensure vector_db module can be found
 import sys
@@ -19,6 +24,14 @@ from vector_db import SemanticSearch
 # Configuration
 DB_PATH = os.getenv('SKILL0_DB_PATH', 'skills.db')
 PARSED_DIR = os.getenv('SKILL0_PARSED_DIR', 'parsed')
+CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:5173,http://localhost:3000').split(',')
+JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'dev-secret-change-in-production')
+JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
+JWT_EXPIRE_MINUTES = int(os.getenv('JWT_EXPIRE_MINUTES', '30'))
+API_RATE_LIMIT = os.getenv('API_RATE_LIMIT', '100/minute')
+
+# Startup timestamp (module import time)
+_startup_time = time.time()
 
 # FastAPI application
 app = FastAPI(
@@ -29,14 +42,84 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# CORS
+# CORS — controlled by CORS_ORIGINS env var
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[o.strip() for o in CORS_ORIGINS if o.strip()],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ==================== Rate Limiting ====================
+
+from collections import defaultdict
+import asyncio
+
+_rate_limit_store: Dict[str, list] = defaultdict(list)
+_rate_lock = asyncio.Lock()
+
+
+def _parse_rate_limit(limit_str: str) -> tuple:
+    """Parse rate limit string like '100/minute' -> (100, 60)"""
+    parts = limit_str.split('/')
+    count = int(parts[0])
+    period_map = {'second': 1, 'minute': 60, 'hour': 3600}
+    period = period_map.get(parts[1], 60) if len(parts) > 1 else 60
+    return count, period
+
+
+async def check_rate_limit(request: Request):
+    """Rate limiting dependency for protected endpoints"""
+    client_ip = request.client.host if request.client else "unknown"
+    max_requests, period = _parse_rate_limit(API_RATE_LIMIT)
+    now = time.time()
+
+    async with _rate_lock:
+        # Purge expired entries
+        _rate_limit_store[client_ip] = [
+            t for t in _rate_limit_store[client_ip] if now - t < period
+        ]
+        if len(_rate_limit_store[client_ip]) >= max_requests:
+            raise HTTPException(
+                status_code=429,
+                detail=f"Rate limit exceeded. Max {max_requests} requests per {period}s.",
+            )
+        _rate_limit_store[client_ip].append(now)
+
+
+# ==================== JWT Authentication ====================
+
+import jwt
+from datetime import datetime, timedelta, timezone
+
+security = HTTPBearer(auto_error=False)
+
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    """Create a JWT access token"""
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=JWT_EXPIRE_MINUTES))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+
+
+def decode_access_token(token: str) -> dict:
+    """Decode and validate a JWT token"""
+    try:
+        return jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired")
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+
+async def require_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Dependency that requires valid JWT for protected endpoints"""
+    if credentials is None:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    return decode_access_token(credentials.credentials)
 
 # Global search engine (lazy initialization)
 search_engine: Optional[SemanticSearch] = None
@@ -151,6 +234,63 @@ async def health_check():
         }
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Service unavailable: {str(e)}")
+
+
+class HealthDetailResponse(BaseModel):
+    """Detailed health check response"""
+    status: str = Field(..., description="Overall health status: healthy or degraded")
+    db_path: str
+    db_exists: bool
+    db_size_bytes: int
+    total_skills: int
+    embedding_model: str
+    uptime_seconds: float
+    version: str = Field("2.1.0", description="API version")
+
+
+@app.get("/api/health/detail", response_model=HealthDetailResponse, tags=["Health"])
+async def health_detail():
+    """Detailed health check including DB and runtime metrics"""
+    # Basic, best-effort values
+    db_path = DB_PATH
+    db_exists = Path(db_path).exists()
+    try:
+        db_size_bytes = Path(db_path).stat().st_size if db_exists else 0
+    except Exception:
+        db_size_bytes = 0
+
+    # Uptime since startup
+    uptime_seconds = max(0.0, time.time() - _startup_time)
+
+    # Defaults (in case engine fails)
+    total_skills = 0
+    embedding_model = "unknown"
+    status = "healthy"
+    try:
+        engine = get_search_engine()
+        stats = engine.get_statistics()
+        if isinstance(stats, dict):
+            total_skills = int(stats.get('total_skills', 0))
+            embedding_model = stats.get('model_name', 'unknown') or 'unknown'
+        else:
+            total_skills = 0
+            embedding_model = 'unknown'
+    except Exception:
+        # Degraded state if the engine cannot be queried
+        status = "degraded"
+        total_skills = 0
+        embedding_model = "unknown"
+
+    return HealthDetailResponse(
+        status=status,
+        db_path=db_path,
+        db_exists=db_exists,
+        db_size_bytes=db_size_bytes,
+        total_skills=total_skills,
+        embedding_model=embedding_model,
+        uptime_seconds=uptime_seconds,
+        version="2.1.0",
+    )
 
 
 @app.post("/api/search", response_model=SearchResponse, tags=["Search"])
@@ -329,9 +469,9 @@ async def get_skill_by_id(
 
 
 @app.post("/api/index", response_model=IndexResponse, tags=["Admin"])
-async def index_skills(request: IndexRequest):
+async def index_skills(request: IndexRequest, _user: dict = Depends(require_auth)):
     """
-    Re-index Skills
+    Re-index Skills (requires authentication)
     
     Rebuild vector index from parsed directory.
     """
@@ -351,6 +491,46 @@ async def index_skills(request: IndexRequest):
         elapsed_seconds=round(elapsed, 3),
         message=f"Successfully indexed {count} skills"
     )
+
+
+# ==================== Auth Endpoints ====================
+
+class TokenRequest(BaseModel):
+    """Token request"""
+    username: str = Field(..., description="Username")
+    password: str = Field(..., description="Password")
+
+
+class TokenResponse(BaseModel):
+    """Token response"""
+    access_token: str
+    token_type: str = "bearer"
+    expires_in: int
+
+
+@app.post("/api/auth/token", response_model=TokenResponse, tags=["Auth"])
+async def login(request: TokenRequest):
+    """
+    Get access token
+
+    In production, validate against a user store.
+    Currently accepts any non-empty credentials for development.
+    """
+    # TODO: Replace with real user validation in production
+    if not request.username or not request.password:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    token = create_access_token({"sub": request.username})
+    return TokenResponse(
+        access_token=token,
+        expires_in=JWT_EXPIRE_MINUTES * 60,
+    )
+
+
+@app.get("/api/auth/me", tags=["Auth"])
+async def get_current_user(user: dict = Depends(require_auth)):
+    """Get current authenticated user info"""
+    return {"username": user.get("sub"), "exp": user.get("exp")}
 
 
 # ==================== Startup ====================
