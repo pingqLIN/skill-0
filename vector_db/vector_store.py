@@ -41,6 +41,9 @@ class VectorStore:
         sqlite_vec.load(self.conn)
         self.conn.enable_load_extension(False)
         self.conn.row_factory = sqlite3.Row
+        # Enable WAL mode for better concurrent read performance
+        self.conn.execute("PRAGMA journal_mode=WAL")
+        self.conn.execute("PRAGMA synchronous=NORMAL")
         self._init_schema()
         
     def _init_schema(self):

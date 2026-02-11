@@ -4,16 +4,20 @@ FastAPI integration with vector search and analysis features
 """
 
 from fastapi import FastAPI, HTTPException, Query, Depends, Request
+from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 import os
-import logging
 from pathlib import Path
 import time
 
-logger = logging.getLogger(__name__)
+from api.logging_config import configure_logging, get_logger, generate_request_id, request_id_var
+
+# Initialize structured logging
+configure_logging()
+logger = get_logger(__name__)
 
 # Ensure vector_db module can be found
 import sys
@@ -50,6 +54,63 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ==================== Prometheus Metrics ====================
+
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+
+REQUEST_COUNT = Counter(
+    "skill0_http_requests_total",
+    "Total HTTP requests",
+    ["method", "endpoint", "status"],
+)
+REQUEST_LATENCY = Histogram(
+    "skill0_http_request_duration_seconds",
+    "HTTP request latency in seconds",
+    ["method", "endpoint"],
+    buckets=[0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0],
+)
+SEARCH_LATENCY = Histogram(
+    "skill0_search_duration_seconds",
+    "Search operation latency in seconds",
+)
+
+
+@app.middleware("http")
+async def request_middleware(request: Request, call_next):
+    """Add request ID, structured logging, and metrics to every request"""
+    rid = generate_request_id()
+    request_id_var.set(rid)
+    start = time.time()
+    method = request.method
+    path = request.url.path
+
+    logger.info("request_started", method=method, path=path)
+
+    response = await call_next(request)
+
+    duration = time.time() - start
+    status = response.status_code
+    response.headers["X-Request-ID"] = rid
+
+    REQUEST_COUNT.labels(method=method, endpoint=path, status=status).inc()
+    REQUEST_LATENCY.labels(method=method, endpoint=path).observe(duration)
+
+    logger.info(
+        "request_completed",
+        method=method,
+        path=path,
+        status=status,
+        duration_ms=round(duration * 1000, 2),
+    )
+    return response
+
+
+@app.get("/metrics", tags=["Monitoring"], include_in_schema=False)
+async def prometheus_metrics():
+    """Prometheus metrics endpoint"""
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
 # ==================== Rate Limiting ====================
@@ -300,13 +361,15 @@ async def search_skills(request: SearchRequest):
     
     Use natural language query to find relevant skills.
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
     results = engine.search(request.query, limit=request.limit)
     
     elapsed = (time.time() - start) * 1000
+    SEARCH_LATENCY.observe(elapsed / 1000)
+
+    logger.info("search_completed", query=request.query, results=len(results), latency_ms=round(elapsed, 2))
     
     return SearchResponse(
         query=request.query,
@@ -326,13 +389,15 @@ async def search_skills_get(
     
     Use natural language query to find relevant skills.
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
     results = engine.search(q, limit=limit)
     
     elapsed = (time.time() - start) * 1000
+    SEARCH_LATENCY.observe(elapsed / 1000)
+
+    logger.info("search_completed", query=q, results=len(results), latency_ms=round(elapsed, 2))
     
     return SearchResponse(
         query=q,
@@ -349,7 +414,6 @@ async def find_similar_skills(request: SimilarRequest):
     
     Find other skills with similar functionality based on the specified skill name.
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
@@ -376,7 +440,6 @@ async def find_similar_skills_get(
     """
     Find similar Skills (GET)
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
@@ -475,16 +538,15 @@ async def index_skills(request: IndexRequest, _user: dict = Depends(require_auth
     
     Rebuild vector index from parsed directory.
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
     
-    # Clear and re-index
     engine.store.clear()
     count = engine.index_skills(request.parsed_dir, show_progress=False)
     
     elapsed = time.time() - start
+    logger.info("index_completed", count=count, elapsed_seconds=round(elapsed, 3))
     
     return IndexResponse(
         indexed_count=count,

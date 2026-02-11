@@ -48,6 +48,9 @@ Thumbs.db
 *.log
 logs/
 
+# Backups
+backups/
+
 # Coverage
 htmlcov/
 .coverage
