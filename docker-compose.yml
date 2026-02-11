@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - ./api:/app/api
+      - ./vector_db:/app/vector_db
+      - ./parsed:/app/parsed
+      - ./schema:/app/schema
+      - ./skills.db:/app/skills.db
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    ports:
+      - "8001:8001"
+    env_file: .env
+    volumes:
+      - ./skill-0-dashboard/apps/api:/app/api
+      - ./tools:/app/tools
+      - ./governance:/app/governance
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "3000:80"
+    depends_on:
+      - api
+      - dashboard
+    restart: unless-stopped
