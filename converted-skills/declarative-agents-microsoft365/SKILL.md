@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ---
 
 name: declarative-agents-microsoft365
@@ -318,11 +315,6 @@ const log = {
 - Microsoft 365 Agents Toolkit logs
 - Schema validation utilities
 
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ---
 
 name: declarative-agents-microsoft365
@@ -640,11 +632,4 @@ const log = {
 - Microsoft 365 Agents Toolkit logs
 - Schema validation utilities
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 This comprehensive guide ensures robust, scalable, and maintainable Microsoft 365 Copilot declarative agents with full TypeSpec and Microsoft 365 Agents Toolkit integration.

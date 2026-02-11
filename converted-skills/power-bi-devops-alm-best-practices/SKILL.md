@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ---
 
 name: power-bi-devops-alm-best-practices
@@ -625,11 +622,6 @@ function Send-DeploymentNotification {
    - Direct production changes
    - Missing audit trails
 
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ---
 
 name: power-bi-devops-alm-best-practices
@@ -1254,11 +1246,4 @@ function Send-DeploymentNotification {
    - Direct production changes
    - Missing audit trails
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 Remember: DevOps for Power BI requires a combination of proper tooling, automated processes, and organizational discipline. Start with basic CI/CD and gradually mature your practices based on organizational needs and compliance requirements.

@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 # Skill-0: Skill Decomposition Parser
 
 [English](README.md)
@@ -287,4 +285,3 @@ clusters = search.cluster_skills(n_clusters=5)
 ## License 授權
 
 MIT
->>>>>>> Stashed changes

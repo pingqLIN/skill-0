@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ---
 
 name: power-bi-data-modeling-best-practices
@@ -641,11 +638,6 @@ plot_relationship_metadata(relationships)
 }
 ```
 
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ---
 
 name: power-bi-data-modeling-best-practices
@@ -1286,11 +1278,4 @@ plot_relationship_metadata(relationships)
 }
 ```
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 Remember: Always validate your model design with business users and test with realistic data volumes and usage patterns. Use Power BI's built-in tools like Performance Analyzer and DAX Studio for optimization and debugging.

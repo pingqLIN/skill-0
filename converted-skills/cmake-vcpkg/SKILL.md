@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 ---
 
 name: cmake-vcpkg
@@ -13,11 +10,6 @@ Prefer setting cache variables and other types of things through CMakePresets.js
 Give information about any CMake Policies that might affect CMake variables that are suggested or mentioned.
 This project needs to be cross-platform and cross-compiler for MSVC, Clang, and GCC.
 When providing OpenCV samples that use the file system to read files, please always use absolute file paths rather than file names, or relative file paths. For example, use `video.open("C:/project/file.mp4")`, not `video.open("file.mp4")`.
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 ---
 
 name: cmake-vcpkg
@@ -30,10 +22,3 @@ Prefer setting cache variables and other types of things through CMakePresets.js
 Give information about any CMake Policies that might affect CMake variables that are suggested or mentioned.
 This project needs to be cross-platform and cross-compiler for MSVC, Clang, and GCC.
 When providing OpenCV samples that use the file system to read files, please always use absolute file paths rather than file names, or relative file paths. For example, use `video.open("C:/project/file.mp4")`, not `video.open("file.mp4")`.
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
