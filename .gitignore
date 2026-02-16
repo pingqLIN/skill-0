@@ -12,6 +12,10 @@ eggs/
 .eggs/
 lib/
 lib64/
+
+# Exception: Dashboard web app needs src/lib for utilities
+!skill-0-dashboard/apps/web/src/lib/
+!skill-0-dashboard/apps/web/src/lib/**
 parts/
 sdist/
 var/
