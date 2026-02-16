@@ -4,14 +4,19 @@ FastAPI integration with vector search and analysis features
 """
 
 from fastapi import FastAPI, HTTPException, Query, Depends, Request
+<<<<<<< Updated upstream
+=======
+from fastapi.responses import Response, JSONResponse
+>>>>>>> Stashed changes
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, TYPE_CHECKING
 import os
 import logging
 from pathlib import Path
 import time
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 
@@ -19,19 +24,97 @@ logger = logging.getLogger(__name__)
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from vector_db import SemanticSearch
+if TYPE_CHECKING:
+    from vector_db import SemanticSearch
 
 # Configuration
 DB_PATH = os.getenv('SKILL0_DB_PATH', 'skills.db')
 PARSED_DIR = os.getenv('SKILL0_PARSED_DIR', 'parsed')
-CORS_ORIGINS = os.getenv('CORS_ORIGINS', 'http://localhost:5173,http://localhost:3000').split(',')
-JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', 'dev-secret-change-in-production')
+SKILL0_ENV = os.getenv('SKILL0_ENV', 'development').lower()
+DEFAULT_JWT_SECRET_KEY = 'dev-secret-change-in-production'
+CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        'CORS_ORIGINS',
+        'http://localhost:5173,http://localhost:3000',
+    ).split(',')
+    if origin.strip()
+]
+JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', DEFAULT_JWT_SECRET_KEY)
 JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
 JWT_EXPIRE_MINUTES = int(os.getenv('JWT_EXPIRE_MINUTES', '30'))
 API_RATE_LIMIT = os.getenv('API_RATE_LIMIT', '100/minute')
+AUTH_RATE_LIMIT = os.getenv('AUTH_RATE_LIMIT', '10/minute')
+API_USERNAME_ENV = "API_USERNAME"
+API_PASSWORD_ENV = "API_PASSWORD"
 
 # Startup timestamp (module import time)
 _startup_time = time.time()
+
+
+def is_production_env(env_value: str) -> bool:
+    """Return True when environment value represents production."""
+    return env_value.strip().lower() in {'production', 'prod'}
+
+
+def _is_local_origin(origin: str) -> bool:
+    """Detect localhost/loopback or wildcard CORS entries."""
+    if origin.strip() == '*':
+        return True
+
+    parsed = urlparse(origin)
+    host = (parsed.hostname or '').lower()
+    return host in {'localhost', '127.0.0.1', '::1'}
+
+
+def find_production_security_issues(
+    env_value: str,
+    cors_origins: List[str],
+    jwt_secret_key: str,
+    default_jwt_secret_key: str,
+    configured_username: Optional[str],
+    configured_password: Optional[str],
+) -> List[str]:
+    """Enumerate production security misconfigurations."""
+    if not is_production_env(env_value):
+        return []
+
+    issues: List[str] = []
+
+    if jwt_secret_key == default_jwt_secret_key:
+        issues.append('JWT_SECRET_KEY must not use the development default in production')
+
+    insecure_origins = [origin for origin in cors_origins if _is_local_origin(origin)]
+    if insecure_origins:
+        issues.append(
+            f'CORS_ORIGINS must not include localhost/wildcard in production: {", ".join(insecure_origins)}'
+        )
+
+    if not configured_username or not configured_password:
+        issues.append(
+            'API_USERNAME and API_PASSWORD must both be configured in production'
+        )
+
+    return issues
+
+
+def enforce_production_security_configuration() -> None:
+    """Fail fast when production security settings are unsafe."""
+    issues = find_production_security_issues(
+        env_value=SKILL0_ENV,
+        cors_origins=CORS_ORIGINS,
+        jwt_secret_key=JWT_SECRET_KEY,
+        default_jwt_secret_key=DEFAULT_JWT_SECRET_KEY,
+        configured_username=os.getenv(API_USERNAME_ENV),
+        configured_password=os.getenv(API_PASSWORD_ENV),
+    )
+    if issues:
+        raise RuntimeError(
+            'Invalid production security configuration: ' + '; '.join(issues)
+        )
+
+
+enforce_production_security_configuration()
 
 # FastAPI application
 app = FastAPI(
@@ -45,13 +128,92 @@ app = FastAPI(
 # CORS — controlled by CORS_ORIGINS env var
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o.strip() for o in CORS_ORIGINS if o.strip()],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
+<<<<<<< Updated upstream
+=======
+# ==================== Prometheus Metrics ====================
+
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
+
+REQUEST_COUNT = Counter(
+    "skill0_http_requests_total",
+    "Total HTTP requests",
+    ["method", "endpoint", "status"],
+)
+REQUEST_LATENCY = Histogram(
+    "skill0_http_request_duration_seconds",
+    "HTTP request latency in seconds",
+    ["method", "endpoint"],
+    buckets=[0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0],
+)
+SEARCH_LATENCY = Histogram(
+    "skill0_search_duration_seconds",
+    "Search operation latency in seconds",
+)
+
+
+@app.middleware("http")
+async def request_middleware(request: Request, call_next):
+    """Add request ID, structured logging, and metrics to every request"""
+    rid = generate_request_id()
+    request_id_var.set(rid)
+    start = time.time()
+    method = request.method
+    path = request.url.path
+
+    logger.info("request_started", method=method, path=path)
+
+    # Apply baseline API rate limit to non-health/docs endpoints.
+    if not _is_rate_limit_exempt_path(path):
+        try:
+            await check_rate_limit(request)
+        except HTTPException as exc:
+            duration = time.time() - start
+            response = JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+            response.headers["X-Request-ID"] = rid
+            REQUEST_COUNT.labels(method=method, endpoint=path, status=exc.status_code).inc()
+            REQUEST_LATENCY.labels(method=method, endpoint=path).observe(duration)
+            logger.warning(
+                "request_rate_limited",
+                method=method,
+                path=path,
+                status=exc.status_code,
+                duration_ms=round(duration * 1000, 2),
+            )
+            return response
+
+    response = await call_next(request)
+
+    duration = time.time() - start
+    status = response.status_code
+    response.headers["X-Request-ID"] = rid
+
+    REQUEST_COUNT.labels(method=method, endpoint=path, status=status).inc()
+    REQUEST_LATENCY.labels(method=method, endpoint=path).observe(duration)
+
+    logger.info(
+        "request_completed",
+        method=method,
+        path=path,
+        status=status,
+        duration_ms=round(duration * 1000, 2),
+    )
+    return response
+
+
+@app.get("/metrics", tags=["Monitoring"], include_in_schema=False)
+async def prometheus_metrics():
+    """Prometheus metrics endpoint"""
+    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
+
+>>>>>>> Stashed changes
 # ==================== Rate Limiting ====================
 
 from collections import defaultdict
@@ -60,33 +222,77 @@ import asyncio
 _rate_limit_store: Dict[str, list] = defaultdict(list)
 _rate_lock = asyncio.Lock()
 
+RATE_LIMIT_EXEMPT_PATHS = {
+    '/',
+    '/health',
+    '/api/health/detail',
+    '/metrics',
+    '/docs',
+    '/redoc',
+    '/openapi.json',
+}
+
+
+def _is_rate_limit_exempt_path(path: str) -> bool:
+    """Paths exempt from API baseline rate limiting."""
+    if path in RATE_LIMIT_EXEMPT_PATHS:
+        return True
+    return path.startswith('/docs/') or path.startswith('/redoc/')
+
 
 def _parse_rate_limit(limit_str: str) -> tuple:
     """Parse rate limit string like '100/minute' -> (100, 60)"""
     parts = limit_str.split('/')
+    if not parts or not parts[0].isdigit():
+        raise ValueError(f"Invalid rate limit format: {limit_str}")
     count = int(parts[0])
     period_map = {'second': 1, 'minute': 60, 'hour': 3600}
-    period = period_map.get(parts[1], 60) if len(parts) > 1 else 60
+    if len(parts) == 1:
+        period = 60
+    else:
+        if parts[1] not in period_map:
+            raise ValueError(f"Invalid rate limit window: {limit_str}")
+        period = period_map[parts[1]]
     return count, period
 
 
 async def check_rate_limit(request: Request):
-    """Rate limiting dependency for protected endpoints"""
+    """Rate limit dependency for baseline API traffic."""
+    await _enforce_rate_limit(request=request, limit_str=API_RATE_LIMIT, scope='api')
+
+
+async def check_auth_rate_limit(request: Request):
+    """Stricter rate limit dependency for auth token endpoint."""
+    await _enforce_rate_limit(request=request, limit_str=AUTH_RATE_LIMIT, scope='auth')
+
+
+async def _enforce_rate_limit(request: Request, limit_str: str, scope: str):
+    """Shared rate-limit implementation with scope separation."""
     client_ip = request.client.host if request.client else "unknown"
-    max_requests, period = _parse_rate_limit(API_RATE_LIMIT)
+    try:
+        max_requests, period = _parse_rate_limit(limit_str)
+    except ValueError as exc:
+        logger.error(
+            "invalid_rate_limit_configuration",
+            scope=scope,
+            limit=limit_str,
+            error=str(exc),
+        )
+        raise HTTPException(status_code=500, detail="Rate limit misconfiguration")
     now = time.time()
+    bucket_key = f"{scope}:{client_ip}"
 
     async with _rate_lock:
         # Purge expired entries
-        _rate_limit_store[client_ip] = [
-            t for t in _rate_limit_store[client_ip] if now - t < period
+        _rate_limit_store[bucket_key] = [
+            t for t in _rate_limit_store[bucket_key] if now - t < period
         ]
-        if len(_rate_limit_store[client_ip]) >= max_requests:
+        if len(_rate_limit_store[bucket_key]) >= max_requests:
             raise HTTPException(
                 status_code=429,
-                detail=f"Rate limit exceeded. Max {max_requests} requests per {period}s.",
+                detail=f"Rate limit exceeded ({scope}). Max {max_requests} requests per {period}s.",
             )
-        _rate_limit_store[client_ip].append(now)
+        _rate_limit_store[bucket_key].append(now)
 
 
 # ==================== JWT Authentication ====================
@@ -121,14 +327,46 @@ async def require_auth(credentials: HTTPAuthorizationCredentials = Depends(secur
         raise HTTPException(status_code=401, detail="Authentication required")
     return decode_access_token(credentials.credentials)
 
+
+def validate_login_credentials(username: str, password: str) -> bool:
+    """Validate API login credentials from environment configuration."""
+    configured_username = os.getenv(API_USERNAME_ENV)
+    configured_password = os.getenv(API_PASSWORD_ENV)
+
+    if not configured_username or not configured_password:
+        logger.error(
+            "auth_configuration_missing",
+            username_env=API_USERNAME_ENV,
+            password_env=API_PASSWORD_ENV,
+            username_configured=bool(configured_username),
+            password_configured=bool(configured_password),
+        )
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Authentication is not configured. "
+                "Set API_USERNAME and API_PASSWORD environment variables."
+            ),
+        )
+
+    return username == configured_username and password == configured_password
+
 # Global search engine (lazy initialization)
-search_engine: Optional[SemanticSearch] = None
+search_engine: Optional["SemanticSearch"] = None
 
 
-def get_search_engine() -> SemanticSearch:
+def _load_semantic_search_class():
+    """Lazy-load SemanticSearch to avoid heavy ML imports at API startup."""
+    from vector_db import SemanticSearch
+
+    return SemanticSearch
+
+
+def get_search_engine() -> "SemanticSearch":
     """Get or initialize search engine"""
     global search_engine
     if search_engine is None:
+        SemanticSearch = _load_semantic_search_class()
         search_engine = SemanticSearch(db_path=DB_PATH)
     return search_engine
 
@@ -509,15 +747,18 @@ class TokenResponse(BaseModel):
 
 
 @app.post("/api/auth/token", response_model=TokenResponse, tags=["Auth"])
-async def login(request: TokenRequest):
+async def login(
+    request: TokenRequest,
+    _auth_rate_limit: None = Depends(check_auth_rate_limit),
+):
     """
     Get access token
 
-    In production, validate against a user store.
-    Currently accepts any non-empty credentials for development.
+    Validates credentials against environment variables:
+    API_USERNAME and API_PASSWORD.
     """
-    # TODO: Replace with real user validation in production
-    if not request.username or not request.password:
+    if not validate_login_credentials(request.username, request.password):
+        logger.warning("login_failed", username=request.username)
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"sub": request.username})

@@ -11,6 +11,7 @@ Tests for tool equivalence and code equivalence verification:
 
 import pytest
 import json
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -24,6 +25,35 @@ from scripts.helper import (
     SkillTester,
     generate_template
 )
+
+
+def _expected_complexity_level(total: int) -> str:
+    """Mirror helper.py thresholds so tests can validate level from parsed totals."""
+    if total < 8:
+        return "Simple"
+    if total < 15:
+        return "Medium"
+    return "Complex"
+
+
+def _parse_complexity_output(output: str) -> dict:
+    """Extract complexity metrics from analyzer output for stable assertions."""
+    metrics = {}
+    for label, count, pct in re.findall(
+        r"^(Actions|Rules|Directives):\s+(\d+)\s+\(([0-9.]+)%\)$",
+        output,
+        re.MULTILINE,
+    ):
+        metrics[label] = {"count": int(count), "pct": float(pct)}
+
+    total_match = re.search(r"^Total:\s+(\d+)$", output, re.MULTILINE)
+    level_match = re.search(r"^Complexity Level:\s+(\w+)$", output, re.MULTILINE)
+
+    return {
+        "metrics": metrics,
+        "total": int(total_match.group(1)) if total_match else None,
+        "level": level_match.group(1) if level_match else None,
+    }
 
 
 class TestSkillValidator:
@@ -290,8 +320,23 @@ class TestSkillTester:
         captured = capsys.readouterr()
         output = captured.out
         
-        # Should report on execution paths
-        assert "Happy Path" in output or "execution path" in output.lower()
+        paths = tester.skill.get("execution_paths", [])
+        assert len(paths) > 0
+
+        first_path = paths[0]
+        expected_steps = len(first_path.get("sequence", []))
+
+        assert re.search(r"Testing\s+\d+\s+execution path\(s\)", output)
+        assert f"Path: {first_path['path_name']}" in output
+        assert re.search(rf"Steps:\s+{expected_steps}\b", output)
+        assert "All elements found" in output
+
+        flow_match = re.search(r"Flow:\s+([^\n]+)", output)
+        assert flow_match is not None
+
+        flow_types = re.findall(r"(action|rule|directive|unknown)", flow_match.group(1))
+        expected_types = [tester._get_element_type(i) for i in first_path["sequence"]]
+        assert flow_types == expected_types
     
     def test_complexity_analysis(self, tester, capsys):
         """Test complexity analysis calculations"""
@@ -300,18 +345,39 @@ class TestSkillTester:
         captured = capsys.readouterr()
         output = captured.out
         
-        # Should show complexity metrics
-        assert "Actions:" in output
-        assert "Rules:" in output
-        assert "Directives:" in output
-        assert "Complexity Level:" in output
+        parsed = _parse_complexity_output(output)
+
+        expected_counts = {
+            "Actions": len(tester.decomposition.get("actions", [])),
+            "Rules": len(tester.decomposition.get("rules", [])),
+            "Directives": len(tester.decomposition.get("directives", [])),
+        }
+        expected_total = sum(expected_counts.values())
+
+        assert set(parsed["metrics"]) == {"Actions", "Rules", "Directives"}
+        assert parsed["total"] == expected_total
+        assert parsed["level"] == _expected_complexity_level(expected_total)
+
+        percentages = []
+        for label, expected_count in expected_counts.items():
+            assert parsed["metrics"][label]["count"] == expected_count
+            pct = parsed["metrics"][label]["pct"]
+            assert 0.0 <= pct <= 100.0
+            percentages.append(pct)
+
+        # Output is rounded to one decimal place, so use a small tolerance.
+        assert abs(sum(percentages) - 100.0) <= 0.2
     
-    def test_complexity_level_simple(self, tester):
+    def test_complexity_level_simple(self, tester, capsys):
         """Test complexity level calculation for simple skills"""
-        # Current test skill has 2 actions, 1 rule, 1 directive = 4 total
-        # Should be classified as "Simple" (< 8)
         tester.analyze_complexity()
-        # This is tested via output, implementation could be improved
+
+        output = capsys.readouterr().out
+        parsed = _parse_complexity_output(output)
+
+        assert parsed["total"] is not None
+        assert parsed["total"] < 8
+        assert parsed["level"] == "Simple"
 
 
 class TestTemplateGeneration:
@@ -394,7 +460,7 @@ class TestIntegrationWorkflows:
         assert result is True
         assert len(validator.errors) == 0
     
-    def test_template_generation_validation_testing_workflow(self, tmp_path):
+    def test_template_generation_validation_testing_workflow(self, tmp_path, capsys):
         """Test workflow: generate → validate → test"""
         # Step 1: Generate template
         template_path = tmp_path / "template.json"
@@ -407,9 +473,26 @@ class TestIntegrationWorkflows:
         
         # Step 3: Test execution paths
         tester = SkillTester(str(template_path))
-        # Should not raise exceptions
         tester.test_execution_paths()
         tester.analyze_complexity()
+
+        output = capsys.readouterr().out
+        with open(template_path) as f:
+            template = json.load(f)
+
+        first_path = template["execution_paths"][0]
+        assert f"Path: {first_path['path_name']}" in output
+        assert re.search(rf"Steps:\s+{len(first_path['sequence'])}\b", output)
+        assert "All elements found" in output
+
+        parsed = _parse_complexity_output(output)
+        expected_total = (
+            len(template["decomposition"]["actions"])
+            + len(template["decomposition"]["rules"])
+            + len(template["decomposition"]["directives"])
+        )
+        assert parsed["total"] == expected_total
+        assert parsed["level"] == _expected_complexity_level(expected_total)
     
     def test_tool_equivalence_validator_consistency(self, valid_skill_path="tests/fixtures/valid_skill.json"):
         """Test validator produces consistent results (tool equivalence)"""
