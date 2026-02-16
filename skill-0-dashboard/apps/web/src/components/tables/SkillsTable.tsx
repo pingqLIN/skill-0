@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpDown, ExternalLink } from 'lucide-react';
+import { ArrowUpDown } from 'lucide-react';
 import type { SkillSummary } from '@/api/types';
 
 const riskColors: Record<string, string> = {
@@ -27,17 +27,11 @@ interface Props {
   onSort: (column: string) => void;
 }
 
-interface SortHeaderProps {
-  column: string;
-  label: string;
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
-  onSort: (column: string) => void;
-}
+export function SkillsTable({ data, sortBy, sortOrder, onSort }: Props) {
+  const navigate = useNavigate();
 
-function SortHeader({ column, label, sortBy, sortOrder, onSort }: SortHeaderProps) {
-  return (
-    <TableHead
+  const SortHeader = ({ column, label }: { column: string; label: string }) => (
+    <TableHead 
       className="cursor-pointer hover:bg-slate-50"
       onClick={() => onSort(column)}
     >
@@ -49,23 +43,18 @@ function SortHeader({ column, label, sortBy, sortOrder, onSort }: SortHeaderProp
       </div>
     </TableHead>
   );
-}
-
-export function SkillsTable({ data, sortBy, sortOrder, onSort }: Props) {
-  const navigate = useNavigate();
 
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <SortHeader column="name" label="Name" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
-          <SortHeader column="risk_score" label="Risk" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
+          <SortHeader column="name" label="Name" />
+          <SortHeader column="risk_score" label="Risk" />
           <TableHead>Equivalence</TableHead>
-          <SortHeader column="status" label="Status" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
+          <SortHeader column="status" label="Status" />
           <TableHead>Author</TableHead>
           <TableHead>License</TableHead>
-          <TableHead>Source</TableHead>
-          <SortHeader column="updated_at" label="Updated" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
+          <SortHeader column="updated_at" label="Updated" />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -93,22 +82,6 @@ export function SkillsTable({ data, sortBy, sortOrder, onSort }: Props) {
             </TableCell>
             <TableCell>{skill.author_name}</TableCell>
             <TableCell>{skill.license_spdx}</TableCell>
-            <TableCell>
-              {skill.source_url ? (
-                <a
-                  href={skill.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 transition-colors"
-                  onClick={(e) => e.stopPropagation()}
-                  title={skill.source_url}
-                >
-                  <ExternalLink className="h-4 w-4" />
-                </a>
-              ) : (
-                <span className="text-muted-foreground">-</span>
-              )}
-            </TableCell>
             <TableCell>{new Date(skill.updated_at).toLocaleDateString()}</TableCell>
           </TableRow>
         ))}

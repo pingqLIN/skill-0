@@ -4,7 +4,7 @@
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Schema Version](https://img.shields.io/badge/schema-v2.1.0-green.svg)](schema/skill-decomposition.schema.json)
+[![Schema Version](https://img.shields.io/badge/schema-v2.2.0-green.svg)](schema/skill-decomposition.schema.json)
 
 ## Overview
 
@@ -281,8 +281,6 @@ Comprehensive documentation is available:
 - **[examples.md](examples.md)** - 7 detailed skill examples across different domains
 - **[AGENTS.md](AGENTS.md)** - Guidelines for AI agents working on this project
 - **[scripts/helper.py](scripts/helper.py)** - Helper utilities for validation, conversion, and testing
-- **[docs/skill-0-vs-claude-code-simplifier.md](docs/skill-0-vs-claude-code-simplifier.md)** - Comparison with Claude Code Simplifier (EN)
-- **[docs/skill-0-vs-claude-code-simplifier.zh-TW.md](docs/skill-0-vs-claude-code-simplifier.zh-TW.md)** - 與 Claude Code Simplifier 比較 (zh-TW)
 
 ### Quick Start Guide
 
@@ -304,12 +302,30 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 
 ## Version
 
-- Schema Version: 2.0.0
+- Schema Version: 2.2.0
+- Project Version: 2.4.0
 - Created: 2026-01-23
-- Updated: 2026-01-26
+- Updated: 2026-01-30
 - Author: pingqLIN
 
 ## Changelog
+
+### v2.4.0 (2026-01-30) - GitHub Skills Discovery & Resource Dependencies
+- **Schema Update**: v2.1.0 → v2.2.0
+  - Added `resource_dependency` definition type with 8 resource categories
+  - Resources can be defined at meta (global) and action levels
+  - Support for database, API, filesystem, GPU, memory, credentials, network, environment
+  - Includes specification details, fallback strategies, and required flags
+- **GitHub Skills Search**: Discovered 75+ repositories aligning with skill-0 goals
+  - Top 30 projects documented (MCP servers, Claude skills, AI frameworks)
+  - MCP ecosystem: 4,509 repositories found
+  - Top repository: awesome-mcp-servers (79,994 ⭐)
+  - License analysis and compatibility verification
+- **New Documentation**:
+  - `docs/github-skills-search-report.md` - Comprehensive search report
+  - `docs/github-skills-search-results.json` - Structured project data
+  - `examples/database-query-analyzer-with-resources.json` - Resource example
+  - `tools/github_skill_search.py` - GitHub search utility
 
 ### v2.3.0 (2026-01-28) - Testing & Quality Assurance
 - **New Feature**: Comprehensive automated test suite

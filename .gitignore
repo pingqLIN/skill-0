@@ -53,11 +53,3 @@ htmlcov/
 .coverage
 .coverage.*
 .pytest_cache/
-
-# Backup files
-*.bak
-*.old
-*.tmp
-
-# Diagnostic files (files starting with ##, using character class to avoid comment interpretation)
-[#][#]*

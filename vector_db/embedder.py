@@ -4,56 +4,10 @@ Skill Embedder - 將 skill 定義轉換為向量嵌入
 """
 
 import json
-import logging
-import os
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 from sentence_transformers import SentenceTransformer
 import numpy as np
-
-logger = logging.getLogger(__name__)
-
-
-def _resolve_device() -> str:
-    """
-    決定推理裝置。
-
-    優先順序:
-    1. 環境變數 SKILL0_DEVICE (cpu / cuda / auto)
-    2. 自動偵測 CUDA 可用性，不可用則回退到 CPU
-    """
-    env_device = os.environ.get("SKILL0_DEVICE", "auto").strip().lower()
-
-    if env_device == "cpu":
-        logger.info("SKILL0_DEVICE=cpu — 使用 CPU 模式")
-        return "cpu"
-
-    if env_device == "cuda":
-        # 用戶明確要求 CUDA，仍做安全檢查
-        try:
-            import torch
-            if torch.cuda.is_available():
-                # 測試真正能跑 kernel
-                torch.zeros(1, device="cuda")
-                logger.info("SKILL0_DEVICE=cuda — CUDA 可用")
-                return "cuda"
-            else:
-                logger.warning("SKILL0_DEVICE=cuda 但 CUDA 不可用，回退到 CPU")
-                return "cpu"
-        except Exception as exc:
-            logger.warning("SKILL0_DEVICE=cuda 但偵測失敗 (%s)，回退到 CPU", exc)
-            return "cpu"
-
-    # auto (預設)
-    try:
-        import torch
-        if torch.cuda.is_available():
-            torch.zeros(1, device="cuda")
-            logger.info("自動偵測: CUDA 可用")
-            return "cuda"
-    except Exception as exc:
-        logger.info("自動偵測: CUDA 不可用 (%s)，使用 CPU", exc)
-    return "cpu"
 
 
 class SkillEmbedder:
@@ -67,9 +21,7 @@ class SkillEmbedder:
             model_name: sentence-transformers 模型名稱
                        預設使用 all-MiniLM-L6-v2 (384 維, 快速且高效)
         """
-        device = _resolve_device()
-        self.device = device
-        self.model = SentenceTransformer(model_name, device=device)
+        self.model = SentenceTransformer(model_name)
         self.dimension = self.model.get_sentence_embedding_dimension()
         
     def skill_to_text(self, skill: Dict) -> str:

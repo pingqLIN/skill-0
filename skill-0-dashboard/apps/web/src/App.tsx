@@ -5,7 +5,6 @@ import { SkillsList } from './pages/SkillsList';
 import { ReviewQueue } from './pages/ReviewQueue';
 import { AuditLog } from './pages/AuditLog';
 import { SkillDetail } from './pages/SkillDetail';
-import { Security } from './pages/Security';
 
 const queryClient = new QueryClient();
 
@@ -18,7 +17,6 @@ function App() {
           <Route path="/skills" element={<SkillsList />} />
           <Route path="/skills/:skillId" element={<SkillDetail />} />
           <Route path="/review" element={<ReviewQueue />} />
-          <Route path="/security" element={<Security />} />
           <Route path="/audit" element={<AuditLog />} />
         </Routes>
       </BrowserRouter>

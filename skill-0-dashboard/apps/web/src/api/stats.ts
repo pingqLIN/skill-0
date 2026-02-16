@@ -1,11 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from './client';
-import type {
-  StatsOverview,
-  RiskDistribution,
-  StatusDistribution,
-  FindingsByRule,
-} from './types';
+import type { StatsOverview, RiskDistribution, StatusDistribution } from './types';
 
 export function useStats() {
   return useQuery<StatsOverview>({
@@ -33,16 +28,6 @@ export function useStatusDistribution() {
     queryKey: ['stats', 'status-distribution'],
     queryFn: async () => {
       const { data } = await api.get('/api/stats/status-distribution');
-      return data;
-    },
-  });
-}
-
-export function useFindingsByRule() {
-  return useQuery<FindingsByRule[]>({
-    queryKey: ['stats', 'findings-by-rule'],
-    queryFn: async () => {
-      const { data } = await api.get('/api/stats/findings-by-rule');
       return data;
     },
   });
