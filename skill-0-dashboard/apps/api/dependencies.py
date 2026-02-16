@@ -8,3 +8,4 @@ from .services.governance import GovernanceService
 def get_governance_service() -> GovernanceService:
     """Get a cached GovernanceService instance"""
     return GovernanceService()
+

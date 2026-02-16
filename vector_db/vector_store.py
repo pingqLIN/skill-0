@@ -178,7 +178,7 @@ class VectorStore:
             SELECT 
                 s.id, s.name, s.filename, s.description, s.category,
                 s.action_count, s.rule_count, s.directive_count,
-                e.distance
+                s.raw_json, e.distance
             FROM skill_embeddings e
             JOIN skills s ON e.rowid = s.id
             WHERE e.embedding MATCH ? AND k = ?
@@ -191,7 +191,7 @@ class VectorStore:
         """按類別搜尋 skills"""
         results = self.conn.execute('''
             SELECT id, name, filename, description, category,
-                   action_count, rule_count, directive_count
+                   action_count, rule_count, directive_count, raw_json
             FROM skills
             WHERE category = ?
             LIMIT ?
@@ -202,8 +202,9 @@ class VectorStore:
     def get_all_skills(self) -> List[Dict]:
         """取得所有 skills 的基本資訊"""
         results = self.conn.execute('''
-            SELECT id, name, filename, description, category,
-                   action_count, rule_count, directive_count
+            SELECT id, name, filename, description, category, version,
+                   action_count, rule_count, directive_count, raw_json,
+                   created_at
             FROM skills
             ORDER BY name
         ''').fetchall()
@@ -218,8 +219,8 @@ class VectorStore:
             ).fetchone()
         else:
             result = self.conn.execute('''
-                SELECT id, name, filename, description, category,
-                       action_count, rule_count, directive_count
+                SELECT id, name, filename, description, category, version,
+                       action_count, rule_count, directive_count, created_at
                 FROM skills WHERE id = ?
             ''', (skill_id,)).fetchone()
             
