@@ -5,17 +5,14 @@ This service provides a clean interface for the API routers to interact
 with the underlying governance database.
 """
 
-import os
 import sys
 import json
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
-TOOLS_DIR = Path(os.getenv(
-    "SKILL0_TOOLS_PATH",
-    str(Path(__file__).parent.parent.parent.parent.parent / "tools"),
-))
+# Add tools directory to path to import governance_db
+TOOLS_DIR = Path(__file__).parent.parent.parent.parent.parent / "tools"
 sys.path.insert(0, str(TOOLS_DIR))
 
 from governance_db import GovernanceDB, SkillRecord
@@ -25,10 +22,7 @@ class GovernanceService:
     """Service layer for governance operations"""
 
     def __init__(self):
-        db_path = Path(os.getenv(
-            "SKILL0_GOVERNANCE_DB_PATH",
-            str(TOOLS_DIR.parent / "governance" / "db" / "governance.db"),
-        ))
+        db_path = TOOLS_DIR.parent / "governance" / "db" / "governance.db"
         self.db = GovernanceDB(db_path=db_path)
 
     # ============ Statistics ============
@@ -193,30 +187,10 @@ class GovernanceService:
             "equivalence_score": skill.equivalence_score,
             "author_name": skill.author_name,
             "author_email": skill.author_email,
-            "author_url": skill.author_url,
-            "author_org": skill.author_org,
             "license_spdx": skill.license_spdx,
-            "license_url": skill.license_url,
-            "requires_attribution": skill.requires_attribution,
-            "commercial_allowed": skill.commercial_allowed,
-            "modification_allowed": skill.modification_allowed,
             "source_type": skill.source_type or "local",
             "source_path": skill.source_path or "",
             "source_url": skill.source_url or "",
-            "source_commit": skill.source_commit,
-            "original_format": skill.original_format,
-            "fetched_at": skill.fetched_at,
-            "converted_at": skill.converted_at,
-            "converter_version": skill.converter_version,
-            "target_format": skill.target_format,
-            "security_scanned_at": skill.security_scanned_at,
-            "scanner_version": skill.scanner_version,
-            "approved_by": skill.approved_by,
-            "approved_at": skill.approved_at,
-            "equivalence_tested_at": skill.equivalence_tested_at,
-            "equivalence_passed": skill.equivalence_passed,
-            "installed_path": skill.installed_path,
-            "installed_at": skill.installed_at,
             "created_at": skill.created_at,
             "updated_at": skill.updated_at,
             "security_findings": [
@@ -290,10 +264,6 @@ class GovernanceService:
             "equivalence_score": skill.equivalence_score,
             "author_name": skill.author_name,
             "license_spdx": skill.license_spdx,
-            "source_url": skill.source_url or "",
-            "source_type": skill.source_type or "local",
-            "version": skill.version or "1.0.0",
-            "created_at": skill.created_at,
             "updated_at": skill.updated_at,
         }
 

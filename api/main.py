@@ -3,118 +3,22 @@ Skill-0 REST API
 FastAPI integration with vector search and analysis features
 """
 
-from fastapi import FastAPI, HTTPException, Query, Depends, Request
-<<<<<<< Updated upstream
-=======
-from fastapi.responses import Response, JSONResponse
->>>>>>> Stashed changes
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any, TYPE_CHECKING
+from typing import List, Optional, Dict, Any
 import os
-import logging
 from pathlib import Path
-import time
-from urllib.parse import urlparse
-
-logger = logging.getLogger(__name__)
 
 # Ensure vector_db module can be found
 import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-if TYPE_CHECKING:
-    from vector_db import SemanticSearch
+from vector_db import SemanticSearch
 
 # Configuration
 DB_PATH = os.getenv('SKILL0_DB_PATH', 'skills.db')
 PARSED_DIR = os.getenv('SKILL0_PARSED_DIR', 'parsed')
-SKILL0_ENV = os.getenv('SKILL0_ENV', 'development').lower()
-DEFAULT_JWT_SECRET_KEY = 'dev-secret-change-in-production'
-CORS_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv(
-        'CORS_ORIGINS',
-        'http://localhost:5173,http://localhost:3000',
-    ).split(',')
-    if origin.strip()
-]
-JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', DEFAULT_JWT_SECRET_KEY)
-JWT_ALGORITHM = os.getenv('JWT_ALGORITHM', 'HS256')
-JWT_EXPIRE_MINUTES = int(os.getenv('JWT_EXPIRE_MINUTES', '30'))
-API_RATE_LIMIT = os.getenv('API_RATE_LIMIT', '100/minute')
-AUTH_RATE_LIMIT = os.getenv('AUTH_RATE_LIMIT', '10/minute')
-API_USERNAME_ENV = "API_USERNAME"
-API_PASSWORD_ENV = "API_PASSWORD"
-
-# Startup timestamp (module import time)
-_startup_time = time.time()
-
-
-def is_production_env(env_value: str) -> bool:
-    """Return True when environment value represents production."""
-    return env_value.strip().lower() in {'production', 'prod'}
-
-
-def _is_local_origin(origin: str) -> bool:
-    """Detect localhost/loopback or wildcard CORS entries."""
-    if origin.strip() == '*':
-        return True
-
-    parsed = urlparse(origin)
-    host = (parsed.hostname or '').lower()
-    return host in {'localhost', '127.0.0.1', '::1'}
-
-
-def find_production_security_issues(
-    env_value: str,
-    cors_origins: List[str],
-    jwt_secret_key: str,
-    default_jwt_secret_key: str,
-    configured_username: Optional[str],
-    configured_password: Optional[str],
-) -> List[str]:
-    """Enumerate production security misconfigurations."""
-    if not is_production_env(env_value):
-        return []
-
-    issues: List[str] = []
-
-    if jwt_secret_key == default_jwt_secret_key:
-        issues.append('JWT_SECRET_KEY must not use the development default in production')
-
-    insecure_origins = [origin for origin in cors_origins if _is_local_origin(origin)]
-    if insecure_origins:
-        issues.append(
-            f'CORS_ORIGINS must not include localhost/wildcard in production: {", ".join(insecure_origins)}'
-        )
-
-    if not configured_username or not configured_password:
-        issues.append(
-            'API_USERNAME and API_PASSWORD must both be configured in production'
-        )
-
-    return issues
-
-
-def enforce_production_security_configuration() -> None:
-    """Fail fast when production security settings are unsafe."""
-    issues = find_production_security_issues(
-        env_value=SKILL0_ENV,
-        cors_origins=CORS_ORIGINS,
-        jwt_secret_key=JWT_SECRET_KEY,
-        default_jwt_secret_key=DEFAULT_JWT_SECRET_KEY,
-        configured_username=os.getenv(API_USERNAME_ENV),
-        configured_password=os.getenv(API_PASSWORD_ENV),
-    )
-    if issues:
-        raise RuntimeError(
-            'Invalid production security configuration: ' + '; '.join(issues)
-        )
-
-
-enforce_production_security_configuration()
 
 # FastAPI application
 app = FastAPI(
@@ -125,248 +29,23 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
-# CORS — controlled by CORS_ORIGINS env var
+# CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=CORS_ORIGINS,
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-
-<<<<<<< Updated upstream
-=======
-# ==================== Prometheus Metrics ====================
-
-from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
-
-REQUEST_COUNT = Counter(
-    "skill0_http_requests_total",
-    "Total HTTP requests",
-    ["method", "endpoint", "status"],
-)
-REQUEST_LATENCY = Histogram(
-    "skill0_http_request_duration_seconds",
-    "HTTP request latency in seconds",
-    ["method", "endpoint"],
-    buckets=[0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5, 5.0],
-)
-SEARCH_LATENCY = Histogram(
-    "skill0_search_duration_seconds",
-    "Search operation latency in seconds",
-)
-
-
-@app.middleware("http")
-async def request_middleware(request: Request, call_next):
-    """Add request ID, structured logging, and metrics to every request"""
-    rid = generate_request_id()
-    request_id_var.set(rid)
-    start = time.time()
-    method = request.method
-    path = request.url.path
-
-    logger.info("request_started", method=method, path=path)
-
-    # Apply baseline API rate limit to non-health/docs endpoints.
-    if not _is_rate_limit_exempt_path(path):
-        try:
-            await check_rate_limit(request)
-        except HTTPException as exc:
-            duration = time.time() - start
-            response = JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
-            response.headers["X-Request-ID"] = rid
-            REQUEST_COUNT.labels(method=method, endpoint=path, status=exc.status_code).inc()
-            REQUEST_LATENCY.labels(method=method, endpoint=path).observe(duration)
-            logger.warning(
-                "request_rate_limited",
-                method=method,
-                path=path,
-                status=exc.status_code,
-                duration_ms=round(duration * 1000, 2),
-            )
-            return response
-
-    response = await call_next(request)
-
-    duration = time.time() - start
-    status = response.status_code
-    response.headers["X-Request-ID"] = rid
-
-    REQUEST_COUNT.labels(method=method, endpoint=path, status=status).inc()
-    REQUEST_LATENCY.labels(method=method, endpoint=path).observe(duration)
-
-    logger.info(
-        "request_completed",
-        method=method,
-        path=path,
-        status=status,
-        duration_ms=round(duration * 1000, 2),
-    )
-    return response
-
-
-@app.get("/metrics", tags=["Monitoring"], include_in_schema=False)
-async def prometheus_metrics():
-    """Prometheus metrics endpoint"""
-    return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
-
-
->>>>>>> Stashed changes
-# ==================== Rate Limiting ====================
-
-from collections import defaultdict
-import asyncio
-
-_rate_limit_store: Dict[str, list] = defaultdict(list)
-_rate_lock = asyncio.Lock()
-
-RATE_LIMIT_EXEMPT_PATHS = {
-    '/',
-    '/health',
-    '/api/health/detail',
-    '/metrics',
-    '/docs',
-    '/redoc',
-    '/openapi.json',
-}
-
-
-def _is_rate_limit_exempt_path(path: str) -> bool:
-    """Paths exempt from API baseline rate limiting."""
-    if path in RATE_LIMIT_EXEMPT_PATHS:
-        return True
-    return path.startswith('/docs/') or path.startswith('/redoc/')
-
-
-def _parse_rate_limit(limit_str: str) -> tuple:
-    """Parse rate limit string like '100/minute' -> (100, 60)"""
-    parts = limit_str.split('/')
-    if not parts or not parts[0].isdigit():
-        raise ValueError(f"Invalid rate limit format: {limit_str}")
-    count = int(parts[0])
-    period_map = {'second': 1, 'minute': 60, 'hour': 3600}
-    if len(parts) == 1:
-        period = 60
-    else:
-        if parts[1] not in period_map:
-            raise ValueError(f"Invalid rate limit window: {limit_str}")
-        period = period_map[parts[1]]
-    return count, period
-
-
-async def check_rate_limit(request: Request):
-    """Rate limit dependency for baseline API traffic."""
-    await _enforce_rate_limit(request=request, limit_str=API_RATE_LIMIT, scope='api')
-
-
-async def check_auth_rate_limit(request: Request):
-    """Stricter rate limit dependency for auth token endpoint."""
-    await _enforce_rate_limit(request=request, limit_str=AUTH_RATE_LIMIT, scope='auth')
-
-
-async def _enforce_rate_limit(request: Request, limit_str: str, scope: str):
-    """Shared rate-limit implementation with scope separation."""
-    client_ip = request.client.host if request.client else "unknown"
-    try:
-        max_requests, period = _parse_rate_limit(limit_str)
-    except ValueError as exc:
-        logger.error(
-            "invalid_rate_limit_configuration",
-            scope=scope,
-            limit=limit_str,
-            error=str(exc),
-        )
-        raise HTTPException(status_code=500, detail="Rate limit misconfiguration")
-    now = time.time()
-    bucket_key = f"{scope}:{client_ip}"
-
-    async with _rate_lock:
-        # Purge expired entries
-        _rate_limit_store[bucket_key] = [
-            t for t in _rate_limit_store[bucket_key] if now - t < period
-        ]
-        if len(_rate_limit_store[bucket_key]) >= max_requests:
-            raise HTTPException(
-                status_code=429,
-                detail=f"Rate limit exceeded ({scope}). Max {max_requests} requests per {period}s.",
-            )
-        _rate_limit_store[bucket_key].append(now)
-
-
-# ==================== JWT Authentication ====================
-
-import jwt
-from datetime import datetime, timedelta, timezone
-
-security = HTTPBearer(auto_error=False)
-
-
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-    """Create a JWT access token"""
-    to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=JWT_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
-
-
-def decode_access_token(token: str) -> dict:
-    """Decode and validate a JWT token"""
-    try:
-        return jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
-    except jwt.ExpiredSignatureError:
-        raise HTTPException(status_code=401, detail="Token has expired")
-    except jwt.InvalidTokenError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-
-async def require_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):
-    """Dependency that requires valid JWT for protected endpoints"""
-    if credentials is None:
-        raise HTTPException(status_code=401, detail="Authentication required")
-    return decode_access_token(credentials.credentials)
-
-
-def validate_login_credentials(username: str, password: str) -> bool:
-    """Validate API login credentials from environment configuration."""
-    configured_username = os.getenv(API_USERNAME_ENV)
-    configured_password = os.getenv(API_PASSWORD_ENV)
-
-    if not configured_username or not configured_password:
-        logger.error(
-            "auth_configuration_missing",
-            username_env=API_USERNAME_ENV,
-            password_env=API_PASSWORD_ENV,
-            username_configured=bool(configured_username),
-            password_configured=bool(configured_password),
-        )
-        raise HTTPException(
-            status_code=503,
-            detail=(
-                "Authentication is not configured. "
-                "Set API_USERNAME and API_PASSWORD environment variables."
-            ),
-        )
-
-    return username == configured_username and password == configured_password
-
 # Global search engine (lazy initialization)
-search_engine: Optional["SemanticSearch"] = None
+search_engine: Optional[SemanticSearch] = None
 
 
-def _load_semantic_search_class():
-    """Lazy-load SemanticSearch to avoid heavy ML imports at API startup."""
-    from vector_db import SemanticSearch
-
-    return SemanticSearch
-
-
-def get_search_engine() -> "SemanticSearch":
+def get_search_engine() -> SemanticSearch:
     """Get or initialize search engine"""
     global search_engine
     if search_engine is None:
-        SemanticSearch = _load_semantic_search_class()
         search_engine = SemanticSearch(db_path=DB_PATH)
     return search_engine
 
@@ -380,11 +59,9 @@ class SkillResult(BaseModel):
     filename: str
     description: Optional[str] = None
     category: Optional[str] = None
-    version: Optional[str] = None
     action_count: int = 0
     rule_count: int = 0
     directive_count: int = 0
-    created_at: Optional[str] = None
     similarity: Optional[float] = None
     distance: Optional[float] = None
 
@@ -472,63 +149,6 @@ async def health_check():
         }
     except Exception as e:
         raise HTTPException(status_code=503, detail=f"Service unavailable: {str(e)}")
-
-
-class HealthDetailResponse(BaseModel):
-    """Detailed health check response"""
-    status: str = Field(..., description="Overall health status: healthy or degraded")
-    db_path: str
-    db_exists: bool
-    db_size_bytes: int
-    total_skills: int
-    embedding_model: str
-    uptime_seconds: float
-    version: str = Field("2.1.0", description="API version")
-
-
-@app.get("/api/health/detail", response_model=HealthDetailResponse, tags=["Health"])
-async def health_detail():
-    """Detailed health check including DB and runtime metrics"""
-    # Basic, best-effort values
-    db_path = DB_PATH
-    db_exists = Path(db_path).exists()
-    try:
-        db_size_bytes = Path(db_path).stat().st_size if db_exists else 0
-    except Exception:
-        db_size_bytes = 0
-
-    # Uptime since startup
-    uptime_seconds = max(0.0, time.time() - _startup_time)
-
-    # Defaults (in case engine fails)
-    total_skills = 0
-    embedding_model = "unknown"
-    status = "healthy"
-    try:
-        engine = get_search_engine()
-        stats = engine.get_statistics()
-        if isinstance(stats, dict):
-            total_skills = int(stats.get('total_skills', 0))
-            embedding_model = stats.get('model_name', 'unknown') or 'unknown'
-        else:
-            total_skills = 0
-            embedding_model = 'unknown'
-    except Exception:
-        # Degraded state if the engine cannot be queried
-        status = "degraded"
-        total_skills = 0
-        embedding_model = "unknown"
-
-    return HealthDetailResponse(
-        status=status,
-        db_path=db_path,
-        db_exists=db_exists,
-        db_size_bytes=db_size_bytes,
-        total_skills=total_skills,
-        embedding_model=embedding_model,
-        uptime_seconds=uptime_seconds,
-        version="2.1.0",
-    )
 
 
 @app.post("/api/search", response_model=SearchResponse, tags=["Search"])
@@ -707,9 +327,9 @@ async def get_skill_by_id(
 
 
 @app.post("/api/index", response_model=IndexResponse, tags=["Admin"])
-async def index_skills(request: IndexRequest, _user: dict = Depends(require_auth)):
+async def index_skills(request: IndexRequest):
     """
-    Re-index Skills (requires authentication)
+    Re-index Skills
     
     Rebuild vector index from parsed directory.
     """
@@ -729,49 +349,6 @@ async def index_skills(request: IndexRequest, _user: dict = Depends(require_auth
         elapsed_seconds=round(elapsed, 3),
         message=f"Successfully indexed {count} skills"
     )
-
-
-# ==================== Auth Endpoints ====================
-
-class TokenRequest(BaseModel):
-    """Token request"""
-    username: str = Field(..., description="Username")
-    password: str = Field(..., description="Password")
-
-
-class TokenResponse(BaseModel):
-    """Token response"""
-    access_token: str
-    token_type: str = "bearer"
-    expires_in: int
-
-
-@app.post("/api/auth/token", response_model=TokenResponse, tags=["Auth"])
-async def login(
-    request: TokenRequest,
-    _auth_rate_limit: None = Depends(check_auth_rate_limit),
-):
-    """
-    Get access token
-
-    Validates credentials against environment variables:
-    API_USERNAME and API_PASSWORD.
-    """
-    if not validate_login_credentials(request.username, request.password):
-        logger.warning("login_failed", username=request.username)
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    token = create_access_token({"sub": request.username})
-    return TokenResponse(
-        access_token=token,
-        expires_in=JWT_EXPIRE_MINUTES * 60,
-    )
-
-
-@app.get("/api/auth/me", tags=["Auth"])
-async def get_current_user(user: dict = Depends(require_auth)):
-    """Get current authenticated user info"""
-    return {"username": user.get("sub"), "exp": user.get("exp")}
 
 
 # ==================== Startup ====================

@@ -4,17 +4,10 @@ Skill-0 Governance Dashboard API
 FastAPI application providing REST APIs for the governance dashboard.
 """
 
-import os
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import stats, skills, reviews, scans, audit
-
-# CORS origins from environment variable
-CORS_ORIGINS = os.getenv(
-    "CORS_ORIGINS", "http://localhost:5173,http://localhost:3000"
-).split(",")
 
 app = FastAPI(
     title="Skill-0 Governance Dashboard API",
@@ -24,10 +17,10 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# Configure CORS — controlled by CORS_ORIGINS env var
+# Configure CORS for development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o.strip() for o in CORS_ORIGINS if o.strip()],
+    allow_origins=["*"],  # For development - restrict in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
