@@ -24,6 +24,13 @@ export interface StatusDistribution {
   blocked: number;
 }
 
+export interface FindingsByRule {
+  rule_id: string;
+  rule_name: string;
+  severity: string;
+  count: number;
+}
+
 export interface SkillSummary {
   skill_id: string;
   name: string;
@@ -33,6 +40,10 @@ export interface SkillSummary {
   equivalence_score: number | null;
   author_name: string;
   license_spdx: string;
+  source_url: string;
+  source_type: string | null;
+  version: string;
+  created_at: string | null;
   updated_at: string;
 }
 
@@ -43,6 +54,17 @@ export interface SecurityFinding {
   line_number: number;
   line_content: string;
   file_path: string;
+  // Context-aware fields
+  original_severity: string | null;
+  adjusted_severity: string | null;
+  severity_changed: boolean;
+  context_type: string | null;
+  in_code_block: boolean;
+  code_block_language: string | null;
+  adjustment_reason: string | null;
+  // Detection standard reference
+  detection_standard: string | null;
+  standard_url: string | null;
 }
 
 export interface ScanSummary {
@@ -51,6 +73,26 @@ export interface ScanSummary {
   risk_level: string;
   risk_score: number;
   findings_count: number;
+}
+
+export interface ScanListItem extends ScanSummary {
+  skill_id: string;
+  skill_name: string;
+  files_scanned: number;
+  blocked: boolean;
+  blocked_reason: string | null;
+}
+
+export interface ScanDetail extends ScanSummary {
+  findings: SecurityFinding[];
+  files_scanned: number;
+  blocked: boolean;
+  blocked_reason: string | null;
+  original_risk_score: number | null;
+  code_blocks_found: number;
+  findings_in_code_blocks: number;
+  severity_adjustments: number;
+  scanner_version: string | null;
 }
 
 export interface TestSummary {
@@ -68,18 +110,43 @@ export interface AuditEvent {
   event_type: string;
   actor: string;
   timestamp: string;
-  details: string;
+  skill_id: string | null;
+  skill_name: string | null;
+  details: Record<string, unknown> | null;
 }
 
 export interface SkillDetail extends SkillSummary {
-  version: string;
-  source_type: string;
   source_path: string;
-  source_url: string;
+  source_commit: string | null;
+  original_format: string | null;
+  fetched_at: string | null;
   author_email: string | null;
-  created_at: string;
+  author_url: string | null;
+  author_org: string | null;
+  license_url: string | null;
+  requires_attribution: boolean;
+  commercial_allowed: boolean;
+  modification_allowed: boolean;
+  converted_at: string | null;
+  converter_version: string | null;
+  target_format: string | null;
+  security_scanned_at: string | null;
+  scanner_version: string | null;
+  approved_by: string | null;
+  approved_at: string | null;
+  equivalence_tested_at: string | null;
+  equivalence_passed: boolean | null;
+  installed_path: string | null;
+  installed_at: string | null;
   security_findings: SecurityFinding[];
   scan_history: ScanSummary[];
   test_history: TestSummary[];
   audit_events: AuditEvent[];
+}
+
+export interface AuditListResponse {
+  items: AuditEvent[];
+  total: number;
+  page: number;
+  page_size: number;
 }
