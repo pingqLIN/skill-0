@@ -4,10 +4,7 @@ FastAPI integration with vector search and analysis features
 """
 
 from fastapi import FastAPI, HTTPException, Query, Depends, Request
-<<<<<<< Updated upstream
-=======
 from fastapi.responses import Response, JSONResponse
->>>>>>> Stashed changes
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
@@ -135,8 +132,6 @@ app.add_middleware(
 )
 
 
-<<<<<<< Updated upstream
-=======
 # ==================== Prometheus Metrics ====================
 
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
@@ -213,7 +208,6 @@ async def prometheus_metrics():
     return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
->>>>>>> Stashed changes
 # ==================== Rate Limiting ====================
 
 from collections import defaultdict
