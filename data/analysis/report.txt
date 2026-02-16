@@ -1,0 +1,161 @@
+============================================================
+📊 Skill-0 結構分析報告
+============================================================
+產生時間: 2026-02-01T08:32:22.849176
+分析 Skills 數量: 32
+
+📈 元素統計
+----------------------------------------
+  Action 總數: 209
+  Rule 總數: 80
+  Directive 總數: 110
+
+🎬 Action 類型分布:
+  - transform: 53
+  - llm_inference: 37
+  - external_call: 35
+  - io_read: 33
+  - io_write: 31
+  - compute: 10
+  - await_input: 8
+  - state_change: 2
+
+📌 Directive 類型分布:
+  - completion: 35
+  - knowledge: 32
+  - principle: 21
+  - strategy: 10
+  - constraint: 9
+  - preference: 3
+
+📋 各 Skill 摘要
+----------------------------------------
+  [claude__webapp_testing] webapp-testing
+    Actions: 5, Rules: 2, Directives: 2
+    有執行流程: ✗
+
+  [claude__connect_apps_plugin] connect-apps-plugin
+    Actions: 9, Rules: 1, Directives: 1
+    有執行流程: ✗
+
+  [claude__composio__invoice_organizer] invoice-organizer
+    Actions: 8, Rules: 4, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__slack_gif_creator] slack-gif-creator
+    Actions: 7, Rules: 3, Directives: 5
+    有執行流程: ✗
+
+  [claude__composio__competitive_ads_extractor] competitive-ads-extractor
+    Actions: 7, Rules: 2, Directives: 3
+    有執行流程: ✗
+
+  [claude__internal_comms] internal-comms
+    Actions: 3, Rules: 1, Directives: 2
+    有執行流程: ✗
+
+  [claude__pptx] pptx
+    Actions: 6, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__theme_factory] theme-factory
+    Actions: 6, Rules: 2, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__raffle_winner_picker] raffle-winner-picker
+    Actions: 9, Rules: 4, Directives: 5
+    有執行流程: ✗
+
+  [claude__skill_creator] skill-creator
+    Actions: 5, Rules: 2, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__connect_apps] connect-apps
+    Actions: 5, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__content_research_writer] content-research-writer
+    Actions: 7, Rules: 1, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__developer_growth_analysis] developer-growth-analysis
+    Actions: 6, Rules: 2, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__langsmith_fetch] langsmith-fetch
+    Actions: 6, Rules: 4, Directives: 4
+    有執行流程: ✗
+
+  [claude__file_organizer] file-organizer
+    Actions: 6, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__pdf] pdf
+    Actions: 10, Rules: 2, Directives: 2
+    有執行流程: ✗
+
+  [claude__canvas_design] canvas-design
+    Actions: 5, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__anthropic__pdf] pdf
+    Actions: 10, Rules: 3, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__brand_guidelines] brand-guidelines
+    Actions: 5, Rules: 2, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__twitter_algorithm_optimizer] twitter-algorithm-optimizer
+    Actions: 6, Rules: 1, Directives: 5
+    有執行流程: ✗
+
+  [claude__image_enhancer] image-enhancer
+    Actions: 5, Rules: 2, Directives: 2
+    有執行流程: ✗
+
+  [claude__composio__tailored_resume_generator] tailored-resume-generator
+    Actions: 8, Rules: 3, Directives: 5
+    有執行流程: ✗
+
+  [claude__composio__changelog_generator] changelog-generator
+    Actions: 6, Rules: 3, Directives: 4
+    有執行流程: ✗
+
+  [claude__mcp_builder] mcp-builder
+    Actions: 6, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__lead_research_assistant] lead-research-assistant
+    Actions: 6, Rules: 1, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__meeting_insights_analyzer] meeting-insights-analyzer
+    Actions: 7, Rules: 2, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__connect] connect
+    Actions: 5, Rules: 2, Directives: 4
+    有執行流程: ✗
+
+  [claude__xlsx] xlsx
+    Actions: 6, Rules: 3, Directives: 3
+    有執行流程: ✗
+
+  [claude__composio__youtube_downloader] youtube-downloader
+    Actions: 7, Rules: 3, Directives: 4
+    有執行流程: ✗
+
+  [claude__composio__skill_share] skill-share
+    Actions: 8, Rules: 4, Directives: 5
+    有執行流程: ✗
+
+  [claude__composio__domain_name_brainstormer] domain-name-brainstormer
+    Actions: 8, Rules: 3, Directives: 6
+    有執行流程: ✗
+
+  [claude__docx] docx
+    Actions: 6, Rules: 3, Directives: 2
+    有執行流程: ✗
+
+============================================================

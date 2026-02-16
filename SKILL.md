@@ -5,6 +5,7 @@
 ## Quick Start
 
 ### Installation
+
 ```bash
 git clone https://github.com/pingqLIN/skill-0.git
 cd skill-0
@@ -12,27 +13,28 @@ pip install -r requirements.txt
 ```
 
 ### First Run
+
 ```bash
 # Index existing skills
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+python -m src.vector_db.search --db db/skills.db --parsed-dir data/parsed index
 
 # Search for skills
-python -m vector_db.search search "document processing"
+python -m src.vector_db.search search "document processing"
 
 # Analyze patterns
-python tools/analyzer.py -p parsed -o analysis/report.json
+python src/tools/analyzer.py -p data/parsed -o data/analysis/report.json
 ```
 
 ## Tool Suite Overview
 
 ```
-skill-0/tools/
+skill-0/src/tools/
 ├── analyzer.py           # 📊 Statistical analysis
 ├── pattern_extractor.py  # 🔍 Pattern discovery
 ├── evaluate.py           # ✅ Coverage evaluation
 └── batch_parse.py        # 🔄 Batch processing
 
-skill-0/vector_db/
+skill-0/src/vector_db/
 ├── embedder.py           # 🧠 Embedding generation
 ├── vector_store.py       # 💾 SQLite-vec storage
 └── search.py             # 🔎 Semantic search CLI
@@ -41,21 +43,24 @@ skill-0/vector_db/
 ## 1. Analyzer Tool
 
 ### Purpose
+
 Generate comprehensive statistics about parsed skills
 
 ### Usage
+
 ```bash
 # Basic analysis
-python tools/analyzer.py
+python src/tools/analyzer.py
 
 # Custom paths
-python tools/analyzer.py -p parsed -o analysis/report.json
+python src/tools/analyzer.py -p data/parsed -o data/analysis/report.json
 
 # With text report
-python tools/analyzer.py -t
+python src/tools/analyzer.py -t
 ```
 
 ### Output Structure
+
 ```json
 {
   "summary": {
@@ -81,6 +86,7 @@ python tools/analyzer.py -t
 ```
 
 ### Use Cases
+
 - Project health monitoring
 - Coverage verification
 - Pattern identification
@@ -89,21 +95,25 @@ python tools/analyzer.py -t
 ## 2. Pattern Extractor
 
 ### Purpose
+
 Discover common patterns across skills for reuse and standardization
 
 ### Usage
+
 ```bash
 # Extract patterns
-python tools/pattern_extractor.py
+python src/tools/pattern_extractor.py
 
 # Custom output
-python tools/pattern_extractor.py -o analysis/patterns.json
+python src/tools/pattern_extractor.py -o data/analysis/patterns.json
 ```
 
 ### Pattern Types
 
 #### Action Combinations
+
 Frequently occurring action sequences
+
 ```json
 {
   "pattern_type": "action_combination",
@@ -114,7 +124,9 @@ Frequently occurring action sequences
 ```
 
 #### Directive Usage
+
 Common directive patterns
+
 ```json
 {
   "pattern_type": "directive_usage",
@@ -125,7 +137,9 @@ Common directive patterns
 ```
 
 #### Structure Patterns
+
 Element ratio patterns
+
 ```json
 {
   "pattern_type": "structure",
@@ -136,6 +150,7 @@ Element ratio patterns
 ```
 
 ### Use Cases
+
 - Template creation
 - Best practice identification
 - Duplicate detection
@@ -144,24 +159,28 @@ Element ratio patterns
 ## 3. Evaluation Tool
 
 ### Purpose
+
 Assess framework coverage and identify gaps
 
 ### Usage
+
 ```bash
 # Evaluate coverage
-python tools/evaluate.py -p parsed
+python src/tools/evaluate.py -p data/parsed
 
 # Detailed report
-python tools/evaluate.py -p parsed -o analysis/evaluation.json
+python src/tools/evaluate.py -p data/parsed -o data/analysis/evaluation.json
 ```
 
 ### Metrics
+
 - **Action Type Coverage**: % of action types used
 - **Directive Type Coverage**: % of directive types used
 - **Completeness Score**: Overall decomposition quality
 - **Pattern Diversity**: Variety in skill structures
 
 ### Output
+
 ```json
 {
   "coverage": {
@@ -187,27 +206,32 @@ python tools/evaluate.py -p parsed -o analysis/evaluation.json
 ## 4. Batch Parser
 
 ### Purpose
+
 Parse multiple skills efficiently with consistent formatting
 
 ### Usage
+
 ```bash
 # Parse directory
-python tools/batch_parse.py -i input_skills/ -o parsed/
+python src/tools/batch_parse.py -i input_skills/ -o data/parsed/
 
 # With validation
-python tools/batch_parse.py -i input_skills/ -o parsed/ --validate
+python src/tools/batch_parse.py -i input_skills/ -o data/parsed/ --validate
 
 # Dry run
-python tools/batch_parse.py -i input_skills/ --dry-run
+python src/tools/batch_parse.py -i input_skills/ --dry-run
 ```
 
 ### Input Format
+
 Accepts various formats:
+
 - Markdown skill definitions
 - JSON pre-formatted
 - Plain text descriptions (requires LLM)
 
 ### Features
+
 - Schema validation
 - ID auto-increment
 - Duplicate detection
@@ -216,21 +240,26 @@ Accepts various formats:
 ## 5. Vector Search System
 
 ### Purpose
+
 Semantic search and clustering for skill discovery
 
 ### Setup
+
 ```bash
 # One-time indexing
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+python -m src.vector_db.search --db db/skills.db --parsed-dir data/parsed index
 ```
 
 ### Commands
 
 #### Search by Query
+
 ```bash
-python -m vector_db.search search "creative design tools"
+python -m src.vector_db.search search "creative design tools"
 ```
+
 Output:
+
 ```
 🔍 Searching for: creative design tools
 --------------------------------------------------
@@ -240,10 +269,13 @@ Output:
 ```
 
 #### Find Similar Skills
+
 ```bash
-python -m vector_db.search similar "Docx Skill"
+python -m src.vector_db.search similar "Docx Skill"
 ```
+
 Output:
+
 ```
 🔍 Finding skills similar to: Docx Skill
 --------------------------------------------------
@@ -253,10 +285,13 @@ Output:
 ```
 
 #### Cluster Analysis
+
 ```bash
-python -m vector_db.search cluster -n 5
+python -m src.vector_db.search cluster -n 5
 ```
+
 Output:
+
 ```
 📊 Clustering 32 skills into 5 groups...
 --------------------------------------------------
@@ -268,10 +303,13 @@ Cluster 2: Document Processing (5 skills)
 ```
 
 #### Statistics
+
 ```bash
-python -m vector_db.search stats
+python -m src.vector_db.search stats
 ```
+
 Output:
+
 ```
 📊 Skill Database Statistics
 --------------------------------------------------
@@ -283,11 +321,12 @@ Last Updated: 2026-01-28
 ```
 
 ### Python API
+
 ```python
-from vector_db import SemanticSearch
+from src.vector_db import SemanticSearch
 
 # Initialize
-search = SemanticSearch(db_path='skills.db')
+search = SemanticSearch(db_path='db/skills.db')
 
 # Search
 results = search.search("PDF processing", limit=5)
@@ -306,46 +345,54 @@ clusters = search.cluster_skills(n_clusters=5)
 ### Adding a New Skill
 
 #### Step 1: Create JSON
+
 ```bash
-cp parsed/template.json parsed/my-skill.json
+cp data/parsed/template.json data/parsed/my-skill.json
 # Edit my-skill.json with your decomposition
 ```
 
 #### Step 2: Validate
+
 ```bash
-python tools/analyzer.py -p parsed/my-skill.json
+python src/tools/analyzer.py -p data/parsed/my-skill.json
 ```
 
 #### Step 3: Index
+
 ```bash
-python -m vector_db.search index
+python -m src.vector_db.search index
 ```
 
 #### Step 4: Verify
+
 ```bash
-python -m vector_db.search search "my skill description"
+python -m src.vector_db.search search "my skill description"
 ```
 
 ### Analyzing a Skill Category
 
 #### Step 1: Filter Skills
+
 ```bash
-python -m vector_db.search search "document processing" > doc_skills.txt
+python -m src.vector_db.search search "document processing" > doc_skills.txt
 ```
 
 #### Step 2: Extract Patterns
+
 ```bash
-python tools/pattern_extractor.py -p parsed/ -o patterns_doc.json
+python src/tools/pattern_extractor.py -p data/parsed/ -o patterns_doc.json
 ```
 
 #### Step 3: Compare
+
 ```bash
-python tools/analyzer.py -p parsed/ -t > comparison.txt
+python src/tools/analyzer.py -p data/parsed/ -t > comparison.txt
 ```
 
 ### Batch Migration
 
 #### Step 1: Prepare Source
+
 ```bash
 # Organize skills in input/
 ls input/
@@ -353,33 +400,39 @@ ls input/
 ```
 
 #### Step 2: Batch Parse
+
 ```bash
-python tools/batch_parse.py -i input/ -o parsed/ --validate
+python src/tools/batch_parse.py -i input/ -o data/parsed/ --validate
 ```
 
 #### Step 3: Re-index
+
 ```bash
-python -m vector_db.search index
+python -m src.vector_db.search index
 ```
 
 #### Step 4: Evaluate
+
 ```bash
-python tools/evaluate.py -p parsed
+python src/tools/evaluate.py -p data/parsed
 ```
 
 ## Performance Tips
 
 ### Large Datasets
+
 - Use `--batch-size` for batch operations
 - Enable parallel processing with `-j` flag
 - Pre-filter with `--filter` patterns
 
 ### Memory Optimization
+
 - Index incrementally for >100 skills
 - Use `--checkpoint` for long operations
 - Clear cache between major operations
 
 ### Search Optimization
+
 - Cache frequent queries
 - Use clustering for categorization
 - Limit results with `--limit`
@@ -387,6 +440,7 @@ python tools/evaluate.py -p parsed
 ## Common Patterns
 
 ### Document Processing Skills
+
 ```
 Pattern: io_read → transform → io_write
 Elements: 3-5 actions, 1-2 rules, 2-3 directives
@@ -394,6 +448,7 @@ Directives: completion, constraint
 ```
 
 ### API Integration Skills
+
 ```
 Pattern: external_call → state_check → transform
 Elements: 2-4 actions, 2-3 rules, 1-2 directives
@@ -401,6 +456,7 @@ Directives: strategy, knowledge
 ```
 
 ### Creative Tools
+
 ```
 Pattern: await_input → llm_inference → io_write
 Elements: 4-6 actions, 1 rule, 3-4 directives
@@ -410,40 +466,44 @@ Directives: preference, principle
 ## Troubleshooting
 
 ### Issue: Schema Validation Fails
+
 ```bash
 # Check schema version
-grep schema_version parsed/your-skill.json
+grep schema_version data/parsed/your-skill.json
 
 # Validate manually
 python -c "
 import json, jsonschema
 schema = json.load(open('schema/skill-decomposition.schema.json'))
-data = json.load(open('parsed/your-skill.json'))
+data = json.load(open('data/parsed/your-skill.json'))
 jsonschema.validate(data, schema)
 "
 ```
 
 ### Issue: Embeddings Out of Date
+
 ```bash
 # Re-index everything
-python -m vector_db.search index --force
+python -m src.vector_db.search index --force
 
 # Check stats
-python -m vector_db.search stats
+python -m src.vector_db.search stats
 ```
 
 ### Issue: Pattern Extraction Slow
+
 ```bash
 # Use sampling
-python tools/pattern_extractor.py --sample-size 20
+python src/tools/pattern_extractor.py --sample-size 20
 
 # Parallel processing
-python tools/pattern_extractor.py -j 4
+python src/tools/pattern_extractor.py -j 4
 ```
 
 ## Integration Examples
 
 ### With GitHub Actions
+
 ```yaml
 name: Validate Skills
 on: [push]
@@ -455,40 +515,45 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
       - name: Validate
-        run: python tools/analyzer.py -p parsed
+        run: python src/tools/analyzer.py -p data/parsed
 ```
 
 ### With Pre-commit Hook
+
 ```bash
 # .git/hooks/pre-commit
 #!/bin/bash
-python tools/analyzer.py -p parsed || exit 1
-python tools/evaluate.py -p parsed || exit 1
+python src/tools/analyzer.py -p data/parsed || exit 1
+python src/tools/evaluate.py -p data/parsed || exit 1
 ```
 
 ### With CI/CD Pipeline
+
 ```bash
 # In your CI script
-python tools/batch_parse.py -i new_skills/ -o parsed/ --validate
-python -m vector_db.search index
-python tools/evaluate.py -p parsed > coverage_report.txt
+python src/tools/batch_parse.py -i new_skills/ -o data/parsed/ --validate
+python -m src.vector_db.search index
+python src/tools/evaluate.py -p data/parsed > coverage_report.txt
 ```
 
 ## Resources
 
 ### Documentation
+
 - [CLAUDE.md](CLAUDE.md) - Claude-specific best practices
-- [reference.md](reference.md) - Complete schema reference
-- [examples.md](examples.md) - Example decompositions
+- [reference.md](docs/guides/reference.md) - Complete schema reference
+- [examples.md](docs/guides/examples.md) - Example decompositions
 
 ### Tools
-- [analyzer.py](tools/analyzer.py) - Source code
-- [pattern_extractor.py](tools/pattern_extractor.py) - Source code
-- [search.py](vector_db/search.py) - Source code
+
+- [analyzer.py](src/tools/analyzer.py) - Source code
+- [pattern_extractor.py](src/tools/pattern_extractor.py) - Source code
+- [search.py](src/vector_db/search.py) - Source code
 
 ### Support
-- Issues: https://github.com/pingqLIN/skill-0/issues
-- Discussions: https://github.com/pingqLIN/skill-0/discussions
+
+- Issues: <https://github.com/pingqLIN/skill-0/issues>
+- Discussions: <https://github.com/pingqLIN/skill-0/discussions>
 
 ---
 

@@ -1,5 +1,7 @@
 # Skill-0: Skill Decomposition Parser
 
+[中文版](README.zh-TW.md)
+
 > A ternary classification system for parsing the internal structure of Claude Skills and MCP Tools
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -14,26 +16,12 @@ Skill-0 is a classification system that parses AI/Chatbot Skills (especially Cla
 
 Organizes and defines the immutable parts of a Skill (or parts that change behavior when modified) into three categories:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│              Skill Ternary Classification                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────────┐   │
-│  │   Action    │   │    Rule     │   │   Directive     │   │
-│  ├─────────────┤   ├─────────────┤   ├─────────────────┤   │
-│  │ Atomic ops  │   │ Atomic      │   │ Descriptive     │   │
-│  │ Indivisible │   │ judgment    │   │ statements      │   │
-│  │             │   │ Indivisible │   │ Decomposable    │   │
-│  │ Answers:    │   │ Answers:    │   │ but paused      │   │
-│  │ "What to do"│   │"How to judge│   │                 │   │
-│  └─────────────┘   └─────────────┘   └─────────────────┘   │
-│        │                 │                    │             │
-│        ▼                 ▼                    ▼             │
-│   🔒 Terminal       🔒 Terminal        ⏸️ Pause point      │
-│                                        (can deep parse)    │
-└─────────────────────────────────────────────────────────────┘
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/skill-ternary-classification.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/skill-ternary-classification.svg">
+  <img alt="Skill Ternary Classification Diagram" src="docs/images/skill-ternary-classification.svg" width="800">
+</picture>
+
 
 | Category | Definition | Characteristics |
 |----------|------------|-----------------|
@@ -51,6 +39,8 @@ Organizes and defines the immutable parts of a Skill (or parts that change behav
 | `constraint` | Constraint condition | "Max 25,000 tokens" |
 | `preference` | Preference setting | "User prefers JSON format" |
 | `strategy` | Strategy guideline | "Retry three times on error" |
+
+>
 
 ### Directive Provenance (Optional)
 
@@ -91,25 +81,13 @@ Skills/Tools may come from diverse sources where the original intent cannot be f
 
 ## Project Structure
 
-```
-skill-0/
-├── README.md                              # Documentation
-├── schema/
-│   └── skill-decomposition.schema.json   # JSON Schema v2.1
-├── parsed/                                # Parsed skill examples (32 skills)
-├── analysis/                              # Analysis reports
-├── tools/                                 # Analysis tools
-│   ├── analyzer.py                       # Structure analyzer
-│   ├── pattern_extractor.py              # Pattern extractor
-│   ├── evaluate.py                       # Coverage evaluator
-│   └── batch_parse.py                    # Batch parser
-├── vector_db/                             # Vector database module
-│   ├── embedder.py                       # Embedding generator
-│   ├── vector_store.py                   # SQLite-vec storage
-│   └── search.py                         # Semantic search CLI
-├── skills.db                              # Vector database
-└── docs/                                  # Documentation
-```
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/project-structure.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/project-structure.svg">
+  <img alt="Skill-0 Project Structure" src="docs/images/project-structure.svg" width="600">
+</picture>
+
+> 
 
 ## Installation
 
@@ -122,7 +100,7 @@ cd skill-0
 pip install -r requirements.txt
 
 # Index skills (first time)
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+python -m src.vector_db.search --db db/skills.db --parsed-dir data/parsed index
 ```
 
 ## Testing
@@ -139,6 +117,7 @@ python3 -m pytest tests/test_helper.py::TestIntegrationWorkflows -v
 ```
 
 **Test Coverage**: 32 tests covering:
+
 - ✅ Schema validation (tool equivalence)
 - ✅ Format conversion (code equivalence)
 - ✅ Execution path testing
@@ -156,25 +135,25 @@ Skill-0 includes a powerful semantic search engine powered by `all-MiniLM-L6-v2`
 
 ```bash
 # Index all skills
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+python -m src.vector_db.search --db db/skills.db --parsed-dir data/parsed index
 
 # Search by natural language
-python -m vector_db.search --db skills.db search "PDF document processing"
+python -m src.vector_db.search --db db/skills.db search "PDF document processing"
 
 # Find similar skills
-python -m vector_db.search --db skills.db similar "Docx Skill"
+python -m src.vector_db.search --db db/skills.db similar "Docx Skill"
 
 # Cluster analysis (auto-grouping)
-python -m vector_db.search --db skills.db cluster -n 5
+python -m src.vector_db.search --db db/skills.db cluster -n 5
 
 # Show statistics
-python -m vector_db.search --db skills.db stats
+python -m src.vector_db.search --db db/skills.db stats
 ```
 
 ### Search Examples
 
 ```bash
-$ python -m vector_db.search search "creative design visual art"
+$ python -m src.vector_db.search search "creative design visual art"
 
 🔍 Searching for: creative design visual art
 --------------------------------------------------
@@ -190,10 +169,10 @@ Search completed in 72.6ms
 ### Python API
 
 ```python
-from vector_db import SemanticSearch
+from src.vector_db import SemanticSearch
 
 # Initialize search engine
-search = SemanticSearch(db_path='skills.db')
+search = SemanticSearch(db_path='db/skills.db')
 
 # Semantic search
 results = search.search("PDF processing", limit=5)
@@ -277,25 +256,25 @@ Comprehensive documentation is available:
 
 - **[CLAUDE.md](CLAUDE.md)** - Best practices for Claude AI integration and skill decomposition
 - **[SKILL.md](SKILL.md)** - Complete tool portal and workflow guide
-- **[reference.md](reference.md)** - Schema reference and format specifications
-- **[examples.md](examples.md)** - 7 detailed skill examples across different domains
+- **[reference.md](docs/guides/reference.md)** - Schema reference and format specifications
+- **[examples.md](docs/guides/examples.md)** - 7 detailed skill examples across different domains
 - **[AGENTS.md](AGENTS.md)** - Guidelines for AI agents working on this project
-- **[scripts/helper.py](scripts/helper.py)** - Helper utilities for validation, conversion, and testing
+- **[scripts/helper.py](src/tools/helper.py)** - Helper utilities for validation, conversion, and testing
 
 ### Quick Start Guide
 
 ```bash
 # Generate a new skill template
-python scripts/helper.py template -o my-skill.json
+python src/tools/helper.py template -o my-skill.json
 
 # Convert markdown to skill JSON
-python scripts/helper.py convert skill.md my-skill.json
+python src/tools/helper.py convert skill.md my-skill.json
 
 # Validate skill against schema
-python scripts/helper.py validate my-skill.json
+python src/tools/helper.py validate my-skill.json
 
 # Test execution paths
-python scripts/helper.py test my-skill.json --analyze
+python src/tools/helper.py test my-skill.json --analyze
 ```
 
 See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test results and examples.
@@ -328,6 +307,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
   - `tools/github_skill_search.py` - GitHub search utility
 
 ### v2.3.0 (2026-01-28) - Testing & Quality Assurance
+
 - **New Feature**: Comprehensive automated test suite
   - 32 tests covering all helper utilities
   - Tool equivalence verification (validator consistency)
@@ -339,6 +319,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 - CI/CD ready test infrastructure
 
 ### v2.2.0 (2026-01-28) - Documentation & Tooling
+
 - **New Feature**: Comprehensive documentation suite
   - `CLAUDE.md` - Claude best practices guide
   - `SKILL.md` - Complete tool portal and workflow
@@ -355,6 +336,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 - Test results documentation in `docs/helper-test-results.md`
 
 ### v2.1.0 (2026-01-26) - Stage 2
+
 - **New Feature**: Semantic search with vector embeddings
   - `vector_db` module with SQLite-vec integration
   - `all-MiniLM-L6-v2` embedding model (384 dimensions)
@@ -364,6 +346,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 - Performance: 0.88s indexing, ~75ms search
 
 ### v2.0.0 (2026-01-26)
+
 - **Breaking Change**: Redefined ternary classification
   - `core_action` → `action` (ID: `ca_XXX` → `a_XXX`)
   - `mission` → `directive` (ID: `m_XXX` → `d_XXX`)
@@ -374,7 +357,28 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 - Added 19 new skills from ComposioHQ/awesome-claude-skills
 
 ### v1.1.0 (2026-01-23)
+
 - Initial version
+
+## Related Projects
+
+### Hue-Sync: LG OLED TV Smart Lighting Sync Application
+
+**Note**: The LG OLED TV Hue Sync project documentation has been moved to a separate repository for better organization.
+
+📦 **Files Moved**: 3 documentation files (~66.5KB) related to developing a Philips Hue Sync-like smart lighting application for LG OLED TVs.
+
+📚 **Transfer Documentation**: See [docs/TRANSFER_TO_HUE_SYNC_REPO.md](docs/TRANSFER_TO_HUE_SYNC_REPO.md) for:
+- Complete file list and metadata
+- Step-by-step transfer instructions (bilingual)
+- Recommended repository structure
+- Sample README content
+
+🚀 **Quick Reference**: [docs/QUICK_REFERENCE_HUE_SYNC_TRANSFER.md](docs/QUICK_REFERENCE_HUE_SYNC_TRANSFER.md)
+
+**Status**: Documentation complete, ready for manual repository creation and file transfer.
+
+---
 
 ## License
 
