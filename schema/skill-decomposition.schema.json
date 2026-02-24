@@ -1,12 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://skill-parser.pingqlin.dev/schema/v2.1/skill-decomposition.schema.json",
+  "$id": "https://skill-parser.pingqlin.dev/schema/v2.4/skill-decomposition.schema.json",
   "title": "Skill Decomposition Schema",
   "description": "解析 Claude Skill 與 MCP Tool 內部成分結構的標準格式，採用三元分類法：Action / Rule / Directive",
-  "version": "2.1.0",
+  "version": "2.4.0",
   "author": "pingqLIN",
   "created": "2026-01-23",
-  "updated": "2026-01-27",
+  "updated": "2026-02-24",
   "definitions": {
     "provenance_source": {
       "type": "object",
@@ -422,8 +422,119 @@
         "provenance": {
           "description": "可選：來源追溯與原句保存（兩層級）",
           "$ref": "#/definitions/directive_provenance"
+        },
+        "satisfaction_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "完成狀態滿足程度（Feature 6：0=未達成, 1=完全達成），適用於 completion 類型"
+        },
+        "satisfaction_criteria": {
+          "type": "string",
+          "description": "定義達到此 Directive 滿足的具體標準（Feature 6：仿 Hive Goal 的 success_criteria）"
         }
       }
+    },
+    "quality_signals_block": {
+      "type": "object",
+      "description": "三角驗證品質信號（Feature 1：仿 Hive 三信號模型 — 確定性規則 + LLM 評估 + 人類判斷）",
+      "properties": {
+        "schema_validation_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "JSON Schema 驗證分數（0=完全不符合, 1=完全符合）"
+        },
+        "completeness_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "LLM 評估的完整性分數（0=極度不完整, 1=非常完整）"
+        },
+        "human_review_flag": {
+          "type": "boolean",
+          "description": "是否需要人工審查（true=需要, false=不需要）"
+        },
+        "signal_convergence": {
+          "type": "boolean",
+          "description": "多信號是否收斂一致（true=收斂→可信, false=分歧→需升級審查）"
+        },
+        "overall_quality": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "description": "整體品質評級"
+        },
+        "review_notes": {
+          "type": "string",
+          "description": "審查備註"
+        },
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "品質評估時間戳記"
+        }
+      },
+      "additionalProperties": false
+    },
+    "success_criterion": {
+      "type": "object",
+      "description": "加權成功標準單項（Feature 2：仿 Hive Goal.success_criteria 模型）",
+      "required": ["id", "description", "metric", "weight"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "標準識別碼"
+        },
+        "description": {
+          "type": "string",
+          "description": "標準描述"
+        },
+        "metric": {
+          "type": "string",
+          "enum": ["schema_field_present", "llm_judge", "manual", "coverage"],
+          "description": "評量方式：schema_field_present=欄位存在, llm_judge=LLM評判, manual=人工評量, coverage=覆蓋率"
+        },
+        "weight": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "此標準的權重（所有標準權重總和建議為 1.0）"
+        },
+        "target": {
+          "type": "string",
+          "description": "可選：目標值或目標條件描述"
+        }
+      },
+      "additionalProperties": false
+    },
+    "failure_pattern": {
+      "type": "object",
+      "description": "已知失敗模式（Feature 3：仿 Hive Reflexion Loop — 捕捉失敗→演化→重新部署）",
+      "required": ["pattern_id", "description"],
+      "properties": {
+        "pattern_id": {
+          "type": "string",
+          "description": "失敗模式識別碼（例如：fp_001）"
+        },
+        "description": {
+          "type": "string",
+          "description": "失敗模式描述"
+        },
+        "recovery_strategy": {
+          "type": "string",
+          "description": "建議的復原策略"
+        },
+        "evolution_hint": {
+          "type": "string",
+          "description": "演化提示：如何改進技能定義以避免此失敗"
+        },
+        "frequency": {
+          "type": "string",
+          "enum": ["rare", "occasional", "common"],
+          "description": "此失敗模式的發生頻率"
+        }
+      },
+      "additionalProperties": false
     },
     "execution_path": {
       "type": "object",
@@ -519,6 +630,13 @@
         "parsed_by": {
           "type": "string",
           "description": "執行解析的 skill_id"
+        },
+        "supported_llm_providers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "相容 LLM 提供者列表（Feature 5：例如 anthropic、openai、gemini、ollama/llama3）"
         }
       }
     },
@@ -601,6 +719,24 @@
         "inconsistency_detail": {
           "type": "string"
         }
+      }
+    },
+    "quality_signals": {
+      "description": "可選：三角驗證品質信號（Feature 1：Schema驗證 + LLM完整性評估 + 人工審查旗標）",
+      "$ref": "#/definitions/quality_signals_block"
+    },
+    "success_criteria": {
+      "type": "array",
+      "description": "可選：加權成功標準列表（Feature 2：仿 Hive Goal 的多維度品質指標）",
+      "items": {
+        "$ref": "#/definitions/success_criterion"
+      }
+    },
+    "failure_patterns": {
+      "type": "array",
+      "description": "可選：已知失敗模式列表（Feature 3：仿 Hive Reflexion Loop 失敗捕捉與演化提示）",
+      "items": {
+        "$ref": "#/definitions/failure_pattern"
       }
     }
   }
