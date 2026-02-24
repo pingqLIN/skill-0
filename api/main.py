@@ -4,10 +4,7 @@ FastAPI integration with vector search and analysis features
 """
 
 from fastapi import FastAPI, HTTPException, Query, Depends, Request
-<<<<<<< Updated upstream
-=======
 from fastapi.responses import Response, JSONResponse
->>>>>>> Stashed changes
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
@@ -16,9 +13,19 @@ import os
 import logging
 from pathlib import Path
 import time
+import uuid
+from contextvars import ContextVar
 from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
+
+
+def generate_request_id() -> str:
+    """Generate a unique request ID using UUID4."""
+    return str(uuid.uuid4())
+
+
+request_id_var: ContextVar[str] = ContextVar('request_id', default='')
 
 # Ensure vector_db module can be found
 import sys
@@ -135,8 +142,6 @@ app.add_middleware(
 )
 
 
-<<<<<<< Updated upstream
-=======
 # ==================== Prometheus Metrics ====================
 
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
@@ -213,7 +218,6 @@ async def prometheus_metrics():
     return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
->>>>>>> Stashed changes
 # ==================== Rate Limiting ====================
 
 from collections import defaultdict
