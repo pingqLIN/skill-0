@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Shield, TestTube, FileText, CheckCircle, XCircle, ExternalLink, Scale, Lock, User, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Shield, TestTube, FileText, CheckCircle, XCircle, ExternalLink, Scale, Lock, User, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import type { ActionResult } from '@/api/types';
 
 const riskColors: Record<string, string> = {
   safe: 'bg-green-100 text-green-800',
@@ -40,15 +41,22 @@ export function SkillDetail() {
   const scanMutation = useTriggerScan();
   const testMutation = useTriggerTest();
   const [actionMessage, setActionMessage] = useState<{ text: string; ok: boolean } | null>(null);
+  const [actionResult, setActionResult] = useState<ActionResult | null>(null);
+  const [actionKind, setActionKind] = useState<'scan' | 'test' | null>(null);
+  const [showDetails, setShowDetails] = useState(false);
 
   const handleScan = async () => {
     if (!skillId) return;
     setActionMessage(null);
+    setActionResult(null);
+    setShowDetails(false);
+    setActionKind('scan');
     const result = await scanMutation.mutateAsync(skillId).catch((e: Error) => {
       setActionMessage({ text: e.message, ok: false });
       return null;
     });
     if (!result) return;
+    setActionResult(result);
     if (result.status === 'success') {
       setActionMessage({ text: `Scan complete — risk score: ${result.results[0]?.risk_score ?? '-'}`, ok: true });
     } else {
@@ -59,16 +67,27 @@ export function SkillDetail() {
   const handleTest = async () => {
     if (!skillId) return;
     setActionMessage(null);
+    setActionResult(null);
+    setShowDetails(false);
+    setActionKind('test');
     const result = await testMutation.mutateAsync(skillId).catch((e: Error) => {
       setActionMessage({ text: e.message, ok: false });
       return null;
     });
     if (!result) return;
+    setActionResult(result);
     if (result.status === 'success') {
       setActionMessage({ text: `Test complete — score: ${Math.round(((result.results[0]?.overall_score as number) ?? 0) * 100)}%`, ok: true });
     } else {
       setActionMessage({ text: result.error_message ?? result.error_code ?? 'Test failed', ok: false });
     }
+  };
+
+  const actionStatusColors: Record<string, string> = {
+    success: 'bg-green-100 text-green-800',
+    failed: 'bg-red-100 text-red-800',
+    partial: 'bg-amber-100 text-amber-800',
+    noop: 'bg-gray-100 text-gray-800',
   };
 
   if (isLoading) {
@@ -104,10 +123,91 @@ export function SkillDetail() {
 
       {/* Action Feedback */}
       {actionMessage && (
-        <div className={`mb-4 px-4 py-3 rounded-md text-sm flex items-center gap-2 ${actionMessage.ok ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+        <div className={`mb-2 px-4 py-3 rounded-md text-sm flex items-center gap-2 ${actionMessage.ok ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
           {actionMessage.ok ? <CheckCircle className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
           {actionMessage.text}
+          {actionResult && (
+            <button
+              className="ml-auto flex items-center gap-1 text-xs underline opacity-70 hover:opacity-100"
+              onClick={() => setShowDetails(v => !v)}
+              aria-expanded={showDetails}
+              aria-label={showDetails ? 'Hide action result details' : 'Show action result details'}
+            >
+              {showDetails ? <><ChevronUp className="h-3 w-3" />Hide details</> : <><ChevronDown className="h-3 w-3" />Show details</>}
+            </button>
+          )}
         </div>
+      )}
+
+      {/* Expandable Action Results Panel */}
+      {actionResult && showDetails && (
+        <Card className="mb-4 border-dashed">
+          <CardContent className="pt-4 space-y-3">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Badge className={actionStatusColors[actionResult.status] ?? 'bg-gray-100 text-gray-800'}>
+                {actionResult.status}
+              </Badge>
+              <span className="text-sm text-muted-foreground">
+                Processed: <strong>{actionResult.processed}</strong>
+              </span>
+            </div>
+
+            {actionResult.results.length > 0 && (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Skill ID</TableHead>
+                    <TableHead>Status</TableHead>
+                    {actionKind === 'scan' && <>
+                      <TableHead>Risk Level</TableHead>
+                      <TableHead>Risk Score</TableHead>
+                      <TableHead>Findings</TableHead>
+                    </>}
+                    {actionKind === 'test' && <>
+                      <TableHead>Score</TableHead>
+                      <TableHead>Passed</TableHead>
+                    </>}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {actionResult.results.map((row, idx) => (
+                    <TableRow key={row.skill_id !== undefined ? String(row.skill_id) : idx}>
+                      <TableCell className="font-mono text-xs">{String(row.skill_id ?? '-')}</TableCell>
+                      <TableCell>
+                        <Badge className={actionStatusColors[String(row.status)] ?? 'bg-gray-100 text-gray-800'}>
+                          {String(row.status ?? '-')}
+                        </Badge>
+                      </TableCell>
+                      {actionKind === 'scan' && <>
+                        <TableCell>
+                          <Badge className={riskColors[String(row.risk_level)] ?? 'bg-gray-100 text-gray-800'}>
+                            {String(row.risk_level ?? '-')}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>{row.risk_score !== undefined ? String(row.risk_score) : '-'}</TableCell>
+                        <TableCell>{row.findings_count !== undefined ? String(row.findings_count) : '-'}</TableCell>
+                      </>}
+                      {actionKind === 'test' && <>
+                        <TableCell>{row.overall_score !== undefined ? `${Math.round((row.overall_score as number) * 100)}%` : '-'}</TableCell>
+                        <TableCell>
+                          {row.passed === true ? <CheckCircle className="h-4 w-4 text-green-600" /> : row.passed === false ? <XCircle className="h-4 w-4 text-red-600" /> : '-'}
+                        </TableCell>
+                      </>}
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+
+            {(actionResult.error_code || actionResult.error_message || actionResult.hint) && (
+              <div className="rounded-md bg-red-50 border border-red-200 p-3 text-sm space-y-1">
+                {actionResult.error_code && <div><span className="font-medium">Error code:</span> {actionResult.error_code}</div>}
+                {actionResult.error_message && <div><span className="font-medium">Message:</span> {actionResult.error_message}</div>}
+                {actionResult.hint && <div><span className="font-medium">Hint:</span> {actionResult.hint}</div>}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       )}
 
       {/* Title & Status */}
