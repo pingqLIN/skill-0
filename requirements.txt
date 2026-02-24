@@ -17,3 +17,4 @@ prometheus_client>=0.14.0
 # Development (optional)
 pytest>=7.0.0
 httpx>=0.24.0
+rich>=13.0.0
