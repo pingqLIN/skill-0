@@ -4,10 +4,7 @@ FastAPI integration with vector search and analysis features
 """
 
 from fastapi import FastAPI, HTTPException, Query, Depends, Request
-<<<<<<< Updated upstream
-=======
 from fastapi.responses import Response, JSONResponse
->>>>>>> Stashed changes
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
@@ -16,9 +13,19 @@ import os
 import logging
 from pathlib import Path
 import time
+import uuid
+from contextvars import ContextVar
 from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
+
+
+def generate_request_id() -> str:
+    """Generate a unique request ID using UUID4."""
+    return str(uuid.uuid4())
+
+
+request_id_var: ContextVar[str] = ContextVar('request_id', default='')
 
 # Ensure vector_db module can be found
 import sys
@@ -135,8 +142,6 @@ app.add_middleware(
 )
 
 
-<<<<<<< Updated upstream
-=======
 # ==================== Prometheus Metrics ====================
 
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
@@ -167,7 +172,7 @@ async def request_middleware(request: Request, call_next):
     method = request.method
     path = request.url.path
 
-    logger.info("request_started", method=method, path=path)
+    logger.info("request_started", extra={"method": method, "path": path})
 
     # Apply baseline API rate limit to non-health/docs endpoints.
     if not _is_rate_limit_exempt_path(path):
@@ -181,10 +186,12 @@ async def request_middleware(request: Request, call_next):
             REQUEST_LATENCY.labels(method=method, endpoint=path).observe(duration)
             logger.warning(
                 "request_rate_limited",
-                method=method,
-                path=path,
-                status=exc.status_code,
-                duration_ms=round(duration * 1000, 2),
+                extra={
+                    "method": method,
+                    "path": path,
+                    "status": exc.status_code,
+                    "duration_ms": round(duration * 1000, 2),
+                },
             )
             return response
 
@@ -199,10 +206,12 @@ async def request_middleware(request: Request, call_next):
 
     logger.info(
         "request_completed",
-        method=method,
-        path=path,
-        status=status,
-        duration_ms=round(duration * 1000, 2),
+        extra={
+            "method": method,
+            "path": path,
+            "status": status,
+            "duration_ms": round(duration * 1000, 2),
+        },
     )
     return response
 
@@ -213,7 +222,6 @@ async def prometheus_metrics():
     return Response(content=generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
->>>>>>> Stashed changes
 # ==================== Rate Limiting ====================
 
 from collections import defaultdict
@@ -274,9 +282,11 @@ async def _enforce_rate_limit(request: Request, limit_str: str, scope: str):
     except ValueError as exc:
         logger.error(
             "invalid_rate_limit_configuration",
-            scope=scope,
-            limit=limit_str,
-            error=str(exc),
+            extra={
+                "scope": scope,
+                "limit": limit_str,
+                "error": str(exc),
+            },
         )
         raise HTTPException(status_code=500, detail="Rate limit misconfiguration")
     now = time.time()
@@ -336,10 +346,12 @@ def validate_login_credentials(username: str, password: str) -> bool:
     if not configured_username or not configured_password:
         logger.error(
             "auth_configuration_missing",
-            username_env=API_USERNAME_ENV,
-            password_env=API_PASSWORD_ENV,
-            username_configured=bool(configured_username),
-            password_configured=bool(configured_password),
+            extra={
+                "username_env": API_USERNAME_ENV,
+                "password_env": API_PASSWORD_ENV,
+                "username_configured": bool(configured_username),
+                "password_configured": bool(configured_password),
+            },
         )
         raise HTTPException(
             status_code=503,
@@ -758,7 +770,7 @@ async def login(
     API_USERNAME and API_PASSWORD.
     """
     if not validate_login_credentials(request.username, request.password):
-        logger.warning("login_failed", username=request.username)
+        logger.warning("login_failed", extra={"username": request.username})
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"sub": request.username})
