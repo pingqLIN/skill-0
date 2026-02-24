@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { useSkill } from '@/api/skills';
+import { useSkill, useActionReadiness, useTriggerScan, useTriggerTest } from '@/api/skills';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { ArrowLeft, Shield, TestTube, FileText, CheckCircle, XCircle, ExternalLink, Scale, Lock, User } from 'lucide-react';
+import { ArrowLeft, Shield, TestTube, FileText, CheckCircle, XCircle, ExternalLink, Scale, Lock, User, AlertCircle } from 'lucide-react';
 
 const riskColors: Record<string, string> = {
   safe: 'bg-green-100 text-green-800',
@@ -35,6 +36,40 @@ export function SkillDetail() {
   const { skillId } = useParams<{ skillId: string }>();
   const navigate = useNavigate();
   const { data: skill, isLoading, error } = useSkill(skillId || '');
+  const { data: readiness } = useActionReadiness(skillId || '');
+  const scanMutation = useTriggerScan();
+  const testMutation = useTriggerTest();
+  const [actionMessage, setActionMessage] = useState<{ text: string; ok: boolean } | null>(null);
+
+  const handleScan = async () => {
+    if (!skillId) return;
+    setActionMessage(null);
+    const result = await scanMutation.mutateAsync(skillId).catch((e: Error) => {
+      setActionMessage({ text: e.message, ok: false });
+      return null;
+    });
+    if (!result) return;
+    if (result.status === 'success') {
+      setActionMessage({ text: `Scan complete — risk score: ${result.results[0]?.risk_score ?? '-'}`, ok: true });
+    } else {
+      setActionMessage({ text: result.error_message ?? result.error_code ?? 'Scan failed', ok: false });
+    }
+  };
+
+  const handleTest = async () => {
+    if (!skillId) return;
+    setActionMessage(null);
+    const result = await testMutation.mutateAsync(skillId).catch((e: Error) => {
+      setActionMessage({ text: e.message, ok: false });
+      return null;
+    });
+    if (!result) return;
+    if (result.status === 'success') {
+      setActionMessage({ text: `Test complete — score: ${Math.round(((result.results[0]?.overall_score as number) ?? 0) * 100)}%`, ok: true });
+    } else {
+      setActionMessage({ text: result.error_message ?? result.error_code ?? 'Test failed', ok: false });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -67,6 +102,14 @@ export function SkillDetail() {
         </Button>
       </div>
 
+      {/* Action Feedback */}
+      {actionMessage && (
+        <div className={`mb-4 px-4 py-3 rounded-md text-sm flex items-center gap-2 ${actionMessage.ok ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          {actionMessage.ok ? <CheckCircle className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
+          {actionMessage.text}
+        </div>
+      )}
+
       {/* Title & Status */}
       <div className="flex items-start justify-between mb-6">
         <div>
@@ -81,8 +124,30 @@ export function SkillDetail() {
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">Re-scan</Button>
-          <Button variant="outline" size="sm">Re-test</Button>
+          <div className="relative group">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleScan}
+              disabled={!readiness?.can_scan || scanMutation.isPending}
+              title={readiness?.can_scan ? 'Run security scan' : (readiness?.reasons.join('; ') ?? 'Checking readiness…')}
+            >
+              {scanMutation.isPending ? 'Scanning…' : 'Re-scan'}
+              {readiness && !readiness.can_scan && <AlertCircle className="h-3 w-3 ml-1 text-amber-500" />}
+            </Button>
+          </div>
+          <div className="relative group">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleTest}
+              disabled={!readiness?.can_test || testMutation.isPending}
+              title={readiness?.can_test ? 'Run equivalence test' : (readiness?.reasons.join('; ') ?? 'Checking readiness…')}
+            >
+              {testMutation.isPending ? 'Testing…' : 'Re-test'}
+              {readiness && !readiness.can_test && <AlertCircle className="h-3 w-3 ml-1 text-amber-500" />}
+            </Button>
+          </div>
           {skill.status === 'pending' && (
             <>
               <Button variant="default" size="sm" className="bg-green-600 hover:bg-green-700">Approve</Button>
