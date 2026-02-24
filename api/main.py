@@ -172,7 +172,7 @@ async def request_middleware(request: Request, call_next):
     method = request.method
     path = request.url.path
 
-    logger.info("request_started", method=method, path=path)
+    logger.info("request_started", extra={"method": method, "path": path})
 
     # Apply baseline API rate limit to non-health/docs endpoints.
     if not _is_rate_limit_exempt_path(path):
@@ -186,10 +186,12 @@ async def request_middleware(request: Request, call_next):
             REQUEST_LATENCY.labels(method=method, endpoint=path).observe(duration)
             logger.warning(
                 "request_rate_limited",
-                method=method,
-                path=path,
-                status=exc.status_code,
-                duration_ms=round(duration * 1000, 2),
+                extra={
+                    "method": method,
+                    "path": path,
+                    "status": exc.status_code,
+                    "duration_ms": round(duration * 1000, 2),
+                },
             )
             return response
 
@@ -204,10 +206,12 @@ async def request_middleware(request: Request, call_next):
 
     logger.info(
         "request_completed",
-        method=method,
-        path=path,
-        status=status,
-        duration_ms=round(duration * 1000, 2),
+        extra={
+            "method": method,
+            "path": path,
+            "status": status,
+            "duration_ms": round(duration * 1000, 2),
+        },
     )
     return response
 
@@ -278,9 +282,11 @@ async def _enforce_rate_limit(request: Request, limit_str: str, scope: str):
     except ValueError as exc:
         logger.error(
             "invalid_rate_limit_configuration",
-            scope=scope,
-            limit=limit_str,
-            error=str(exc),
+            extra={
+                "scope": scope,
+                "limit": limit_str,
+                "error": str(exc),
+            },
         )
         raise HTTPException(status_code=500, detail="Rate limit misconfiguration")
     now = time.time()
@@ -340,10 +346,12 @@ def validate_login_credentials(username: str, password: str) -> bool:
     if not configured_username or not configured_password:
         logger.error(
             "auth_configuration_missing",
-            username_env=API_USERNAME_ENV,
-            password_env=API_PASSWORD_ENV,
-            username_configured=bool(configured_username),
-            password_configured=bool(configured_password),
+            extra={
+                "username_env": API_USERNAME_ENV,
+                "password_env": API_PASSWORD_ENV,
+                "username_configured": bool(configured_username),
+                "password_configured": bool(configured_password),
+            },
         )
         raise HTTPException(
             status_code=503,
@@ -762,7 +770,7 @@ async def login(
     API_USERNAME and API_PASSWORD.
     """
     if not validate_login_credentials(request.username, request.password):
-        logger.warning("login_failed", username=request.username)
+        logger.warning("login_failed", extra={"username": request.username})
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
     token = create_access_token({"sub": request.username})
