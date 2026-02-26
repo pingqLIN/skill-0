@@ -4,9 +4,14 @@ Skill-0 Governance Dashboard API
 FastAPI application providing REST APIs for the governance dashboard.
 """
 
+import logging
 import os
+import sys
+import time
+import uuid
 
-from fastapi import Depends, FastAPI
+import structlog
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 
 from .auth import require_auth
@@ -33,6 +38,62 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Structured logging setup
+def _setup_dashboard_logging():
+    shared_processors = [
+        structlog.contextvars.merge_contextvars,
+        structlog.stdlib.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.processors.UnicodeDecoder(),
+    ]
+    log_format = os.getenv("SKILL0_LOG_FORMAT", "json").lower()
+    if log_format == "json":
+        renderer = structlog.processors.JSONRenderer(ensure_ascii=False)
+    else:
+        renderer = structlog.dev.ConsoleRenderer()
+
+    structlog.configure(
+        processors=[*shared_processors, structlog.stdlib.ProcessorFormatter.wrap_for_formatter],
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        wrapper_class=structlog.stdlib.BoundLogger,
+        cache_logger_on_first_use=True,
+    )
+    formatter = structlog.stdlib.ProcessorFormatter(
+        processors=[structlog.stdlib.ProcessorFormatter.remove_processors_meta, renderer],
+        foreign_pre_chain=shared_processors,
+    )
+    handler = logging.StreamHandler(sys.stdout)
+    handler.setFormatter(formatter)
+    root = logging.getLogger()
+    root.handlers.clear()
+    root.addHandler(handler)
+    root.setLevel(logging.INFO)
+
+
+_setup_dashboard_logging()
+_logger = structlog.get_logger("dashboard")
+
+
+@app.middleware("http")
+async def request_logging_middleware(request: Request, call_next):
+    """Add request ID and structured logging to every request."""
+    rid = uuid.uuid4().hex[:8]
+    structlog.contextvars.bind_contextvars(request_id=rid)
+    start = time.time()
+    response = await call_next(request)
+    duration_ms = round((time.time() - start) * 1000, 2)
+    _logger.info(
+        "request_completed",
+        method=request.method,
+        path=request.url.path,
+        status=response.status_code,
+        duration_ms=duration_ms,
+    )
+    response.headers["X-Request-ID"] = rid
+    structlog.contextvars.unbind_contextvars("request_id")
+    return response
+
 
 # Auth dependency applied to all /api/* routes
 _auth_deps = [Depends(require_auth)]
