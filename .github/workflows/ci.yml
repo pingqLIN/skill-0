@@ -80,11 +80,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install PyJWT pytest httpx
+          pip install PyJWT pytest httpx pytest-cov
 
       - name: Run tests
         run: |
-          python -m pytest tests/ -v
+          python -m pytest tests/ -v --cov=api --cov=vector_db --cov=tools --cov-report=term-missing --cov-report=xml:coverage.xml
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
 
   build-web:
     runs-on: ubuntu-latest
@@ -109,3 +115,20 @@ jobs:
       - name: Build
         working-directory: skill-0-dashboard/apps/web
         run: npm run build
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build API image
+        run: docker build -f Dockerfile.api -t skill-0-api:test .
+
+      - name: Build Dashboard image
+        run: docker build -f Dockerfile.dashboard -t skill-0-dashboard:test .
+
+      - name: Build Web image
+        run: docker build -f Dockerfile.web -t skill-0-web:test .
