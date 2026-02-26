@@ -1,0 +1,261 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__typescript-5-es2022",
+    "name": "typescript-5-es2022",
+    "skill_layer": "claude_skill",
+    "title": "Typescript 5 Es2022 Skill",
+    "description": "Guidelines for TypeScript Development targeting TypeScript 5.x and ES2022 output Triggers on: **/*.ts",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.725404Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/typescript-5-es2022/SKILL.md",
+    "skill_name": "typescript-5-es2022",
+    "skill_description": "Guidelines for TypeScript Development targeting TypeScript 5.x and ES2022 output Triggers on: **/*.ts"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Prefer readable, explicit solutions over clever shortcuts.",
+        "description": "Prefer readable, explicit solutions over clever shortcuts.",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Rely on the project's build, lint, and test scripts unless a",
+        "description": "Rely on the project's build, lint, and test scripts unless asked otherwise.",
+        "action_type": "await_input",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Note design trade-offs when intent is not obvious.",
+        "description": "Note design trade-offs when intent is not obvious.",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Keep tests, types, and helpers near their implementation whe",
+        "description": "Keep tests, types, and helpers near their implementation when it aids discovery.",
+        "action_type": "llm_inference",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Name things for their behavior or domain meaning, not implem",
+        "description": "Name things for their behavior or domain meaning, not implementation.",
+        "action_type": "llm_inference",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Run the repository's lint/format scripts (e.g., `npm run lin",
+        "description": "Run the repository's lint/format scripts (e.g., `npm run lint`) before submitting.",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Keep functions focused; extract helpers when logic branches ",
+        "description": "Keep functions focused; extract helpers when logic branches grow.",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Express intent with TypeScript utility types (e.g., `Readonl",
+        "description": "Express intent with TypeScript utility types (e.g., `Readonly`, `Partial`, `Record`).",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Send errors through the project's logging/telemetry utilitie",
+        "description": "Send errors through the project's logging/telemetry utilities.",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Debounce configuration-driven updates and dispose resources ",
+        "description": "Debounce configuration-driven updates and dispose resources deterministically.",
+        "action_type": "external_call",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Instantiate clients outside hot paths and inject them for te",
+        "description": "Instantiate clients outside hot paths and inject them for testability.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Encode untrusted content before rendering HTML; use framewor",
+        "description": "Encode untrusted content before rendering HTML; use framework escaping or trusted types.",
+        "action_type": "external_call",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Patch dependencies promptly and monitor advisories.",
+        "description": "Patch dependencies promptly and monitor advisories.",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Handle secrets via the project's secure storage; guard `unde",
+        "description": "Handle secrets via the project's secure storage; guard `undefined` and error states.",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Document new configuration keys and update related tests.",
+        "description": "Document new configuration keys and update related tests.",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "> These instructions assume projects are built with TypeScript 5.x (or newer) compiling to an ES2022 JavaScript baseline. Adjust guidance if your runt",
+        "condition": "typescript development",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Use pure ES modules; never emit `require`, `module.exports`, or CommonJS helpers.",
+        "condition": "general guardrails",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Avoid `any` (implicit or explicit); prefer `unknown` plus narrowing.",
+        "condition": "type system expectations",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Guard edge cases early to avoid deep nesting.",
+        "condition": "async, events & error handling",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Never hardcode secrets; load them from secure sources.",
+        "condition": "external integrations",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Validate and sanitize external input with schema validators or type guards.",
+        "condition": "security practices",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Avoid dynamic code execution and untrusted template rendering.",
+        "condition": "security practices",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Reach configuration through shared helpers and validate with schemas or dedicated validators.",
+        "condition": "configuration & secrets",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Avoid brittle timing assertions; prefer fake timers or injected clocks.",
+        "condition": "testing expectations",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Respect the existing architecture and coding standards.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Extend current abstractions before inventing new ones.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Prioritize maintainability and clarity, short methods and classes, clean code.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Target TypeScript 5.x / ES2022 and prefer native features over polyfills.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Follow the repository's folder and responsibility layout for new code.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use kebab-case filenames (e.g., `user-session.ts`, `data-service.ts`) unless told otherwise.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Reuse or extend shared utilities before adding new ones.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use PascalCase for classes, interfaces, enums, and type aliases; camelCase for everything else.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Skip interface prefixes like `I`; rely on descriptive names.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Match the project's indentation, quote style, and trailing comma rules.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

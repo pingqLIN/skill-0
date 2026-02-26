@@ -1,0 +1,243 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-react-platform-libraries",
+    "name": "pcf-react-platform-libraries",
+    "skill_layer": "claude_skill",
+    "title": "Pcf React Platform Libraries Skill",
+    "description": "React controls and platform libraries for PCF components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.087435Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-react-platform-libraries/SKILL.md",
+    "skill_name": "pcf-react-platform-libraries",
+    "skill_description": "React controls and platform libraries for PCF components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "When you use React and platform libraries, you're using the ",
+        "description": "When you use React and platform libraries, you're using the same infrastructure used by the Power Apps platform. This means you no longer have to pack",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Reduced control bundle size",
+        "description": "Reduced control bundle size",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Optimized solution packaging",
+        "description": "Optimized solution packaging",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Faster runtime transfer, scripting, and control rendering",
+        "description": "Faster runtime transfer, scripting, and control rendering",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Design and theme alignment with the Power Apps Fluent design",
+        "description": "Design and theme alignment with the Power Apps Fluent design system",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "> Note: These instructions expect that you have created code",
+        "description": "> Note: These instructions expect that you have created code components before. If you have not, see [Create your first component](https://learn.micro",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| --run-npm-install | true (default) |",
+        "description": "| --run-npm-install | true (default) |",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The following PowerShell command uses the parameter shortcut",
+        "description": "The following PowerShell command uses the parameter shortcuts and creates a React component project and runs `npm-install`:",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "You can now build and view the control in the test harness a",
+        "description": "You can now build and view the control in the test harness as usual using `npm start`.",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "After you build the control, you can package it inside solut",
+        "description": "After you build the control, you can package it inside solutions and use it for model-driven apps (including custom pages) and canvas apps like standa",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "> Note: Changing this value does not convert a component fro",
+        "description": "> Note: Changing this value does not convert a component from one type to another.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "> Note: For more information about valid platform library ve",
+        "description": "> Note: For more information about valid platform library versions, see Supported platform libraries list.",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "React and Fluent libraries aren't included in the package be",
+        "description": "React and Fluent libraries aren't included in the package because they're shared, therefore the size of bundle.js is smaller.",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| ChoicesPickerReact | The standard ChoicesPickerControl con",
+        "description": "| ChoicesPickerReact | The standard ChoicesPickerControl converted to be a React Control | ChoicesPickerReact Sample |",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| FacepileReact | The ReactStandardControl converted to be a",
+        "description": "| FacepileReact | The ReactStandardControl converted to be a React Control | FacepileReact |",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "> Note: With GA release, all existing virtual controls will continue to function. However, they should be rebuilt and deployed using the latest CLI ve",
+        "condition": "benefits",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "As with any component, you must install [Visual Studio Code](https://code.visualstudio.com/Download) and the [Microsoft Power Platform CLI](https://le",
+        "condition": "prerequisites",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "> Note: If you have already installed Power Platform CLI for Windows, make sure you are running the latest version by using the `pac install latest` c",
+        "condition": "prerequisites",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Recommendation: We recommend using platform libraries for Fluent 8 and 9. If you don't use Fluent, you should remove the `platform-library` element wh",
+        "condition": "controlmanifest.input.xml",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "The [ReactControl.init](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/react-control/init) method for control in",
+        "condition": "index.ts",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "A: No. React controls & platform libraries are currently only supported for canvas and model-driven apps. In Power Pages, React controls don't update ",
+        "condition": "q: can i use react controls & platform libraries with power pages?",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "By reusing the existing platform React and Fluent libraries, you can expect:",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "There's a new `--framework` (`-fw`) parameter for the `pac pcf init` command. Set the value of this parameter to `react`.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "pac pcf init -n ReactSample -ns SampleNamespace -t field -fw react -npm",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "The [control element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/control) `control-type` att",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Within the [resources element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/resources), find t",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<platform-library name=\"React\" version=\"16.14.0\" />",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<platform-library name=\"Fluent\" version=\"9.46.2\" />",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "The following controls are included in the samples. They function the same as their standard versions but offer better performance since they are virt",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "|---------|---------|---------------|-----------------|",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| React | react | 16.14.0 | 17.0.2 (Model), 16.14.0 (Canvas) |",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

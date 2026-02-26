@@ -1,0 +1,243 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-bi-security-rls-best-practices",
+    "name": "power-bi-security-rls-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Power Bi Security Rls Best Practices Skill",
+    "description": "Comprehensive Power BI Row-Level Security (RLS) and advanced security patterns implementation guide with dynamic security, best practices, and governance strategies. Triggers on: **/*.{pbix,dax,md,txt",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.356016Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-bi-security-rls-best-practices/SKILL.md",
+    "skill_name": "power-bi-security-rls-best-practices",
+    "skill_description": "Comprehensive Power BI Row-Level Security (RLS) and advanced security patterns implementation guide with dynamic security, best practices, and governance strategies. Triggers on: **/*.{pbix,dax,md,txt"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "CREATE FUNCTION Security.tvf_securitypredicate(@SalesRep AS ",
+        "description": "CREATE FUNCTION Security.tvf_securitypredicate(@SalesRep AS nvarchar(50))",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "CREATE SECURITY POLICY SalesFilter",
+        "description": "CREATE SECURITY POLICY SalesFilter",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "CREATE FUNCTION Security.tvf_securitypredicate(@UserName AS ",
+        "description": "CREATE FUNCTION Security.tvf_securitypredicate(@UserName AS varchar(50))",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "OR USER_NAME() = 'BatchProcess@contoso.com';",
+        "description": "OR USER_NAME() = 'BatchProcess@contoso.com';",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "-- Using the function to create a Security Policy",
+        "description": "-- Using the function to create a Security Policy",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "CREATE SECURITY POLICY YourSecurityPolicy",
+        "description": "CREATE SECURITY POLICY YourSecurityPolicy",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Create summary table for partial RLS",
+        "description": "// Create summary table for partial RLS",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\" | Accessible: \" & FORMAT(AccessibleRows, \"#,0\") &",
+        "description": "\" | Accessible: \" & FORMAT(AccessibleRows, \"#,0\") &",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\" | Total: \" & FORMAT(TotalRows, \"#,0\") &",
+        "description": "\" | Total: \" & FORMAT(TotalRows, \"#,0\") &",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\" | Access: \" & FORMAT(AccessPercentage, \"0.00\") & \"%\"",
+        "description": "\" | Access: \" & FORMAT(AccessPercentage, \"0.00\") & \"%\"",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Generate token with Azure AD user context",
+        "description": "// Generate token with Azure AD user context",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "var tokenRequest = new GenerateTokenRequestV2(",
+        "description": "var tokenRequest = new GenerateTokenRequestV2(",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "reports: new List<GenerateTokenRequestV2Report>() { new Gene",
+        "description": "reports: new List<GenerateTokenRequestV2Report>() { new GenerateTokenRequestV2Report(reportId) },",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "datasets: datasetIds.Select(datasetId => new GenerateTokenRe",
+        "description": "datasets: datasetIds.Select(datasetId => new GenerateTokenRequestV2Dataset(datasetId.ToString())).ToList(),",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "targetWorkspaces: targetWorkspaceId != Guid.Empty ? new List",
+        "description": "targetWorkspaces: targetWorkspaceId != Guid.Empty ? new List<GenerateTokenRequestV2TargetWorkspace>() { new GenerateTokenRequestV2TargetWorkspace(targ",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "// Restrict access to recent data based on role",
+        "condition": "3. time-based security",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "// Validate expected roles explicitly",
+        "condition": "2. explicit role validation",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "//  AVOID: This grants full access to unexpected users",
+        "condition": "1. overly permissive defaults",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "//  AVOID: Overly complex security that's hard to audit",
+        "condition": "2. complex security logic",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "\"🚨 Multiple Access Denials - Review Required\",",
+        "condition": "2. data breach detection",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Remember: Security is layered - implement defense in depth with proper authentication, authorization, data encryption, network security, and comprehen",
+        "condition": "2. data breach detection",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "This document provides comprehensive instructions for implementing robust security patterns in Power BI, focusing on Row-Level Security (RLS), dynamic",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "// Hierarchical security with territory lookups",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "=DimSalesTerritory[SalesTerritoryKey]=LOOKUPVALUE(",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DimUserSecurity[SalesTerritoryID],",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DimUserSecurity[UserName], USERNAME(),",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DimUserSecurity[SalesTerritoryID], DimSalesTerritory[SalesTerritoryKey]",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "UserSecurity[UserName] = USERNAME()",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "VAR AllowedTerritories = SELECTCOLUMNS(UserTerritories, \"Territory\", UserSecurity[Territory])",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Territory] IN AllowedTerritories",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"datasets\": [ \"fe0a1aeb-f6a4-4b27-a2d3-b5df3bb28bdc\" ]",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

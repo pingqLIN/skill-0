@@ -1,0 +1,201 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-sample-components",
+    "name": "pcf-sample-components",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Sample Components Skill",
+    "description": "How to use and run PCF sample components from the PowerApps-Samples repository Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.095596Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-sample-components/SKILL.md",
+    "skill_name": "pcf-sample-components",
+    "skill_description": "How to use and run PCF sample components from the PowerApps-Samples repository Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run npm",
+        "description": "npm install",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "All the sample components listed under this section are avai",
+        "description": "All the sample components listed under this section are available to download from [github.com/microsoft/PowerApps-Samples/tree/master/component-frame",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Download](https://docs.github.com/repositories/working-with",
+        "description": "[Download](https://docs.github.com/repositories/working-with-files/using-files/downloading-source-code-archives#downloading-source-code-archives-from-",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Install [Install Power Platform CLI for Windows](https://lea",
+        "description": "Install [Install Power Platform CLI for Windows](https://learn.microsoft.com/en-us/power-platform/developer/cli/introduction#install-power-platform-cl",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Follow the steps in the [README.md](https://github.com/micro",
+        "description": "Follow the steps in the [README.md](https://github.com/microsoft/PowerApps-Samples/blob/master/component-framework/README.md) to generate solutions co",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use the following steps to import and try the sample compone",
+        "description": "Use the following steps to import and try the sample components in your model-driven or canvas app.",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Download or clone the repository",
+        "description": "1. Download or clone the repository",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "On Windows, you can type `developer command prompt` in Start",
+        "description": "On Windows, you can type `developer command prompt` in Start to open a developer command prompt.",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Navigate to the component you want to try, for example `Incr",
+        "description": "Navigate to the component you want to try, for example `IncrementControl`, and run:",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "After the command has completed, run:",
+        "description": "After the command has completed, run:",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create a new folder inside the sample component folder:",
+        "description": "Create a new folder inside the sample component folder:",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Inside the folder you created, run the `pac solution init` c",
+        "description": "Inside the folder you created, run the `pac solution init` command:",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "pac solution init --publisher-name powerapps_samples --publi",
+        "description": "pac solution init --publisher-name powerapps_samples --publisher-prefix sample",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "> Note: This command creates a new file named `IncrementCont",
+        "description": "> Note: This command creates a new file named `IncrementControlSolution.cdsproj` in the folder.",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Run the `pac solution add-reference` command with the `path`",
+        "description": "Run the `pac solution add-reference` command with the `path` set to the location of the `.pcfproj` file:",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "To try the sample components, you must first:",
+        "condition": "before you can try the sample components",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "completion",
+        "description": "The individual sample component topics under this section provide you an overview of the sample component, its visual appearance, and a link to the co",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Open a [Developer Command Prompt for Visual Studio](https://learn.microsoft.com/visualstudio/ide/reference/command-prompt-powershell) and navigate to ",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "pac solution add-reference --path ../../IncrementControl",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Now that you have the zip file, you have two options:",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Finally, to add code components to your model-driven and canvas apps, see:",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Add components to model-driven apps](https://learn.microsoft.com/powerapps/developer/component-framework/add-custom-controls-to-a-field-or-entity)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Add components to canvas apps](https://learn.microsoft.com/powerapps/developer/component-framework/component-framework-for-canvas-apps#add-components",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "The repository contains numerous sample components including:",
+        "decomposable": false,
+        "id": "d_008"
+      }
+    ]
+  }
+}

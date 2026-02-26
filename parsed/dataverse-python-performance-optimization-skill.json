@@ -1,0 +1,261 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-performance-optimization",
+    "name": "dataverse-python-performance-optimization",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Performance Optimization Skill",
+    "description": "dataverse-python-performance-optimization guidelines Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.414344Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-performance-optimization/SKILL.md",
+    "skill_name": "dataverse-python-performance-optimization",
+    "skill_description": "dataverse-python-performance-optimization guidelines Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Impact: Reduces payload size and memory usage by 30-50%.",
+        "description": "Impact: Reduces payload size and memory usage by 30-50%.",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "filter=\"statecode eq 0 and createdon gt 2025-01-01Z\"",
+        "description": "filter=\"statecode eq 0 and createdon gt 2025-01-01Z\"",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "orderby=[\"createdon desc\", \"name asc\"],",
+        "description": "orderby=[\"createdon desc\", \"name asc\"],",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "for page in pages:  # Each iteration fetches one page",
+        "description": "for page in pages:  # Each iteration fetches one page",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "process_record(record)  # Process immediately",
+        "description": "process_record(record)  # Process immediately",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Memory efficient (pages loaded on-demand)",
+        "description": "Memory efficient (pages loaded on-demand)",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Can stop early if needed",
+        "description": "Can stop early if needed",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ids = client.create(\"account\", payloads)  # One API call for",
+        "description": "ids = client.create(\"account\", payloads)  # One API call for many records",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.update(\"account\", account_ids, {\"statecode\": 1})  # O",
+        "description": "client.update(\"account\", account_ids, {\"statecode\": 1})  # One call",
+        "action_type": "external_call",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.update(\"account\", account_ids, updates)",
+        "description": "client.update(\"account\", account_ids, updates)",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| Table Type | Batch Size | Max Threads |",
+        "description": "| Table Type | Batch Size | Max Threads |",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def bulk_create_optimized(client, table_name, payloads, batc",
+        "description": "def bulk_create_optimized(client, table_name, payloads, batch_size=200):",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Create records in optimal batch size.\"\"\"",
+        "description": "\"\"\"Create records in optimal batch size.\"\"\"",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "for i in range(0, len(payloads), batch_size):",
+        "description": "for i in range(0, len(payloads), batch_size):",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "batch = payloads[i:i + batch_size]",
+        "description": "batch = payloads[i:i + batch_size]",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "select=[\"accountid\", \"name\", \"telephone1\", \"creditlimit\"],",
+        "condition": "✅ fast - only retrieve needed columns",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "top=5000,              # Total limit",
+        "condition": "✅ best - generator yields one page at a time",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "\"\"\"Call function with exponential backoff for rate limits.\"\"\"",
+        "condition": "10. rate limiting handling",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "print(f\"Rate limited. Waiting {wait_time}s...\")",
+        "condition": "10. rate limiting handling",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "def create_with_consistency_check(client, table_name, payloads):",
+        "condition": "⚠️ if bulk operation partially fails, some records may be created",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "\"\"\"Create records and verify all succeeded.\"\"\"",
+        "condition": "⚠️ if bulk operation partially fails, some records may be created",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "| Use select to limit columns | ☐ | Only retrieve needed data |",
+        "condition": "13. performance checklist",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "| Filter server-side with OData | ☐ | Don't fetch all and filter |",
+        "condition": "13. performance checklist",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "| Handle rate limiting (429) | ☐ | Implement exponential backoff |",
+        "condition": "13. performance checklist",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Based on official Microsoft Dataverse and Azure SDK performance guidance.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "The Dataverse SDK for Python is optimized for Python developers but has some limitations in preview:",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Minimal retry policy: Only network errors are retried by default",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "No DeleteMultiple: Use individual deletes or update status instead",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "Limited OData batching: General-purpose OData batching not supported",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "SQL limitations: No JOINs, limited WHERE/TOP/ORDER BY",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "Workarounds and optimization strategies address these limitations.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "active_accounts = [a for a in all_accounts if a.get(\"statecode\") == 0]",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "all_records = list(client.get(\"account\", top=100000))",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "for page in client.get(\"account\", top=100000, page_size=5000):",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

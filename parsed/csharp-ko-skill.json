@@ -1,0 +1,102 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__csharp-ko",
+    "name": "csharp-ko",
+    "skill_layer": "claude_skill",
+    "title": "Csharp Ko Skill",
+    "description": "C# 애플리케이션 개발을 위한 코드 작성 규칙 by @jgkim999 Triggers on: **/*.cs",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.259430Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/csharp-ko/SKILL.md",
+    "skill_name": "csharp-ko",
+    "skill_description": "C# 애플리케이션 개발을 위한 코드 작성 규칙 by @jgkim999 Triggers on: **/*.cs"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "| ConfigureAwait | 라이브러리 코드에서 컨텍스트 전환 오버헤드 감소 | `await SomeM",
+        "description": "| ConfigureAwait | 라이브러리 코드에서 컨텍스트 전환 오버헤드 감소 | `await SomeMethodAsync().ConfigureAwait(false)` |",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "문자열을 반복적으로 연결할 때는 + 연산자 대신 StringBuilder를 사용하세요.",
+        "description": "문자열을 반복적으로 연결할 때는 + 연산자 대신 StringBuilder를 사용하세요.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "일관된 명명 규칙은 코드 가독성의 핵심입니다. Microsoft의 가이드라인을 따르는 것을 권장합니다.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| 인터페이스 | 접두사 'I' + PascalCase | `IAsyncRepository`, `ILogger` |",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| 공개(public) 멤버 | 파스칼 케이스 (PascalCase) | `public int MaxCount;`, `public void GetData()` |",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| 매개변수, 지역 변수 | 카멜 케이스 (camelCase) | `int userCount`, `string customerName` |",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| 비공개/내부 필드 | 밑줄(_) + 카멜 케이스 | `private string _connectionString;` |",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "| 상수 (const) | 파스칼 케이스 (PascalCase) | `public const int DefaultTimeout = 5000;` |",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "completion",
+        "description": "| 제네릭 형식 매개변수 | 접두사 'T' + 설명적인 이름 | `TKey`, `TValue`, `TResult` |",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| 비동기 메서드 | 'Async' 접미사 | `GetUserAsync`, `DownloadFileAsync` |",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| 들여쓰기 | 4개의 공백 사용 | 탭 대신 4개의 공백을 사용합니다. cs 파일은 반드시 4개의 공백을 사용합니다. |",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| 괄호 | 항상 중괄호 {} 사용 | 제어문(if, for, while 등)이 한 줄이더라도 항상 중괄호를 사용합니다. |",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

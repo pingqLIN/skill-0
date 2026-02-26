@@ -1,0 +1,237 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__r",
+    "name": "r",
+    "skill_layer": "claude_skill",
+    "title": "R Skill",
+    "description": "R language and document formats (R, Rmd, Quarto): coding standards and Copilot guidance for idiomatic, safe, and consistent code generation. Triggers on: **/*.R, **/*.r, **/*.Rmd, **/*.rmd, **/*.qmd",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.465350Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/r/SKILL.md",
+    "skill_name": "r",
+    "skill_description": "R language and document formats (R, Rmd, Quarto): coding standards and Copilot guidance for idiomatic, safe, and consistent code generation. Triggers on: **/*.R, **/*.r, **/*.Rmd, **/*.rmd, **/*.qmd"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Help GitHub Copilot generate idiomatic, safe, and maintainab",
+        "description": "Help GitHub Copilot generate idiomatic, safe, and maintainable R code across projects.",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Magrittr pipe `%>%`: Continue using in projects already comm",
+        "description": "Magrittr pipe `%>%`: Continue using in projects already committed to magrittr or when you need features like `.`, `%T>%`, or `%$%`.",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Large datasets: consider `data.table`; benchmark with your w",
+        "description": "Large datasets: consider `data.table`; benchmark with your workload.",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "dplyr compatibility: Use `dtplyr` to write dplyr syntax that",
+        "description": "dplyr compatibility: Use `dtplyr` to write dplyr syntax that translates to data.table operations automatically for performance gains.",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Formatting: `styler` (tidyverse style), two-space indents, ~",
+        "description": "Formatting: `styler` (tidyverse style), two-space indents, ~100-char lines.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Linting: `lintr` configured via `.lintr`.",
+        "description": "Linting: `lintr` configured via `.lintr`.",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Pre-commit: consider `precommit` hooks to lint/format automa",
+        "description": "Pre-commit: consider `precommit` hooks to lint/format automatically.",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Docs: roxygen2 for exported functions (`@param`, `@return`, ",
+        "description": "Docs: roxygen2 for exported functions (`@param`, `@return`, `@examples`).",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Tests: prefer small, pure, composable functions that are eas",
+        "description": "Tests: prefer small, pure, composable functions that are easy to unit test.",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Dependencies: manage with `renv`; snapshot after adding pack",
+        "description": "Dependencies: manage with `renv`; snapshot after adding packages.",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Strings & Dates: use `stringr`/`lubridate` where already pre",
+        "description": "Strings & Dates: use `stringr`/`lubridate` where already present; otherwise use clear base helpers (e.g., `nchar()`, `substr()`, `as.Date()` with expl",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "I/O: prefer explicit, typed readers (e.g., `readr::read_csv(",
+        "description": "I/O: prefer explicit, typed readers (e.g., `readr::read_csv()`); make parsing assumptions explicit.",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Prefer `ggplot2` for publication-quality plots. Keep layers ",
+        "description": "Prefer `ggplot2` for publication-quality plots. Keep layers readable and label axes and units.",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "In tidyverse contexts, use `rlang::abort()` / `rlang::warn()",
+        "description": "In tidyverse contexts, use `rlang::abort()` / `rlang::warn()` for structured conditions; in base-only code, use `stop()` / `warning()`.",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When multiple approaches are equivalent, prefer readability ",
+        "description": "When multiple approaches are equivalent, prefer readability and type stability and explain the trade-offs.",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Be consistent: Don't mix `|>` and `%>%` within the same script unless there's a clear technical reason.",
+        "condition": "pipe operators",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Prefer consistent return structures—typed outputs for normal flows, structured lists only when error details are required.",
+        "condition": "error handling",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Validate inputs with `req()` and clear, user-friendly messages.",
+        "condition": "shiny",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Use connection pooling (`pool`) for databases; avoid long-lived global objects.",
+        "condition": "shiny",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Avoid global state; prefer local helpers. Use `withr::with_seed()` for deterministic chunks.",
+        "condition": "r markdown / quarto",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Match the project’s style. If the file shows a preference (tidyverse vs. base R, `%>%` vs. `|>`), follow it.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Prefer clear, vectorized code. Keep functions small and avoid hidden side effects.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Qualify non-base functions in examples/snippets, e.g., `dplyr::mutate()`, `stringr::str_detect()`. In project code, using `library()` is acceptable wh",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Naming: `lower_snake_case` for objects/files; avoid dots in names.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Side effects: Never call `setwd()`; prefer project-relative paths (e.g., `here::here()`).",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Reproducibility: Set seeds locally around stochastic operations using `withr::with_seed()`.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Validation: Validate and constrain user inputs; use typed checks and allowlists where possible.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Safety: Avoid `eval(parse())`, unvalidated shell calls, and unparameterized SQL.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Native pipe `|>` (R ≥ 4.1.0): Prefer in R ≥ 4.1 (no extra dependency).",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Profiling: Use `profvis::profvis()` to identify performance bottlenecks in your code. Profile before optimizing.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

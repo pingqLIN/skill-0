@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__wordpress",
+    "name": "wordpress",
+    "skill_layer": "claude_skill",
+    "title": "Wordpress Skill",
+    "description": "Coding, security, and testing rules for WordPress plugins and themes Triggers on: wp-content/plugins/**,wp-content/themes/**,**/*.php,**/*.inc,**/*.js,**/*.jsx,**/*.ts,**/*.tsx,**/*.css,**/*.scss,**/*",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.817113Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/wordpress/SKILL.md",
+    "skill_name": "wordpress",
+    "skill_description": "Coding, security, and testing rules for WordPress plugins and themes Triggers on: wp-content/plugins/**,wp-content/themes/**,**/*.php,**/*.inc,**/*.js,**/*.jsx,**/*.ts,**/*.tsx,**/*.css,**/*.scss,**/*"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Goal: Generate WordPress code that is secure, performant, te",
+        "description": "Goal: Generate WordPress code that is secure, performant, testable, and compliant with official WordPress practices. Prefer hooks, small functions, de",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<config name=\"testVersion\" value=\"7.4-\"/>",
+        "description": "<config name=\"testVersion\" value=\"7.4-\"/>",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"dealerdirect/phpcodesniffer-composer-installer\": \"^1.0\",",
+        "description": "\"dealerdirect/phpcodesniffer-composer-installer\": \"^1.0\",",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Load translations with `load_plugin_textdomain()` or `load_t",
+        "description": "Load translations with `load_plugin_textdomain()` or `load_theme_textdomain()`.",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `block.json` + `register_block_type()`; rely on `@wordpr",
+        "description": "Use `block.json` + `register_block_type()`; rely on `@wordpress/*` packages.",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Provide server render callbacks when needed (dynamic blocks)",
+        "description": "Provide server render callbacks when needed (dynamic blocks).",
+        "action_type": "external_call",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `wp_register_style/script` to register first if multiple",
+        "description": "Use `wp_register_style/script` to register first if multiple components depend on the same assets.",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use WordPress test suite with `PHPUnit` and `WP_UnitTestCase",
+        "description": "Use WordPress test suite with `PHPUnit` and `WP_UnitTestCase`.",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Prefer factories (`self::factory()->post->create()` etc.) to",
+        "description": "Prefer factories (`self::factory()->post->create()` etc.) to set up fixtures.",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<phpunit bootstrap=\"tests/bootstrap.php\" colors=\"true\">",
+        "description": "<phpunit bootstrap=\"tests/bootstrap.php\" colors=\"true\">",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<testsuite name=\"Plugin Test Suite\">",
+        "description": "<testsuite name=\"Plugin Test Suite\">",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<directory suffix=\"Test.php\">tests/</directory>",
+        "description": "<directory suffix=\"Test.php\">tests/</directory>",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// tests/bootstrap.php (minimal sketch)",
+        "description": "// tests/bootstrap.php (minimal sketch)",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "$_tests_dir = getenv('WP_TESTS_DIR') ?: '/tmp/wordpress-test",
+        "description": "$_tests_dir = getenv('WP_TESTS_DIR') ?: '/tmp/wordpress-tests-lib';",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "tests_add_filter( 'muplugins_loaded', function () {",
+        "description": "tests_add_filter( 'muplugins_loaded', function () {",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Add nonces with `wp_nonce_field()` and verify via `check_admin_referer()` / `wp_verify_nonce()`.",
+        "condition": "3) security & data handling",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Restrict mutations with `current_user_can( 'manage_options' /* or specific cap */ )`.",
+        "condition": "3) security & data handling",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Database: always use `$wpdb->prepare()` with placeholders; never concatenate untrusted input.",
+        "condition": "3) security & data handling",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Uploads: validate MIME/type and use `wp_handle_upload()`/`media_handle_upload()`.",
+        "condition": "3) security & data handling",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Keep a `.pot` in `/languages` and ensure consistent domain usage.",
+        "condition": "4) internationalization (i18n)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Defer heavy logic to specific hooks; avoid expensive work on `init`/`wp_loaded` unless necessary.",
+        "condition": "5) performance",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Avoid direct HTML echoing for complex UIs; prefer templates or small view helpers with escaping.",
+        "condition": "6) admin ui & settings",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Register with `register_rest_route()`; always set a `permission_callback`.",
+        "condition": "7) rest api",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Validate/sanitize request args via the `args` schema.",
+        "condition": "7) rest api",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "E2E tests should cover: insert block → edit → save → front‑end render.",
+        "condition": "8) blocks & editor (gutenberg)",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Never modify WordPress core. Extend via actions and filters.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "For plugins, always include a header and guard direct execution in entry PHP files.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use unique prefixes or PHP namespaces to avoid global collisions.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Enqueue assets; never inline raw `<script>`/`<style>` in PHP templates.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Make user‑facing strings translatable and load the correct text domain.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Follow WordPress Coding Standards (WPCS) and write DocBlocks for public APIs.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "preference",
+        "description": "PHP: Prefer strict comparisons (`===`, `!==`) where appropriate. Be consistent with array syntax and spacing as per WPCS.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "JS: Match WordPress JS style; prefer `@wordpress/*` packages for block/editor code.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "CSS: Use BEM‑like class naming when helpful; avoid over‑specific selectors.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "PHP 7.4+ compatible patterns unless the project specifies higher. Avoid using features not supported by target WP/PHP versions.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

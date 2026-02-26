@@ -1,0 +1,225 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__rust-mcp-server",
+    "name": "rust-mcp-server",
+    "skill_layer": "claude_skill",
+    "title": "Rust Mcp Server Skill",
+    "description": "Best practices for building Model Context Protocol servers in Rust using the official rmcp SDK with async/await patterns Triggers on: **/*.rs",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.523717Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/rust-mcp-server/SKILL.md",
+    "skill_name": "rust-mcp-server",
+    "skill_description": "Best practices for building Model Context Protocol servers in Rust using the official rmcp SDK with async/await patterns Triggers on: **/*.rs"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run cargo",
+        "description": "cargo build --release --target x86_64-unknown-linux-gnu",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "│   ├── handler.rs        # ServerHandler implementation",
+        "description": "│   ├── handler.rs        # ServerHandler implementation",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create a server with stdio transport:",
+        "description": "Create a server with stdio transport:",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "tracing_subscriber::fmt::init();",
+        "description": "tracing_subscriber::fmt::init();",
+        "action_type": "external_call",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "server.run(signal::ctrl_c()).await?;",
+        "description": "server.run(signal::ctrl_c()).await?;",
+        "action_type": "llm_inference",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement the `ServerHandler` trait:",
+        "description": "Implement the `ServerHandler` trait:",
+        "action_type": "llm_inference",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "tool_router: Self::create_tool_router(),",
+        "description": "tool_router: Self::create_tool_router(),",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "fn create_tool_router() -> ToolRouter {",
+        "description": "fn create_tool_router() -> ToolRouter {",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Initialize and return tool router",
+        "description": "// Initialize and return tool router",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "annotations(read_only_hint = true)",
+        "description": "annotations(read_only_hint = true)",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "_ => Err(format!(\"Unknown operation: {}\", p.operation)),",
+        "description": "_ => Err(format!(\"Unknown operation: {}\", p.operation)),",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "format!(\"Hello, {}!\", params.inner().name)",
+        "description": "format!(\"Hello, {}!\", params.inner().name)",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "pub async fn delete_file(params: Parameters<DeleteParams>) -",
+        "description": "pub async fn delete_file(params: Parameters<DeleteParams>) -> Result<(), String> {",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "async fn analyze_code(params: Parameters<CodeParams>) -> Too",
+        "description": "async fn analyze_code(params: Parameters<CodeParams>) -> ToolResponseContent {",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "TextContent::text(format!(\"Analysis of {}:\", params.inner().",
+        "description": "TextContent::text(format!(\"Analysis of {}:\", params.inner().filename)),",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": ".ok_or_else(|| ErrorData::invalid_params(\"language required\"))?;",
+        "condition": "prompt handler",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "fn validate_params(value: &str) -> Result<(), ErrorData> {",
+        "condition": "errordata usage",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "validate_params(&request.name)?;",
+        "condition": "errordata usage",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This guide provides best practices for building Model Context Protocol (MCP) servers using the official Rust SDK (`rmcp`).",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "rmcp = { version = \"0.8.1\", features = [\"server\"] }",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "schemars = { version = \"0.8\", features = [\"derive\"] }",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "server::{RequestContext, ServerHandler, RoleServer},",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "let tcc = ToolCallContext::new(self, request, context);",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use the `#[tool]` macro for declarative tool definitions:",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "description = \"Performs basic arithmetic operations\",",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "completion",
+        "description": "pub async fn calculate(params: Parameters<CalculateParams>) -> Result<f64, String> {",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "async fn greet(params: Parameters<GreetParams>) -> String {",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use annotations to provide hints about tool behavior:",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

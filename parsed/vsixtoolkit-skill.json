@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__vsixtoolkit",
+    "name": "vsixtoolkit",
+    "skill_layer": "claude_skill",
+    "title": "Vsixtoolkit Skill",
+    "description": "Guidelines for Visual Studio extension (VSIX) development using Community.VisualStudio.Toolkit Triggers on: **/*.cs, **/*.vsct, **/*.xaml, **/source.extension.vsixmanifest",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.797487Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/vsixtoolkit/SKILL.md",
+    "skill_name": "vsixtoolkit",
+    "skill_description": "Guidelines for Visual Studio extension (VSIX) development using Community.VisualStudio.Toolkit Triggers on: **/*.cs, **/*.vsct, **/*.xaml, **/source.extension.vsixmanifest"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "`Community.VisualStudio.Toolkit.*` NuGet package reference",
+        "description": "`Community.VisualStudio.Toolkit.*` NuGet package reference",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`ToolkitPackage` base class (not raw `AsyncPackage`)",
+        "description": "`ToolkitPackage` base class (not raw `AsyncPackage`)",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Generate async-first, thread-safe extension code",
+        "description": "Generate async-first, thread-safe extension code",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Follow VSSDK and VSTHRD analyzer rules",
+        "description": "Follow VSSDK and VSTHRD analyzer rules",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Produce testable, maintainable extension code",
+        "description": "Produce testable, maintainable extension code",
+        "action_type": "llm_inference",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Analyzer severity levels and suppressions",
+        "description": "Analyzer severity levels and suppressions",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Visual Studio extensions target .NET Framework 4.8 but can u",
+        "description": "Visual Studio extensions target .NET Framework 4.8 but can use modern C# syntax (up to C# 14) with constraints imposed by the .NET Framework runtime.",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`Span<T>`, `ReadOnlySpan<T>`, `Memory<T>` (no runtime suppor",
+        "description": "`Span<T>`, `ReadOnlySpan<T>`, `Memory<T>` (no runtime support)",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`IAsyncEnumerable<T>` (without polyfill packages)",
+        "description": "`IAsyncEnumerable<T>` (without polyfill packages)",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Default interface implementations",
+        "description": "Default interface implementations",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`Index` and `Range` types (no runtime support for `^` and `.",
+        "description": "`Index` and `Range` types (no runtime support for `^` and `..` operators)",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"Create a command that opens the current file's containing f",
+        "description": "\"Create a command that opens the current file's containing folder using `BaseCommand<T>`\"",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"Write a tagger provider for C# files that highlights TODO c",
+        "description": "\"Write a tagger provider for C# files that highlights TODO comments\"",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"Show a status bar progress indicator while processing files",
+        "description": "\"Show a status bar progress indicator while processing files\"",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Suggesting raw `AsyncPackage` instead of `ToolkitPackage`",
+        "description": "Suggesting raw `AsyncPackage` instead of `ToolkitPackage`",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Verify the project uses the toolkit by checking for:",
+        "condition": "scope",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "If the project uses raw VSSDK (`AsyncPackage` directly) or the new `VisualStudio.Extensibility` model, do not apply these instructions.",
+        "condition": "scope",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Ensure all UI respects Visual Studio themes",
+        "condition": "goals",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "If an `.editorconfig` file exists in the repository, all generated and modified code MUST follow its rules.",
+        "condition": "code style (.editorconfig)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "This includes but is not limited to:",
+        "condition": "code style (.editorconfig)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Line endings and final newline requirements",
+        "condition": "code style (.editorconfig)",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Before generating code, check for `.editorconfig` in the repository root and apply its settings. When in doubt, match the style of surrounding code in",
+        "condition": "code style (.editorconfig)",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Records (with limitations)",
+        "condition": "✅ supported modern c# features",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "`init`-only setters on structs (runtime limitation)",
+        "condition": "❌ not supported (.net framework limitations)",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Extensions using the toolkit should have these global usings in the Package file:",
+        "condition": "global usings",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "These instructions apply ONLY to Visual Studio extensions using `Community.VisualStudio.Toolkit`.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use toolkit abstractions (`VS.*` helpers, `BaseCommand<T>`, `BaseOptionModel<T>`)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Adhere to `.editorconfig` settings when present in the repository",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Naming conventions (fields, properties, methods, etc.)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Code style preferences (`var` usage, expression bodies, braces, etc.)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "When writing code, prefer APIs available in .NET Framework 4.8. If a modern API is needed, check if a polyfill NuGet package exists (e.g., `Microsoft.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"Add an options page with a boolean setting using `BaseOptionModel<T>`\"",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Using `OleMenuCommandService` directly instead of `BaseCommand<T>`",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "├── Commands/           # Command handlers (menu items, toolbar buttons)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "├── Services/           # Business logic and services",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

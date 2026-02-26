@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__terraform-azure",
+    "name": "terraform-azure",
+    "skill_layer": "claude_skill",
+    "title": "Terraform Azure Skill",
+    "description": "Create or modify solutions built using Terraform on Azure. Triggers on: **/*.terraform, **/*.tf, **/*.tfvars, **/*.tflint.hcl, **/*.tfstate, **/*.tf.json, **/*.tfvars.json",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.708026Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/terraform-azure/SKILL.md",
+    "skill_name": "terraform-azure",
+    "skill_description": "Create or modify solutions built using Terraform on Azure. Triggers on: **/*.terraform, **/*.tf, **/*.tfvars, **/*.tflint.hcl, **/*.tfstate, **/*.tf.json, **/*.tfvars.json"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "This instruction set extends the universal DevOps Core Princ",
+        "description": "This instruction set extends the universal DevOps Core Principles and Taming Copilot directives for Azure/Terraform scenarios. It assumes those founda",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When operating in chat mode with these instructions loaded:",
+        "description": "When operating in chat mode with these instructions loaded:",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `locals.tf` to abstract complex expressions and for bett",
+        "description": "Use `locals.tf` to abstract complex expressions and for better readability",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Follow consistent naming conventions and formatting (`terraf",
+        "description": "Follow consistent naming conventions and formatting (`terraform fmt`)",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "description = \"Name of the created resource group\"",
+        "description": "description = \"Name of the created resource group\"",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Improve readability by extracting repeated expressions",
+        "description": "Improve readability by extracting repeated expressions",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Versioning: Target latest stable Terraform and Azure provide",
+        "description": "Versioning: Target latest stable Terraform and Azure provider versions. Specify versions in code and keep updated (TFFR3).",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Antipattern - branch per environment, repository per environ",
+        "description": "Antipattern - branch per environment, repository per environment, folder per environment - or similar layouts that make it hard to test the root folde",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Be aware of tools such as Terragrunt which may influence thi",
+        "description": "Be aware of tools such as Terragrunt which may influence this design.",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "│       ├── test.tfvars             # Test environment",
+        "description": "│       ├── test.tfvars             # Test environment",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "└── README.md                       # Documentation",
+        "description": "└── README.md                       # Documentation",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Follow [Azure naming conventions](https://learn.microsoft.co",
+        "description": "Follow [Azure naming conventions](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ready/azure-best-practices/resource-naming)",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use consistent region naming and variables for multi-region ",
+        "description": "Use consistent region naming and variables for multi-region deployments",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement consistent tagging.",
+        "description": "Implement consistent tagging.",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement Key Vault with appropriate RBAC.",
+        "description": "Implement Key Vault with appropriate RBAC.",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "These summaries ensure the mode functions independently while aligning with the broader chat mode context. For full details, reference the original De",
+        "condition": "incorporated taming copilot directives (behavioral hierarchy)",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Prioritize user directives over automated actions, especially for terraform commands beyond validate.",
+        "condition": "chat mode integration",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Planning Files Awareness: Always check for planning files in the `.terraform-planning-files/` folder (if present). Read and incorporate relevant detai",
+        "condition": "chat mode integration",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Any significant resource should use an AVM if available. AVMs are designed to be aligned to the Well Architected Framework, are supported and maintain",
+        "condition": "4. use azure verified modules (avm)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "An exception to this instruction is if the user has been directed to use an internal private registry, or explicitly states they do not wish to use Az",
+        "condition": "4. use azure verified modules (avm)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "This aligns with the incorporated DevOps Automation principle by leveraging pre-validated, community-maintained modules.",
+        "condition": "4. use azure verified modules (avm)",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Use `ephemeral` secrets with write-only parameters when supported (Terraform v1.11+) to avoid storing secrets in state files. Consult module documenta",
+        "condition": "6. secrets",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Where secrets are required, store in Key Vault unless directed to use a different service.",
+        "condition": "6. secrets",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Never write secrets to local filesystems or commit to git.",
+        "condition": "6. secrets",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Mark sensitive values appropriately, isolate them from other attributes, and avoid outputting sensitive data unless absolutely necessary. Follow TFNFR",
+        "condition": "6. secrets",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Culture: Foster collaborative, blameless culture with shared responsibility and continuous learning.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Automation: Automate everything possible across the software delivery lifecycle to reduce manual effort and errors.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Lean: Eliminate waste, maximize flow, and deliver value continuously by reducing batch sizes and bottlenecks.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Measurement: Measure everything relevant (e.g., DORA metrics: Deployment Frequency, Lead Time for Changes, Change Failure Rate, Mean Time to Recovery)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Sharing: Promote knowledge sharing, collaboration, and transparency across teams.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Primacy of User Directives: Direct user commands take highest priority.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Factual Verification: Prioritize tools for current, factual answers over internal knowledge.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Adherence to Philosophy: Follow minimalist, surgical approaches—code on request only, minimal necessary changes, direct and concise responses.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Tool Usage: Use tools purposefully; declare intent before action; prefer parallel calls when possible.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Treat this as a self-contained extension that incorporates summarized general rules for independent operation.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

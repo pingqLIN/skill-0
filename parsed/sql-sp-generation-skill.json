@@ -1,0 +1,171 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__sql-sp-generation",
+    "name": "sql-sp-generation",
+    "skill_layer": "claude_skill",
+    "title": "Sql Sp Generation Skill",
+    "description": "Guidelines for generating SQL statements and stored procedures Triggers on: **/*.sql",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.615993Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/sql-sp-generation/SKILL.md",
+    "skill_name": "sql-sp-generation",
+    "skill_description": "Guidelines for generating SQL statements and stored procedures Triggers on: **/*.sql"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "break long queries into multiple lines for readability",
+        "description": "break long queries into multiple lines for readability",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "use OUTPUT parameters for returning status information",
+        "description": "use OUTPUT parameters for returning status information",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "use batch processing for large data operations",
+        "description": "use batch processing for large data operations",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "all table names should be in singular form",
+        "condition": "database schema generation",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "all column names should be in singular form",
+        "condition": "database schema generation",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "all tables should have a primary key column named `id`",
+        "condition": "database schema generation",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "all tables should have a column named `created_at` to store the creation timestamp",
+        "condition": "database schema generation",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "all tables should have a column named `updated_at` to store the last update timestamp",
+        "condition": "database schema generation",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "limit the use of subqueries when joins can be used instead",
+        "condition": "sql query structure",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "include LIMIT/TOP clauses to restrict result sets",
+        "condition": "sql query structure",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "avoid using functions on indexed columns in WHERE clauses",
+        "condition": "sql query structure",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "validate parameter values before use",
+        "condition": "parameter handling",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "arrange parameters consistently (required first, optional later)",
+        "condition": "parameter handling",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "constraint",
+        "description": "all tables should have a primary key constraint",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "all foreign key constraints should have a name",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "all foreign key constraints should be defined inline",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "all foreign key constraints should have `ON DELETE CASCADE` option",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "all foreign key constraints should have `ON UPDATE CASCADE` option",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "all foreign key constraints should reference the primary key of the parent table",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "use uppercase for SQL keywords (SELECT, FROM, WHERE)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "use consistent indentation for nested queries and conditions",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "organize clauses consistently (SELECT, FROM, JOIN, WHERE, GROUP BY, HAVING, ORDER BY)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "use explicit column names in SELECT statements instead of SELECT *",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

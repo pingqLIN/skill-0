@@ -1,0 +1,219 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__java-17-to-java-21-upgrade",
+    "name": "java-17-to-java-21-upgrade",
+    "skill_layer": "claude_skill",
+    "title": "Java 17 To Java 21 Upgrade Skill",
+    "description": "Comprehensive best practices for adopting new Java 21 features since the release of Java 17. Triggers on: ['*']",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.725760Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/java-17-to-java-21-upgrade/SKILL.md",
+    "skill_name": "java-17-to-java-21-upgrade",
+    "skill_description": "Comprehensive best practices for adopting new Java 21 features since the release of Java 17. Triggers on: ['*']"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "When working with string formatting:",
+        "description": "When working with string formatting:",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When working with thread-local data:",
+        "description": "When working with thread-local data:",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Consider Scoped Values as a modern alternative to ThreadLoca",
+        "description": "Consider Scoped Values as a modern alternative to ThreadLocal",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Better performance and clearer semantics for virtual threads",
+        "description": "Better performance and clearer semantics for virtual threads",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "processRequest(); // Can access USER_ID.get() anywhere in ca",
+        "description": "processRequest(); // Can access USER_ID.get() anywhere in call chain",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "private static final Cleaner CLEANER = Cleaner.create();",
+        "description": "private static final Cleaner CLEANER = Cleaner.create();",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "cleaner.register(this, new CleanupTask(nativeResource));",
+        "description": "cleaner.register(this, new CleanupTask(nativeResource));",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "private static class CleanupTask implements Runnable {",
+        "description": "private static class CleanupTask implements Runnable {",
+        "action_type": "await_input",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add `-XX:+EnableDynamicAgentLoading` to suppress warnings if",
+        "description": "Add `-XX:+EnableDynamicAgentLoading` to suppress warnings if needed",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Consider loading agents at startup instead of dynamically",
+        "description": "Consider loading agents at startup instead of dynamically",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Update tooling to use startup agent loading",
+        "description": "Update tooling to use startup agent loading",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add `--enable-preview` to compiler and runtime",
+        "description": "Add `--enable-preview` to compiler and runtime",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<artifactId>maven-compiler-plugin</artifactId>",
+        "description": "<artifactId>maven-compiler-plugin</artifactId>",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "options.compilerArgs.add(\"--enable-preview\")",
+        "description": "options.compilerArgs.add(\"--enable-preview\")",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For applications using Virtual Threads:",
+        "description": "For applications using Virtual Threads:",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "No special JVM flags required (standard feature in 21)",
+        "condition": "virtual threads configuration",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "1. Update Build Tools: Ensure Maven/Gradle supports JDK 21",
+        "condition": "step-by-step upgrade process",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "These instructions help GitHub Copilot assist developers in upgrading Java projects from JDK 17 to JDK 21, focusing on new language features, API chan",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Enhanced switch Expressions and Statements",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "When working with switch constructs:",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Suggest converting traditional switch to pattern matching where appropriate",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Use pattern matching for type checking and destructuring",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Example upgrade patterns:",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "public String processObject(Object obj) {",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "} else if (obj instanceof Integer) {",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "case String s -> s.toUpperCase();",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "case Integer i -> i.toString();",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

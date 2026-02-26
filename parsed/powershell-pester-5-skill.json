@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__powershell-pester-5",
+    "name": "powershell-pester-5",
+    "skill_layer": "claude_skill",
+    "title": "Powershell Pester 5 Skill",
+    "description": "PowerShell Pester testing best practices based on Pester v5 conventions Triggers on: **/*.Tests.ps1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.410040Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/powershell-pester-5/SKILL.md",
+    "skill_name": "powershell-pester-5",
+    "skill_description": "PowerShell Pester testing best practices based on Pester v5 conventions Triggers on: **/*.Tests.ps1"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "File Convention: Use `*.Tests.ps1` naming pattern",
+        "description": "File Convention: Use `*.Tests.ps1` naming pattern",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Placement: Place test files next to tested code or in dedica",
+        "description": "Placement: Place test files next to tested code or in dedicated test directories",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Import Pattern: Use `BeforeAll { . $PSScriptRoot/FunctionNam",
+        "description": "Import Pattern: Use `BeforeAll { . $PSScriptRoot/FunctionName.ps1 }` to import tested functions",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "BeforeAll { # Import tested functions }",
+        "description": "BeforeAll { # Import tested functions }",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "BeforeAll { # Setup for context }",
+        "description": "BeforeAll { # Setup for context }",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`Describe`: Top-level grouping, typically named after functi",
+        "description": "`Describe`: Top-level grouping, typically named after function being tested",
+        "action_type": "external_call",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`It`: Individual test cases, use descriptive names",
+        "description": "`It`: Individual test cases, use descriptive names",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`BeforeAll/AfterAll`: Setup/teardown once per block",
+        "description": "`BeforeAll/AfterAll`: Setup/teardown once per block",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`BeforeEach/AfterEach`: Setup/teardown before/after each tes",
+        "description": "`BeforeEach/AfterEach`: Setup/teardown before/after each test",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`BeforeAll`: Runs once at start of containing block, use for",
+        "description": "`BeforeAll`: Runs once at start of containing block, use for expensive operations",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`BeforeEach`: Runs before every `It` in block, use for test-",
+        "description": "`BeforeEach`: Runs before every `It` in block, use for test-specific setup",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`AfterEach`: Runs after every `It`, guaranteed even if test ",
+        "description": "`AfterEach`: Runs after every `It`, guaranteed even if test fails",
+        "action_type": "llm_inference",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`AfterAll`: Runs once at end of block, use for cleanup",
+        "description": "`AfterAll`: Runs once at end of block, use for cleanup",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Variable Scoping: `BeforeAll` variables available to child b",
+        "description": "Variable Scoping: `BeforeAll` variables available to child blocks (read-only), `BeforeEach/It/AfterEach` share same scope",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Mock Get-Service { @{ Status = 'Running' } } -ParameterFilte",
+        "description": "Mock Get-Service { @{ Status = 'Running' } } -ParameterFilter { $Name -eq 'TestService' }",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "It 'Should behavior' { # Individual test }",
+        "condition": "test structure hierarchy",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "`Should`: Assertion keyword for test validation",
+        "condition": "core keywords",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "`Should -Invoke`: Verify mock was called specific number of times",
+        "condition": "mocking",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "`Should -InvokeVerifiable`: Verify all verifiable mocks were called",
+        "condition": "mocking",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Should -Invoke Get-Service -Exactly 1 -ParameterFilter { $Name -eq 'TestService' }",
+        "condition": "mocking",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "It 'Should return <Expected> for <Input>' -TestCases @(",
+        "condition": "test cases (data-driven tests)",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Get-Function $Input | Should -Be $Expected",
+        "condition": "test cases (data-driven tests)",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "It 'Should work' -Tag 'Fast', 'Stable' { }",
+        "condition": "tags",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "It 'Should be slow' -Tag 'Slow', 'Integration' { }",
+        "condition": "tags",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "It 'Should work on Windows' -Skip:(-not $IsWindows) { }",
+        "condition": "skip",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This guide provides PowerShell-specific instructions for creating automated tests using PowerShell Pester v5 module. Follow PowerShell cmdlet developm",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "No Direct Code: Put ALL code inside Pester blocks (`BeforeAll`, `Describe`, `Context`, `It`, etc.)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`Context`: Sub-grouping within Describe for specific scenarios",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Numeric: `-BeGreaterThan`, `-BeLessThan`, `-BeGreaterOrEqual`",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`Mock CommandName { ScriptBlock }`: Replace command behavior",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`-ParameterFilter`: Mock only when parameters match condition",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "It 'Returns <Expected> for <Name>' -ForEach @(",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "completion",
+        "description": "@{ Name = 'test1'; Expected = 'result1' }",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "completion",
+        "description": "@{ Name = 'test2'; Expected = 'result2' }",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": ") { Get-Function $Name | Should -Be $Expected }",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

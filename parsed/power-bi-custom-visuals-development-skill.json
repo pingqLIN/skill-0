@@ -1,0 +1,213 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-bi-custom-visuals-development",
+    "name": "power-bi-custom-visuals-development",
+    "skill_layer": "claude_skill",
+    "title": "Power Bi Custom Visuals Development Skill",
+    "description": "Comprehensive Power BI custom visuals development guide covering React, D3.js integration, TypeScript patterns, testing frameworks, and advanced visualization techniques. Triggers on: **/*.{ts,tsx,js,",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.228834Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-bi-custom-visuals-development/SKILL.md",
+    "skill_name": "power-bi-custom-visuals-development",
+    "skill_description": "Comprehensive Power BI custom visuals development guide covering React, D3.js integration, TypeScript patterns, testing frameworks, and advanced visualization techniques. Triggers on: **/*.{ts,tsx,js,"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run npm",
+        "description": "npm install -g powerbi-visuals-tools",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Install Power BI visuals tools globally",
+        "description": "// Install Power BI visuals tools globally",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "npm install -g powerbi-visuals-tools",
+        "description": "npm install -g powerbi-visuals-tools",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import powerbi from \"powerbi-visuals-api\";",
+        "description": "import powerbi from \"powerbi-visuals-api\";",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import DataView = powerbi.DataView;",
+        "description": "import DataView = powerbi.DataView;",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import VisualConstructorOptions = powerbi.extensibility.visu",
+        "description": "import VisualConstructorOptions = powerbi.extensibility.visual.VisualConstructorOptions;",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import VisualUpdateOptions = powerbi.extensibility.visual.Vi",
+        "description": "import VisualUpdateOptions = powerbi.extensibility.visual.VisualUpdateOptions;",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import IVisual = powerbi.extensibility.visual.IVisual;",
+        "description": "import IVisual = powerbi.extensibility.visual.IVisual;",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import IVisualHost = powerbi.extensibility.IVisualHost;",
+        "description": "import IVisualHost = powerbi.extensibility.IVisualHost;",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import \"./../style/visual.less\";",
+        "description": "import \"./../style/visual.less\";",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "export class Visual implements IVisual {",
+        "description": "export class Visual implements IVisual {",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public update(options: VisualUpdateOptions) {",
+        "description": "public update(options: VisualUpdateOptions) {",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public getFormattingModel(): powerbi.visuals.FormattingModel",
+        "description": "public getFormattingModel(): powerbi.visuals.FormattingModel {",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "return this.formattingSettingsService.buildFormattingModel(t",
+        "description": "return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "this.valueText = document.createElement(\"p\");",
+        "description": "this.valueText = document.createElement(\"p\");",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "const webpack = require(\"webpack\");",
+        "condition": "1. unit testing setup",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This document provides comprehensive instructions for developing custom Power BI visuals using modern web technologies including React, D3.js, TypeScr",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "const singleDataView: DataViewSingle = dataView.single;",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "this.valueText.innerText = singleDataView.value.toString();",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "private reactRoot: React.ComponentElement<any, any>;",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "data: dataView.categorical?.values?.[0]?.values || [],",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "categories: dataView.categorical?.categories?.[0]?.values || []",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "const { data, categories, size = 200, color = \"#3498db\" } = props;",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "const radius = ((value - minValue) / (maxValue - minValue)) * size / 2;",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<span className=\"label\">{categories[index]}: {value}</span>",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

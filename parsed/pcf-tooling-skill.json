@@ -1,0 +1,75 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-tooling",
+    "name": "pcf-tooling",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Tooling Skill",
+    "description": "Get Microsoft Power Platform CLI tooling for Power Apps Component Framework Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.102306Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-tooling/SKILL.md",
+    "skill_name": "pcf-tooling",
+    "skill_description": "Get Microsoft Power Platform CLI tooling for Power Apps Component Framework Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Use Microsoft Power Platform CLI (command-line interface) to",
+        "description": "Use Microsoft Power Platform CLI (command-line interface) to create, debug, and deploy code components using Power Apps component framework. Microsoft",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "More information: [Install Microsoft Power Platform CLI](htt",
+        "description": "More information: [Install Microsoft Power Platform CLI](https://learn.microsoft.com/en-us/power-apps/developer/data-platform/powerapps-cli)",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Create your first code component](https://learn.microsoft.c",
+        "description": "[Create your first code component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/implementing-controls-using-typescript)",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "> Important: To deploy your code component using Microsoft Power Platform CLI, you must have a Microsoft Dataverse environment with system administrat",
+        "condition": "get tooling for power apps component framework",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "[Learn Power Apps component framework](https://learn.microsoft.com/en-us/training/paths/use-power-apps-component-framework)",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "description: Get Microsoft Power Platform CLI tooling for Power Apps Component Framework Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "triggers: \"**/*.{ts,tsx,js,json,xml,pcfproj,csproj}\"",
+        "decomposable": false,
+        "id": "d_003"
+      }
+    ]
+  }
+}

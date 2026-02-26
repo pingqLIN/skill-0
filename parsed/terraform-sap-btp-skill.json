@@ -1,0 +1,227 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__terraform-sap-btp",
+    "name": "terraform-sap-btp",
+    "skill_layer": "claude_skill",
+    "title": "Terraform Sap Btp Skill",
+    "description": "Terraform conventions and guidelines for SAP Business Technology Platform (SAP BTP). Triggers on: **/*.tf, **/*.tfvars, **/*.tflint.hcl, **/*.tf.json, **/*.tfvars.json",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.717681Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/terraform-sap-btp/SKILL.md",
+    "skill_name": "terraform-sap-btp",
+    "skill_description": "Terraform conventions and guidelines for SAP Business Technology Platform (SAP BTP). Triggers on: **/*.tf, **/*.tfvars, **/*.tflint.hcl, **/*.tf.json, **/*.tfvars.json"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Use the latest stable Terraform CLI and provider versions; u",
+        "description": "Use the latest stable Terraform CLI and provider versions; upgrade proactively for security patches.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2 spaces indentation; run `terraform fmt -recursive`.",
+        "description": "2 spaces indentation; run `terraform fmt -recursive`.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "└── README.md                   # Documentation",
+        "description": "└── README.md                   # Documentation",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Alphabetize within a section for faster scanning.",
+        "description": "Alphabetize within a section for faster scanning.",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "A concise root `README.md`: purpose, prerequisites, auth mod",
+        "description": "A concise root `README.md`: purpose, prerequisites, auth model, usage (init/plan/apply), testing, rollback.",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Generate module docs with `terraform-docs` (add to CI if pos",
+        "description": "Generate module docs with `terraform-docs` (add to CI if possible).",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use Terraform test framework (`*.tftest.hcl`) for module log",
+        "description": "Use Terraform test framework (`*.tftest.hcl`) for module logic & invariants.",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Cover success & failure paths; keep tests stateless/idempote",
+        "description": "Cover success & failure paths; keep tests stateless/idempotent.",
+        "action_type": "llm_inference",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Install & run server (see https://github.com/mcp/hashicor",
+        "description": "1. Install & run server (see https://github.com/mcp/hashicorp/terraform-mcp-server).",
+        "action_type": "compute",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Generate draft resource blocks, then refine manually for ",
+        "description": "4. Generate draft resource blocks, then refine manually for naming & tagging standards.",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Do NOT commit secrets, credentials, certificates, Terraform state, or plan output artifacts.",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Prefer ephemeral / write‑only provider auth (Terraform >= 1.11) so secrets never persist in state.",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Continuously scan with `tfsec`, `trivy`, `checkov` (pick at least one) in CI.",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Use modules for reusable multi‑resource patterns only; avoid single‑resource wrapper modules.",
+        "condition": "modularity",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Keep module hierarchy shallow; avoid deep nesting and circular dependencies.",
+        "condition": "modularity",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Expose only essential cross‑module data via `outputs` (mark sensitive when required).",
+        "condition": "modularity",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Comment WHY, not WHAT; avoid restating obvious resource attributes.",
+        "condition": "maintainability",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Prefer data sources for external existing infra; never for resources just created in same root – use outputs.",
+        "condition": "maintainability",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Avoid data sources in generic reusable modules; require inputs instead.",
+        "condition": "maintainability",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Do NOT create separate branches/repos/folders per environment (antipattern).",
+        "condition": "layout & files",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Keep Terraform code minimal, modular, repeatable, secure, and auditable.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Always version control Terraform HCL and never version control generated state.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Mark all secret variables and outputs as `sensitive = true`.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Minimize sensitive outputs; emit only what downstream automation truly needs.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Periodically review provider credentials, rotate keys, and enable MFA where supported.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Split by logical domain (e.g., entitlements, service instances) – NOT by environment.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Parameterize (variables) instead of hard‑coding; provide defaults only when sensible.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Remove unused / slow data sources; they degrade plan time.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `locals` for derived or repeated expressions to centralize logic.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Descriptive, consistent names for resources, variables, outputs.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-model-driven-apps",
+    "name": "pcf-model-driven-apps",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Model Driven Apps Skill",
+    "description": "Code components for model-driven apps implementation and configuration Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.055948Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-model-driven-apps/SKILL.md",
+    "skill_name": "pcf-model-driven-apps",
+    "skill_description": "Code components for model-driven apps implementation and configuration Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Power Apps component framework gives developers the ability ",
+        "description": "Power Apps component framework gives developers the ability to extend the visualizations in model-driven apps. Professional developers can create, deb",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "> Important: Power Apps component framework is enabled for m",
+        "description": "> Important: Power Apps component framework is enabled for model-driven apps by default. See [Code components for canvas apps](https://learn.microsoft",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The [create your first code component](https://learn.microso",
+        "description": "The [create your first code component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/implementing-controls-using-typescri",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Create your first code component](https://learn.microsoft.c",
+        "description": "[Create your first code component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/implementing-controls-using-typescript)",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Before you start creating code components, make sure that you have installed all the [prerequisites](https://learn.microsoft.com/en-us/power-apps/deve",
+        "condition": "implementing code components",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Whenever you update the code components and want to see the changes in runtime, you need to bump the version property in the manifest file.",
+        "condition": "update existing code components",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Best Practice: It is recommended to always bump the version of the component whenever you make changes.",
+        "condition": "update existing code components",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "To add code components to a column or a table in model-driven apps, see [Add code components to model-driven apps](https://learn.microsoft.com/en-us/p",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "![Add linear slider control](https://learn.microsoft.com/en-us/power-apps/maker/model-driven-apps/media/add-slider.png)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "![Data Set Grid component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/add-dataset-component.png)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Power Apps component framework overview](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/overview)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Learn Power Apps component framework](https://learn.microsoft.com/en-us/training/paths/use-power-apps-component-framework)",
+        "decomposable": false,
+        "id": "d_005"
+      }
+    ]
+  }
+}

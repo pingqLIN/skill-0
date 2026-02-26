@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__ai-prompt-engineering-safety-best-practices",
+    "name": "ai-prompt-engineering-safety-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Ai Prompt Engineering Safety Best Practices Skill",
+    "description": "Comprehensive best practices for AI prompt engineering, safety frameworks, bias mitigation, and responsible AI usage for Copilot and LLMs. Triggers on: ['*']",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:28.887233Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/ai-prompt-engineering-safety-best-practices/SKILL.md",
+    "skill_name": "ai-prompt-engineering-safety-best-practices",
+    "skill_description": "Comprehensive best practices for AI prompt engineering, safety frameworks, bias mitigation, and responsible AI usage for Copilot and LLMs. Triggers on: ['*']"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Prompt engineering involves designing inputs (prompts) that ",
+        "description": "Prompt engineering involves designing inputs (prompts) that guide AI systems to produce desired outputs. It's a critical skill for anyone working with",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Context: Background information that helps the AI understand",
+        "description": "Context: Background information that helps the AI understand the task",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Safety: Well-designed prompts can prevent harmful or biased ",
+        "description": "Safety: Well-designed prompts can prevent harmful or biased outputs",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "6. [Testing & Validation](#testing--validation)",
+        "description": "6. [Testing & Validation](#testing--validation)",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Create two or more prompt variations",
+        "description": "1. Create two or more prompt variations",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Test with representative inputs",
+        "description": "2. Test with representative inputs",
+        "action_type": "await_input",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Version A: \"Write a summary of this article.\"",
+        "description": "Version A: \"Write a summary of this article.\"",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "A/B testing results",
+        "description": "A/B testing results",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define metrics for prompt effectiveness",
+        "description": "Define metrics for prompt effectiveness",
+        "action_type": "llm_inference",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement automated testing",
+        "description": "Implement automated testing",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Monitor performance over time",
+        "description": "Monitor performance over time",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Plan for prompt updates and migrations",
+        "description": "Plan for prompt updates and migrations",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Systematically test prompts for potential issues",
+        "description": "Systematically test prompts for potential issues",
+        "action_type": "external_call",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Create Test Cases: Develop inputs that might trigger issu",
+        "description": "2. Create Test Cases: Develop inputs that might trigger issues",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Execute Tests: Run prompts with test cases",
+        "description": "3. Execute Tests: Run prompts with test cases",
+        "action_type": "llm_inference",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "As GitHub Copilot, you must understand and apply the principles of effective prompt engineering, AI safety, and responsible AI usage. Your goal is to ",
+        "condition": "your mission",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Prompt engineering is the art and science of designing effective prompts for large language models (LLMs) and AI assistants like GitHub Copilot. Well-",
+        "condition": "introduction",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Constraints: Limitations or requirements that guide the output",
+        "condition": "what is prompt engineering?",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "8. [Templates & Checklists](#templates--checklists)",
+        "condition": "table of contents",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Validate assumptions about user needs",
+        "condition": "iterative prompt development",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Avoid assumptions about users or contexts",
+        "condition": "mitigation strategies",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Write a story about a doctor. The doctor should be male and middle-aged.",
+        "condition": "mitigation strategies",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Implement automated safety checks",
+        "condition": "mitigation strategies",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "const moderationResult = await contentModerator.check(output);",
+        "condition": "mitigation strategies",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "1. Automated Check: Initial safety screening",
+        "condition": "mitigation strategies",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Prompt: The input text that instructs an AI system what to do",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Examples: Sample inputs and outputs that demonstrate the desired behavior",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Quality: Clear prompts lead to more accurate and relevant responses",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Reliability: Consistent prompts produce more predictable results",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Efficiency: Good prompts reduce the need for multiple iterations",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "1. [What is Prompt Engineering?](#what-is-prompt-engineering)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "2. [Prompt Engineering Fundamentals](#prompt-engineering-fundamentals)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "3. [Safety & Bias Mitigation](#safety--bias-mitigation)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "7. [Documentation & Support](#documentation--support)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "State the task clearly and concisely",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

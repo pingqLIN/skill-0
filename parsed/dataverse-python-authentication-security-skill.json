@@ -1,0 +1,237 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-authentication-security",
+    "name": "dataverse-python-authentication-security",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Authentication Security Skill",
+    "description": "dataverse-python-authentication-security guidelines Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.340299Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-authentication-security/SKILL.md",
+    "skill_name": "dataverse-python-authentication-security",
+    "skill_description": "dataverse-python-authentication-security guidelines Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Advantages over connection strings:",
+        "description": "Advantages over connection strings:",
+        "action_type": "external_call",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import InteractiveBrowserCredential",
+        "description": "from azure.identity import InteractiveBrowserCredential",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Interactive development and testing",
+        "description": "Interactive development and testing",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use for: Apps that run in multiple environments (dev → test ",
+        "description": "Use for: Apps that run in multiple environments (dev → test → production).",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import DefaultAzureCredential",
+        "description": "from azure.identity import DefaultAzureCredential",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Azure PowerShell (`Connect-AzAccount`)",
+        "description": "4. Azure PowerShell (`Connect-AzAccount`)",
+        "action_type": "external_call",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import ClientSecretCredential",
+        "description": "from azure.identity import ClientSecretCredential",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Create app registration in Azure AD",
+        "description": "1. Create app registration in Azure AD",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Create client secret (keep secure!)",
+        "description": "2. Create client secret (keep secure!)",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import ManagedIdentityCredential",
+        "description": "from azure.identity import ManagedIdentityCredential",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Setup: `az login` with your developer account",
+        "description": "Setup: `az login` with your developer account",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Setup: Enable managed identity in App Service, grant permiss",
+        "description": "Setup: Enable managed identity in App Service, grant permissions in Dataverse",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Setup: Create service principal, store credentials securely,",
+        "description": "Setup: Create service principal, store credentials securely, grant Dataverse permissions",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.config import DataverseCon",
+        "description": "from PowerPlatform.Dataverse.core.config import DataverseConfig",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Never hardcode credentials in source code",
+        "condition": "client secret credential (service principal)",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Use minimal required permissions",
+        "condition": "client secret credential (service principal)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "print(\"Ensure Dataverse security role is assigned\")",
+        "condition": "error: \"access denied\" (403)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "# User must already be authenticated",
+        "condition": "each user gets client with their credentials",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "System Administrator: Full access (avoid for apps)",
+        "condition": "security roles",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Based on official Microsoft Azure SDK authentication documentation and Dataverse SDK best practices.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "principle",
+        "description": "The Dataverse SDK for Python uses Azure Identity credentials for token-based authentication. This approach follows the principle of least privilege an",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Establishes specific permissions needed by your app (principle of least privilege)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "With managed identity, no secrets to store or compromise",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Works seamlessly across environments without code changes",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use for: Developer workstations during local development.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "1. Environment variables (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "5. Managed identity (on Azure VMs, App Service, AKS, etc.)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use for: Unattended authentication (scheduled jobs, scripts, on-premises services).",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "4. Store credentials in environment variables or secure vault",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

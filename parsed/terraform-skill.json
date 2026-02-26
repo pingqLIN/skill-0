@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__terraform",
+    "name": "terraform",
+    "skill_layer": "claude_skill",
+    "title": "Terraform Skill",
+    "description": "Terraform Conventions and Guidelines Triggers on: **/*.tf",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.697818Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/terraform/SKILL.md",
+    "skill_name": "terraform",
+    "skill_description": "Terraform Conventions and Guidelines Triggers on: **/*.tf"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Regularly update your Terraform configurations to incorporat",
+        "description": "Regularly update your Terraform configurations to incorporate security patches and improvements.",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Store sensitive information in a secure manner, such as usin",
+        "description": "Store sensitive information in a secure manner, such as using AWS Secrets Manager or SSM Parameter Store.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `.gitignore` to exclude files containing sensitive infor",
+        "description": "Use `.gitignore` to exclude files containing sensitive information from version control.",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Follow the principle of least privilege when assigning permi",
+        "description": "Follow the principle of least privilege when assigning permissions.",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use encryption for sensitive data at rest and in transit.",
+        "description": "Use encryption for sensitive data at rest and in transit.",
+        "action_type": "compute",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Enable encryption for EBS volumes, S3 buckets, and RDS insta",
+        "description": "Enable encryption for EBS volumes, S3 buckets, and RDS instances.",
+        "action_type": "compute",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Allows for independent development and deployment of compone",
+        "description": "Allows for independent development and deployment of components",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use modules to simplify complex configurations and improve r",
+        "description": "Use modules to simplify complex configurations and improve readability.",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `output` blocks to expose important information about yo",
+        "description": "Use `output` blocks to expose important information about your infrastructure.",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use outputs to provide information that is useful for other ",
+        "description": "Use outputs to provide information that is useful for other modules or for users of the configuration.",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Prioritize readability, clarity, and maintainability.",
+        "description": "Prioritize readability, clarity, and maintainability.",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use comments to explain complex configurations and why certa",
+        "description": "Use comments to explain complex configurations and why certain design decisions were made.",
+        "action_type": "llm_inference",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write concise, efficient, and idiomatic configs that are eas",
+        "description": "Write concise, efficient, and idiomatic configs that are easy to understand.",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use data sources to retrieve information about existing reso",
+        "description": "Use data sources to retrieve information about existing resources instead of requiring manual configuration.",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Follow the Terraform Style Guide for formatting.",
+        "description": "Follow the Terraform Style Guide for formatting.",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always use the latest stable version of Terraform and its providers.",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Never commit sensitive information such as AWS credentials, API keys, passwords, certificates, or Terraform state to version control.",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Always mark sensitive variables as `sensitive = true` in your Terraform configurations.",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Deploy resources in private subnets whenever possible.",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Use public subnets only for resources that require direct internet access, such as load balancers or NAT gateways.",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Use tools like `trivy`, `tfsec`, or `checkov` to scan your Terraform configurations for security issues.",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Use modules to avoid duplication of configurations.",
+        "condition": "modularity",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Avoid circular dependencies between modules.",
+        "condition": "modularity",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Avoid unnecessary layers of abstraction; use modules only when they add value.",
+        "condition": "modularity",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Avoid using modules for single resources; only use them for groups of related resources.",
+        "condition": "modularity",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use Terraform to provision and manage infrastructure.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use version control for your Terraform configurations.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use AWS environment variables to reference values stored in AWS Secrets Manager or SSM Parameter Store.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "This keeps sensitive values out of your Terraform state files.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "completion",
+        "description": "This prevents sensitive values from being displayed in the Terraform plan or apply output.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use IAM roles and policies to control access to resources.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use security groups and network ACLs to control network access to resources.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Regularly review and audit your Terraform configurations for security vulnerabilities.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use separate projects for each major component of the infrastructure; this:",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Makes it easier to manage and maintain configurations",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

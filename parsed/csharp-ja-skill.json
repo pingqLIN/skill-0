@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__csharp-ja",
+    "name": "csharp-ja",
+    "skill_layer": "claude_skill",
+    "title": "Csharp Ja Skill",
+    "description": "C# アプリケーション構築指針 by @tsubakimoto Triggers on: **/*.cs",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.252739Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/csharp-ja/SKILL.md",
+    "skill_name": "csharp-ja",
+    "skill_description": "C# アプリケーション構築指針 by @tsubakimoto Triggers on: **/*.cs"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "ASP.NET Core に関連する OAuth 2.0 および OpenID Connect の概念を説明します。",
+        "description": "ASP.NET Core に関連する OAuth 2.0 および OpenID Connect の概念を説明します。",
+        "action_type": "external_call",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": ".NET の組み込みコンテナーサポート（`dotnet publish --os linux --arch x64 -p",
+        "description": ".NET の組み込みコンテナーサポート（`dotnet publish --os linux --arch x64 -p:PublishProfile=DefaultContainer`）を用いた API のコンテナー化を案内します。",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ヘルスチェックと Readiness Probe の実装方法を示します。",
+        "description": "ヘルスチェックと Readiness Probe の実装方法を示します。",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "任意のコード ブロック（if、for、while、foreach、using、try など）の開始波括弧の前に改行を入れます。",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "すべての公開 API に XML ドキュメントコメントを作成します。可能であれば `<example>` と `<code>` も含めます。",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "ASP.NET Core 10 における Program.cs と構成システム、そして環境別設定を説明します。",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`== null` や `!= null` ではなく、常に `is null` または `is not null` を使用します。",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "C# の null 注釈を信頼し、型システムが値の非 null を保証している場合は不要な null チェックを追加しません。",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "標準化されたエラー応答のための Problem Details（RFC 7807）の実装を説明します。",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Azure App Service、Azure Container Apps、その他のホスティングオプションへのデプロイを示します。",
+        "decomposable": false,
+        "id": "d_007"
+      }
+    ]
+  }
+}

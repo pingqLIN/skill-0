@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__performance-optimization",
+    "name": "performance-optimization",
+    "skill_layer": "claude_skill",
+    "title": "Performance Optimization Skill",
+    "description": "The most comprehensive, practical, and engineer-authored performance optimization instructions for all languages, frameworks, and stacks. Covers frontend, backend, and database best practices with act",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.117855Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/performance-optimization/SKILL.md",
+    "skill_name": "performance-optimization",
+    "skill_description": "The most comprehensive, practical, and engineer-authored performance optimization instructions for all languages, frameworks, and stacks. Covers frontend, backend, and database best practices with act"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Minimize DOM Manipulations: Batch updates where possible. Fr",
+        "description": "Minimize DOM Manipulations: Batch updates where possible. Frequent DOM changes are expensive.",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "*Anti-pattern:* Updating the DOM in a loop. Instead, build a",
+        "description": "*Anti-pattern:* Updating the DOM in a loop. Instead, build a document fragment and append it once.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "*React Example:* Use `React.memo`, `useMemo`, and `useCallba",
+        "description": "*React Example:* Use `React.memo`, `useMemo`, and `useCallback` to prevent unnecessary renders.",
+        "action_type": "external_call",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Defer Non-Critical Rendering: Use `requestIdleCallback` or s",
+        "description": "Defer Non-Critical Rendering: Use `requestIdleCallback` or similar to defer work until the browser is idle.",
+        "action_type": "external_call",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Image Compression: Use tools like ImageOptim, Squoosh, or Ti",
+        "description": "Image Compression: Use tools like ImageOptim, Squoosh, or TinyPNG. Prefer modern formats (WebP, AVIF) for web delivery.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Minification and Bundling: Use Webpack, Rollup, or esbuild t",
+        "description": "Minification and Bundling: Use Webpack, Rollup, or esbuild to bundle and minify JS/CSS. Enable tree-shaking to remove dead code.",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Cache Headers: Set long-lived cache headers for static asset",
+        "description": "Cache Headers: Set long-lived cache headers for static assets. Use cache busting for updates.",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Lazy Loading: Use `loading=\"lazy\"` for images, and dynamic i",
+        "description": "Lazy Loading: Use `loading=\"lazy\"` for images, and dynamic imports for JS modules/components.",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Preload and Prefetch: Use `<link rel=\"preload\">` and `<link ",
+        "description": "Preload and Prefetch: Use `<link rel=\"preload\">` and `<link rel=\"prefetch\">` for critical resources.",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `trackBy` in `ngFor` for efficient list rendering.",
+        "description": "Use `trackBy` in `ngFor` for efficient list rendering.",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Lazy load modules and components with the Angular Router.",
+        "description": "Lazy load modules and components with the Angular Router.",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Lazy load components and routes with Vue Router.",
+        "description": "Lazy load components and routes with Vue Router.",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Loading large JS bundles on initial page load.",
+        "description": "Loading large JS bundles on initial page load.",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Not compressing images or using outdated formats.",
+        "description": "Not compressing images or using outdated formats.",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Ignoring mobile performance (test on real devices!).",
+        "description": "Ignoring mobile performance (test on real devices!).",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Performance isn't just a buzzword—it's the difference between a product people love and one they abandon. I've seen firsthand how a slow app can frust",
+        "condition": "introduction",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Virtual DOM Frameworks: Use React, Vue, or similar efficiently—avoid unnecessary re-renders.",
+        "condition": "rendering and dom",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Keys in Lists: Always use stable keys in lists to help virtual DOM diffing. Avoid using array indices as keys unless the list is static.",
+        "condition": "rendering and dom",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Avoid Inline Styles: Inline styles can trigger layout thrashing. Prefer CSS classes.",
+        "condition": "rendering and dom",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Defer/Async Scripts: Use `defer` or `async` for non-critical JS to avoid blocking rendering.",
+        "condition": "network optimization",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Avoid Blocking the Main Thread: Offload heavy computation to Web Workers.",
+        "condition": "javascript performance",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Debounce/Throttle Events: For scroll, resize, and input events, use debounce/throttle to limit handler frequency.",
+        "condition": "javascript performance",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Memory Leaks: Clean up event listeners, intervals, and DOM references. Use browser dev tools to check for detached nodes.",
+        "condition": "javascript performance",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Avoid Global Variables: Globals can cause memory leaks and unpredictable performance.",
+        "condition": "javascript performance",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Avoid Deep Object Cloning: Use shallow copies or libraries like lodash's `cloneDeep` only when necessary.",
+        "condition": "javascript performance",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Measure First, Optimize Second: Always profile and measure before optimizing. Use benchmarks, profilers, and monitoring tools to identify real bottlen",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "*Pro Tip:* Use tools like Chrome DevTools, Lighthouse, New Relic, Datadog, Py-Spy, or your language's built-in profilers.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Optimize for the Common Case: Focus on optimizing code paths that are most frequently executed. Don't waste time on rare edge cases unless they're cri",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Avoid Premature Optimization: Write clear, maintainable code first; optimize only when necessary. Premature optimization can make code harder to read ",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Minimize Resource Usage: Use memory, CPU, network, and disk resources efficiently. Always ask: \"Can this be done with less?\"",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Prefer Simplicity: Simple algorithms and data structures are often faster and easier to optimize. Don't over-engineer.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Document Performance Assumptions: Clearly comment on any code that is performance-critical or has non-obvious optimizations. Future maintainers (inclu",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Understand the Platform: Know the performance characteristics of your language, framework, and runtime. What's fast in Python may be slow in JavaScrip",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Automate Performance Testing: Integrate performance tests and benchmarks into your CI/CD pipeline. Catch regressions early.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "Set Performance Budgets: Define acceptable limits for load time, memory usage, API latency, etc. Enforce them with automated checks.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

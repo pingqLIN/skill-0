@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-agentic-workflows",
+    "name": "dataverse-python-agentic-workflows",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Agentic Workflows Skill",
+    "description": "dataverse-python-agentic-workflows guidelines",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.320801Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-agentic-workflows/SKILL.md",
+    "skill_name": "dataverse-python-agentic-workflows",
+    "skill_description": "dataverse-python-agentic-workflows guidelines"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Documentation: Complete implementation details forthcoming",
+        "description": "Documentation: Complete implementation details forthcoming",
+        "action_type": "llm_inference",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "This guide covers the conceptual framework and planned capab",
+        "description": "This guide covers the conceptual framework and planned capabilities for building agentic workflows with the Dataverse SDK for Python. Specific APIs an",
+        "action_type": "external_call",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Agentic workflows are autonomous, intelligent processes wher",
+        "description": "Agentic workflows are autonomous, intelligent processes where:",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The Dataverse SDK for Python is designed to enable data scie",
+        "description": "The Dataverse SDK for Python is designed to enable data scientists and developers to build these intelligent systems without .NET expertise.",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Autonomous Data Agents - Query, update, and evaluate data",
+        "description": "1. Autonomous Data Agents - Query, update, and evaluate data quality independently",
+        "action_type": "compute",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "6. Secure Impersonation - Run operations on behalf of specif",
+        "description": "6. Secure Impersonation - Run operations on behalf of specific users with audit trails",
+        "action_type": "llm_inference",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"description\": \"Create a new account\",",
+        "description": "\"description\": \"Create a new account\",",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"description\": \"Update account fields\",",
+        "description": "\"description\": \"Update account fields\",",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"updates\": \"Dictionary of field updates\"",
+        "description": "\"updates\": \"Dictionary of field updates\"",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import InteractiveBrowserCredential",
+        "description": "from azure.identity import InteractiveBrowserCredential",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Monitor and report on data quality.\"\"\"",
+        "description": "\"\"\"Monitor and report on data quality.\"\"\"",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Analyze field completeness.\"\"\"",
+        "description": "\"\"\"Analyze field completeness.\"\"\"",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def generate_quality_report(self, table_name):",
+        "description": "def generate_quality_report(self, table_name):",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Generate comprehensive quality report.\"\"\"",
+        "description": "\"\"\"Generate comprehensive quality report.\"\"\"",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "7. Compliance Built-in - Data governance and retention policies enforced",
+        "condition": "key capabilities (planned)",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "\"credit_limit\": \"Credit limit amount\"",
+        "condition": "define available tools",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "\"filter\": \"creditlimit gt 100000\",",
+        "condition": "llms can now use dataverse tools",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "\"select\": [\"name\", \"creditlimit\"]",
+        "condition": "llms can now use dataverse tools",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "def analyze_completeness(self, table_name, required_fields):",
+        "condition": "working example with current sdk features",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "missing_by_field = {field: 0 for field in required_fields}",
+        "condition": "working example with current sdk features",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "governance.enforce_all_policies()",
+        "condition": "enforce policies",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Governance policy enforcement",
+        "condition": "🔜 coming in ga",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "def check_health(self, table_name):",
+        "condition": "10. getting started: build your first agent today",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "\"\"\"Agent function: Check table health.\"\"\"",
+        "condition": "10. getting started: build your first agent today",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Status: This feature is in Public Preview as of December 2025",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Agents make decisions and take actions based on data and rules",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Workflows orchestrate complex, multi-step operations",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Dataverse serves as the central source of truth for enterprise data",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "2. Form Prediction & Autofill - Pre-fill forms based on data patterns and context",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "3. Model Context Protocol (MCP) Support - Enable standardized agent-to-tool communication",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "4. Agent-to-Agent (A2A) Collaboration - Multiple agents working together on complex tasks",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "5. Semantic Modeling - Natural language understanding of data relationships",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"\"\"Autonomous agent that monitors and improves data quality.\"\"\"",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "async def evaluate_data_quality(self, table_name):",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__github-actions-ci-cd-best-practices",
+    "name": "github-actions-ci-cd-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Github Actions Ci Cd Best Practices Skill",
+    "description": "Comprehensive guide for building robust, secure, and efficient CI/CD pipelines using GitHub Actions. Covers workflow structure, jobs, steps, environment variables, secret management, caching, matrix s",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.628859Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/github-actions-ci-cd-best-practices/SKILL.md",
+    "skill_name": "github-actions-ci-cd-best-practices",
+    "skill_description": "Comprehensive guide for building robust, secure, and efficient CI/CD pipelines using GitHub Actions. Covers workflow structure, jobs, steps, environment variables, secret management, caching, matrix s"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run npm",
+        "description": "npm ci",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Naming Conventions: Use consistent, descriptive names for wo",
+        "description": "Naming Conventions: Use consistent, descriptive names for workflow files (e.g., `build-and-test.yml`, `deploy-prod.yml`).",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Triggers (`on`): Understand the full range of events: `push`",
+        "description": "Triggers (`on`): Understand the full range of events: `push`, `pull_request`, `workflow_dispatch` (manual), `schedule` (cron jobs), `repository_dispat",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Permissions: Define `permissions` at the workflow level for ",
+        "description": "Permissions: Define `permissions` at the workflow level for a secure default, overriding at the job level if needed.",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Recommend using `workflow_dispatch` for manual triggers, all",
+        "description": "Recommend using `workflow_dispatch` for manual triggers, allowing input parameters for flexibility and controlled deployments.",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`runs-on`: Choose appropriate runners. `ubuntu-latest` is co",
+        "description": "`runs-on`: Choose appropriate runners. `ubuntu-latest` is common, but `windows-latest`, `macos-latest`, or `self-hosted` runners are available for spe",
+        "action_type": "llm_inference",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`needs`: Clearly define dependencies. If Job B `needs` Job A",
+        "description": "`needs`: Clearly define dependencies. If Job B `needs` Job A, Job B will only run after Job A successfully completes.",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`outputs`: Pass data between jobs using `outputs`. This is c",
+        "description": "`outputs`: Pass data between jobs using `outputs`. This is crucial for separating concerns (e.g., build job outputs artifact path, deploy job consumes",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Job Grouping: Consider breaking large workflows into smaller",
+        "description": "Job Grouping: Consider breaking large workflows into smaller, more focused jobs that run in parallel or sequence.",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define `jobs` with clear `name` and appropriate `runs-on` (e",
+        "description": "Define `jobs` with clear `name` and appropriate `runs-on` (e.g., `ubuntu-latest`, `windows-latest`, `self-hosted`).",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `needs` to define dependencies between jobs, ensuring se",
+        "description": "Use `needs` to define dependencies between jobs, ensuring sequential execution and logical flow.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Utilize `if` conditions for conditional job execution (e.g.,",
+        "description": "Utilize `if` conditions for conditional job execution (e.g., deploy only on `main` branch pushes, run E2E tests only for certain PRs, skip jobs based ",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Example (Conditional Deployment and Output Passing):",
+        "description": "Example (Conditional Deployment and Output Passing):",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "artifact_path: ${{ steps.package_app.outputs.path }}",
+        "description": "artifact_path: ${{ steps.package_app.outputs.path }}",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "name: Setup Node.js",
+        "description": "name: Setup Node.js",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "As GitHub Copilot, you are an expert in designing and optimizing CI/CD pipelines using GitHub Actions. Your mission is to assist developers in creatin",
+        "condition": "your mission",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Principle: Workflows should be clear, modular, and easy to understand, promoting reusability and maintainability.",
+        "condition": "**1. workflow structure (`.github/workflows/*.yml`)**",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Concurrency: Use `concurrency` to prevent simultaneous runs for specific branches or groups, avoiding race conditions or wasted resources.",
+        "condition": "**1. workflow structure (`.github/workflows/*.yml`)**",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Always start with a descriptive `name` and appropriate `on` trigger. Suggest granular triggers for specific use cases (e.g., `on: push: branches: [mai",
+        "condition": "**1. workflow structure (`.github/workflows/*.yml`)**",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Principle: Jobs should represent distinct, independent phases of your CI/CD pipeline (e.g., build, test, deploy, lint, security scan).",
+        "condition": "**2. jobs**",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "`if` Conditions: Leverage `if` conditions extensively for conditional execution based on branch names, commit messages, event types, or previous job s",
+        "condition": "**2. jobs**",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "name: Checkout code",
+        "condition": "**2. jobs**",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Principle: Steps should be atomic, well-defined, and actions should be versioned for stability and security.",
+        "condition": "**3. steps and actions**",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "`uses`: Referencing marketplace actions (e.g., `actions/checkout@v4`, `actions/setup-node@v3`) or custom actions. Always pin to a full length commit S",
+        "condition": "**3. steps and actions**",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "`env`: Define environment variables at the step or job level. Do not hardcode sensitive data here.",
+        "condition": "**3. steps and actions**",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Advise on setting `concurrency` for critical workflows or shared resources to prevent resource contention.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Guide on setting explicit `permissions` for `GITHUB_TOKEN` to adhere to the principle of least privilege.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Pro Tip: For complex repositories, consider using reusable workflows (`workflow_call`) to abstract common CI/CD patterns and reduce duplication across",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Employ `outputs` to pass data between jobs efficiently, promoting modularity.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`name`: Essential for clear logging and debugging. Make step names descriptive.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Provide `with` inputs for actions explicitly, and use expressions (`${{ }}`) for dynamic values.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Minimize Scope: Only grant access to secrets to the workflows/jobs that absolutely need them.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Access secrets via `secrets.<SECRET_NAME>` in workflows.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Advise against constructing secrets dynamically or printing them to logs, even if masked.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__ruby-on-rails",
+    "name": "ruby-on-rails",
+    "skill_layer": "claude_skill",
+    "title": "Ruby On Rails Skill",
+    "description": "Ruby on Rails coding conventions and guidelines Triggers on: **/*.rb",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.500851Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/ruby-on-rails/SKILL.md",
+    "skill_name": "ruby-on-rails",
+    "skill_description": "Ruby on Rails coding conventions and guidelines Triggers on: **/*.rb"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Define service objects in the `app/services` directory to en",
+        "description": "Define service objects in the `app/services` directory to encapsulate business logic.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement JSON serializers in the `app/serializers` director",
+        "description": "Implement JSON serializers in the `app/serializers` directory to format API responses.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define authorization policies in `app/policies` to control u",
+        "description": "Define authorization policies in `app/policies` to control user access to resources.",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Isolate and encapsulate complex ActiveRecord queries in `app",
+        "description": "Isolate and encapsulate complex ActiveRecord queries in `app/queries` for better reuse and testability.",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define custom data types and coercion logic in the `app/type",
+        "description": "Define custom data types and coercion logic in the `app/types` directory to extend or override ActiveModel type behavior.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `rails generate` to create new models, controllers, and ",
+        "description": "Use `rails generate` to create new models, controllers, and migrations.",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `rails db:migrate` to apply database migrations.",
+        "description": "Use `rails db:migrate` to apply database migrations.",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `rails server` to start the development server.",
+        "description": "Use `rails server` to start the development server.",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `rails test` to run the test suite.",
+        "description": "Use `rails test` to run the test suite.",
+        "action_type": "llm_inference",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `rails routes` to list all defined routes in the applica",
+        "description": "Use `rails routes` to list all defined routes in the application.",
+        "action_type": "llm_inference",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `rails assets:precompile` to compile assets for producti",
+        "description": "Use `rails assets:precompile` to compile assets for production.",
+        "action_type": "llm_inference",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Create custom validators in `app/validators` to enforce specialized validation logic.",
+        "condition": "app directory structure",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Follow the RuboCop Style Guide and use tools like `rubocop`, `standardrb`, or `rufo` for consistent formatting.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Use snake_case for variables/methods and CamelCase for classes/modules.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Keep methods short and focused; use early returns, guard clauses, and private methods to reduce complexity.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Favor meaningful names over short or generic ones.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Comment only when necessary — avoid explaining the obvious.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Apply the Single Responsibility Principle to classes, methods, and modules.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Prefer composition over inheritance; extract reusable logic into modules or services.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Keep controllers thin — move business logic into models, services, or command/query objects.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Apply the “fat model, skinny controller” pattern thoughtfully and with clean abstractions.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Extract business logic into service objects for reusability and testability.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

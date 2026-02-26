@@ -1,0 +1,251 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__php-symfony",
+    "name": "php-symfony",
+    "skill_layer": "claude_skill",
+    "title": "Php Symfony Skill",
+    "description": "Symfony development standards aligned with official Symfony Best Practices Triggers on: **/*.php, **/*.yaml, **/*.yml, **/*.xml, **/*.twig",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.147321Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/php-symfony/SKILL.md",
+    "skill_name": "php-symfony",
+    "skill_description": "Symfony development standards aligned with official Symfony Best Practices Triggers on: **/*.php, **/*.yaml, **/*.yml, **/*.xml, **/*.twig"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Use `.env` files to define environment-specific values",
+        "description": "Use `.env` files to define environment-specific values",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use YAML as the preferred format for service configuration",
+        "description": "Use YAML as the preferred format for service configuration",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use attributes to configure routing, caching, and security",
+        "description": "Use attributes to configure routing, caching, and security",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define Doctrine mapping using PHP attributes",
+        "description": "Define Doctrine mapping using PHP attributes",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define forms as PHP classes",
+        "description": "Define forms as PHP classes",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define validation constraints on the underlying object",
+        "description": "Define validation constraints on the underlying object",
+        "action_type": "llm_inference",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use a single controller action to render and process each fo",
+        "description": "Use a single controller action to render and process each form",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use the auto password hasher",
+        "description": "Use the auto password hasher",
+        "action_type": "compute",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure failure transports for failed messages",
+        "description": "Configure failure transports for failed messages",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write functional tests using `WebTestCase`",
+        "description": "Write functional tests using `WebTestCase`",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Hard-code URLs in functional tests instead of generating rou",
+        "description": "Hard-code URLs in functional tests instead of generating routes",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use unit tests where appropriate for isolated logic",
+        "description": "Use unit tests where appropriate for isolated logic",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add more specific tests incrementally as the application evo",
+        "description": "Add more specific tests incrementally as the application evolves",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Do not create bundles for application code",
+        "condition": "project structure",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Do not use environment variables to control application behavior",
+        "condition": "environment configuration",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Never commit secrets to the repository",
+        "condition": "sensitive configuration",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Prefix parameters with `app.` to avoid collisions",
+        "condition": "application configuration",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Keep services private whenever possible",
+        "condition": "services & dependency injection",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Avoid accessing services via `$container->get()`",
+        "condition": "services & dependency injection",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Do not place business logic in controllers",
+        "condition": "controllers",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Avoid putting business logic in repositories",
+        "condition": "doctrine & persistence",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Avoid business logic in Twig templates",
+        "condition": "templates (twig)",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Avoid using `|raw` unless content is trusted and sanitized",
+        "condition": "templates (twig)",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "principle",
+        "description": "Instructions for developing Symfony applications following the official Symfony Best Practices and core framework philosophy.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Symfony (latest stable or LTS)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Default Symfony directory structure",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Autowiring and autoconfiguration enabled",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Doctrine ORM when persistence is needed",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Twig for templating",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Symfony Forms, Validator, Security, Messenger as needed",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "PHPUnit for testing",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Attribute-based configuration where supported",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Keep configuration in `config/`, application code in `src/`, templates in `templates/`",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

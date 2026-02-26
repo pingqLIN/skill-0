@@ -1,0 +1,173 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dotnet-wpf",
+    "name": "dotnet-wpf",
+    "skill_layer": "claude_skill",
+    "title": "Dotnet Wpf Skill",
+    "description": ".NET WPF component and application patterns Triggers on: **/*.xaml, **/*.cs",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.578146Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dotnet-wpf/SKILL.md",
+    "skill_name": "dotnet-wpf",
+    "skill_description": ".NET WPF component and application patterns Triggers on: **/*.xaml, **/*.cs"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "These instructions guide GitHub Copilot to assist with build",
+        "description": "These instructions guide GitHub Copilot to assist with building high-quality, maintainable, and performant WPF applications using the MVVM pattern. It",
+        "action_type": "llm_inference",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Applications following the MVVM (Model-View-ViewModel) desig",
+        "description": "Applications following the MVVM (Model-View-ViewModel) design pattern",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Generate boilerplate for `INotifyPropertyChanged` and `Relay",
+        "description": "Generate boilerplate for `INotifyPropertyChanged` and `RelayCommand`",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Recommend performance tips (e.g., virtualization, async load",
+        "description": "Recommend performance tips (e.g., virtualization, async loading)",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Produce testable ViewModels",
+        "description": "Produce testable ViewModels",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"Generate a ViewModel for a login screen with properties for",
+        "description": "\"Generate a ViewModel for a login screen with properties for username and password, and a LoginCommand\"",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"Write a XAML snippet for a ListView that uses UI virtualiza",
+        "description": "\"Write a XAML snippet for a ListView that uses UI virtualization and binds to an ObservableCollection\"",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"Add a loading spinner while fetching data asynchronously in",
+        "description": "\"Add a loading spinner while fetching data asynchronously in WPF\"",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`CommunityToolkit.Mvvm` or custom `RelayCommand` implementat",
+        "description": "`CommunityToolkit.Mvvm` or custom `RelayCommand` implementations",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<TextBox Text=\"{Binding UserName, UpdateSourceTrigger=Proper",
+        "description": "<TextBox Text=\"{Binding UserName, UpdateSourceTrigger=PropertyChanged}\" />",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Avoid tightly coupling code-behind logic",
+        "condition": "goals",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Solutions emphasizing performance and responsiveness",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Suggest clean separation of ViewModel and View logic",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Encourage use of `ObservableCollection<T>`, `ICommand`, and proper binding",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"Refactor this code-behind click handler into a RelayCommand in the ViewModel\"",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`ObservableCollection`, `ICommand`, `INotifyPropertyChanged`",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "ViewModel-first binding",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Dependency Injection using .NET or third-party containers (e.g., Autofac, SimpleInjector)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "XAML naming conventions (PascalCase for controls, camelCase for bindings)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Avoiding magic strings in binding (use `nameof`)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<Button Content=\"Login\" Command=\"{Binding LoginCommand}\" />",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

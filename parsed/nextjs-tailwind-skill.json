@@ -1,0 +1,157 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__nextjs-tailwind",
+    "name": "nextjs-tailwind",
+    "skill_layer": "claude_skill",
+    "title": "Nextjs Tailwind Skill",
+    "description": "Next.js + Tailwind development standards and instructions Triggers on: **/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.928731Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/nextjs-tailwind/SKILL.md",
+    "skill_name": "nextjs-tailwind",
+    "skill_description": "Next.js + Tailwind development standards and instructions Triggers on: **/*.tsx, **/*.ts, **/*.jsx, **/*.js, **/*.css"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Zod for runtime type validation",
+        "description": "Zod for runtime type validation",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Responsive design patterns",
+        "description": "Responsive design patterns",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Proper loading and error states",
+        "description": "Proper loading and error states",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Optimistic updates where appropriate",
+        "description": "Optimistic updates where appropriate",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "React Suspense for loading states",
+        "description": "React Suspense for loading states",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Route prefetching",
+        "description": "Route prefetching",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Bundle size optimization",
+        "description": "Bundle size optimization",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "6. Implement responsive styling",
+        "description": "6. Implement responsive styling",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Proper authentication checks",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Rate limiting implementation",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Instructions for high-quality Next.js applications with Tailwind CSS styling and TypeScript.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Latest Next.js (App Router)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "TypeScript for type safety",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Tailwind CSS for styling",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "App Router with server and client components",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Group routes by feature/domain",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Implement proper error boundaries",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Use React Server Components by default",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Leverage static optimization where possible",
+        "decomposable": false,
+        "id": "d_009"
+      }
+    ]
+  }
+}

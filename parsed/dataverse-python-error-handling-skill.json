@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-error-handling",
+    "name": "dataverse-python-error-handling",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Error Handling Skill",
+    "description": "dataverse-python-error-handling guidelines Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.368931Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-error-handling/SKILL.md",
+    "skill_name": "dataverse-python-error-handling",
+    "skill_description": "dataverse-python-error-handling guidelines Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "from PowerPlatform.Dataverse.core.errors import DataverseErr",
+        "description": "from PowerPlatform.Dataverse.core.errors import DataverseError",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "message: str,                          # Human-readable erro",
+        "description": "message: str,                          # Human-readable error message",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "details: Dict[str, Any] | None = None, # Additional diagnost",
+        "description": "details: Dict[str, Any] | None = None, # Additional diagnostic information",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"Message: {e.message}\")           # Human-readable me",
+        "description": "print(f\"Message: {e.message}\")           # Human-readable message",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "# Convert to dictionary for logging",
+        "description": "# Convert to dictionary for logging",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Cause: Invalid credentials, expired tokens, or misconfigured",
+        "description": "Cause: Invalid credentials, expired tokens, or misconfigured settings.",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import InteractiveBrowserCredential",
+        "description": "from azure.identity import InteractiveBrowserCredential",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "# User doesn't have permission to read contacts",
+        "description": "# User doesn't have permission to read contacts",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def create_with_retry(client, table_name, payload, max_retri",
+        "description": "def create_with_retry(client, table_name, payload, max_retries=3):",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "result = client.create(table_name, payload)",
+        "description": "result = client.create(table_name, payload)",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "result = client.create(\"account\", {\"name\": \"Acme\"})",
+        "description": "result = client.create(\"account\", {\"name\": \"Acme\"})",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "# Implement retry logic with exponential backoff",
+        "description": "# Implement retry logic with exponential backoff",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.create(\"account\", {\"telephone1\": \"not-a-phone-number\"",
+        "description": "client.create(\"account\", {\"telephone1\": \"not-a-phone-number\"})",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.core.exceptions import AzureError",
+        "description": "from azure.core.exceptions import AzureError",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "print(\"Authentication failed. Check credentials and token expiration.\")",
+        "condition": "authentication errors (401)",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "# Don't retry - fix credentials first",
+        "condition": "authentication errors (401)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "print(\"Access denied. User lacks required permissions.\")",
+        "condition": "authorization errors (403)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Cause: Too many requests exceeding service protection limits.",
+        "condition": "rate limiting (429)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "\"\"\"Create record with retry logic for rate limiting.\"\"\"",
+        "condition": "rate limiting (429)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "print(f\"Rate limited. Retrying in {wait_time}s...\")",
+        "condition": "rate limiting (429)",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Cause: Invalid request format, missing required fields, or business rule violations.",
+        "condition": "validation errors (400)",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "# Missing required field or invalid data",
+        "condition": "validation errors (400)",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Always catch specific exceptions before general ones:",
+        "condition": "use specific exception handling",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "print(\"Re-authenticate required\")",
+        "condition": "use specific exception handling",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Based on official Microsoft documentation for Azure SDK error handling patterns and Dataverse SDK specifics.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "The Dataverse SDK for Python provides a structured exception hierarchy for robust error handling.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "code: str,                             # Error category (e.g., \"validation_error\", \"http_error\")",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "subcode: str | None = None,            # Optional specific error identifier",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "status_code: int | None = None,        # HTTP status code (if applicable)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "source: str | None = None,             # Error source: \"client\" or \"server\"",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "is_transient: bool = False             # Whether error may succeed on retry",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Code: {e.code}\")                 # Error category",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Subcode: {e.subcode}\")           # Specific error type",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Status Code: {e.status_code}\")   # HTTP status (401, 403, 429, etc.)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__azure-functions-typescript",
+    "name": "azure-functions-typescript",
+    "skill_layer": "claude_skill",
+    "title": "Azure Functions Typescript Skill",
+    "description": "TypeScript patterns for Azure Functions Triggers on: **/*.ts, **/*.js, **/*.json",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:28.968172Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/azure-functions-typescript/SKILL.md",
+    "skill_name": "azure-functions-typescript",
+    "skill_description": "TypeScript patterns for Azure Functions Triggers on: **/*.ts, **/*.js, **/*.json"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Generate modern TypeScript code for Node.js",
+        "description": "Generate modern TypeScript code for Node.js",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The API is built using Azure Functions using `@azure/functio",
+        "description": "The API is built using Azure Functions using `@azure/functions@4` package.",
+        "action_type": "external_call",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When making changes to the API, make sure to update the Open",
+        "description": "When making changes to the API, make sure to update the OpenAPI schema (if it exists) and `README.md` file accordingly.",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Whenever possible, use Node.js v20 built-in modules instead of external packages",
+        "condition": "guidance for code generation",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Always use Node.js async functions, like `node:fs/promises` instead of `fs` to avoid blocking the event loop",
+        "condition": "guidance for code generation",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Each endpoint should have its own function file, and use the following naming convention: `src/functions/<resource-name>-<http-verb>.ts`",
+        "condition": "guidance for code generation",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Ask before adding any extra dependencies to the project",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "description: TypeScript patterns for Azure Functions Triggers on: /*.ts, /*.js, **/*.json",
+        "decomposable": false,
+        "id": "d_002"
+      }
+    ]
+  }
+}

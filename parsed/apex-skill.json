@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__apex",
+    "name": "apex",
+    "skill_layer": "claude_skill",
+    "title": "Apex Skill",
+    "description": "Guidelines and best practices for Apex development on the Salesforce Platform Triggers on: **/*.cls, **/*.trigger",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:28.930943Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/apex/SKILL.md",
+    "skill_name": "apex",
+    "skill_description": "Guidelines and best practices for Apex development on the Salesforce Platform Triggers on: **/*.cls, **/*.trigger"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Write clear and concise comments for each class and method, ",
+        "description": "Write clear and concise comments for each class and method, explaining the business logic and any complex operations.",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Handle edge cases and implement proper exception handling wi",
+        "description": "Handle edge cases and implement proper exception handling with meaningful error messages.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Focus on bulkification - write code that handles collections",
+        "description": "Focus on bulkification - write code that handles collections of records, not single records.",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper separation of concerns using service layers",
+        "description": "Implement proper separation of concerns using service layers, domain classes, and selector classes.",
+        "action_type": "llm_inference",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use collections (`List<>`, `Set<>`, `Map<>`) to process mult",
+        "description": "Use collections (`List<>`, `Set<>`, `Map<>`) to process multiple records efficiently.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public static void updateAccountRating(List<Account> account",
+        "description": "public static void updateAccountRating(List<Account> accounts) {",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public static void updateAccountRating(Account account) {",
+        "description": "public static void updateAccountRating(Account account) {",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "update account; // DML in a method designed for single recor",
+        "description": "update account; // DML in a method designed for single records",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use Maps for efficient lookups - Convert lists to maps for O",
+        "description": "Use Maps for efficient lookups - Convert lists to maps for O(1) constant-time lookups instead of O(n) list iterations.",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `Map<Id, SObject>` constructor to quickly convert query ",
+        "description": "Use `Map<Id, SObject>` constructor to quickly convert query results to a map.",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement SOQL for loops for processing large data sets.",
+        "description": "Implement SOQL for loops for processing large data sets.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public static void processLargeDataSet() {",
+        "description": "public static void processLargeDataSet() {",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Process batch of 200 records",
+        "description": "// Process batch of 200 records",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create custom exception classes for specific error scenarios",
+        "description": "Create custom exception classes for specific error scenarios.",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Log exceptions appropriately for debugging and monitoring.",
+        "description": "Log exceptions appropriately for debugging and monitoring.",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always use the latest Apex features and best practices for the Salesforce Platform.",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Be mindful of governor limits and design solutions that scale efficiently.",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Always write bulkified code - Design all code to handle collections of records, not individual records.",
+        "condition": "bulkification",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Avoid SOQL queries and DML statements inside loops.",
+        "condition": "bulkification",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Ideal for matching related records, lookups, and avoiding nested loops.",
+        "condition": "maps for o(1) lookup",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Be aware of Salesforce governor limits: SOQL queries (100), DML statements (150), heap size (6MB), CPU time (10s).",
+        "condition": "governor limits",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Monitor governor limits proactively using `System.Limits` class to check consumption before hitting limits.",
+        "condition": "governor limits",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "List<Account> accounts = [SELECT Id, Name FROM Account WHERE IsActive__c = true LIMIT 200];",
+        "condition": "governor limits",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Always check CRUD/FLS permissions before performing SOQL queries or DML operations.",
+        "condition": "security and data access",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Use `WITH SECURITY_ENFORCED` in SOQL queries to enforce field-level security.",
+        "condition": "security and data access",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Document external dependencies, integration points, and their purposes in comments.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Classes: Use `PascalCase` for class names. Name classes descriptively to reflect their purpose.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Controllers: suffix with `Controller` (e.g., `AccountController`)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Trigger Handlers: suffix with `TriggerHandler` (e.g., `AccountTriggerHandler`)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Service Classes: suffix with `Service` (e.g., `AccountService`)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Selector Classes: suffix with `Selector` (e.g., `AccountSelector`)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Test Classes: suffix with `Test` (e.g., `AccountServiceTest`)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Batch Classes: suffix with `Batch` (e.g., `AccountCleanupBatch`)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Queueable Classes: suffix with `Queueable` (e.g., `EmailNotificationQueueable`)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Methods: Use `camelCase` for method names. Use verbs to indicate actions.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-apps-canvas-yaml",
+    "name": "power-apps-canvas-yaml",
+    "skill_layer": "claude_skill",
+    "title": "Power Apps Canvas Yaml Skill",
+    "description": "Comprehensive guide for working with Power Apps Canvas Apps YAML structure based on Microsoft Power Apps YAML schema v3.0. Covers Power Fx formulas, control structures, data types, and source control ",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.187240Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-apps-canvas-yaml/SKILL.md",
+    "skill_name": "power-apps-canvas-yaml",
+    "skill_description": "Comprehensive guide for working with Power Apps Canvas Apps YAML structure based on Microsoft Power Apps YAML schema v3.0. Covers Power Fx formulas, control structures, data types, and source control "
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "The `App` section defines application-level properties and c",
+        "description": "The `App` section defines application-level properties and configuration.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`StartScreen` property is commonly specified",
+        "description": "`StartScreen` property is commonly specified",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Defines all screens in the application as an unordered map.",
+        "description": "Defines all screens in the application as an unordered map.",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Control: Label            # Uses latest version by default",
+        "description": "Control: Label            # Uses latest version by default",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ComponentName: publisherprefix_namespace.classname",
+        "description": "ComponentName: publisherprefix_namespace.classname",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define reusable custom components:",
+        "description": "Define reusable custom components:",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Output: Sends values to parent",
+        "description": "Output: Sends values to parent",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "OutputFunction: Function defined in component",
+        "description": "OutputFunction: Function defined in component",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ConnectorId: shared_office365users",
+        "description": "ConnectorId: shared_office365users",
+        "action_type": "external_call",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "# Additional connector parameters",
+        "description": "# Additional connector parameters",
+        "action_type": "external_call",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Actions: Connector actions and flows",
+        "description": "Actions: Connector actions and flows",
+        "action_type": "external_call",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "All controls use ascending order starting from 1",
+        "description": "All controls use ascending order starting from 1",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Keep formulas readable and well-formatted",
+        "description": "Keep formulas readable and well-formatted",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Minimize complex calculations in frequently updated properti",
+        "description": "Minimize complex calculations in frequently updated properties",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "# Download and extract YAML files",
+        "description": "# Download and extract YAML files",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Control: ControlType      # Required: Control type identifier",
+        "condition": "control definition format:",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "All formulas must start with `=`",
+        "condition": "formula syntax:",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Avoid overly complex nested expressions",
+        "condition": "2. formula writing:",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Document connection requirements",
+        "condition": "4. data source management:",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "All controls must have a `Control` property",
+        "condition": "required properties:",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Component definitions must have `DefinitionType`",
+        "condition": "required properties:",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Data sources must have `Type`",
+        "condition": "required properties:",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Ensure control types are spelled correctly",
+        "condition": "1. invalid control types:",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Check for proper casing",
+        "condition": "1. invalid control types:",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Verify control type is supported in schema",
+        "condition": "1. invalid control types:",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This document provides comprehensive instructions for working with YAML code for Power Apps canvas apps based on the official Microsoft Power Apps YAM",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Official Schema Source: https://raw.githubusercontent.com/microsoft/PowerApps-Tooling/refs/heads/master/schemas/pa-yaml/v3.0/pa.schema.yaml",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Power Fx is the formula language used throughout Power Apps canvas apps. It follows these core principles:",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Simple: Uses familiar concepts from Excel formulas",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Excel Consistency: Aligns with Excel formula syntax and behavior",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Declarative: Describes what you want, not how to achieve it",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Functional: Avoids side effects; most functions are pure",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Composition: Complex logic built by combining simpler functions",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Strongly Typed: Type system ensures data integrity",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Integrated: Works seamlessly across the Power Platform",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__agents",
+    "name": "agents",
+    "skill_layer": "claude_skill",
+    "title": "Agents Skill",
+    "description": "Guidelines for creating custom agent files for GitHub Copilot Triggers on: **/*.agent.md",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:28.863867Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/agents/SKILL.md",
+    "skill_name": "agents",
+    "skill_description": "Guidelines for creating custom agent files for GitHub Copilot Triggers on: **/*.agent.md"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "tools: ['read', 'edit', 'search']",
+        "description": "tools: ['read', 'edit', 'search']",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Example: `'Focuses on test coverage, quality, and testing be",
+        "description": "Example: `'Focuses on test coverage, quality, and testing best practices'`",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Example: `'Testing Specialist'`",
+        "description": "Example: `'Testing Specialist'`",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Supports comma-separated string or YAML array format",
+        "description": "Supports comma-separated string or YAML array format",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Example: `metadata: { category: 'testing', version: '1.0' }`",
+        "description": "Example: `metadata: { category: 'testing', version: '1.0' }`",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure MCP servers available only to this agent",
+        "description": "Configure MCP servers available only to this agent",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Handoffs enable you to create guided sequential workflows th",
+        "description": "Handoffs enable you to create guided sequential workflows that transition seamlessly between custom agents. This is useful for orchestrating multi-ste",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define handoffs in the agent file's YAML frontmatter using t",
+        "description": "Define handoffs in the agent file's YAML frontmatter using the `handoffs` field:",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "label: Start Implementation",
+        "description": "label: Start Implementation",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "prompt: 'Now implement the plan outlined above.'",
+        "description": "prompt: 'Now implement the plan outlined above.'",
+        "action_type": "llm_inference",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "prompt: 'Please review the implementation for quality and se",
+        "description": "prompt: 'Please review the implementation for quality and security issues.'",
+        "action_type": "llm_inference",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `send` | boolean | No | If `true`, automatically submits t",
+        "description": "| `send` | boolean | No | If `true`, automatically submits the prompt to the target agent (default: `false`) |",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Quality gates: Ensuring review steps between implementation ",
+        "description": "Quality gates: Ensuring review steps between implementation phases",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Guided processes: Directing users through a structured devel",
+        "description": "Guided processes: Directing users through a structured development process",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Skill transitions: Moving from planning/design to implementa",
+        "description": "Skill transitions: Moving from planning/design to implementation/testing specialists",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Every agent file must include YAML frontmatter with the following fields:",
+        "condition": "required frontmatter",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Should be concise (50-150 characters) and actionable",
+        "condition": "**description** (required)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Specifies which AI model the agent should use",
+        "condition": "**model** (strongly recommended)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Choose based on agent complexity and required capabilities",
+        "condition": "**model** (strongly recommended)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Set to `false` to require manual agent selection",
+        "condition": "**infer** (optional)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Each handoff in the list must include the following properties:",
+        "condition": "handoff properties",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "| Property | Type | Required | Description |",
+        "condition": "handoff properties",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Manual vs Auto: When `send: false`, users must review and manually send the pre-filled prompt; when `send: true`, the prompt is automatically submitte",
+        "condition": "handoff behavior",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "4. Identify testing requirements",
+        "condition": "planner agent",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Do not write any code - focus only on planning.",
+        "condition": "planner agent",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Instructions for creating effective and maintainable custom agent files that provide specialized expertise for specific development tasks in GitHub Co",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Target audience: Developers creating custom agents for GitHub Copilot",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "File format: Markdown with YAML frontmatter",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "File naming convention: lowercase with hyphens (e.g., `test-specialist.agent.md`)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Location: `.github/agents/` directory (repository-level) or `agents/` directory (organization/enterprise-level)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Purpose: Define specialized agents with tailored expertise, tools, and instructions for specific tasks",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Official documentation: https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-custom-agents",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "description: 'Brief description of the agent purpose and capabilities'",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Single-quoted string, clearly stating the agent's purpose and domain expertise",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "preference",
+        "description": "If omitted, defaults to filename (without `.md` or `.agent.md`)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

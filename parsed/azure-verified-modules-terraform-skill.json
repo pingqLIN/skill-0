@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__azure-verified-modules-terraform",
+    "name": "azure-verified-modules-terraform",
+    "skill_layer": "claude_skill",
+    "title": "Azure Verified Modules Terraform Skill",
+    "description": "Azure Verified Modules (AVM) and Terraform Triggers on: **/*.terraform, **/*.tf, **/*.tfvars, **/*.tfstate, **/*.tflint.hcl, **/*.tf.json, **/*.tfvars.json",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.020153Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/azure-verified-modules-terraform/SKILL.md",
+    "skill_name": "azure-verified-modules-terraform",
+    "skill_description": "Azure Verified Modules (AVM) and Terraform Triggers on: **/*.terraform, **/*.tf, **/*.tfvars, **/*.tfstate, **/*.tflint.hcl, **/*.tf.json, **/*.tfvars.json"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "More details on the AVM process can be found in the [Azure V",
+        "description": "More details on the AVM process can be found in the [Azure Verified Modules Contribution documentation](https://azure.github.io/Azure-Verified-Modules",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Failure to run these tests will cause PR validation failures",
+        "description": "Failure to run these tests will cause PR validation failures and prevent successful merges.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Add `version = \"~> 1.0\"` (use latest available)",
+        "description": "3. Add `version = \"~> 1.0\"` (use latest available)",
+        "action_type": "llm_inference",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "URL Pattern: `https://registry.terraform.io/modules/Azure/{m",
+        "description": "URL Pattern: `https://registry.terraform.io/modules/Azure/{module}/azurerm/latest`",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Example: `https://registry.terraform.io/modules/Azure/avm-re",
+        "description": "Example: `https://registry.terraform.io/modules/Azure/avm-res-storage-storageaccount/azurerm/latest`",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Start with official examples from module documentation",
+        "description": "Start with official examples from module documentation",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Review all inputs and outputs before implementation",
+        "description": "Review all inputs and outputs before implementation",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Before creating or updating any pull request:",
+        "description": "Before creating or updating any pull request:",
+        "action_type": "external_call",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Deployment Guidance: Use `azure_get_deployment_best_practice",
+        "description": "Deployment Guidance: Use `azure_get_deployment_best_practices` tool",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Schema Information: Use `azure_get_schema_for_Bicep` for Bic",
+        "description": "Schema Information: Use `azure_get_schema_for_Bicep` for Bicep resources",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Use the official examples as starting points",
+        "description": "2. Use the official examples as starting points",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Run all validation tests before committing",
+        "description": "3. Run all validation tests before committing",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Validation Failures: Run AVM validation tools before comm",
+        "description": "3. Validation Failures: Run AVM validation tools before committing",
+        "action_type": "llm_inference",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Code is formatted (`terraform fmt`)",
+        "description": "[ ] Code is formatted (`terraform fmt`)",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Documentation is updated",
+        "description": "[ ] Documentation is updated",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "IMPORTANT: When GitHub Copilot Agent or GitHub Copilot Coding Agent is working on this repository, the following local unit tests MUST be executed to ",
+        "condition": "custom instructions for github copilot agents",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "These commands must be run before any pull request is created or updated to ensure compliance with the Azure Verified Modules standards and prevent CI",
+        "condition": "custom instructions for github copilot agents",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "> Note: The following links always point to the latest version of the CSV files on the main branch. As intended, this means the files may change over ",
+        "condition": "official avm index",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "2. Configure required and optional inputs",
+        "condition": "from scratch",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Always pin module and provider versions",
+        "condition": "module usage",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Follow AzureRM provider requirements and constraints",
+        "condition": "module usage",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Always run `terraform fmt` after making changes",
+        "condition": "code quality",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Always run `terraform validate` after making changes",
+        "condition": "code quality",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "1. Always check for existing modules before creating new resources",
+        "condition": "github copilot integration",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "1. Version Conflicts: Always check compatibility between module and provider versions",
+        "condition": "common issues",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Azure Verified Modules (AVM) are pre-built, tested, and validated Terraform and Bicep modules that follow Azure best practices. Use these modules to c",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Filter by \"Partner\" tag to find official AVM modules",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Example: Search \"avm storage account\" → filter by Partner",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Terraform Resource Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/TerraformResour",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Terraform Pattern Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/TerraformPattern",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Terraform Utility Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/TerraformUtility",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "1. Copy the example code from the module documentation",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "2. Replace `source = \"../../\"` with `source = \"Azure/avm-res-{service}-{resource}/azurerm\"`",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "1. Copy the Provision Instructions from module documentation",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "source  = \"Azure/avm-res-storage-storageaccount/azurerm\"",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

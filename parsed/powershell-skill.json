@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__powershell",
+    "name": "powershell",
+    "skill_layer": "claude_skill",
+    "title": "Powershell Skill",
+    "description": "PowerShell cmdlet and scripting best practices based on Microsoft guidelines Triggers on: **/*.ps1,**/*.psm1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.395544Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/powershell/SKILL.md",
+    "skill_name": "powershell",
+    "skill_description": "PowerShell cmdlet and scripting best practices based on Microsoft guidelines Triggers on: **/*.ps1,**/*.psm1"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Implement Begin/Process/End blocks for pipeline handling",
+        "description": "Implement Begin/Process/End blocks for pipeline handling",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Return rich objects, not formatted text",
+        "description": "Return rich objects, not formatted text",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Enable downstream cmdlet processing",
+        "description": "Enable downstream cmdlet processing",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use process block for streaming",
+        "description": "Use process block for streaming",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Enable immediate processing",
+        "description": "Enable immediate processing",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement `-PassThru` switch for object return",
+        "description": "Implement `-PassThru` switch for object return",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Return modified/created object with `-PassThru`",
+        "description": "Return modified/created object with `-PassThru`",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use verbose/warning for status updates",
+        "description": "Use verbose/warning for status updates",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "function Update-ResourceStatus {",
+        "description": "function Update-ResourceStatus {",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write-Verbose 'Starting resource status update process'",
+        "description": "Write-Verbose 'Starting resource status update process'",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "# Process each resource individually",
+        "description": "# Process each resource individually",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write-Verbose \"Processing resource: $Name\"",
+        "description": "Write-Verbose \"Processing resource: $Name\"",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write-Verbose 'Resource status update process completed'",
+        "description": "Write-Verbose 'Resource status update process completed'",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`Write-Verbose` for operational details with `-Verbose`",
+        "description": "`Write-Verbose` for operational details with `-Verbose`",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`Write-Warning` for warning conditions",
+        "description": "`Write-Warning` for warning conditions",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "[ValidateSet('Basic', 'Detailed')]",
+        "condition": "example",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "[ValidateSet('Dev', 'Test', 'Prod')]",
+        "condition": "example",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Document pipeline input requirements",
+        "condition": "pipeline and output",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Avoid Write-Host for data output",
+        "condition": "pipeline and output",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Avoid collecting large arrays",
+        "condition": "pipeline and output",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]",
+        "condition": "example",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "[ValidateSet('Active', 'Inactive', 'Maintenance')]",
+        "condition": "example",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "ShouldProcess Implementation:",
+        "condition": "error handling and safety",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Use `[CmdletBinding(SupportsShouldProcess = $true)]`",
+        "condition": "error handling and safety",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Call `$PSCmdlet.ShouldProcess()` for system changes",
+        "condition": "error handling and safety",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This guide provides PowerShell-specific instructions to help GitHub Copilot generate idiomatic,",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "safe, and maintainable scripts. It aligns with Microsoft’s PowerShell cmdlet development guidelines.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Verb-Noun Format:",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use approved PowerShell verbs (Get-Verb)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use singular nouns",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "PascalCase for both verb and noun",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Avoid special characters and spaces",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Parameter Names:",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Choose clear, descriptive names",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use singular form unless always multiple",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

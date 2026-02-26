@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__convert-cassandra-to-spring-data-cosmos",
+    "name": "convert-cassandra-to-spring-data-cosmos",
+    "skill_layer": "claude_skill",
+    "title": "Convert Cassandra To Spring Data Cosmos Skill",
+    "description": "Step-by-step guide for converting Spring Boot Cassandra applications to use Azure Cosmos DB with Spring Data Cosmos Triggers on: **/*.java,**/pom.xml,**/build.gradle,**/application*.properties,**/appl",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.149844Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/convert-cassandra-to-spring-data-cosmos/SKILL.md",
+    "skill_name": "convert-cassandra-to-spring-data-cosmos",
+    "skill_description": "Step-by-step guide for converting Spring Boot Cassandra applications to use Azure Cosmos DB with Spring Data Cosmos Triggers on: **/*.java,**/pom.xml,**/build.gradle,**/application*.properties,**/appl"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run mvn",
+        "description": "mvn compile 2>&1 | grep -E \"(ERROR|error)\" | wc -l",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Azure CLI installed and authenticated (`az login`) for local",
+        "description": "Azure CLI installed and authenticated (`az login`) for local development",
+        "action_type": "external_call",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Azure Cosmos DB account created in Azure Portal",
+        "description": "Azure Cosmos DB account created in Azure Portal",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Start with Manual 400 RU/s for development/testing",
+        "description": "Start with Manual 400 RU/s for development/testing",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use Autoscale for production workloads with variable traffic",
+        "description": "Use Autoscale for production workloads with variable traffic",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Containers will be auto-created by Spring Data Cosmos when t",
+        "description": "Containers will be auto-created by Spring Data Cosmos when the application starts, using the `@Container` annotation settings from your entities. No m",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Workload Identity (for AKS)",
+        "description": "Workload Identity (for AKS)",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Setup for local development:",
+        "description": "Setup for local development:",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public CosmosClientBuilder getCosmosClientBuilder() {",
+        "description": "public CosmosClientBuilder getCosmosClientBuilder() {",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "return new CosmosClientBuilder()",
+        "description": "return new CosmosClientBuilder()",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": ".credential(new DefaultAzureCredentialBuilder().build());",
+        "description": ".credential(new DefaultAzureCredentialBuilder().build());",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Request blocked by Auth: Request for Read DatabaseAccount is",
+        "description": "Request blocked by Auth: Request for Read DatabaseAccount is blocked because principal",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Microsoft.DocumentDB/databaseAccounts/sqlDatabases/write] o",
+        "description": "[Microsoft.DocumentDB/databaseAccounts/sqlDatabases/write] on any scope.",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Solution: Assign the \"Cosmos DB Built-in Data Contributor\" r",
+        "description": "Solution: Assign the \"Cosmos DB Built-in Data Contributor\" role:",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "PRINCIPAL_ID=$(az ad signed-in-user show --query id -o tsv)",
+        "description": "PRINCIPAL_ID=$(az ad signed-in-user show --query id -o tsv)",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Bulk data migration (code conversion only - data must be migrated separately)",
+        "condition": "applicability",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Java 11 or higher (Java 17+ required for Spring Boot 3.x)",
+        "condition": "prerequisites",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "For Gradle projects with Spring Boot 3.x: Ensure JAVA_HOME environment variable points to Java 17+",
+        "condition": "prerequisites",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "CRITICAL: Before running your application, ensure the database exists in your Cosmos DB account.",
+        "condition": "database setup for azure cosmos db",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "4. Enter the database name matching your application configuration (check `application.properties` or `application.yml` for the configured database na",
+        "condition": "option 1: manual database creation (recommended for first run)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Spring Data Cosmos can auto-create the database on first connection, but this requires:",
+        "condition": "option 2: automatic creation",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Configuration (no key required):",
+        "condition": "the application will automatically use your cli credentials",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "[xxx] does not have required RBAC permissions to perform action",
+        "condition": "rbac permissions required",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Alternative: If you're logged in with `az login`, your account should already have permissions if you're the owner/contributor of the Cosmos DB accoun",
+        "condition": "assign the role (replace <resource-group> with your actual resource group)",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Problem: Spring Boot 3.0+ requires Java 17 or higher. Using Java 11 causes build failures.",
+        "condition": "java version requirements (spring boot 3.x)",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Spring Boot 2.x - 3.x applications (both reactive and non-reactive)",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Applications using Spring Data Cassandra, Cassandra DAOs, or DataStax drivers",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Both synchronous and reactive (Spring WebFlux) applications",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Non-Spring frameworks (Jakarta EE, Micronaut, Quarkus, plain Java)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Complex Cassandra features (materialized views, UDTs, counters, custom types)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Cassandra-specific features like lightweight transactions (LWT) or batch operations across partitions",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "This guide provides step-by-step instructions for converting reactive Spring Boot applications from Apache Cassandra to Azure Cosmos DB using Spring D",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Maven 3.6+ or Gradle 6+ (depending on your project)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Basic understanding of your application's data model and query patterns",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "5. Choose throughput settings (Manual or Autoscale based on your needs)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

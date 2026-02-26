@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dotnet-architecture-good-practices",
+    "name": "dotnet-architecture-good-practices",
+    "skill_layer": "claude_skill",
+    "title": "Dotnet Architecture Good Practices Skill",
+    "description": "DDD and .NET architecture guidelines Triggers on: **/*.cs,**/*.csproj,**/Program.cs,**/*.razor",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.502915Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dotnet-architecture-good-practices/SKILL.md",
+    "skill_name": "dotnet-architecture-good-practices",
+    "skill_description": "DDD and .NET architecture guidelines Triggers on: **/*.cs,**/*.csproj,**/Program.cs,**/*.razor"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Does the design adhere to the Single Responsibility Principl",
+        "description": "Does the design adhere to the Single Responsibility Principle?",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Will tests follow the `MethodName_Condition_ExpectedResult()",
+        "description": "Will tests follow the `MethodName_Condition_ExpectedResult()` pattern?",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Which aggregates/entities will be created/modified.",
+        "description": "Which aggregates/entities will be created/modified.",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "What domain events will be published.",
+        "description": "What domain events will be published.",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "What tests will be needed and their naming.",
+        "description": "What tests will be needed and their naming.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If you cannot clearly explain these points, STOP and ask for",
+        "description": "If you cannot clearly explain these points, STOP and ask for clarification.",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Dependency Injection (DI): Leverage the built-in DI containe",
+        "description": "Dependency Injection (DI): Leverage the built-in DI container to promote loose coupling and testability.",
+        "action_type": "llm_inference",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "LINQ: Use Language-Integrated Query for expressive and reada",
+        "description": "LINQ: Use Language-Integrated Query for expressive and readable data manipulation.",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Exception Handling: Implement a clear and consistent strateg",
+        "description": "Exception Handling: Implement a clear and consistent strategy for handling and logging errors.",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Modern C# Features: Utilize modern language features (e.g., ",
+        "description": "Modern C# Features: Utilize modern language features (e.g., records, pattern matching) to write concise and robust code.",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Domain Security: Implement authorization at the aggregate le",
+        "description": "Domain Security: Implement authorization at the aggregate level.",
+        "action_type": "llm_inference",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Data Protection: LGPD compliance in aggregate design.",
+        "description": "Data Protection: LGPD compliance in aggregate design.",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Async Operations: Non-blocking processing with `async`/`awai",
+        "description": "Async Operations: Non-blocking processing with `async`/`await`.",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Optimized Data Access: Efficient database queries and indexi",
+        "description": "Optimized Data Access: Efficient database queries and indexing strategies.",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Domain Events: Capture business-significant state changes.",
+        "description": "Domain Events: Capture business-significant state changes.",
+        "action_type": "llm_inference",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "BEFORE any implementation, you MUST:",
+        "condition": "mandatory thinking process",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "1.  Show Your Analysis - Always start by explaining:",
+        "condition": "mandatory thinking process",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "2.  Review Against Guidelines - Explicitly check:",
+        "condition": "mandatory thinking process",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "3.  Validate Implementation Plan - Before coding, state:",
+        "condition": "mandatory thinking process",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Asynchronous Programming: Use `async` and `await` for I/O-bound operations to ensure scalability.",
+        "condition": "3. **.net good practices**",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Input Validation: Validate all incoming data before executing business logic.",
+        "condition": "application layer",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Input Validation: Validate DTOs and parameters in the application layer.",
+        "condition": "development practices",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Aggregate boundaries and consistency requirements.",
+        "condition": "step 1: domain analysis (required)",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Business rules and invariants to enforce.",
+        "condition": "step 1: domain analysis (required)",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "All quality checklist items are met.",
+        "condition": "step 5: post-implementation review (required)",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "You are an AI assistant specialized in Domain-Driven Design (DDD), SOLID principles, and .NET good practices for software Development. Follow these gu",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "principle",
+        "description": "What DDD patterns and SOLID principles apply to the request.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Which layer(s) will be affected (Domain/Application/Infrastructure).",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "principle",
+        "description": "How interfaces and classes will be structured according to SOLID principles.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Ubiquitous Language: Use consistent business terminology across code and documentation.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Bounded Contexts: Clear service boundaries with well-defined responsibilities.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Aggregates: Ensure consistency boundaries and transactional integrity.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Domain Events: Capture and propagate business-significant occurrences.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Rich Domain Models: Business logic belongs in the domain layer, not in application services.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Single Responsibility Principle (SRP): A class should have only one reason to change.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

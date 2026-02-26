@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__go",
+    "name": "go",
+    "skill_layer": "claude_skill",
+    "title": "Go Skill",
+    "description": "Instructions for writing Go code following idiomatic Go practices and community standards Triggers on: **/*.go,**/go.mod,**/go.sum",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.647753Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/go/SKILL.md",
+    "skill_name": "go",
+    "skill_description": "Instructions for writing Go code following idiomatic Go practices and community standards Triggers on: **/*.go,**/go.mod,**/go.sum"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Write simple, clear, and idiomatic Go code",
+        "description": "Write simple, clear, and idiomatic Go code",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write self-documenting code with clear, descriptive names",
+        "description": "Write self-documenting code with clear, descriptive names",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Document exported types, functions, methods, and packages",
+        "description": "Document exported types, functions, methods, and packages",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Leverage the Go standard library instead of reinventing the ",
+        "description": "Leverage the Go standard library instead of reinventing the wheel (e.g., use `strings.Builder` for string concatenation, `filepath.Join` for path cons",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Prefer standard library solutions over custom implementation",
+        "description": "Prefer standard library solutions over custom implementations when functionality exists",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write comments in English by default; translate only upon us",
+        "description": "Write comments in English by default; translate only upon user request",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use lowercase, single-word package names",
+        "description": "Use lowercase, single-word package names",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Choose names that describe what the package provides, not wh",
+        "description": "Choose names that describe what the package provides, not what it contains",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If you need to replace the entire file content, start with t",
+        "description": "If you need to replace the entire file content, start with the existing package name",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use the SAME package name as existing files in that director",
+        "description": "Use the SAME package name as existing files in that directory",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If it's a new directory, use the directory name as the packa",
+        "description": "If it's a new directory, use the directory name as the package name",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write exactly one `package <name>` line at the very top of t",
+        "description": "Write exactly one `package <name>` line at the very top of the file",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If replacing file content, include only ONE `package` declar",
+        "description": "If replacing file content, include only ONE `package` declaration in the new content",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Exported names start with a capital letter",
+        "description": "Exported names start with a capital letter",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Unexported names start with a lowercase letter",
+        "description": "Unexported names start with a lowercase letter",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Prefer early return over if-else chains; use `if condition { return }` pattern to avoid else blocks",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Avoid using emoji in code and comments",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Avoid underscores, hyphens, or mixedCaps",
+        "condition": "packages",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Avoid generic names like `util`, `common`, or `base`",
+        "condition": "packages",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Package names should be singular, not plural",
+        "condition": "packages",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "NEVER duplicate `package` declarations - each Go file must have exactly ONE `package` line",
+        "condition": "package declaration rules (critical):",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "PRESERVE the existing `package` declaration - do not add another one",
+        "condition": "package declaration rules (critical):",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "BEFORE writing any code, check what package name other `.go` files in the same directory use",
+        "condition": "package declaration rules (critical):",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "ALWAYS verify the target file doesn't already have a `package` declaration before adding one",
+        "condition": "package declaration rules (critical):",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "NEVER create files with multiple `package` lines or duplicate declarations",
+        "condition": "package declaration rules (critical):",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Follow idiomatic Go practices and community standards when writing Go code. These instructions are based on [Effective Go](https://go.dev/doc/effectiv",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Keep the happy path left-aligned (minimize indentation)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use mixedCaps or MixedCaps (camelCase) rather than underscores",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use single-letter variables only for very short scopes (like loop indices)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Consider using typed constants for better type safety",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Strive for self-documenting code; prefer clear variable names, function names, and code structure over comments",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Translate comments to other languages only upon specific user request",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Wrap errors with context using `fmt.Errorf` with `%w` verb",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Prefer generics over unconstrained types; when an unconstrained type is truly needed, use the predeclared alias `any` instead of `interface{}` (Go 1.1",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use pointer receivers for large structs or when you need to modify the receiver",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

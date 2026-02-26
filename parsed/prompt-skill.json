@@ -1,0 +1,223 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__prompt",
+    "name": "prompt",
+    "skill_layer": "claude_skill",
+    "title": "Prompt Skill",
+    "description": "Guidelines for creating high-quality prompt files for GitHub Copilot Triggers on: **/*.prompt.md",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.417881Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/prompt/SKILL.md",
+    "skill_name": "prompt",
+    "skill_description": "Guidelines for creating high-quality prompt files for GitHub Copilot Triggers on: **/*.prompt.md"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Provide a short filename that communicates the action (for e",
+        "description": "Provide a short filename that communicates the action (for example, `generate-readme.prompt.md` rather than `prompt1.prompt.md`).",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Start with an `#` level heading that matches the prompt inte",
+        "description": "Start with an `#` level heading that matches the prompt intent so it surfaces well in Quick Pick search.",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write in direct, imperative sentences targeted at Copilot (f",
+        "description": "Write in direct, imperative sentences targeted at Copilot (for example, “Analyze”, “Generate”, “Summarize”).",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Specify the format, structure, and location of expected resu",
+        "description": "Specify the format, structure, and location of expected results (for example, “Create `docs/adr/adr-XXXX.md` using the template below”).",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Maintain reference tables (capabilities, status codes, role ",
+        "description": "Maintain reference tables (capabilities, status codes, role descriptions) inline to keep the prompt self-contained. Update these tables when upstream ",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Workflow covers preparation, execution, and post-process",
+        "description": "[ ] Workflow covers preparation, execution, and post-processing without gaps.",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Output expectations include formatting and storage detai",
+        "description": "[ ] Output expectations include formatting and storage details.",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Prompt executes successfully in VS Code (`Chat: Run Prom",
+        "description": "[ ] Prompt executes successfully in VS Code (`Chat: Run Prompt`) using representative scenarios.",
+        "action_type": "llm_inference",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Version-control prompts alongside the code they affect; upda",
+        "description": "Version-control prompts alongside the code they affect; update them when dependencies, tooling, or review processes change.",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Coordinate with other repositories: when a prompt proves bro",
+        "description": "Coordinate with other repositories: when a prompt proves broadly useful, extract common guidance into instruction files or shared prompt packs.",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Prompt Files Documentation](https://code.visualstudio.com/d",
+        "description": "[Prompt Files Documentation](https://code.visualstudio.com/docs/copilot/customization/prompt-files#_prompt-file-format)",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Every prompt file should include YAML frontmatter with the following fields:",
+        "condition": "frontmatter requirements",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "| Field | Required | Description |",
+        "condition": "required/recommended fields",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Limit `tools` to the smallest set that enables the task. List them in the preferred execution order when the sequence matters.",
+        "condition": "tool and permission guidance",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Avoid idioms, humor, or culturally specific references; favor neutral, inclusive language.",
+        "condition": "instruction tone and style",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Provide validation steps—manual checks, automated commands, or acceptance criteria lists—that reviewers can execute after running the prompt.",
+        "condition": "output definition",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Embed Good/Bad examples or scaffolds (Markdown templates, JSON stubs) that the prompt should produce or follow.",
+        "condition": "examples and reusable assets",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "[ ] Validation steps are actionable (commands, diff checks, review prompts).",
+        "condition": "quality assurance checklist",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Review prompts periodically to ensure tool lists, model requirements, and linked documents remain valid.",
+        "condition": "maintenance guidance",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "completion",
+        "description": "Instructions for creating effective and maintainable prompt files that guide GitHub Copilot in delivering consistent, high-quality outcomes across any",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Target audience: maintainers and contributors authoring reusable prompts for Copilot Chat.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Goals: predictable behaviour, clear expectations, minimal permissions, and portability across repositories.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Primary references: VS Code documentation on prompt files and organization-specific conventions.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "preference",
+        "description": "| `description` | Recommended | A short description of the prompt (single sentence, actionable outcome) |",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "| `name` | Optional | The name shown after typing `/` in chat. Defaults to filename if not specified |",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "preference",
+        "description": "| `agent` | Recommended | The agent to use: `ask`, `edit`, `agent`, or a custom agent name. Defaults to current agent |",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "| `model` | Optional | The language model to use. Defaults to the currently selected model |",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| `tools` | Optional | List of tool/tool set names available for this prompt |",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| `argument-hint` | Optional | Hint text shown in chat input to guide user interaction |",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

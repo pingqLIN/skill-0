@@ -1,0 +1,179 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-events",
+    "name": "pcf-events",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Events Skill",
+    "description": "Define and handle custom events in PCF components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.025800Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-events/SKILL.md",
+    "skill_name": "pcf-events",
+    "skill_description": "Define and handle custom events in PCF components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "The common data flow for a code component is data flowing fr",
+        "description": "The common data flow for a code component is data flowing from the hosting application into the control as inputs and updated data flowing out of the ",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "![Shows that data update from the code component to the bind",
+        "description": "![Shows that data update from the code component to the binding field triggers the OnChange event](https://learn.microsoft.com/en-us/power-apps/develo",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The event mechanism in PCF is based on the standard event mo",
+        "description": "The event mechanism in PCF is based on the standard event model in JavaScript. The component can define events in the manifest file and raise these ev",
+        "action_type": "llm_inference",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The component defines events using the [event element](https",
+        "description": "The component defines events using the [event element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-refe",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "![Shows the custom events in the canvas apps designer](https",
+        "description": "![Shows the custom events in the canvas apps designer](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/custom-events-",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "this.onLoad = function (executionContext) {",
+        "description": "this.onLoad = function (executionContext) {",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For model-driven apps you can pass a payload with the event ",
+        "description": "For model-driven apps you can pass a payload with the event allowing for more complex scenarios. For example in the diagram below the component passes",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "![In this example, the component passes a callback function ",
+        "description": "![In this example, the component passes a callback function in the event allowing the script handling to call back to the component](https://learn.mic",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Makers configure an event using Power Fx on the PCF control ",
+        "description": "Makers configure an event using Power Fx on the PCF control in the properties pane.",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Tutorial: Define a custom event in a component](https://lea",
+        "description": "[Tutorial: Define a custom event in a component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/tutorial-define-event)",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "A common requirement when building custom components with the Power Apps Component Framework is the ability to react to events generated within the co",
+        "condition": "define events (preview)",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "The data update from the code component to the bound field triggers the `OnChange` event. For most component scenarios, this is enough and makers just",
+        "condition": "component data flow",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "[This topic is pre-release documentation and is subject to change.]",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Canvas apps react to the event using Power Fx expressions:",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Model Driven Apps use the [addEventHandler method](https://learn.microsoft.com/en-us/power-apps/developer/model-driven-apps/clientapi/reference/contro",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "const formContext = executionContext.getFormContext();",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "const sampleControl1 = formContext.getControl(controlName1);",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "sampleControl1.addEventHandler(\"customEvent1\", this.onSampleControl1CustomEvent1);",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "sampleControl1.addEventHandler(\"customEvent2\", this.onSampleControl1CustomEvent2);",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "> Note: These events occur separately for each instance of the code component in the app.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "this.onSampleControl1CustomEvent1 = function (params) {",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "//alert(`SampleControl1 Custom Event 1: ${params}`);",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

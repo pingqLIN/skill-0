@@ -1,0 +1,107 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__localization",
+    "name": "localization",
+    "skill_layer": "claude_skill",
+    "title": "Localization Skill",
+    "description": "Guidelines for localizing markdown documents Triggers on: **/*.md",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.825888Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/localization/SKILL.md",
+    "skill_name": "localization",
+    "skill_description": "Guidelines for localizing markdown documents Triggers on: **/*.md"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "DISCLAIMER: This document is the localized by [GitHub Copilo",
+        "description": "DISCLAIMER: This document is the localized by [GitHub Copilot](https://docs.github.com/copilot/about-github-copilot/what-is-github-copilot). Therefore",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "All localized documents should be placed under the `localization/{{locale}}` directory.",
+        "condition": "instruction",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "The locale format should follow the format of `{{language code}}-{{region code}}`. The language code is defined in ISO 639-1, and the region code is d",
+        "condition": "instruction",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "DO NOT miss any sections nor any paragraphs while localizing.",
+        "condition": "instruction",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "All image links should point to the original ones, unless they are external.",
+        "condition": "instruction",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "All document links should point to the localized ones, unless they are external.",
+        "condition": "instruction",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "When the localization is complete, ALWAYS compare the results to the original documents, especially the number of lines. If the number of lines of eac",
+        "condition": "instruction",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "ALWAYS add the disclaimer to the end of each localized document.",
+        "condition": "disclaimer",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "The disclaimer should also be localized.",
+        "condition": "disclaimer",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Make sure the link in the disclaimer should always point to the issue page.",
+        "condition": "disclaimer",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "You're an expert of localization for technical documents. Follow the instruction to localize documents.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Find all markdown documents and localize them into given locale.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Localize all the sections and paragraphs in the original documents.",
+        "decomposable": false,
+        "id": "d_003"
+      }
+    ]
+  }
+}

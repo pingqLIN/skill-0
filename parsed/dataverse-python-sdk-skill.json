@@ -1,0 +1,176 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-sdk",
+    "name": "dataverse-python-sdk",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Sdk Skill",
+    "description": "dataverse-python-sdk guidelines Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.436943Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-sdk/SKILL.md",
+    "skill_name": "dataverse-python-sdk",
+    "skill_description": "dataverse-python-sdk guidelines Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run pip",
+        "description": "pip install PowerPlatform-Dataverse-Client",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Dataverse environment with read/write",
+        "description": "Dataverse environment with read/write",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "pip install PowerPlatform-Dataverse-Client",
+        "description": "pip install PowerPlatform-Dataverse-Client",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import InteractiveBrowserCredential",
+        "description": "from azure.identity import InteractiveBrowserCredential",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.config import DataverseCon",
+        "description": "from PowerPlatform.Dataverse.core.config import DataverseConfig",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "account_id = client.create(\"account\", {\"name\": \"Acme, Inc.\",",
+        "description": "account_id = client.create(\"account\", {\"name\": \"Acme, Inc.\", \"telephone1\": \"555-0100\"})[0]",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.update(\"account\", account_id, {\"telephone1\": \"555-019",
+        "description": "client.update(\"account\", account_id, {\"telephone1\": \"555-0199\"})",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.delete(\"account\", account_id)",
+        "description": "client.delete(\"account\", account_id)",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ids = client.create(\"account\", [{\"name\": \"Contoso\"}, {\"name\"",
+        "description": "ids = client.create(\"account\", [{\"name\": \"Contoso\"}, {\"name\": \"Fabrikam\"}])",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.update(\"account\", ids, {\"telephone1\": \"555-0200\"})",
+        "description": "client.update(\"account\", ids, {\"telephone1\": \"555-0200\"})",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.update(\"account\", ids, [{\"telephone1\": \"555-1200\"}, {",
+        "description": "client.update(\"account\", ids, [{\"telephone1\": \"555-1200\"}, {\"telephone1\": \"555-1300\"}])",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "payloads = [{\"name\": \"Contoso\"}, {\"name\": \"Fabrikam\"}, {\"nam",
+        "description": "payloads = [{\"name\": \"Contoso\"}, {\"name\": \"Fabrikam\"}, {\"name\": \"Northwind\"}]",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ids = client.create(\"account\", payloads)",
+        "description": "ids = client.create(\"account\", payloads)",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.upload_file('account', record_id, 'sample_filecolumn'",
+        "description": "client.upload_file('account', record_id, 'sample_filecolumn', 'test.pdf')",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This instruction summarizes Microsoft Learn guidance for the Dataverse SDK for Python (preview) and provides copyable snippets.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "preference",
+        "description": "cfg = DataverseConfig()  # defaults to language_code=1033",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Optional HTTP settings: `cfg.http_retries`, `cfg.http_backoff`, `cfg.http_timeout`.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Working with data: https://learn.microsoft.com/en-us/power-apps/developer/data-platform/sdk-python/work-data",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "SDK source/examples: https://github.com/microsoft/PowerPlatform-DataverseClient-Python",
+        "decomposable": false,
+        "id": "d_005"
+      }
+    ]
+  }
+}

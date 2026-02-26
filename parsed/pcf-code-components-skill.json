@@ -1,0 +1,225 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-code-components",
+    "name": "pcf-code-components",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Code Components Skill",
+    "description": "Understanding code components structure and implementation Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.999866Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-code-components/SKILL.md",
+    "skill_name": "pcf-code-components",
+    "skill_description": "Understanding code components structure and implementation Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Code components are a type of solution component that can be",
+        "description": "Code components are a type of solution component that can be included in a solution file and imported into different environments. They can be added t",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Component implementation",
+        "description": "2. Component implementation",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "> Note: The definition and implementation of code components",
+        "description": "> Note: The definition and implementation of code components using Power Apps component framework is the same for both model-driven and canvas apps. T",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The manifest is the `ControlManifest.Input.xml` metadata fil",
+        "description": "The manifest is the `ControlManifest.Input.xml` metadata file that defines a component. It is an XML document that describes:",
+        "action_type": "await_input",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The kind of data that can be configured, either a `field` or",
+        "description": "The kind of data that can be configured, either a `field` or a `dataset`",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Any properties that can be configured in the application whe",
+        "description": "Any properties that can be configured in the application when the component is added",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When a user configures a code component, the data in the man",
+        "description": "When a user configures a code component, the data in the manifest file filters the available components so that only valid components for the context ",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "More information: [Manifest schema reference](https://learn.",
+        "description": "More information: [Manifest schema reference](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/)",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The component object implements these lifecycle methods:",
+        "description": "The component object implements these lifecycle methods:",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When the page loads, the application creates an object using",
+        "description": "When the page loads, the application creates an object using data from the manifest:",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The page then initializes the component:",
+        "description": "The page then initializes the component:",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `context` | Contains all information about how the compone",
+        "description": "| `context` | Contains all information about how the component is configured and all parameters. Access input properties via `context.parameters.<prop",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `state` | Contains component data from the previous page l",
+        "description": "| `state` | Contains component data from the previous page load if explicitly stored using `setControlState` method. |",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When a user navigates away from the page, the code component",
+        "description": "When a user navigates away from the page, the code component loses scope and all memory allocated for objects is cleared. However, some methods (like ",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement the `setControlState` method to store information ",
+        "description": "Implement the `setControlState` method to store information for the next time within the same session",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Code components are implemented using TypeScript. Each code component must include an object that implements the methods described in the code compone",
+        "condition": "component implementation",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "init (Required) - Called when the page loads",
+        "condition": "required methods",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "updateView (Required) - Called when app data changes",
+        "condition": "required methods",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "destroy (Required) - Called when the page closes",
+        "condition": "required methods",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "| `notifyOutputChanged` | Alerts the framework whenever the component has new outputs ready to be retrieved asynchronously. |",
+        "condition": "page load",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "If the platform changes the data, it calls the `updateView` method of the component and passes the new context object as a parameter. This method shou",
+        "condition": "app changes data",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "The resource node in the manifest file refers to the resources that the component requires to implement its visualization. Each code component must ha",
+        "condition": "resources",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "completion",
+        "description": "getOutputs (Optional) - Returns values when user changes data",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "var obj = new <\"namespace on manifest\">.<\"constructor on manifest\">();",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "var controlObj = new SampleNameSpace.LinearInputComponent();",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "completion",
+        "description": "controlObj.init(context, notifyOutputChanged, state, container);",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| `container` | An HTML div element to which developers can append HTML elements for the UI. |",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "completion",
+        "description": "When a user interacts with your component to change data, call the `notifyOutputChanged` method passed in the `init` method. The platform responds by ",
+        "decomposable": false,
+        "id": "d_006"
+      }
+    ]
+  }
+}

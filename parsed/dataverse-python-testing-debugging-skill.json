@@ -1,0 +1,249 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-testing-debugging",
+    "name": "dataverse-python-testing-debugging",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Testing Debugging Skill",
+    "description": "dataverse-python-testing-debugging guidelines Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.449396Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-testing-debugging/SKILL.md",
+    "skill_name": "dataverse-python-testing-debugging",
+    "skill_description": "dataverse-python-testing-debugging guidelines Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run pip",
+        "description": "pip install pytest pytest-cov unittest-mock",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Based on official Azure Functions and pytest testing pattern",
+        "description": "Based on official Azure Functions and pytest testing patterns.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Integration Tests  <- Test with real Dataverse",
+        "description": "Integration Tests  <- Test with real Dataverse",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "pip install pytest pytest-cov unittest-mock",
+        "description": "pip install pytest pytest-cov unittest-mock",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from unittest.mock import Mock, patch, MagicMock",
+        "description": "from unittest.mock import Mock, patch, MagicMock",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def test_create_account(mock_client):",
+        "description": "def test_create_account(mock_client):",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Test account creation with mocked client.\"\"\"",
+        "description": "\"\"\"Test account creation with mocked client.\"\"\"",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "mock_client.create.return_value = [\"id-123\"]",
+        "description": "mock_client.create.return_value = [\"id-123\"]",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from my_app import create_account",
+        "description": "from my_app import create_account",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "result = create_account(mock_client, {\"name\": \"Acme\"})",
+        "description": "result = create_account(mock_client, {\"name\": \"Acme\"})",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "mock_client.create.assert_called_once_with(\"account\", {\"name",
+        "description": "mock_client.create.assert_called_once_with(\"account\", {\"name\": \"Acme\"})",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def test_create_account_error(mock_client):",
+        "description": "def test_create_account_error(mock_client):",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Test error handling in account creation.\"\"\"",
+        "description": "\"\"\"Test error handling in account creation.\"\"\"",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.errors import DataverseErr",
+        "description": "from PowerPlatform.Dataverse.core.errors import DataverseError",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "def test_rate_limiting_retry(mock_client):",
+        "condition": "mock errors",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "\"\"\"Test retry logic on rate limiting.\"\"\"",
+        "condition": "mock errors",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "assert duration < 10  # Should complete in under 10 seconds",
+        "condition": "measure operation duration",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "| Mock not called | Check method name/parameters match exactly |",
+        "condition": "10. debugging checklist",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "| Real API failing | Check credentials, URL, permissions |",
+        "condition": "10. debugging checklist",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "| Rate limiting in tests | Add delays or use smaller batches |",
+        "condition": "10. debugging checklist",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "| Data not found | Verify record created and not cleaned up |",
+        "condition": "10. debugging checklist",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "{**sample_account, \"accountid\": \"id-124\", \"name\": \"Fabrikam\"},",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "{**sample_account, \"accountid\": \"id-125\", \"name\": \"Contoso\"},",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "mock_client.get.return_value = iter([sample_accounts])",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "account = dataverse_client.get(\"account\", account_id)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "logging.getLogger('PowerPlatform').setLevel(logging.DEBUG)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "return list(dataverse_client.get(\"account\", top=100))",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "completion",
+        "description": "result = get_account_safe(mock_client, \"invalid-id\")",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "completion",
+        "description": "assert result is None  # Returns None instead of raising",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| Assertion errors | Print actual vs expected values |",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Dataverse SDK Examples](https://github.com/microsoft/PowerPlatform-DataverseClient-Python/tree/main/examples)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

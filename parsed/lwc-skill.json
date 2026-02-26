@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__lwc",
+    "name": "lwc",
+    "skill_layer": "claude_skill",
+    "title": "Lwc Skill",
+    "description": "Guidelines and best practices for developing Lightning Web Components (LWC) on Salesforce Platform. Triggers on: force-app/main/default/lwc/**",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.836122Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/lwc/SKILL.md",
+    "skill_name": "lwc",
+    "skill_description": "Guidelines and best practices for developing Lightning Web Components (LWC) on Salesforce Platform. Triggers on: force-app/main/default/lwc/**"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Optional: `myComponent.test.js` for Jest unit tests.",
+        "description": "Optional: `myComponent.test.js` for Jest unit tests.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<button onclick={handleSave}>Save</button>",
+        "description": "<button onclick={handleSave}>Save</button>",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use CSS custom properties (design tokens) when possible",
+        "description": "Use CSS custom properties (design tokens) when possible",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import { LightningElement, track, api } from 'lwc';",
+        "description": "import { LightningElement, track, api } from 'lwc';",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "export default class MyComponent extends LightningElement {",
+        "description": "export default class MyComponent extends LightningElement {",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// No decorator needed - reassignment triggers re-render",
+        "description": "// No decorator needed - reassignment triggers re-render",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// @track is NOT needed for simple property reassignment",
+        "description": "// @track is NOT needed for simple property reassignment",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "this.simpleValue = 'updated'; // Reactive without @track",
+        "description": "this.simpleValue = 'updated'; // Reactive without @track",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// @track IS needed when mutating nested properties without ",
+        "description": "// @track IS needed when mutating nested properties without reassignment",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// For example, updating complexObject.details.status withou",
+        "description": "// For example, updating complexObject.details.status without reassigning complexObject.",
+        "action_type": "llm_inference",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import { getRecord } from 'lightning/uiRecordApi';",
+        "description": "import { getRecord } from 'lightning/uiRecordApi';",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import { getObjectInfo } from 'lightning/uiObjectInfoApi';",
+        "description": "import { getObjectInfo } from 'lightning/uiObjectInfoApi';",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import { ShowToastEvent } from 'lightning/platformShowToastE",
+        "description": "import { ShowToastEvent } from 'lightning/platformShowToastEvent';",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Developer-defined async operation",
+        "description": "// Developer-defined async operation",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<!-- Use template directives for conditional rendering -->",
+        "description": "<!-- Use template directives for conditional rendering -->",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Each LWC should reside in its own folder under `force-app/main/default/lwc/`.",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "The folder name should match the component name (e.g., `myComponent` folder for the `myComponent` component).",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Each component folder should contain the following files:",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Always prefer Lightning Web Component library components over plain HTML elements for consistency, accessibility, and future-proofing.",
+        "condition": "1. use lightning components over html tags",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "| `<input type=\"checkbox\">` | `<lightning-input type=\"checkbox\">` | `checked`, `label` |",
+        "condition": "2. lightning component mapping guide",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "| `<input type=\"toggle\">` | `<lightning-input type=\"toggle\">` | `checked`, `variant` |",
+        "condition": "2. lightning component mapping guide",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Always use Salesforce Lightning Design System utility classes with the `slds-var-` prefix for modern implementations:",
+        "condition": "use slds utility classes",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "If you must use custom CSS, follow these guidelines:",
+        "condition": "when custom css is necessary",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Prefix custom classes to avoid conflicts",
+        "condition": "when custom css is necessary",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Never override SLDS base classes",
+        "condition": "when custom css is necessary",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "`myComponent.js-meta.xml`: The metadata configuration file.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Optional: `myComponent.css` for component-specific styles.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<!-- Use Lightning components -->",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<lightning-button label=\"Save\" variant=\"brand\" onclick={handleSave}></lightning-button>",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<lightning-input type=\"text\" label=\"Name\" value={name} onchange={handleNameChange}></lightning-input>",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<lightning-combobox label=\"Type\" options={typeOptions} value={selectedType}></lightning-combobox>",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<lightning-radio-group name=\"duration\" label=\"Duration\" options={durationOptions} value={duration} type=\"radio\"></lightning-radio-group>",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| HTML Element | Lightning Component | Key Attributes |",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "|--------------|-------------------|----------------|",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| `<button>` | `<lightning-button>` | `variant`, `label`, `icon-name` |",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

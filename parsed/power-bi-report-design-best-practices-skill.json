@@ -1,0 +1,237 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-bi-report-design-best-practices",
+    "name": "power-bi-report-design-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Power Bi Report Design Best Practices Skill",
+    "description": "Comprehensive Power BI report design and visualization best practices based on Microsoft guidance for creating effective, accessible, and performant reports and dashboards. Triggers on: **/*.{pbix,md,",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.336971Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-bi-report-design-best-practices/SKILL.md",
+    "skill_name": "power-bi-report-design-best-practices",
+    "skill_description": "Comprehensive Power BI report design and visualization best practices based on Microsoft guidance for creating effective, accessible, and performant reports and dashboards. Triggers on: **/*.{pbix,md,"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Start axis at zero for accurate comparison",
+        "description": "Start axis at zero for accurate comparison",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Start Y-axis at zero when showing absolute values",
+        "description": "Start Y-axis at zero when showing absolute values",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Include data point markers for sparse data",
+        "description": "Include data point markers for sparse data",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When percentages are more important than absolute values",
+        "description": "When percentages are more important than absolute values",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Alternative: Use stacked bar charts for better readability",
+        "description": "Alternative: Use stacked bar charts for better readability",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Consider using conditional formatting",
+        "description": "Consider using conditional formatting",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Responsive design considerations",
+        "description": "Responsive design considerations",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Create target drillthrough page",
+        "description": "1. Create target drillthrough page",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Design page with filtered context in mind",
+        "description": "3. Design page with filtered context in mind",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Test drillthrough functionality",
+        "description": "4. Test drillthrough functionality",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "5. Configure source visuals for drillthrough",
+        "description": "5. Configure source visuals for drillthrough",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Captions/Legends: 8-10pt, Regular, Supplementary information",
+        "description": "Captions/Legends: 8-10pt, Regular, Supplementary information",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Left-align text for readability (except centered titles)",
+        "description": "Left-align text for readability (except centered titles)",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Visual Hierarchy: Use size, color, and spacing to indicate i",
+        "description": "Visual Hierarchy: Use size, color, and spacing to indicate importance",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Consider progressive disclosure of information",
+        "description": "Consider progressive disclosure of information",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Limit to 7-10 categories for readability",
+        "condition": "1. comparison visualizations",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Avoid jargon and technical abbreviations",
+        "condition": "2. typography and readability",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Check refresh and performance impact",
+        "condition": "2. custom visuals integration",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "□ Filters don't inadvertently exclude data",
+        "condition": "1. functional testing checklist",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Known limitations and workarounds",
+        "condition": "3. quality assurance framework",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This document provides comprehensive instructions for designing effective, accessible, and performant Power BI reports and dashboards following Micros",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Visual Hierarchy - Organize information by importance:",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Primary: Key metrics, KPIs, most critical insights (top-left, header area)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Secondary: Supporting details, trends, comparisons (main body)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Tertiary: Filters, controls, navigation elements (sidebars, footers)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "┌─────────────────────────────────────┐",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "│ Header: Title, KPIs, Key Metrics    │",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "├─────────────────────────────────────┤",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "│ Main Content Area                   │",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "│ ┌─────────────┐ ┌─────────────────┐ │",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-bi-devops-alm-best-practices",
+    "name": "power-bi-devops-alm-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Power Bi Devops Alm Best Practices Skill",
+    "description": "Comprehensive guide for Power BI DevOps, Application Lifecycle Management (ALM), CI/CD pipelines, deployment automation, and version control best practices. Triggers on: **/*.{yml,yaml,ps1,json,pbix,p",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.301952Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-bi-devops-alm-best-practices/SKILL.md",
+    "skill_name": "power-bi-devops-alm-best-practices",
+    "skill_description": "Comprehensive guide for Power BI DevOps, Application Lifecycle Management (ALM), CI/CD pipelines, deployment automation, and version control best practices. Triggers on: **/*.{yml,yaml,ps1,json,pbix,p"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run git",
+        "description": "git init",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "git merge feature/new-dashboard",
+        "description": "git merge feature/new-dashboard",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "$url = \"pipelines/{0}/Deploy\" -f \"Insert your pipeline ID he",
+        "description": "$url = \"pipelines/{0}/Deploy\" -f \"Insert your pipeline ID here\"",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "sourceStageOrder = 0 # Development (0), Test (1)",
+        "description": "sourceStageOrder = 0 # Development (0), Test (1)",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "# Allows creating new item if needed on the Test stage works",
+        "description": "# Allows creating new item if needed on the Test stage workspace",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "# Allows overwriting existing item if needed on the Test sta",
+        "description": "# Allows overwriting existing item if needed on the Test stage workspace",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "$deployResult = Invoke-PowerBIRestMethod -Url $url -Method P",
+        "description": "$deployResult = Invoke-PowerBIRestMethod -Url $url -Method Post -Body $body | ConvertFrom-Json",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "$url = \"pipelines/{0}/Operations/{1}\" -f \"Insert your pipeli",
+        "description": "$url = \"pipelines/{0}/Operations/{1}\" -f \"Insert your pipeline ID here\",$deployResult.id",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "$operation = Invoke-PowerBIRestMethod -Url $url -Method Get ",
+        "description": "$operation = Invoke-PowerBIRestMethod -Url $url -Method Get | ConvertFrom-Json",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "while($operation.Status -eq \"NotStarted\" -or $operation.Stat",
+        "description": "while($operation.Status -eq \"NotStarted\" -or $operation.Status -eq \"Executing\")",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "TargetFolder: '$(Build.ArtifactStagingDirectory)'",
+        "description": "TargetFolder: '$(Build.ArtifactStagingDirectory)'",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "task: PowerPlatformToolInstaller@2",
+        "description": "task: PowerPlatformToolInstaller@2",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "task: PowerPlatformExportData@2",
+        "description": "task: PowerPlatformExportData@2",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "PowerPlatformSPN: 'PowerBIServiceConnection'",
+        "description": "PowerPlatformSPN: 'PowerBIServiceConnection'",
+        "action_type": "external_call",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Environment: '$(BuildTools.EnvironmentUrl)'",
+        "description": "Environment: '$(BuildTools.EnvironmentUrl)'",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "git checkout -b feature/new-dashboard",
+        "condition": "create feature branch for development",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "[ValidateSet(\"dev\", \"test\", \"prod\")]",
+        "condition": "environment-specific parameter management",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "displayName: 'Validate Power BI Project'",
+        "condition": "multi-stage release pipeline",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "$requiredFiles = @(\"Report\\report.json\", \"Model\\tables\")",
+        "condition": "multi-stage release pipeline",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "foreach ($file in $requiredFiles) {",
+        "condition": "multi-stage release pipeline",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "throw \"Missing required file: $file\"",
+        "condition": "multi-stage release pipeline",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "$healthCheck.Issues += \"Missing report: $expectedReport\"",
+        "condition": "post-deployment validation",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "$healthCheck.Status = \"Unhealthy\"",
+        "condition": "post-deployment validation",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "$healthCheck.Issues += \"Missing dataset: $expectedDataset\"",
+        "condition": "post-deployment validation",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "$healthCheck.Issues += \"Dataset refresh failed: $expectedDataset\"",
+        "condition": "post-deployment validation",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "preference",
+        "description": "This document provides comprehensive instructions for implementing DevOps practices, CI/CD pipelines, and Application Lifecycle Management (ALM) for P",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "New-Item -ItemType Directory -Path \".\\modules\" -ErrorAction SilentlyContinue | Out-Null",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "@(\"https://raw.githubusercontent.com/microsoft/Analysis-Services/master/pbidevmode/fabricps-pbip/FabricPS-PBIP.psm1\",",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"https://raw.githubusercontent.com/microsoft/Analysis-Services/master/pbidevmode/fabricps-pbip/FabricPS-PBIP.psd1\") |% {",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Invoke-WebRequest -Uri $_ -OutFile \".\\modules\\$(Split-Path $_ -Leaf)\"",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "$workspaceId = New-FabricWorkspace -name $workspaceName -skipErrorIfExists",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "$pbipSemanticModelPath = \"[PBIP Path]\\[Item Name].SemanticModel\"",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "$currentPath = (Split-Path $MyInvocation.MyCommand.Definition -Parent)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"workspaceId\": \"dev-workspace-id\",",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"dataSourceUrl\": \"dev-database.database.windows.net\",",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

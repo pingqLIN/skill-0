@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-file-operations",
+    "name": "dataverse-python-file-operations",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python File Operations Skill",
+    "description": "dataverse-python-file-operations guidelines",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.381936Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-file-operations/SKILL.md",
+    "skill_name": "dataverse-python-file-operations",
+    "skill_description": "dataverse-python-file-operations guidelines"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"Upload successful: {response}\")",
+        "description": "print(f\"Upload successful: {response}\")",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(\"Chunked upload complete\")",
+        "description": "print(\"Chunked upload complete\")",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def calculate_file_hash(file_path):",
+        "description": "def calculate_file_hash(file_path):",
+        "action_type": "compute",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Calculate SHA-256 hash of file.\"\"\"",
+        "description": "\"\"\"Calculate SHA-256 hash of file.\"\"\"",
+        "action_type": "compute",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "for chunk in iter(lambda: f.read(1024*1024), b''):",
+        "description": "for chunk in iter(lambda: f.read(1024*1024), b''):",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def upload_with_tracking(client, table_name, record_id, colu",
+        "description": "def upload_with_tracking(client, table_name, record_id, column_name, file_path):",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Upload file with validation tracking.\"\"\"",
+        "description": "\"\"\"Upload file with validation tracking.\"\"\"",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"Starting upload: {file_path.name} ({file_size / 1024",
+        "description": "print(f\"Starting upload: {file_path.name} ({file_size / 1024 / 1024:.2f} MB)\")",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "original_hash = calculate_file_hash(file_path)",
+        "description": "original_hash = calculate_file_hash(file_path)",
+        "action_type": "compute",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"File hash: {original_hash}\")",
+        "description": "print(f\"File hash: {original_hash}\")",
+        "action_type": "compute",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "upload_with_tracking(client, \"account\", account_id, \"new_doc",
+        "description": "upload_with_tracking(client, \"account\", account_id, \"new_documentfile\", \"report.pdf\")",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def upload_file_smart(client, table_name, record_id, column_",
+        "description": "def upload_file_smart(client, table_name, record_id, column_name, file_path):",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Upload with automatic strategy selection.\"\"\"",
+        "description": "\"\"\"Upload with automatic strategy selection.\"\"\"",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"Using chunked upload (file > 128 MB)\")",
+        "description": "print(f\"Using chunked upload (file > 128 MB)\")",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "def validate_file_for_upload(file_path, max_size_mb=500):",
+        "condition": "file size validation",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "\"\"\"Validate file before upload.\"\"\"",
+        "condition": "file size validation",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "size = validate_file_for_upload(\"document.pdf\", max_size_mb=128)",
+        "condition": "usage",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "def validate_file_type(file_path):",
+        "condition": "supported file types validation",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "validate_file_type(\"document.pdf\")",
+        "condition": "usage",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "def check_upload_space(file_path):",
+        "condition": "issue: insufficient disk space",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "\"\"\"Check if system has space for file + temp buffer.\"\"\"",
+        "condition": "issue: insufficient disk space",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "required_space = file_size * 1.1",
+        "condition": "issue: insufficient disk space",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "raise OSError(f\"Insufficient disk space: {free / 1024 / 1024:.0f} MB free, {required_space / 1024 / 1024:.0f} MB needed\")",
+        "condition": "issue: insufficient disk space",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "def verify_uploaded_file(local_path, remote_data):",
+        "condition": "issue: file corruption during upload",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "completion",
+        "description": "Complete guide to file upload operations, chunking strategies, and practical real-world examples using the PowerPlatform-DataverseClient-Python SDK.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "When to use: Large videos, databases, archives > 128 MB",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "completion",
+        "description": "print(f\"Success: {len(results['success'])}, Failed: {len(results['failed'])}\")",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "client = DataverseClient(\"https://yourorg.crm.dynamics.com\", credential)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "media_files: [{\"file\": path, \"type\": MediaType, \"description\": text}, ...]",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"new_description\": media_info.get(\"description\", \"\"),",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "{\"file\": \"photo1.jpg\", \"type\": MediaType.PHOTO, \"description\": \"Product shot 1\"},",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "{\"file\": \"photo2.jpg\", \"type\": MediaType.PHOTO, \"description\": \"Product shot 2\"},",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "{\"file\": \"demo.mp4\", \"type\": MediaType.VIDEO, \"description\": \"Product demo video\"},",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "{\"file\": \"manual.pdf\", \"type\": MediaType.DOCUMENT, \"description\": \"User manual\"}",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

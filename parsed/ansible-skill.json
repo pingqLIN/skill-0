@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__ansible",
+    "name": "ansible",
+    "skill_layer": "claude_skill",
+    "title": "Ansible Skill",
+    "description": "Ansible conventions and best practices Triggers on: **/*.yaml, **/*.yml",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:28.903857Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/ansible/SKILL.md",
+    "skill_name": "ansible",
+    "skill_description": "Ansible conventions and best practices Triggers on: **/*.yaml, **/*.yml"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Use Ansible to configure and manage infrastructure.",
+        "description": "Use Ansible to configure and manage infrastructure.",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Start names with an action verb that indicates the operation",
+        "description": "Start names with an action verb that indicates the operation being performed, such as \"Install,\" \"Configure,\" or \"Copy\"",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Omit the role name from role tasks; Ansible will automatical",
+        "description": "Omit the role name from role tasks; Ansible will automatically display the role name when running a role",
+        "action_type": "external_call",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use tags to dynamically create groups based on environment, ",
+        "description": "Use tags to dynamically create groups based on environment, function, location, etc.",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If you have to use `shell` or `command`, use the `creates:` ",
+        "description": "If you have to use `shell` or `command`, use the `creates:` or `removes:` parameter, where feasible, to prevent unnecessary execution",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use the `ansible.builtin` collection for [builtin modules an",
+        "description": "Use the `ansible.builtin` collection for [builtin modules and plugins](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/index.html#",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Group related tasks together to improve readability and modu",
+        "description": "Group related tasks together to improve readability and modularity",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use the following process to make it easy to find where vaul",
+        "description": "Use the following process to make it easy to find where vaulted variables are defined",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Create a `group_vars/` subdirectory named after the group",
+        "description": "1. Create a `group_vars/` subdirectory named after the group",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Inside this subdirectory, create two files named `vars` a",
+        "description": "2. Inside this subdirectory, create two files named `vars` and `vault`",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. In the `vars` file, define all of the variables needed, i",
+        "description": "3. In the `vars` file, define all of the variables needed, including any sensitive ones",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "6. Encrypt the `vault` file to protect its contents",
+        "description": "6. Encrypt the `vault` file to protect its contents",
+        "action_type": "compute",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When using other tools with Ansible (e.g., Terraform), store",
+        "description": "When using other tools with Ansible (e.g., Terraform), store secrets in a third-party secrets management tool (e.g., Hashicorp Vault, AWS Secrets Mana",
+        "action_type": "compute",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "It improves readability and reduces changeset collisions for",
+        "description": "It improves readability and reduces changeset collisions for version control",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Task declaration (e.g., `service:`, `package:`)",
+        "description": "Task declaration (e.g., `service:`, `package:`)",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Don't include redundant comments",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Use idempotent Ansible modules whenever possible; avoid `shell`, `command`, and `raw`, as they break idempotency",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Use [fully qualified collection names (FQCN)](https://docs.ansible.com/ansible/latest/reference_appendices/glossary.html#term-Fully-Qualified-Collecti",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Only set `become: true` at the play level or on an `include:` statement, if all included tasks require super user privileges; otherwise, specify `beco",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Only set `become: true` on a task if it requires super user privileges",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Use 2-space indentation and always indent lists",
+        "condition": "style",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Always use multi-line map syntax, regardless of how many pairs exist in the map",
+        "condition": "style",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "The only time you should use double quotes is when they are nested within single quotes (e.g. Jinja map reference), or when your string requires escap",
+        "condition": "style",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "If you must write a long string, use folded block scalar syntax (i.e., `>`) to replace newlines with spaces or literal block scalar syntax (i.e., `|`)",
+        "condition": "style",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "The `host` section of a play should follow this general order:",
+        "condition": "style",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use version control for your Ansible configurations.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Keep things simple; only use advanced features when necessary",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Give every play, block, and task a concise but descriptive `name`",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Omit periods from the end of task names for brevity",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "When including tasks from a separate file, you may include the filename in each task name to make tasks easier to locate (e.g., `<TASK_FILENAME> : <TA",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Use comments to provide additional context about what, how, and/or why something is being done",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `group_vars` to set variables based on these attributes",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "For modules where `state` is optional, explicitly set `state: present` or `state: absent` to improve clarity and consistency",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use the lowest privileges necessary to perform a task",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "When using Ansible alone, store secrets using Ansible Vault",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

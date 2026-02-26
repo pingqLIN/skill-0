@@ -1,0 +1,151 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__html-css-style-color-guide",
+    "name": "html-css-style-color-guide",
+    "skill_layer": "claude_skill",
+    "title": "Html Css Style Color Guide Skill",
+    "description": "Color usage guidelines and styling rules for HTML elements to ensure accessible, professional designs. Triggers on: **/*.html, **/*.css, **/*.js",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.671286Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/html-css-style-color-guide/SKILL.md",
+    "skill_name": "html-css-style-color-guide",
+    "skill_description": "Color usage guidelines and styling rules for HTML elements to ensure accessible, professional designs. Triggers on: **/*.html, **/*.css, **/*.js"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Follow these guidelines when updating or creating HTML/CSS s",
+        "description": "Follow these guidelines when updating or creating HTML/CSS styles for browser rendering. Color names",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Yellow (poor contrast and readability)",
+        "description": "Yellow (poor contrast and readability)",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use only when conveying urgency or importance",
+        "description": "Use only when conveying urgency or importance",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Government or Professional Color Standards](https://designs",
+        "description": "[Government or Professional Color Standards](https://designsystem.digital.gov/design-tokens/color/overview/)",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[UI Color Palette Best Practices](https://www.interaction-de",
+        "description": "[UI Color Palette Best Practices](https://www.interaction-design.org/literature/article/ui-color-palette)",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Ensure background is a light color",
+        "condition": "text colors",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Ensure background is a dark color",
+        "condition": "text colors",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Unless explicitly required by design specifications or user request, avoid:",
+        "condition": "colors to avoid",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Limit to small accent areas rather than large sections",
+        "condition": "colors to use sparingly",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "represent the full spectrum of their respective hue ranges (e.g., \"blue\" includes navy, sky blue, etc.).",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Primary Color: Use 60% of the time (*cool or light color*)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Secondary Color: Use 30% of the time (*cool or light color*)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Accent: Use 10% of the time (*complementary hot color*)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Balance the colors used by applying the 60-30-10 rule to graphic design elements like backgrounds,",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Light cool colors (e.g., light blues, light greens)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Colors with low contrast ratios (fails WCAG accessibility standards)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Reserve for critical alerts, warnings, or error messages",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Consider alternatives like icons or bold text before using hot colors",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Apply gradients with subtle color transitions to maintain professional aesthetics.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

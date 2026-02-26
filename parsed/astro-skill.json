@@ -1,0 +1,225 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__astro",
+    "name": "astro",
+    "skill_layer": "claude_skill",
+    "title": "Astro Skill",
+    "description": "Astro development standards and best practices for content-driven websites Triggers on: **/*.astro, **/*.ts, **/*.js, **/*.md, **/*.mdx",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:28.951284Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/astro/SKILL.md",
+    "skill_name": "astro",
+    "skill_description": "Astro development standards and best practices for content-driven websites Triggers on: **/*.astro, **/*.ts, **/*.js, **/*.md, **/*.mdx"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Instructions for building high-quality Astro applications fo",
+        "description": "Instructions for building high-quality Astro applications following the content-driven, server-first architecture with modern best practices.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure `tsconfig.json` with recommended v5.0 settings:",
+        "description": "Configure `tsconfig.json` with recommended v5.0 settings:",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Types auto-generated in `.astro/types.d.ts` (replaces `src/e",
+        "description": "Types auto-generated in `.astro/types.d.ts` (replaces `src/env.d.ts`)",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Run `astro sync` to generate/update type definitions",
+        "description": "Run `astro sync` to generate/update type definitions",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define component props with TypeScript interfaces",
+        "description": "Define component props with TypeScript interfaces",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Leverage auto-generated types for content collections and Co",
+        "description": "Leverage auto-generated types for content collections and Content Layer API",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define collections in `src/content.config.ts` using the new ",
+        "description": "Define collections in `src/content.config.ts` using the new Content Layer API",
+        "action_type": "external_call",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use built-in loaders: `glob()` for file-based content, `file",
+        "description": "Use built-in loaders: `glob()` for file-based content, `file()` for single files",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Leverage enhanced performance and scalability with the new l",
+        "description": "Leverage enhanced performance and scalability with the new loading system",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import { defineCollection, z } from 'astro:content';",
+        "description": "import { defineCollection, z } from 'astro:content';",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import { glob } from 'astro/loaders';",
+        "description": "import { glob } from 'astro/loaders';",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "const blog = defineCollection({",
+        "description": "const blog = defineCollection({",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "loader: glob({ pattern: '**/*.md', base: './src/content/blog",
+        "description": "loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Legacy `type: 'content'` collections still supported via aut",
+        "description": "Legacy `type: 'content'` collections still supported via automatic glob() implementation",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Migrate existing collections by adding explicit `loader` con",
+        "description": "Migrate existing collections by adding explicit `loader` configuration",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Minimize bundle size by avoiding unnecessary client-side JavaScript",
+        "condition": "performance optimization",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Ensure accessibility with semantic HTML and proper ARIA attributes",
+        "condition": "styling",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Enable SSR mode for dynamic content requirements",
+        "condition": "api routes and ssr",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Astro 5.x with Islands Architecture and Content Layer API",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "TypeScript for type safety and better DX with auto-generated types",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Content-driven websites (blogs, marketing, e-commerce, documentation)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Server-first rendering with selective client-side hydration",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Support for multiple UI frameworks (React, Vue, Svelte, Solid, etc.)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Static site generation (SSG) by default with optional server-side rendering (SSR)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Enhanced performance with modern content loading and build optimizations",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Embrace the Islands Architecture: server-render by default, hydrate selectively",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Organize content with Content Collections for type-safe Markdown/MDX management",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Structure projects by feature or content type for scalability",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

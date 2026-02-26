@@ -1,0 +1,249 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__kubernetes-manifests",
+    "name": "kubernetes-manifests",
+    "skill_layer": "claude_skill",
+    "title": "Kubernetes Manifests Skill",
+    "description": "Best practices for Kubernetes YAML manifests including labeling conventions, security contexts, pod security, resource management, probes, and validation commands Triggers on: k8s/**/*.yaml,k8s/**/*.y",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.806880Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/kubernetes-manifests/SKILL.md",
+    "skill_name": "kubernetes-manifests",
+    "skill_description": "Best practices for Kubernetes YAML manifests including labeling conventions, security contexts, pod security, resource management, probes, and validation commands Triggers on: k8s/**/*.yaml,k8s/**/*.y"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Liveness: Restart unhealthy containers",
+        "description": "Liveness: Restart unhealthy containers",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Readiness: Control traffic routing",
+        "description": "Readiness: Control traffic routing",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Startup: Protect slow-starting applications",
+        "description": "Startup: Protect slow-starting applications",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure appropriate delays, periods, timeouts, and thresho",
+        "description": "Configure appropriate delays, periods, timeouts, and thresholds for each.",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`RollingUpdate` with `maxSurge` and `maxUnavailable`",
+        "description": "`RollingUpdate` with `maxSurge` and `maxUnavailable`",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Anti-affinity rules (spread across nodes/zones)",
+        "description": "Anti-affinity rules (spread across nodes/zones)",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Horizontal Pod Autoscaler (HPA) for variable load",
+        "description": "Horizontal Pod Autoscaler (HPA) for variable load",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`kubectl apply --dry-run=client -f manifest.yaml`",
+        "description": "`kubectl apply --dry-run=client -f manifest.yaml`",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`kubectl apply --dry-run=server -f manifest.yaml`",
+        "description": "`kubectl apply --dry-run=server -f manifest.yaml`",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "OPA Conftest, Kyverno, or Datree",
+        "description": "OPA Conftest, Kyverno, or Datree",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`kubectl rollout status deployment/NAME`",
+        "description": "`kubectl rollout status deployment/NAME`",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`kubectl rollout undo deployment/NAME`",
+        "description": "`kubectl rollout undo deployment/NAME`",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`kubectl rollout undo deployment/NAME --to-revision=N`",
+        "description": "`kubectl rollout undo deployment/NAME --to-revision=N`",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`kubectl rollout history deployment/NAME`",
+        "description": "`kubectl rollout history deployment/NAME`",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`kubectl rollout restart deployment/NAME`",
+        "description": "`kubectl rollout restart deployment/NAME`",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Create production-ready Kubernetes manifests that prioritize security, reliability, and operational excellence with consistent labeling, proper resour",
+        "condition": "your mission",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Limits: Maximum allowed (prevents exhaustion)",
+        "condition": "resource requests and limits",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Guaranteed: requests == limits (best for critical apps)",
+        "condition": "resource requests and limits",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Burstable: requests < limits (flexible resource use)",
+        "condition": "resource requests and limits",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "BestEffort: No resources defined (avoid in production)",
+        "condition": "resource requests and limits",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "[ ] Resources: Requests and limits defined",
+        "condition": "manifest checklist",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "[ ] Images: Specific tags (never :latest)",
+        "condition": "manifest checklist",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "preference",
+        "description": "Required Labels (Kubernetes recommended):",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`app.kubernetes.io/name`: Application name",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`app.kubernetes.io/instance`: Instance identifier",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`app.kubernetes.io/version`: Version",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`app.kubernetes.io/component`: Component role",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`app.kubernetes.io/part-of`: Application group",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`app.kubernetes.io/managed-by`: Management tool",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`environment`: Environment name",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`team`: Owning team",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`cost-center`: For billing",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

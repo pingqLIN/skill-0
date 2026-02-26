@@ -1,0 +1,147 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-api-reference",
+    "name": "pcf-api-reference",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Api Reference Skill",
+    "description": "Complete PCF API reference with all interfaces and their availability in model-driven and canvas apps Triggers on: **/*.{ts,tsx,js}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.974334Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-api-reference/SKILL.md",
+    "skill_name": "pcf-api-reference",
+    "skill_description": "Complete PCF API reference with all interfaces and their availability in model-driven and canvas apps Triggers on: **/*.{ts,tsx,js}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "The Power Apps component framework provides a rich set of AP",
+        "description": "The Power Apps component framework provides a rich set of APIs that enable you to create powerful code components. This reference lists all available ",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| NumberFormattingInfo | Yes | Yes |",
+        "description": "| NumberFormattingInfo | Yes | Yes |",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Filtering: Define data filtering",
+        "description": "Filtering: Define data filtering",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Linking: Define relationships",
+        "description": "Linking: Define relationships",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Popup: Create popup dialogs",
+        "description": "Popup: Create popup dialogs",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Mode: Get component rendering mode",
+        "description": "Mode: Get component rendering mode",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always check the API availability for your target platform (model-driven or canvas)",
+        "condition": "api version compatibility",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Test components in the target environment to ensure compatibility",
+        "condition": "api version compatibility",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "The following table shows all API interfaces available in the Power Apps component framework, along with their availability in model-driven apps and c",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "The `Context` object provides access to all framework capabilities and is passed to your component's lifecycle methods. It contains:",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Client: Information about the client (form factor, network status)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Device: Device capabilities (camera, location, microphone)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Factory: Factory methods for creating framework objects",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Formatting: Number and date formatting",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Mode: Component mode and tracking",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Navigation: Navigation methods",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Resources: Access to resources (images, strings)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "UserSettings: User settings (locale, number format, security roles)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

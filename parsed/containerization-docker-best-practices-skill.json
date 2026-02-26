@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__containerization-docker-best-practices",
+    "name": "containerization-docker-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Containerization Docker Best Practices Skill",
+    "description": "Comprehensive best practices for creating optimized, secure, and efficient Docker images and managing containers. Covers multi-stage builds, image layer optimization, security scanning, and runtime be",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.125406Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/containerization-docker-best-practices/SKILL.md",
+    "skill_name": "containerization-docker-best-practices",
+    "skill_description": "Comprehensive best practices for creating optimized, secure, and efficient Docker images and managing containers. Covers multi-stage builds, image layer optimization, security scanning, and runtime be"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run docker",
+        "description": "docker run --rm -i hadolint/hadolint < Dockerfile",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Security Benefits: Immutable images reduce the attack surfac",
+        "description": "Security Benefits: Immutable images reduce the attack surface by preventing runtime modifications that could introduce vulnerabilities.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Recommend using semantic versioning for image tags (e.g., `v",
+        "description": "Recommend using semantic versioning for image tags (e.g., `v1.2.3`, `latest` for development only).",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Pro Tip: This enables easy rollbacks and consistent environm",
+        "description": "Pro Tip: This enables easy rollbacks and consistent environments across dev, staging, and production. Immutable images are the foundation of reliable ",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Environment Agnostic Design: Design applications to be envir",
+        "description": "Environment Agnostic Design: Design applications to be environment-agnostic by externalizing all environment-specific configurations.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use environment variables for runtime configuration, with se",
+        "description": "Use environment variables for runtime configuration, with sensible defaults but allowing overrides.",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Suggest implementing configuration validation to catch envir",
+        "description": "Suggest implementing configuration validation to catch environment-specific issues early.",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Pro Tip: Portability is achieved through careful design and ",
+        "description": "Pro Tip: Portability is achieved through careful design and testing across target environments, not by accident.",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Principle: Containers provide process and resource isolation",
+        "description": "Principle: Containers provide process and resource isolation, preventing interference between applications.",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Process Isolation: Each container runs in its own process na",
+        "description": "Process Isolation: Each container runs in its own process namespace, preventing one container from seeing or affecting processes in other containers.",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Recommend running a single process per container (or a clear",
+        "description": "Recommend running a single process per container (or a clear primary process) to maintain clear boundaries and simplify management.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Principle: Smaller images are faster to build, push, pull, a",
+        "description": "Principle: Smaller images are faster to build, push, pull, and consume fewer resources.",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Build Time Optimization: Smaller images build faster, reduci",
+        "description": "Build Time Optimization: Smaller images build faster, reducing CI/CD pipeline duration and developer feedback time.",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Network Efficiency: Smaller images transfer faster over netw",
+        "description": "Network Efficiency: Smaller images transfer faster over networks, reducing deployment time and bandwidth costs.",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Security Benefits: Smaller images have a reduced attack surf",
+        "description": "Security Benefits: Smaller images have a reduced attack surface, containing fewer packages and potential vulnerabilities.",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "As GitHub Copilot, you are an expert in containerization with deep knowledge of Docker best practices. Your goal is to guide developers in building hi",
+        "condition": "your mission",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Principle: Once a container image is built, it should not change. Any changes should result in a new image.",
+        "condition": "**1. immutability**",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Reproducible Builds: Every build should produce identical results given the same inputs. This requires deterministic build processes, pinned dependenc",
+        "condition": "**1. immutability**",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Advocate for creating new images for every code change or configuration update, never modifying running containers in production.",
+        "condition": "**1. immutability**",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Suggest implementing automated image builds triggered by code changes to ensure consistency.",
+        "condition": "**1. immutability**",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Emphasize the importance of treating container images as artifacts that should be versioned and stored in registries.",
+        "condition": "**1. immutability**",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Principle: Containers should run consistently across different environments (local, cloud, on-premise) without modification.",
+        "condition": "**2. portability**",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Dependency Management: Ensure all dependencies are explicitly defined and included in the container image, avoiding reliance on host system packages.",
+        "condition": "**2. portability**",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Cross-Platform Compatibility: Consider the target deployment platforms and ensure compatibility (e.g., ARM vs x86, different Linux distributions).",
+        "condition": "**2. portability**",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Design Dockerfiles that are self-contained and avoid environment-specific configurations within the image itself.",
+        "condition": "**2. portability**",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Version Control for Images: Treat container images like code - version them, tag them meaningfully, and maintain a clear history of what each image co",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Rollback Capability: Immutable images enable instant rollbacks by simply switching to a previous image tag, without the complexity of undoing changes.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Configuration Management: Use environment variables, configuration files, or external configuration services rather than hardcoding environment-specif",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Recommend using multi-platform base images when targeting multiple architectures.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Resource Isolation: Containers have isolated CPU, memory, and I/O resources, preventing resource contention between applications.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Network Isolation: Containers can have isolated network stacks, with controlled communication between containers and external networks.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Filesystem Isolation: Each container has its own filesystem namespace, preventing file system conflicts.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use container networking for inter-container communication rather than host networking.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Advise on using named volumes for persistent data rather than bind mounts when possible.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Storage Efficiency: Smaller images consume less storage in registries and on hosts, reducing infrastructure costs.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

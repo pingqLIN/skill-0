@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-bi-data-modeling-best-practices",
+    "name": "power-bi-data-modeling-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Power Bi Data Modeling Best Practices Skill",
+    "description": "Comprehensive Power BI data modeling best practices based on Microsoft guidance for creating efficient, scalable, and maintainable semantic models using star schema principles. Triggers on: **/*.{pbix",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.255868Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-bi-data-modeling-best-practices/SKILL.md",
+    "skill_name": "power-bi-data-modeling-best-practices",
+    "skill_description": "Comprehensive Power BI data modeling best practices based on Microsoft guidance for creating efficient, scalable, and maintainable semantic models using star schema principles. Triggers on: **/*.{pbix"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Create explicit bridging tables when possible",
+        "description": "Create explicit bridging tables when possible",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Monitor performance impact carefully",
+        "description": "Monitor performance impact carefully",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Degenerate dimension scenarios",
+        "description": "Degenerate dimension scenarios",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Optimize data types (Integer vs. Decimal, Date vs. DateTime)",
+        "description": "Optimize data types (Integer vs. Decimal, Date vs. DateTime)",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Remove test, invalid, or cancelled transactions",
+        "description": "Remove test, invalid, or cancelled transactions",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper data archiving strategies",
+        "description": "Implement proper data archiving strategies",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Text → Numeric: Convert codes to integers when possible",
+        "description": "Text → Numeric: Convert codes to integers when possible",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create indexes on frequently filtered columns",
+        "description": "Create indexes on frequently filtered columns",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create indexes on relationship key columns",
+        "description": "Create indexes on relationship key columns",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement appropriate database maintenance",
+        "description": "Implement appropriate database maintenance",
+        "action_type": "llm_inference",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Consider columnstore indexes for analytical workloads",
+        "description": "Consider columnstore indexes for analytical workloads",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use star schema design strictly",
+        "description": "Use star schema design strictly",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Apply filters early in report design",
+        "description": "Apply filters early in report design",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Monitor and optimize slow queries",
+        "description": "Monitor and optimize slow queries",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Update existing records with new values",
+        "description": "Update existing records with new values",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "High Precision → Lower Precision: Match business requirements",
+        "condition": "data reduction techniques for import",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Avoid calculated columns on large tables",
+        "condition": "directquery performance optimization",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Limit high-cardinality filtering",
+        "condition": "directquery performance optimization",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Consider OLAP cubes for complex analytical requirements",
+        "condition": "1. model size optimization",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Ensure referential integrity in source data",
+        "condition": "2. relationship performance",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Avoid many-to-many relationships when possible",
+        "condition": "2. relationship performance",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Enable bi-directional only when required",
+        "condition": "2. relationship performance",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Document security requirements clearly",
+        "condition": "1. row-level security (rls)",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Validate business rule implementation",
+        "condition": "2. data governance",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "□ Queries execute within SLA requirements",
+        "condition": "1. model testing checklist",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This document provides comprehensive instructions for designing efficient, scalable, and maintainable Power BI semantic models following Microsoft's o",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Dimension Tables - Store descriptive business entities:",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Contain unique key columns (preferably surrogate keys)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Used for filtering, grouping, and providing context",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Sales transactions, website clicks, manufacturing events",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DimProduct (Dimension)          FactSales (Fact)              DimCustomer (Dimension)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "├── ProductKey (PK)             ├── SalesKey (PK)             ├── CustomerKey (PK)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "├── ProductName                 ├── ProductKey (FK)           ├── CustomerName",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "├── Category                    ├── CustomerKey (FK)          ├── CustomerType",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "├── SubCategory                 ├── DateKey (FK)              ├── Region",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

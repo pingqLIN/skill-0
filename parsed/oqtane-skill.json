@@ -1,0 +1,225 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__oqtane",
+    "name": "oqtane",
+    "skill_layer": "claude_skill",
+    "title": "Oqtane Skill",
+    "description": "Oqtane Module patterns Triggers on: **/*.razor, **/*.razor.cs, **/*.razor.css",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.954058Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/oqtane/SKILL.md",
+    "skill_name": "oqtane",
+    "skill_description": "Oqtane Module patterns Triggers on: **/*.razor, **/*.razor.cs, **/*.razor.css"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Write idiomatic and efficient Blazor and C# code.",
+        "description": "Write idiomatic and efficient Blazor and C# code.",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper error handling for Blazor pages and API cal",
+        "description": "Implement proper error handling for Blazor pages and API calls.",
+        "action_type": "external_call",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement validation using FluentValidation or DataAnnotatio",
+        "description": "Implement validation using FluentValidation or DataAnnotations in forms.",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use asynchronous methods (async/await) for API calls or UI a",
+        "description": "Use asynchronous methods (async/await) for API calls or UI actions that could block the main thread.",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Optimize Razor components by reducing unnecessary renders an",
+        "description": "Optimize Razor components by reducing unnecessary renders and using StateHasChanged() efficiently.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement in-memory caching for frequently used data, especi",
+        "description": "Implement in-memory caching for frequently used data, especially for Blazor Server apps. Use IMemoryCache for lightweight caching solutions.",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "use built-in Oqtane state management in the base classes lik",
+        "description": "use built-in Oqtane state management in the base classes like PageState and SiteState when appropriate.",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For client-side state persistence in Blazor WebAssembly, con",
+        "description": "For client-side state persistence in Blazor WebAssembly, consider using Blazored.LocalStorage or Blazored.SessionStorage to maintain state between pag",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For server-side Blazor, use Scoped Services and the StateCon",
+        "description": "For server-side Blazor, use Scoped Services and the StateContainer pattern to manage state within user sessions while minimizing re-renders.",
+        "action_type": "llm_inference",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test Blazor components and services using xUnit, NUnit, or M",
+        "description": "Test Blazor components and services using xUnit, NUnit, or MSTest.",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use Moq or NSubstitute for mocking dependencies during tests",
+        "description": "Use Moq or NSubstitute for mocking dependencies during tests.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement Authentication and Authorization using built-in Oq",
+        "description": "Implement Authentication and Authorization using built-in Oqtane base class members like User.Roles.",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Async/await should be used where applicable to ensure non-blocking UI operations.",
+        "condition": "blazor code style and structure",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Utilize Blazor server-side or WebAssembly optimally based on the project requirements.",
+        "condition": "blazor api and performance optimization",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Minimize the component render tree by avoiding re-renders unless necessary, using ShouldRender() where appropriate.",
+        "condition": "blazor api and performance optimization",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Cache API calls by storing responses to avoid redundant calls when data is unlikely to change, thus improving the user experience.",
+        "condition": "caching strategies",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Avoid adding extra depenencies like Fluxor or BlazorState when the application grows in complexity.",
+        "condition": "state management libraries",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "All unit testing and integration testing should be done in Visual Studio Enterprise.",
+        "condition": "testing and debugging in visual studio",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Use HTTPS for all web communication and ensure proper CORS policies are implemented.",
+        "condition": "security and authentication",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use Razor Components appropriately for component-based UI development.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Blazor Components appropriately for component-based UI development.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Prefer inline functions for smaller components but separate complex logic into code-behind or service classes.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Follow PascalCase for component names, method names, and public members.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use camelCase for private fields and local variables.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Prefix interface names with \"I\" (e.g., IUserService).",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Utilize Blazor's built-in features for component lifecycle (e.g., OnInitializedAsync, OnParametersSetAsync).",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use data binding effectively with @bind.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Leverage Dependency Injection for services in Blazor.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Structure Blazor components and services following Separation of Concerns.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

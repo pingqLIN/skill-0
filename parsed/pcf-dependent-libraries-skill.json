@@ -1,0 +1,209 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-dependent-libraries",
+    "name": "pcf-dependent-libraries",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Dependent Libraries Skill",
+    "description": "Using dependent libraries in PCF components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.017969Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-dependent-libraries/SKILL.md",
+    "skill_name": "pcf-dependent-libraries",
+    "skill_description": "Using dependent libraries in PCF components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "With model-driven apps, you can reuse a prebuilt library con",
+        "description": "With model-driven apps, you can reuse a prebuilt library contained in another component that is loaded as a dependency to more than one component.",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Having copies of a prebuilt library in multiple controls is ",
+        "description": "Having copies of a prebuilt library in multiple controls is undesirable. Reusing existing libraries improves performance, especially when the library ",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Create a Library component that contains the library. Thi",
+        "description": "1. Create a Library component that contains the library. This component can provide some functionality or only be a container for the library.",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Configure another component to depend on the library load",
+        "description": "2. Configure another component to depend on the library loaded by the library component.",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "By default, the library loads when the dependent component l",
+        "description": "By default, the library loads when the dependent component loads, but you can configure it to load on demand.",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "You need to add configuration data to your component project",
+        "description": "You need to add configuration data to your component project so that the build process deploys your libraries the way you want. Set this configuration",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Edit the manifest schema to Register dependencies",
+        "description": "Edit the manifest schema to Register dependencies",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add this file to override the default feature flags for a co",
+        "description": "Add this file to override the default feature flags for a component without modifying the files generated in the `node_modules` folder.",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The build process for components uses [Webpack](https://webp",
+        "description": "The build process for components uses [Webpack](https://webpack.js.org/) to bundle the code and dependencies into a deployable asset. To exclude your ",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "![Diagram showing the use of a function from a library where",
+        "description": "![Diagram showing the use of a function from a library where the library is loaded on demand](https://learn.microsoft.com/en-us/power-apps/developer/c",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "To enable on demand loading, you need to:",
+        "description": "To enable on demand loading, you need to:",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<platform-action action-type=\"afterPageLoad\" />",
+        "description": "<platform-action action-type=\"afterPageLoad\" />",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Step 2: Set the `load-type` attribute of the [dependency ele",
+        "description": "Step 2: Set the `load-type` attribute of the [dependency element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "This way you can independently maintain the library in the Library Control and the dependent controls don't need to have a copy of the library bundled",
+        "condition": "implementation steps",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "| `pcfAllowCustomWebpack` | Enables the component to use a custom web pack. This feature must be enabled for components that define a library resource",
+        "condition": "featureconfig.json",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Rather than loading the dependent library when a component loads, you can load the dependent library on demand. Loading on demand provides the flexibi",
+        "condition": "dependency as on-demand load of a component",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "[This topic is pre-release documentation and is subject to change.]",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Before: Custom library files contained in each PCF component",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "![Diagram showing custom library files contained in each pcf component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/med",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "After: Components calling a shared function from a Library Control",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "![Diagram showing components calling a shared function from a Library Control](https://learn.microsoft.com/en-us/power-apps/developer/component-framew",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| `pcfResourceDependency` | Enables the component to use a library resource. |",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "preference",
+        "description": "By default, these values are `off`. Set them to `on` to override the default.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "This file might look like the following when the library alias is `myLib`:",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use the [dependency element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/dependency) within [",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Step 1: Add these [platform-action element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/platf",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

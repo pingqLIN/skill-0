@@ -1,0 +1,261 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__nestjs",
+    "name": "nestjs",
+    "skill_layer": "claude_skill",
+    "title": "Nestjs Skill",
+    "description": "NestJS development standards and best practices for building scalable Node.js server-side applications Triggers on: **/*.ts, **/*.js, **/*.json, **/*.spec.ts, **/*.e2e-spec.ts",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.910760Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/nestjs/SKILL.md",
+    "skill_name": "nestjs",
+    "skill_description": "NestJS development standards and best practices for building scalable Node.js server-side applications Triggers on: **/*.ts, **/*.js, **/*.json, **/*.spec.ts, **/*.e2e-spec.ts"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "As GitHub Copilot, you are an expert in NestJS development w",
+        "description": "As GitHub Copilot, you are an expert in NestJS development with deep knowledge of TypeScript, decorators, dependency injection, and modern Node.js pat",
+        "action_type": "llm_inference",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Prefer interface-based dependency injection for better testa",
+        "description": "Prefer interface-based dependency injection for better testability",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Principle: Leverage decorators to define routes, middleware,",
+        "description": "Principle: Leverage decorators to define routes, middleware, guards, and other framework features.",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement metadata reflection for advanced scenarios",
+        "description": "Implement metadata reflection for advanced scenarios",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement comprehensive input validation with DTOs",
+        "description": "Implement comprehensive input validation with DTOs",
+        "action_type": "await_input",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "constructor(private readonly usersService: UsersService) {}",
+        "description": "constructor(private readonly usersService: UsersService) {}",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "@UseInterceptors(TransformInterceptor)",
+        "description": "@UseInterceptors(TransformInterceptor)",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "async create(@Body() createUserDto: CreateUserDto): Promise<",
+        "description": "async create(@Body() createUserDto: CreateUserDto): Promise<User> {",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "return this.usersService.create(createUserDto);",
+        "description": "return this.usersService.create(createUserDto);",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement business logic in services, not controllers",
+        "description": "Implement business logic in services, not controllers",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create focused, single-responsibility services",
+        "description": "Create focused, single-responsibility services",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "private readonly userRepository: Repository<User>,",
+        "description": "private readonly userRepository: Repository<User>,",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "private readonly emailService: EmailService,",
+        "description": "private readonly emailService: EmailService,",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "async create(createUserDto: CreateUserDto): Promise<User> {",
+        "description": "async create(createUserDto: CreateUserDto): Promise<User> {",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "const user = this.userRepository.create(createUserDto);",
+        "description": "const user = this.userRepository.create(createUserDto);",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "message: 'Password must contain uppercase, lowercase and number',",
+        "condition": "**3. dtos and validation**",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Use metadata to define required roles",
+        "condition": "**role-based access control**",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "it('should create a user', async () => {",
+        "condition": "**unit testing**",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Validate configuration at startup",
+        "condition": "**environment configuration**",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Circular Dependencies: Avoid importing modules that create circular references",
+        "condition": "common pitfalls to avoid",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Heavy Controllers: Don't put business logic in controllers",
+        "condition": "common pitfalls to avoid",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Missing Error Handling: Always handle errors appropriately",
+        "condition": "common pitfalls to avoid",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Improper DI Usage: Don't create instances manually when DI can handle it",
+        "condition": "common pitfalls to avoid",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Missing Validation: Always validate input data",
+        "condition": "common pitfalls to avoid",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "principle",
+        "description": "Principle: NestJS uses a powerful DI container that manages the instantiation and lifetime of providers.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `@Injectable()` decorator for services, repositories, and other providers",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Inject dependencies through constructor parameters with proper typing",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use custom providers when you need specific instantiation logic",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Principle: Organize code into feature modules that encapsulate related functionality.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Guidance for Copilot:",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Create feature modules with `@Module()` decorator",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Import only necessary modules and avoid circular dependencies",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Use `forRoot()` and `forFeature()` patterns for configurable modules",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Implement shared modules for common functionality",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

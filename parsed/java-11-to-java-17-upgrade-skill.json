@@ -1,0 +1,243 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__java-11-to-java-17-upgrade",
+    "name": "java-11-to-java-17-upgrade",
+    "skill_layer": "claude_skill",
+    "title": "Java 11 To Java 17 Upgrade Skill",
+    "description": "Comprehensive best practices for adopting new Java 17 features since the release of Java 11. Triggers on: [\"*\"]",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.712533Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/java-11-to-java-17-upgrade/SKILL.md",
+    "skill_name": "java-11-to-java-17-upgrade",
+    "skill_description": "Comprehensive best practices for adopting new Java 17 features since the release of Java 11. Triggers on: [\"*\"]"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Migration Pattern: Convert data classes to records",
+        "description": "Migration Pattern: Convert data classes to records",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public int hashCode() { /* boilerplate */ }",
+        "description": "public int hashCode() { /* boilerplate */ }",
+        "action_type": "compute",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Migration Pattern: Convert switch statements to expressions",
+        "description": "Migration Pattern: Convert switch statements to expressions",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\".formatted(name, age, city);",
+        "description": "\"\"\".formatted(name, age, city);",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Old NPE message: \"Exception in thread 'main' java.lang.Nu",
+        "description": "// Old NPE message: \"Exception in thread 'main' java.lang.NullPointerException\"",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public void processPersons(List<Person> persons) {",
+        "description": "public void processPersons(List<Person> persons) {",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public static <T> T createProxy(Class<T> interfaceClass, Inv",
+        "description": "public static <T> T createProxy(Class<T> interfaceClass, InvocationHandler handler) {",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Hidden classes provide better encapsulation for dynamical",
+        "description": "// Hidden classes provide better encapsulation for dynamically generated classes",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "interfaceClass.getClassLoader(),",
+        "description": "interfaceClass.getClassLoader(),",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Migration Pattern: Use for compile-time constants",
+        "description": "Migration Pattern: Use for compile-time constants",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Primarily used by compiler and framework developers",
+        "description": "// Primarily used by compiler and framework developers",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "return \"Computed at runtime, cached as constant\";",
+        "description": "return \"Computed at runtime, cached as constant\";",
+        "action_type": "compute",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "RandomGeneratorFactory.of(\"L64X128MixRandom\").create();",
+        "description": "RandomGeneratorFactory.of(\"L64X128MixRandom\").create();",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Better for parallel processing",
+        "description": "// Better for parallel processing",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import java.net.UnixDomainSocketAddress;",
+        "description": "import java.net.UnixDomainSocketAddress;",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Migration Pattern: Use sealed classes for restricted inheritance",
+        "condition": "jep 409: sealed classes (java 17)",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "sm.checkPermission(new RuntimePermission(\"shutdownHooks\"));",
+        "condition": "jep 411: deprecate the security manager for removal",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "// Most applications don't need Security Manager functionality",
+        "condition": "jep 411: deprecate the security manager for removal",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Verify dependency compatibility",
+        "condition": "phase 1: foundation (weeks 1-2)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Identify inheritance restrictions",
+        "condition": "phase 4: sealed classes (weeks 7-8)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Faster creation and equality checks",
+        "condition": "records vs traditional classes",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "This guide provides comprehensive GitHub Copilot instructions for upgrading Java projects from JDK 11 to JDK 17, covering major language features, API",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "public boolean equals(Object obj) { /* boilerplate */ }",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "if (age < 0) throw new IllegalArgumentException(\"Age cannot be negative\");",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Migration Pattern: Simplify instanceof checks",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "// Old: Traditional instanceof with casting",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "public String processObject(Object obj) {",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "} else if (obj instanceof Integer) {",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "} else if (obj instanceof List<?>) {",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "return \"List with \" + list.size() + \" elements\";",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "// New: Pattern matching for instanceof (Java 16+)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

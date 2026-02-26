@@ -1,0 +1,255 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__java-mcp-server",
+    "name": "java-mcp-server",
+    "skill_layer": "claude_skill",
+    "title": "Java Mcp Server Skill",
+    "description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Java using the official MCP Java SDK with reactive streams and Spring integration. Triggers on: **/*.java, **/pom.xml, ",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.749755Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/java-mcp-server/SKILL.md",
+    "skill_name": "java-mcp-server",
+    "skill_description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Java using the official MCP Java SDK with reactive streams and Spring integration. Triggers on: **/*.java, **/pom.xml, "
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "implementation(\"io.modelcontextprotocol.sdk:mcp:0.14.1\")",
+        "description": "implementation(\"io.modelcontextprotocol.sdk:mcp:0.14.1\")",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create an MCP server using the builder pattern:",
+        "description": "Create an MCP server using the builder pattern:",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.mcp.server.McpServer;",
+        "description": "import io.mcp.server.McpServer;",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.mcp.server.McpServerBuilder;",
+        "description": "import io.mcp.server.McpServerBuilder;",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.mcp.server.transport.StdioServerTransport;",
+        "description": "import io.mcp.server.transport.StdioServerTransport;",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "McpServer server = McpServerBuilder.builder()",
+        "description": "McpServer server = McpServerBuilder.builder()",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "server.start(transport).subscribe();",
+        "description": "server.start(transport).subscribe();",
+        "action_type": "external_call",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Register tool handlers with the server:",
+        "description": "Register tool handlers with the server:",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.mcp.server.tool.Tool;",
+        "description": "import io.mcp.server.tool.Tool;",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.mcp.server.tool.ToolHandler;",
+        "description": "import io.mcp.server.tool.ToolHandler;",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import reactor.core.publisher.Mono;",
+        "description": "import reactor.core.publisher.Mono;",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Tool searchTool = Tool.builder()",
+        "description": "Tool searchTool = Tool.builder()",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": ".description(\"Search for information\")",
+        "description": ".description(\"Search for information\")",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement resource handlers for data access:",
+        "description": "Implement resource handlers for data access:",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.mcp.server.resource.Resource;",
+        "description": "import io.mcp.server.resource.Resource;",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": ".property(\"limit\", JsonSchema.integer()",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "int limit = arguments.has(\"limit\")",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "? arguments.get(\"limit\").asInt()",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "List<String> results = performSearch(query, limit);",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": ".property(\"query\", JsonSchema.string().required(true)))",
+        "condition": "spring boot integration",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "server.addToolHandler(\"validate\", (args) -> {",
+        "condition": "request validation",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "if (!args.has(\"required_field\")) {",
+        "condition": "request validation",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": ".message(\"Missing required_field\")",
+        "condition": "request validation",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "When building MCP servers in Java, follow these best practices and patterns using the official Java SDK.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "StdioServerTransport transport = new StdioServerTransport();",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "completion",
+        "description": ".addTextContent(\"Found \" + results.size() + \" results\")",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "return Mono.just(ResourceContent.text(content, uri));",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "preference",
+        "description": "String topic = arguments.getOrDefault(\"topic\", \"general\");",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "String depth = arguments.getOrDefault(\"depth\", \"basic\");",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "PromptMessage.assistant(\"I'll provide a \" + depth + \" analysis of \" + topic)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": ".description(\"Analysis of \" + topic + \" at \" + depth + \" level\")",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "The Java SDK uses Reactive Streams (Project Reactor) for asynchronous processing:",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "completion",
+        "description": "// Return Mono for single results",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

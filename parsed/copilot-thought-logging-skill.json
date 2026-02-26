@@ -1,0 +1,227 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__copilot-thought-logging",
+    "name": "copilot-thought-logging",
+    "skill_layer": "claude_skill",
+    "title": "Copilot Thought Logging Skill",
+    "description": "See process Copilot is following where you can edit this to reshape the interaction or save when follow up may be needed Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.235265Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/copilot-thought-logging/SKILL.md",
+    "skill_name": "copilot-thought-logging",
+    "skill_description": "See process Copilot is following where you can edit this to reshape the interaction or save when follow up may be needed Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Create file `\\Copilot-Processing.md` in workspace root",
+        "description": "Create file `\\Copilot-Processing.md` in workspace root",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Populate `\\Copilot-Processing.md` with user request details",
+        "description": "Populate `\\Copilot-Processing.md` with user request details",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Generate an action plan into the `\\Copilot-Processing.md` fi",
+        "description": "Generate an action plan into the `\\Copilot-Processing.md` file.",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Generate detailed and granular task specific action items to",
+        "description": "Generate detailed and granular task specific action items to be used for tracking each action plan item with todo/complete status in the file `\\Copilo",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Execute action items from the action plan in logical groupin",
+        "description": "Execute action items from the action plan in logical groupings/phases",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Update file `\\Copilot-Processing.md` and mark the action ite",
+        "description": "Update file `\\Copilot-Processing.md` and mark the action item(s) as complete in the tracking.",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When a phase is complete keep mental note of this that the s",
+        "description": "When a phase is complete keep mental note of this that the specific phase from `\\Copilot-Processing.md` is done and does not need to be repeated.",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add summary to `\\Copilot-Processing.md`",
+        "description": "Add summary to `\\Copilot-Processing.md`",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Execute only when ALL actions complete",
+        "description": "Execute only when ALL actions complete",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Inform user: \"Added final summary to `\\Copilot-Processing.md",
+        "description": "Inform user: \"Added final summary to `\\Copilot-Processing.md`.\"",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Remind user to review the summary and confirm completion of ",
+        "description": "Remind user to review the summary and confirm completion of the process then to remove the file when done so it is not added to the repository.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If you catch yourself about to skip a phase, STOP and go bac",
+        "description": "If you catch yourself about to skip a phase, STOP and go back to the correct phase",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If you catch yourself combining phases, STOP and perform onl",
+        "description": "If you catch yourself combining phases, STOP and perform only the current phase",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "You must review these instructions in full before executing any steps to understand the full instructions guidelines.",
+        "condition": "copilot process tracking instructions",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "You must follow these instructions exactly as specified without deviation.",
+        "condition": "copilot process tracking instructions",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Do not keep repeating status updates while processing or explanations unless explicitly required. This is bad and will flood Copilot session context.",
+        "condition": "copilot process tracking instructions",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Phases must be executed one at a time and in the exact order specified.",
+        "condition": "copilot process tracking instructions",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "This should include:",
+        "condition": "phase 2: planning",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Ensure tasks are granular enough to be executed one at a time",
+        "condition": "phase 2: planning",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "NEVER write \"# Phase X\" headers in responses",
+        "condition": "phase 4: summary",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "NEVER repeat the word \"Phase\" in output unless explicitly required",
+        "condition": "phase 4: summary",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "NEVER provide explanations beyond the exact text specified",
+        "condition": "phase 4: summary",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "NEVER combine multiple phases in one response",
+        "condition": "phase 4: summary",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "completion",
+        "description": "NO phase announcements (no \"# Phase X\" headers in output)",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Only output the exact text specified in phase instructions",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Work silently without announcements until complete.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "completion",
+        "description": "When this phase is complete keep mental note of this that <Phase 1> is done and does not need to be repeated.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Specific tasks for each action item in the action plan as a phase.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Repeat this pattern until all action items are complete",
+        "decomposable": false,
+        "id": "d_006"
+      }
+    ]
+  }
+}
