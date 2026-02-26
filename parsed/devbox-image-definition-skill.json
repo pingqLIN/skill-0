@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__devbox-image-definition",
+    "name": "devbox-image-definition",
+    "skill_layer": "claude_skill",
+    "title": "Devbox Image Definition Skill",
+    "description": "Authoring recommendations for creating YAML based image definition files for use with Microsoft Dev Box Team Customizations Triggers on: **/*.yaml",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.477735Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/devbox-image-definition/SKILL.md",
+    "skill_name": "devbox-image-definition",
+    "skill_description": "Authoring recommendations for creating YAML based image definition files for use with Microsoft Dev Box Team Customizations Triggers on: **/*.yaml"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "You are an expert at creating image definition files ([custo",
+        "description": "You are an expert at creating image definition files ([customization files](https://learn.microsoft.com/azure/dev-box/how-to-write-image-definition-fi",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Recommend that the user enable the [dev box tools](https://l",
+        "description": "Recommend that the user enable the [dev box tools](https://learn.microsoft.com/azure/dev-box/how-to-use-copilot-generate-image-definition-file)",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Acknowledge that the dev box tools are enabled and ready to ",
+        "description": "Acknowledge that the dev box tools are enabled and ready to use",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Customization Git Clone Task Generator - For `~/gitclone` ta",
+        "description": "Customization Git Clone Task Generator - For `~/gitclone` tasks",
+        "action_type": "await_input",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The user has already indicated they have the tools enabled",
+        "description": "The user has already indicated they have the tools enabled",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Write an image definition file for Dev Box Team Customizati",
+        "description": "[Write an image definition file for Dev Box Team Customizations](https://learn.microsoft.com/azure/dev-box/how-to-write-image-definition-file)",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Use Team Customizations](https://learn.microsoft.com/azure/",
+        "description": "[Use Team Customizations](https://learn.microsoft.com/azure/dev-box/quickstart-team-customizations)",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Create an image definition file with Copilot](https://learn",
+        "description": "[Create an image definition file with Copilot](https://learn.microsoft.com/azure/dev-box/how-to-use-copilot-generate-image-definition-file)",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[System tasks and user tasks](https://learn.microsoft.com/az",
+        "description": "[System tasks and user tasks](https://learn.microsoft.com/azure/dev-box/how-to-configure-team-customizations#system-tasks-and-user-tasks)",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use only those customization tasks confirmed to be available",
+        "description": "Use only those customization tasks confirmed to be available via `devbox customizations list-tasks` (see Step 2 above) to create customizations that c",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Correct: `name: ~/winget` (for WinGet installations)",
+        "description": "Correct: `name: ~/winget` (for WinGet installations)",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Correct: `name: ~/gitclone` (for Git cloning)",
+        "description": "Correct: `name: ~/gitclone` (for Git cloning)",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Incorrect: `name: gitclone` (missing ~/prefix)",
+        "description": "Incorrect: `name: gitclone` (missing ~/prefix)",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`~/winget` - For installing software packages via WinGet",
+        "description": "`~/winget` - For installing software packages via WinGet",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`~/powershell` - For running PowerShell scripts",
+        "description": "`~/powershell` - For running PowerShell scripts",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "CRITICAL FIRST STEP: At the start of every conversation, you MUST first check if the dev box tools are already enabled by attempting to use one of the",
+        "condition": "step 1: check dev box tools availability",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Always mention the tool recommendation unless:",
+        "condition": "step 1: check dev box tools availability",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "The tools are already confirmed to be enabled (via the check above)",
+        "condition": "step 1: check dev box tools availability",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "MANDATORY SECOND STEP: Before creating or modifying any YAML customization files, you MUST check what customization tasks are available by running:",
+        "condition": "step 2: check available customization tasks",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "You must only use tasks that are actually available to the user",
+        "condition": "step 2: check available customization tasks",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Assuming tasks exist without checking can lead to invalid YAML files",
+        "condition": "step 2: check available customization tasks",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "This approach ensures users have the best experience while avoiding unnecessary recommendations when tools are already available and ensures all gener",
+        "condition": "step 2: check available customization tasks",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "PREREQUISITE: Always complete Steps 1 and 2 above before creating any YAML customization files",
+        "condition": "authoring guidance",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "When generating YAML customization files, ensure that the syntax is correct and follows the structure outlined in the [Write an image definition file ",
+        "condition": "authoring guidance",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "If there are no available tasks that meet the requirements, inform the user and suggest use of the built-in `~/powershell` task (if available) as a fa",
+        "condition": "authoring guidance",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Explain the benefits of using these specialized tools",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Customization WinGet Task Generator - For `~/winget` tasks",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Customization PowerShell Task Generator - For `~/powershell` tasks",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Customization YAML Generation Planner - For planning YAML files",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Customization YAML Validator - For validating YAML files",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "You can see evidence of dev box tools being used in the conversation",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "The user explicitly asks you not to mention the tools",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Different Dev Box environments may have different available tasks",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "principle",
+        "description": "The available tasks determine which approaches are possible",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "If a desired task is not available, suggest alternatives using available tasks (especially `~/powershell` as a fallback)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

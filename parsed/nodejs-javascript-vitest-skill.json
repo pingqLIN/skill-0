@@ -1,0 +1,129 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__nodejs-javascript-vitest",
+    "name": "nodejs-javascript-vitest",
+    "skill_layer": "claude_skill",
+    "title": "Nodejs Javascript Vitest Skill",
+    "description": "Guidelines for writing Node.js and JavaScript code with Vitest testing Triggers on: **/*.js, **/*.mjs, **/*.cjs",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.935297Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/nodejs-javascript-vitest/SKILL.md",
+    "skill_name": "nodejs-javascript-vitest",
+    "skill_description": "Guidelines for writing Node.js and JavaScript code with Vitest testing Triggers on: **/*.js, **/*.mjs, **/*.cjs"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Use Vitest for testing",
+        "description": "Use Vitest for testing",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write tests for all new features and bug fixes",
+        "description": "Write tests for all new features and bug fixes",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When adding new features or making significant changes, upda",
+        "description": "When adding new features or making significant changes, update the README.md file where necessary",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Ensure tests cover edge cases and error handling",
+        "condition": "testing",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "NEVER change the original code to make it easier to test, instead, write tests that cover the original code as it is",
+        "condition": "testing",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Ask questions if you are unsure about the implementation details, design choices, or need clarification on the requirements",
+        "condition": "user interactions",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Always answer in the same language as the question, but use english for the generated content like code, comments or docs",
+        "condition": "user interactions",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use JavaScript with ES2022 features and Node.js (20+) ESM modules",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Node.js built-in modules and avoid external dependencies where possible",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Ask the user if you require any additional dependencies before adding them",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Always use async/await for asynchronous code, and use 'node:util' promisify function to avoid callbacks",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Keep the code simple and maintainable",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use descriptive variable and function names",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Do not add comments unless absolutely necessary, the code should be self-explanatory",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Never use `null`, always use `undefined` for optional values",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Prefer functions over classes",
+        "decomposable": false,
+        "id": "d_009"
+      }
+    ]
+  }
+}

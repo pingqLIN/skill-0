@@ -1,0 +1,223 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__playwright-dotnet",
+    "name": "playwright-dotnet",
+    "skill_layer": "claude_skill",
+    "title": "Playwright Dotnet Skill",
+    "description": "Playwright .NET test generation instructions Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.155674Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/playwright-dotnet/SKILL.md",
+    "skill_name": "playwright-dotnet",
+    "skill_description": "Playwright .NET test generation instructions Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Usings: Start with `using Microsoft.Playwright;` and either ",
+        "description": "Usings: Start with `using Microsoft.Playwright;` and either `using Microsoft.Playwright.Xunit;` or `using Microsoft.Playwright.NUnit;` or `using Micro",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Organization: Create test classes that inherit from `PageTes",
+        "description": "Organization: Create test classes that inherit from `PageTest` (available in NUnit, xUnit, and MSTest packages) or use `IClassFixture<PlaywrightFixtur",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Setup: Use `[SetUp]` (NUnit), `[TestInitialize]` (MSTest), o",
+        "description": "Setup: Use `[SetUp]` (NUnit), `[TestInitialize]` (MSTest), or constructor initialization (xUnit) for setup actions common to all tests (e.g., navigati",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Titles: Use the appropriate test attribute (`[Test]` for NUn",
+        "description": "Titles: Use the appropriate test attribute (`[Test]` for NUnit, `[Fact]` for xUnit, `[TestMethod]` for MSTest) with descriptive method names following",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Location: Store all test files in a `Tests/` directory or or",
+        "description": "Location: Store all test files in a `Tests/` directory or organize by feature.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Naming: Use the convention `<FeatureOrPage>Tests.cs` (e.g., ",
+        "description": "Naming: Use the convention `<FeatureOrPage>Tests.cs` (e.g., `LoginTests.cs`, `SearchTests.cs`).",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Scope: Aim for one test class per major application feature ",
+        "description": "Scope: Aim for one test class per major application feature or page.",
+        "action_type": "llm_inference",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public class MovieSearchTests : PageTest",
+        "description": "public class MovieSearchTests : PageTest",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "public override async Task InitializeAsync()",
+        "description": "public override async Task InitializeAsync()",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Navigate to the application before each test",
+        "description": "// Navigate to the application before each test",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "await Test.StepAsync(\"Activate and perform search\", async ()",
+        "description": "await Test.StepAsync(\"Activate and perform search\", async () =>",
+        "action_type": "llm_inference",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Tests are grouped logically and follow a clear structure",
+        "description": "[ ] Tests are grouped logically and follow a clear structure",
+        "action_type": "external_call",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Tests follow consistent naming conventions",
+        "description": "[ ] Tests follow consistent naming conventions",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Code is properly formatted and commented",
+        "description": "[ ] Code is properly formatted and commented",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "await Test.StepAsync(\"Verify search results\", async () =>",
+        "condition": "example test structure",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "// Verify the accessibility tree of the search results",
+        "condition": "example test structure",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Before finalizing tests, ensure:",
+        "condition": "quality checklist",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "[ ] All locators are accessible and specific and avoid strict mode violations",
+        "condition": "quality checklist",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Locators: Prioritize user-facing, role-based locators (`GetByRole`, `GetByLabel`, `GetByText`, etc.) for resilience and accessibility. Use `await Test",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Assertions: Use auto-retrying web-first assertions. These assertions use `Expect()` from Playwright assertions (e.g., `await Expect(locator).ToHaveTex",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Timeouts: Rely on Playwright's built-in auto-waiting mechanisms. Avoid hard-coded waits or increased default timeouts.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Clarity: Use descriptive test and step titles that clearly state the intent. Add comments only to explain complex logic or non-obvious interactions.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "UI Structure: Use `ToMatchAriaSnapshotAsync` to verify the accessibility tree structure of a component. This provides a comprehensive and accessible s",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Element Counts: Use `ToHaveCountAsync` to assert the number of elements found by a locator.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Text Content: Use `ToHaveTextAsync` for exact text matches and `ToContainTextAsync` for partial matches.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Navigation: Use `ToHaveURLAsync` to verify the page URL after an action.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "await Page.GotoAsync(\"https://debs-obrien.github.io/playwright-movies-app\");",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "await Page.GetByRole(AriaRole.Search).ClickAsync();",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

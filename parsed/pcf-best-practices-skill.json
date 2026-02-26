@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-best-practices",
+    "name": "pcf-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Best Practices Skill",
+    "description": "Best practices and guidance for developing PCF code components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj,css,html}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.983452Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-best-practices/SKILL.md",
+    "skill_name": "pcf-best-practices",
+    "skill_description": "Best practices and guidance for developing PCF code components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj,css,html}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run npx",
+        "description": "npx eslint --init",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Run npm",
+        "description": "npm run lint:fix",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "These include using undocumented internal methods that exist",
+        "description": "These include using undocumented internal methods that exist on the `ComponentFramework.Context`. These methods might work but, because they're not su",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The hosting context calls the `destroy` method when a code c",
+        "description": "The hosting context calls the `destroy` method when a code component is removed from the browser DOM. Use the `destroy` method to close any `WebSocket",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If your code component is of type dataset, the bound dataset",
+        "description": "If your code component is of type dataset, the bound dataset properties expose a `refresh` method that causes the hosting context to reload the data. ",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "In some circumstances, it's undesirable for updates to a UI ",
+        "description": "In some circumstances, it's undesirable for updates to a UI control (such as keypresses or mouse move events) to each call `notifyOutputChanged`, as m",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Each time you add a component to your canvas app, it takes a",
+        "description": "Each time you add a component to your canvas app, it takes a finite amount of time to render. Render time increases with each component you add. Caref",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Currently, each code component bundles their own library of ",
+        "description": "Currently, each code component bundles their own library of shared libraries such as Fluent UI and React. Loading multiple instances of the same libra",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When app makers consume code components from inside a canvas",
+        "description": "When app makers consume code components from inside a canvas app, they want to use a style that matches the rest of their app. Use input properties to",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Linting is where a tool can scan the code for potential issu",
+        "description": "Linting is where a tool can scan the code for potential issues. The template used by `pac pcf init` installs the `eslint` module to your project and c",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "To configure, at the command-line use:",
+        "description": "To configure, at the command-line use:",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "What type of modules does your project use? Answer: JavaScri",
+        "description": "What type of modules does your project use? Answer: JavaScript modules (import/export)",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Where does your code run? Answer: Browser",
+        "description": "Where does your code run? Answer: Browser",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "How would you like to define a style for your project? Answe",
+        "description": "How would you like to define a style for your project? Answer: Answer questions about your style",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "What format do you want your config file to be in? Answer: J",
+        "description": "What format do you want your config file to be in? Answer: JSON",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Code components can be built in [production or development mode](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/code-compo",
+        "condition": "avoid deploying development builds to dataverse",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "When the hosting context loads a code component, the `init` method is first called. Use this method to request any network resources such as metadata ",
+        "condition": "use `init` method to request network required resources",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "When developing code components for different hosts (model-driven apps, canvas apps, portals), always check the availability of the APIs you're using ",
+        "condition": "check api availability",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Null values are passed to the `updateView` method when data isn't ready. Your components should account for this situation and expect that the data co",
+        "condition": "manage temporarily null property values passed to `updateview`",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "When using the `context.WebApi` methods, limit both the number of calls and the amount of data. Each time you call the `WebApi`, it counts towards the",
+        "condition": "limit size and frequency of calls to the `webapi`",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "By default, code components target ES5 to support older browsers. If you don't want to support these older browsers, you can change the target to ES6 ",
+        "condition": "es5 vs es6",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Always bundle the modules that are required as part of your code component instead of using scripts that are required to be loading using the `SCRIPT`",
+        "condition": "module imports",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "How would you like to use ESLint? Answer: To check syntax, find problems, and enforce code style",
+        "condition": "linting",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Do you require semicolons? Answer: Yes",
+        "condition": "linting",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "To avoid importing and bundling the entire library, you can use path-based imports where the specific library component is imported using the explicit",
+        "condition": "use path-based imports from fluent to reduce bundle size",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Developing, deploying, and maintaining code components needs a combination of knowledge across multiple areas. This article outlines established best ",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "If you have experience working with client API, you might be used to interacting with `formContext` to access attributes, controls, and call API metho",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "A workaround is to make the code component bound to a column and add an `OnChange` event handler to that column. The code component can update the col",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Canvas apps provide a wide set of best practices from inside the app and solution checker. Ensure your apps follow these recommendations before you ad",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Tips to improve canvas app performance](https://learn.microsoft.com/en-us/powerapps/maker/canvas-apps/performance-tips)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Considerations for optimized performance in Power Apps](https://powerapps.microsoft.com/blog/considerations-for-optimized-performance-in-power-apps/)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "> Note: Support for shared libraries across components using library nodes in the component manifest is not yet supported.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Which framework does your project use? Answer: React",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "preference",
+        "description": "What style of indentation do you use? Answer: Spaces",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Additionally, you can add files to ignore by adding to the `.eslintrc.json`:",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__angular",
+    "name": "angular",
+    "skill_layer": "claude_skill",
+    "title": "Angular Skill",
+    "description": "Angular-specific coding standards and best practices Triggers on: **/*.ts, **/*.html, **/*.scss, **/*.css",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:28.896445Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/angular/SKILL.md",
+    "skill_name": "angular",
+    "skill_description": "Angular-specific coding standards and best practices Triggers on: **/*.ts, **/*.html, **/*.scss, **/*.css"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Instructions for generating high-quality Angular application",
+        "description": "Instructions for generating high-quality Angular applications with TypeScript, using Angular Signals for state management, adhering to Angular best pr",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define clear interfaces and types for components, services, ",
+        "description": "Define clear interfaces and types for components, services, and models",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper error handling with RxJS operators (e.g., `",
+        "description": "Implement proper error handling with RxJS operators (e.g., `catchError`)",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement responsive design using CSS Grid, Flexbox, or Angu",
+        "description": "Implement responsive design using CSS Grid, Flexbox, or Angular CDK Layout utilities",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use Angular Signals for reactive state management in compone",
+        "description": "Use Angular Signals for reactive state management in components and services",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Leverage `signal()`, `computed()`, and `effect()` for reacti",
+        "description": "Leverage `signal()`, `computed()`, and `effect()` for reactive state updates",
+        "action_type": "compute",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use writable signals for mutable state and computed signals ",
+        "description": "Use writable signals for mutable state and computed signals for derived state",
+        "action_type": "compute",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Handle loading and error states with signals and proper UI f",
+        "description": "Handle loading and error states with signals and proper UI feedback",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use Angular's `AsyncPipe` to handle observables in templates",
+        "description": "Use Angular's `AsyncPipe` to handle observables in templates when combining signals with RxJS",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement RxJS operators for data transformation and error h",
+        "description": "Implement RxJS operators for data transformation and error handling",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement caching strategies (e.g., `shareReplay` for observ",
+        "description": "Implement caching strategies (e.g., `shareReplay` for observables)",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Store API response data in signals for reactive updates",
+        "description": "Store API response data in signals for reactive updates",
+        "action_type": "external_call",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement route guards for authentication and authorization",
+        "description": "Implement route guards for authentication and authorization",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Enable production builds with `ng build --prod` for optimiza",
+        "description": "Enable production builds with `ng build --prod` for optimization",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use lazy loading for routes to reduce initial bundle size",
+        "description": "Use lazy loading for routes to reduce initial bundle size",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Use type guards and union types for robust type checking",
+        "condition": "typescript",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Validate form inputs with Angular's reactive forms and custom validators",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Follow Angular's security best practices (e.g., avoid direct DOM manipulation)",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Ensure high test coverage for critical functionality",
+        "condition": "testing",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "preference",
+        "description": "Latest Angular version (use standalone components by default)",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "TypeScript for type safety",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Angular CLI for project setup and scaffolding",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Follow Angular Style Guide (https://angular.dev/style-guide)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Angular Material or other modern UI libraries for consistent styling (if specified)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use standalone components unless modules are explicitly required",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Organize code by standalone feature modules or domains for scalability",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Implement lazy loading for feature modules to optimize performance",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Angular's built-in dependency injection system effectively",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Structure components with a clear separation of concerns (smart vs. presentational components)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

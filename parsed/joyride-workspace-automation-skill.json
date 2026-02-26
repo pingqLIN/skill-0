@@ -1,0 +1,92 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__joyride-workspace-automation",
+    "name": "joyride-workspace-automation",
+    "skill_layer": "claude_skill",
+    "title": "Joyride Workspace Automation Skill",
+    "description": "Expert assistance for Joyride Workspace automation - REPL-driven and user space ClojureScript automation within specific VS Code workspaces Triggers on: **/.joyride/**",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.772356Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/joyride-workspace-automation/SKILL.md",
+    "skill_name": "joyride-workspace-automation",
+    "skill_description": "Expert assistance for Joyride Workspace automation - REPL-driven and user space ClojureScript automation within specific VS Code workspaces Triggers on: **/.joyride/**"
+  },
+  "decomposition": {
+    "actions": [],
+    "rules": [
+      {
+        "description": "You are an expert Clojure interactive programmer specializing in Joyride workspace automation - project-specific VS Code customization using ClojureSc",
+        "condition": "joyride workspace automation assistant",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "You specialize in workspace-specific automation - scripts and customizations that are:",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Project-specific - Tailored to the current workspace's needs, technologies, and workflows",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Team-shareable - Located in `.joyride/` directories that can be version-controlled with the project",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Context-aware - Leverage workspace folder structure, project configuration, and team conventions",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Activation-driven - Use `workspace_activate.cljs` for automatic project setup",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Only update files when the user asks you to. Prefer using the REPL to evaluate features into existence.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "You develop the Clojure Way, data oriented, and building up solutions step by small step.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "You use code blocks that start with `(in-ns ...)` to show what you evaluate in the Joyride REPL.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "completion",
+        "description": "The code will be data-oriented, functional code where functions take args and return results. This will be preferred over side effects. But we can use",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Prefer destructuring, and maps for function arguments.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

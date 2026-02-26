@@ -1,0 +1,249 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__tanstack-start-shadcn-tailwind",
+    "name": "tanstack-start-shadcn-tailwind",
+    "skill_layer": "claude_skill",
+    "title": "Tanstack Start Shadcn Tailwind Skill",
+    "description": "Guidelines for building TanStack Start applications Triggers on: **/*.ts, **/*.tsx, **/*.js, **/*.jsx, **/*.css, **/*.scss, **/*.json",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.658973Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/tanstack-start-shadcn-tailwind/SKILL.md",
+    "skill_name": "tanstack-start-shadcn-tailwind",
+    "skill_description": "Guidelines for building TanStack Start applications Triggers on: **/*.ts, **/*.tsx, **/*.js, **/*.jsx, **/*.css, **/*.scss, **/*.json"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run npx",
+        "description": "npx shadcn@latest add button card input dialog",
+        "action_type": "await_input",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "You are an expert TypeScript developer specializing in TanSt",
+        "description": "You are an expert TypeScript developer specializing in TanStack Start applications with modern React patterns.",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "TanStack Start (routing & SSR)",
+        "description": "TanStack Start (routing & SSR)",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Client mutations with optimistic updates",
+        "description": "Client mutations with optimistic updates",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "export const Route = createFileRoute('/users')({",
+        "description": "export const Route = createFileRoute('/users')({",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "const users = await fetchUsers()",
+        "description": "const users = await fetchUsers()",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "return { users: userListSchema.parse(users) }",
+        "description": "return { users: userListSchema.parse(users) }",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "queryFn: () => fetchUserStats(userId),",
+        "description": "queryFn: () => fetchUserStats(userId),",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "export const userSchema = z.object({",
+        "description": "export const userSchema = z.object({",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "export type User = z.infer<typeof userSchema>",
+        "description": "export type User = z.infer<typeof userSchema>",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "const result = userSchema.safeParse(data)",
+        "description": "const result = userSchema.safeParse(data)",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "console.error('Validation failed:', result.error.format())",
+        "description": "console.error('Validation failed:', result.error.format())",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "export const Route = createFileRoute('/users/$id')({",
+        "description": "export const Route = createFileRoute('/users/$id')({",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "loader: async ({ params }) => {",
+        "description": "loader: async ({ params }) => {",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "const user = await fetchUser(params.id);",
+        "description": "const user = await fetchUser(params.id);",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "NEVER use `any` type - always use proper TypeScript types",
+        "condition": "code style rules",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Always validate external data with Zod schemas",
+        "condition": "code style rules",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Initial page data required for rendering",
+        "condition": "data fetching",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "SSR requirements",
+        "condition": "data fetching",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Always validate external data. Define schemas in `src/lib/schemas.ts`:",
+        "condition": "zod validation",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Structure routes in `src/routes/` with file-based routing. Always include error and pending boundaries:",
+        "condition": "routes",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Always prefer Shadcn/ui components over custom ones:",
+        "condition": "ui components",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Include error and pending boundaries for all routes",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Follow accessibility best practices with ARIA attributes",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use function components with proper TypeScript interfaces:",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "variant?: 'primary' | 'secondary';",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "preference",
+        "description": "export default function Button({ children, onClick, variant = 'primary' }: ButtonProps) {",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<button onClick={onClick} className={cn(buttonVariants({ variant }))}>",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<div className=\"text-red-600 p-4\">Error: {error.message}</div>",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<div className=\"flex items-center justify-center p-4\">",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<div className=\"animate-spin rounded-full h-8 w-8 border-b-2 border-primary\" />",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<div className=\"flex flex-col gap-4 p-6 md:flex-row md:gap-6\">",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

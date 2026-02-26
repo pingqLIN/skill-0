@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dart-n-flutter",
+    "name": "dart-n-flutter",
+    "skill_layer": "claude_skill",
+    "title": "Dart N Flutter Skill",
+    "description": "Instructions for writing Dart and Flutter code following the official recommendations. Triggers on: **/*.dart",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.285380Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dart-n-flutter/SKILL.md",
+    "skill_name": "dart-n-flutter",
+    "skill_description": "Instructions for writing Dart and Flutter code following the official recommendations. Triggers on: **/*.dart"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Over the past several years, we've written a ton of Dart cod",
+        "description": "Over the past several years, we've written a ton of Dart code and learned a lot about what works well and what doesn't. We're sharing this with you so",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1.  Be consistent. When it comes to things like formatting, ",
+        "description": "1.  Be consistent. When it comes to things like formatting, and casing, arguments about which is better are subjective and impossible to resolve. What",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2.  Be brief. Dart was designed to be familiar, so it inheri",
+        "description": "2.  Be brief. Dart was designed to be familiar, so it inherits many of the same statements and expressions as C, Java, JavaScript and other languages.",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Style – This defines the rules for laying out and organizing",
+        "description": "Style – This defines the rules for laying out and organizing code, or at least the parts that `dart format` doesn't handle for you. The style topic al",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Documentation – This tells you everything you need to know a",
+        "description": "Documentation – This tells you everything you need to know about what goes inside comments. Both doc comments and regular, run-of-the-mill code commen",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Usage – This teaches you how to make the best use of languag",
+        "description": "Usage – This teaches you how to make the best use of language features to implement behavior. If it's in a statement or expression, it's covered here.",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Design – This is the softest topic, but the one with the wid",
+        "description": "Design – This is the softest topic, but the one with the widest scope. It covers what we've learned about designing consistent, usable APIs for librar",
+        "action_type": "external_call",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Each topic is broken into a few sections. Sections contain a",
+        "description": "Each topic is broken into a few sections. Sections contain a list of guidelines. Each guideline starts with one of these words:",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "DO name packages, directories, and source files using `lower",
+        "description": "DO name packages, directories, and source files using `lowercase_with_underscores`.",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "DO name import prefixes using `lowercase_with_underscores`.",
+        "description": "DO name import prefixes using `lowercase_with_underscores`.",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "DO place `dart:` imports before other imports.",
+        "description": "DO place `dart:` imports before other imports.",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "DO place `package:` imports before relative imports.",
+        "description": "DO place `package:` imports before relative imports.",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "DO specify exports in a separate section after all imports.",
+        "description": "DO specify exports in a separate section after all imports.",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "DO format your code using `dart format`.",
+        "description": "DO format your code using `dart format`.",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "CONSIDER changing your code to make it more formatter-friend",
+        "description": "CONSIDER changing your code to make it more formatter-friendly.",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "If two pieces of code look different it should be because they *are* different in some meaningful way. When a bit of code stands out and catches your ",
+        "condition": "effective dart",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "If there are multiple ways to say something, you should generally pick the most concise one. This is not to say you should `code golf` yourself into c",
+        "condition": "effective dart",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "DO guidelines describe practices that should always be followed. There will almost never be a valid reason to stray from them.",
+        "condition": "how to read the topics",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "DON'T guidelines are the converse: things that are almost never a good idea. Hopefully, we don't have as many of these as other languages do because w",
+        "condition": "how to read the topics",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "PREFER guidelines are practices that you *should* follow. However, there may be circumstances where it makes sense to do otherwise. Just make sure you",
+        "condition": "how to read the topics",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "AVOID guidelines are the dual to \"prefer\": stuff you shouldn't do but where there may be good reasons to on rare occasions.",
+        "condition": "how to read the topics",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "This sounds like the police are going to beat down your door if you don't have your laces tied correctly. Things aren't that bad. Most of the guidelin",
+        "condition": "how to read the topics",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "DON'T use a leading underscore for identifiers that aren't private.",
+        "condition": "style",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "DON'T use prefix letters.",
+        "condition": "style",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "DON'T explicitly name libraries.",
+        "condition": "style",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "preference",
+        "description": "Best practices recommended by the Dart and Flutter teams. These instructions were taken from [Effective Dart](https://dart.dev/effective-dart) and [Ar",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "We split the guidelines into a few separate topics for easy digestion:",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "CONSIDER guidelines are practices that you might or might not want to follow, depending on circumstances, precedents, and your own preference.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Some guidelines describe an exception where the rule does *not* apply. When listed, the exceptions may not be exhaustive—you might still need to use y",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DO capitalize acronyms and abbreviations longer than two letters like words.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "PREFER using wildcards for unused callback parameters.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DO use curly braces for all flow control statements.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DO use `///` doc comments to document members and types.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DO separate the first sentence of a doc comment into its own paragraph.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "preference",
+        "description": "PREFER a noun phrase or non-imperative verb phrase for a function or method if returning a value is its primary purpose.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

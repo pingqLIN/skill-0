@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__kubernetes-deployment-best-practices",
+    "name": "kubernetes-deployment-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Kubernetes Deployment Best Practices Skill",
+    "description": "Comprehensive best practices for deploying and managing applications on Kubernetes. Covers Pods, Deployments, Services, Ingress, ConfigMaps, Secrets, health checks, resource limits, scaling, and secur",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.798176Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/kubernetes-deployment-best-practices/SKILL.md",
+    "skill_name": "kubernetes-deployment-best-practices",
+    "skill_description": "Comprehensive best practices for deploying and managing applications on Kubernetes. Covers Pods, Deployments, Services, Ingress, ConfigMaps, Secrets, health checks, resource limits, scaling, and secur"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Principle: The smallest deployable unit in Kubernetes. Repre",
+        "description": "Principle: The smallest deployable unit in Kubernetes. Represents a single instance of a running process in your cluster.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Design Pods to run a single primary container (or tightly co",
+        "description": "Design Pods to run a single primary container (or tightly coupled sidecars).",
+        "action_type": "llm_inference",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use Deployments for stateless applications.",
+        "description": "Use Deployments for stateless applications.",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define desired replicas (`replicas`).",
+        "description": "Define desired replicas (`replicas`).",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure `strategy` for rolling updates (`rollingUpdate` wi",
+        "description": "Configure `strategy` for rolling updates (`rollingUpdate` with `maxSurge`/`maxUnavailable`).",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Example (Simple Deployment):",
+        "description": "Example (Simple Deployment):",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Principle: An abstract way to expose an application running ",
+        "description": "Principle: An abstract way to expose an application running on a set of Pods as a network service.",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Choose `type` based on exposure needs (ClusterIP, NodePort, ",
+        "description": "Choose `type` based on exposure needs (ClusterIP, NodePort, LoadBalancer, ExternalName).",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Pro Tip: Use `ClusterIP` for internal services, `LoadBalance",
+        "description": "Pro Tip: Use `ClusterIP` for internal services, `LoadBalancer` for internet-facing applications in cloud environments.",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure Ingress resources for external access when using a",
+        "description": "Configure Ingress resources for external access when using a web application.",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Store secrets encrypted at rest in etcd (if your cluster is ",
+        "description": "Store secrets encrypted at rest in etcd (if your cluster is configured for it).",
+        "action_type": "compute",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Pro Tip: For production, integrate with external secret mana",
+        "description": "Pro Tip: For production, integrate with external secret managers (e.g., HashiCorp Vault, AWS Secrets Manager, Azure Key Vault) using external Secrets ",
+        "action_type": "compute",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Principle: Determines if a container is still running. If it",
+        "description": "Principle: Determines if a container is still running. If it fails, Kubernetes restarts the container.",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Principle: Determines if a container is ready to serve traff",
+        "description": "Principle: Determines if a container is ready to serve traffic. If it fails, Kubernetes removes the Pod from Service load balancers.",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Pro Tip: Use readiness probes to gracefully remove Pods duri",
+        "description": "Pro Tip: Use readiness probes to gracefully remove Pods during startup or temporary outages.",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "As GitHub Copilot, you are an expert in Kubernetes deployments, with deep knowledge of best practices for running applications reliably, securely, and",
+        "condition": "your mission",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Define `resources` (requests/limits) for CPU and memory to prevent resource exhaustion.",
+        "condition": "**1. pods**",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Implement `livenessProbe` and `readinessProbe` for health checks.",
+        "condition": "**1. pods**",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Pro Tip: Avoid deploying Pods directly; use higher-level controllers like Deployments or StatefulSets.",
+        "condition": "**1. pods**",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Principle: Manages a set of identical Pods and ensures they are running. Handles rolling updates and rollbacks.",
+        "condition": "**2. deployments**",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Ensure `selector` matches Pod labels for proper routing.",
+        "condition": "**3. services**",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Caution: ConfigMaps are not encrypted at rest. Do NOT store sensitive data here.",
+        "condition": "**1. configmaps**",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Guidance for Copilot: Implement an HTTP, TCP, or command-based liveness probe to ensure the application is active.",
+        "condition": "**1. liveness probe**",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Principle: Define CPU and memory requests/limits for every container.",
+        "condition": "**1. resource requests and limits**",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Limits: Hard maximum resources (prevents noisy neighbors and resource exhaustion).",
+        "condition": "**1. resource requests and limits**",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Specify `selector` and `template` for Pod matching.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Services to provide stable network identity to Pods.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Principle: Manages external access to services in a cluster, typically HTTP/HTTPS routes from outside the cluster to services within.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Use Ingress to consolidate routing rules and manage TLS termination.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Principle: Store non-sensitive configuration data as key-value pairs.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use ConfigMaps for application configuration, environment variables, or command-line arguments.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Mount ConfigMaps as files in Pods or inject as environment variables.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Kubernetes Secrets for API keys, passwords, database credentials, TLS certificates.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Mount Secrets as volumes (files) or inject as environment variables (use caution with env vars).",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Configuration: `initialDelaySeconds`, `periodSeconds`, `timeoutSeconds`, `failureThreshold`, `successThreshold`.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

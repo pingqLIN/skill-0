@@ -1,0 +1,243 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dotnet-maui",
+    "name": "dotnet-maui",
+    "skill_layer": "claude_skill",
+    "title": "Dotnet Maui Skill",
+    "description": ".NET MAUI component and application patterns Triggers on: **/*.xaml, **/*.cs",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.521021Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dotnet-maui/SKILL.md",
+    "skill_name": "dotnet-maui",
+    "skill_description": ".NET MAUI component and application patterns Triggers on: **/*.xaml, **/*.cs"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Write idiomatic and efficient .NET MAUI and C# code.",
+        "description": "Write idiomatic and efficient .NET MAUI and C# code.",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use async/await for I/O and long-running work to keep the UI",
+        "description": "Use async/await for I/O and long-running work to keep the UI responsive.",
+        "action_type": "llm_inference",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Register routes with `Routing.RegisterRoute(...)` and naviga",
+        "description": "Register routes with `Routing.RegisterRoute(...)` and navigate with `Shell.Current.GoToAsync(...)`.",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper error handling for .NET MAUI pages and API ",
+        "description": "Implement proper error handling for .NET MAUI pages and API calls.",
+        "action_type": "external_call",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement validation using FluentValidation or DataAnnotatio",
+        "description": "Implement validation using FluentValidation or DataAnnotations in forms.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Prefer compiled bindings for performance and correctness.",
+        "description": "Prefer compiled bindings for performance and correctness.",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Update UI from background work using `Dispatcher.Dispatch()`",
+        "description": "Update UI from background work using `Dispatcher.Dispatch()` or `Dispatcher.DispatchAsync()`:",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `MainThread.BeginInvokeOnMainThread(...)` as a fallback ",
+        "description": "Use `MainThread.BeginInvokeOnMainThread(...)` as a fallback only when no Dispatcher is available.",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test components and services using xUnit, NUnit, or MSTest.",
+        "description": "Test components and services using xUnit, NUnit, or MSTest.",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use Moq or NSubstitute for mocking dependencies during tests",
+        "description": "Use Moq or NSubstitute for mocking dependencies during tests.",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement Authentication and Authorization in the MAUI app w",
+        "description": "Implement Authentication and Authorization in the MAUI app where necessary using OAuth or JWT tokens for API authentication.",
+        "action_type": "external_call",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Testing only on emulators misses real-device edge cases; tes",
+        "description": "Testing only on emulators misses real-device edge cases; test on physical devices.",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "NEVER use ListView (deprecated). Use CollectionView.",
+        "condition": "critical rules (consistency)",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "NEVER use TableView (deprecated). Prefer CollectionView or layouts such as Grid/VerticalStackLayout.",
+        "condition": "critical rules (consistency)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "NEVER use Frame (deprecated). Use Border instead.",
+        "condition": "critical rules (consistency)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "NEVER use `*AndExpand` layout options (deprecated). Use Grid and explicit sizing instead.",
+        "condition": "critical rules (consistency)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "NEVER place ScrollView or CollectionView inside StackLayout/VerticalStackLayout/HorizontalStackLayout (can break scrolling and virtualization). Use Gr",
+        "condition": "critical rules (consistency)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "NEVER reference images as `.svg` at runtime. Use PNG/JPG resources.",
+        "condition": "critical rules (consistency)",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "NEVER mix Shell navigation with NavigationPage/TabbedPage/FlyoutPage.",
+        "condition": "critical rules (consistency)",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "NEVER use renderers. Use handlers.",
+        "condition": "critical rules (consistency)",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "NEVER set `BackgroundColor`; use `Background` (supports gradients/brushes and is the preferred modern API).",
+        "condition": "critical rules (consistency)",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Set `MainPage` once at startup; avoid changing it frequently.",
+        "condition": "shell navigation",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Keep UI (Views) focused on layout and bindings; keep logic in ViewModels and services.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Follow PascalCase for component names, method names, and public members.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use camelCase for private fields and local variables.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Prefix interface names with \"I\" (e.g., IUserService).",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Utilize .NET MAUI's built-in features for component lifecycle (e.g. OnAppearing, OnDisappearing).",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Use data binding effectively with `{Binding}` and MVVM patterns.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Structure .NET MAUI components and services following Separation of Concerns.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use the language version supported by the repo's target .NET SDK and settings; avoid requiring preview language features unless the project is already",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Prefer `VerticalStackLayout`/`HorizontalStackLayout` over `StackLayout Orientation=\"...\"` (more performant).",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `BindableLayout` for small, non-scrollable lists (≤20 items). Use `CollectionView` for larger or scrollable lists.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

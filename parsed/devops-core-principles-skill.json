@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__devops-core-principles",
+    "name": "devops-core-principles",
+    "skill_layer": "claude_skill",
+    "title": "Devops Core Principles Skill",
+    "description": "Foundational instructions covering core DevOps principles, culture (CALMS), and key metrics (DORA) to guide GitHub Copilot in understanding and promoting effective software delivery. Triggers on: *",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.490368Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/devops-core-principles/SKILL.md",
+    "skill_name": "devops-core-principles",
+    "skill_description": "Foundational instructions covering core DevOps principles, culture (CALMS), and key metrics (DORA) to guide GitHub Copilot in understanding and promoting effective software delivery. Triggers on: *"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "DevOps is a set of practices that combines software developm",
+        "description": "DevOps is a set of practices that combines software development (Dev) and IT operations (Ops) to shorten the systems development life cycle while deli",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Blameless Post-Mortems: When incidents occur, focus on ident",
+        "description": "Blameless Post-Mortems: When incidents occur, focus on identifying systemic issues and learning opportunities rather than assigning blame. This encour",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Advise on creating runbooks that are clear and executable by",
+        "description": "Advise on creating runbooks that are clear and executable by anyone in the team, not just experts.",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "CI/CD Pipelines: Automate the build, test, integrate, and de",
+        "description": "CI/CD Pipelines: Automate the build, test, integrate, and deploy stages. This is the backbone of fast, reliable releases.",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Automated Testing: Implement a robust testing strategy inclu",
+        "description": "Automated Testing: Implement a robust testing strategy including unit, integration, end-to-end, performance, and security tests. Automate their execut",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Monitoring & Alerting: Automate the collection of metrics, l",
+        "description": "Monitoring & Alerting: Automate the collection of metrics, logs, and traces, and set up automated alerts for anomalies.",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Security Automation: Integrate security scans (SAST, DAST, S",
+        "description": "Security Automation: Integrate security scans (SAST, DAST, SCA) directly into the CI/CD pipeline.",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When generating CI/CD pipelines (e.g., GitHub Actions workfl",
+        "description": "When generating CI/CD pipelines (e.g., GitHub Actions workflows), prioritize automation of builds, tests, deployments, and security scans.",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Highlight the benefits of comprehensive automated testing (u",
+        "description": "Highlight the benefits of comprehensive automated testing (unit, integration, E2E) and help generate test cases.",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When asked about deployment, suggest fully automated blue/gr",
+        "description": "When asked about deployment, suggest fully automated blue/green or canary deployments where feasible.",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Value Stream Mapping: Understand the entire process of deliv",
+        "description": "Value Stream Mapping: Understand the entire process of delivering software to identify bottlenecks and areas for improvement.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Just-in-Time Delivery: Deliver features and fixes as soon as",
+        "description": "Just-in-Time Delivery: Deliver features and fixes as soon as they are ready, rather than waiting for large release cycles.",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Suggest breaking down large features or tasks into smaller, ",
+        "description": "Suggest breaking down large features or tasks into smaller, manageable chunks (e.g., small, frequent PRs, iterative deployments).",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When writing code, emphasize modularity and testability to r",
+        "description": "When writing code, emphasize modularity and testability to reduce future waste (e.g., easier refactoring, fewer bugs).",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Monitoring & Logging: Collect comprehensive application and ",
+        "description": "Monitoring & Logging: Collect comprehensive application and infrastructure metrics, logs, and traces. Centralize them for easy access and analysis.",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "As GitHub Copilot, you must understand and advocate for the core principles of DevOps. Your goal is to guide developers in adopting a collaborative, a",
+        "condition": "your mission",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "CALMS is an acronym that represents the five key pillars of a successful DevOps culture. You should always consider these when analyzing or generating",
+        "condition": "the calms framework (pillars of devops)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Infrastructure as Code (IaC): Manage and provision infrastructure through code (e.g., Terraform, Ansible, Pulumi) rather than manual processes. This e",
+        "condition": "2. **a - automation**",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Key Takeaway: If a task is repeatable, it should be automated. This frees up engineers for more complex problems, reduces human error, and ensures con",
+        "condition": "2. **a - automation**",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Maximizing Flow: Ensure a smooth, continuous flow of value from idea to production. This involves reducing batch sizes (smaller commits, smaller PRs, ",
+        "condition": "3. **l - lean**",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Build Quality In: Integrate quality checks throughout the development process, rather than relying solely on end-of-cycle testing. This reduces the co",
+        "condition": "3. **l - lean**",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Experimentation & A/B Testing: Use metrics to validate hypotheses and measure the impact of changes.",
+        "condition": "4. **m - measurement**",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Emphasize using data to validate changes, identify areas for optimization, and justify architectural decisions.",
+        "condition": "4. **m - measurement**",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Key Takeaway: You can't improve what you don't measure. Data-driven decisions are essential for identifying areas for improvement, demonstrating value",
+        "condition": "4. **m - measurement**",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Tooling & Platforms: Share common tools, platforms, and practices across teams to ensure consistency and leverage collective expertise.",
+        "condition": "5. **s - sharing**",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "principle",
+        "description": "It emphasizes communication, collaboration, integration, and automation to improve the flow of work between development and operations teams. This lea",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Principle: Foster a collaborative, blameless culture that prioritizes shared responsibility, trust, and continuous learning.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Breaking Down Silos: Encourage communication and empathy between development, operations, security, and even business teams. Promote cross-functional ",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Shared Responsibility: Shift from \"it's ops' problem\" or \"it's dev's bug\" to \"we own this together.\" This includes owning the code from commit to prod",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Continuous Learning & Improvement: Promote a growth mindset. Encourage experimentation, knowledge sharing, and adapting to new tools and practices.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Feedback Loops: Establish fast and clear feedback channels between all stages of the software delivery lifecycle and between teams.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "When discussing code reviews, suggest adding context about the 'why' behind changes, fostering understanding.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "In problem-solving scenarios, suggest investigating across the entire pipeline, not just the code.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "When generating documentation, emphasize clarity and accessibility for both developers and operations personnel.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Recommend communication tools or practices (e.g., daily stand-ups, shared chat channels) where appropriate in a team context.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

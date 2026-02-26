@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__rust",
+    "name": "rust",
+    "skill_layer": "claude_skill",
+    "title": "Rust Skill",
+    "description": "Rust programming language coding conventions and best practices Triggers on: **/*.rs",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.511039Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/rust/SKILL.md",
+    "skill_name": "rust",
+    "skill_description": "Rust programming language coding conventions and best practices Triggers on: **/*.rs"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Write code with good maintainability practices, including co",
+        "description": "Write code with good maintainability practices, including comments on why certain design decisions were made.",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Explicitly annotate lifetimes when the compiler cannot infer",
+        "description": "Explicitly annotate lifetimes when the compiler cannot infer them.",
+        "action_type": "llm_inference",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `Rc<T>` for single-threaded reference counting and `Arc<",
+        "description": "Use `Rc<T>` for single-threaded reference counting and `Arc<T>` for thread-safe reference counting.",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `RefCell<T>` for interior mutability in single-threaded ",
+        "description": "Use `RefCell<T>` for interior mutability in single-threaded contexts and `Mutex<T>` or `RwLock<T>` for multi-threaded contexts.",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Follow the Rust Style Guide and use `rustfmt` for automatic ",
+        "description": "Follow the Rust Style Guide and use `rustfmt` for automatic formatting.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create custom error types using `thiserror` or implement `st",
+        "description": "Create custom error types using `thiserror` or implement `std::error::Error`.",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Eagerly implement common traits where appropriate:",
+        "description": "Eagerly implement common traits where appropriate:",
+        "action_type": "llm_inference",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`Copy`, `Clone`, `Eq`, `PartialEq`, `Ord`, `PartialOrd`, `Ha",
+        "description": "`Copy`, `Clone`, `Eq`, `PartialEq`, `Ord`, `PartialOrd`, `Hash`, `Debug`, `Display`, `Default`",
+        "action_type": "compute",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use sealed traits to protect against downstream implementati",
+        "description": "Use sealed traits to protect against downstream implementations",
+        "action_type": "llm_inference",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write comprehensive unit tests using `#[cfg(test)]` modules ",
+        "description": "Write comprehensive unit tests using `#[cfg(test)]` modules and `#[test]` annotations.",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use test modules alongside the code they test (`mod tests { ",
+        "description": "Use test modules alongside the code they test (`mod tests { ... }`).",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write integration tests in `tests/` directory with descripti",
+        "description": "Write integration tests in `tests/` directory with descriptive filenames.",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write clear and concise comments for each function, struct, ",
+        "description": "Write clear and concise comments for each function, struct, enum, and complex logic.",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `#[doc(hidden)]` to hide implementation details from pub",
+        "description": "Use `#[doc(hidden)]` to hide implementation details from public documentation.",
+        "action_type": "llm_inference",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Traits: Implements `Debug`, `Clone`, `PartialEq` where a",
+        "description": "[ ] Traits: Implements `Debug`, `Clone`, `PartialEq` where appropriate",
+        "action_type": "llm_inference",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always prioritize readability, safety, and maintainability.",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Write idiomatic, safe, and efficient Rust code that follows the borrow checker's rules.",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Ensure code compiles without warnings.",
+        "condition": "general instructions",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Use `cargo clippy` to catch common mistakes and enforce best practices.",
+        "condition": "code style and formatting",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Error types should be meaningful and well-behaved (implement standard traits).",
+        "condition": "error handling",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Validate function arguments and return appropriate errors for invalid input.",
+        "condition": "error handling",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Collections should implement `FromIterator` and `Extend`",
+        "condition": "common traits implementation",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Note: `Send` and `Sync` are auto-implemented by the compiler when safe; avoid manual implementation unless using `unsafe` code",
+        "condition": "common traits implementation",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Arguments should convey meaning through types; prefer specific types over generic `bool` parameters",
+        "condition": "type safety and predictability",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Functions with a clear receiver should be methods",
+        "condition": "type safety and predictability",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Follow idiomatic Rust practices and community standards when writing Rust code.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "preference",
+        "description": "These instructions are based on [The Rust Book](https://doc.rust-lang.org/book/), [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/), ",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use strong typing and leverage Rust's ownership system for memory safety.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Break down complex functions into smaller, more manageable functions.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "principle",
+        "description": "For algorithm-related code, include explanations of the approach used.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Handle errors gracefully using `Result<T, E>` and provide meaningful error messages.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "For external dependencies, mention their usage and purpose in documentation.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Use consistent naming conventions following [RFC 430](https://github.com/rust-lang/rfcs/blob/master/text/0430-finalizing-naming-conventions.md).",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use modules (`mod`) and public interfaces (`pub`) to encapsulate logic.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Handle errors properly using `?`, `match`, or `if let`.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

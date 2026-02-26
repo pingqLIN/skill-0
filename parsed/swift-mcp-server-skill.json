@@ -1,0 +1,255 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__swift-mcp-server",
+    "name": "swift-mcp-server",
+    "skill_layer": "claude_skill",
+    "title": "Swift Mcp Server Skill",
+    "description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Swift using the official MCP Swift SDK package. Triggers on: **/*.swift, **/Package.swift, **/Package.resolved",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.639088Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/swift-mcp-server/SKILL.md",
+    "skill_name": "swift-mcp-server",
+    "skill_description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Swift using the official MCP Swift SDK package. Triggers on: **/*.swift, **/Package.swift, **/Package.resolved"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Create an MCP server using the `Server` class with capabilit",
+        "description": "Create an MCP server using the `Server` class with capabilities:",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "resources: .init(subscribe: true, listChanged: true),",
+        "description": "resources: .init(subscribe: true, listChanged: true),",
+        "action_type": "external_call",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `withMethodHandler` to register tool handlers:",
+        "description": "Use `withMethodHandler` to register tool handlers:",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "description: \"Search for information\",",
+        "description": "description: \"Search for information\",",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement resource handlers for data access:",
+        "description": "Implement resource handlers for data access:",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Register resource list handler",
+        "description": "// Register resource list handler",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Register resource read handler",
+        "description": "// Register resource read handler",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "await server.withMethodHandler(ReadResource.self) { params i",
+        "description": "await server.withMethodHandler(ReadResource.self) { params in",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "let content = loadResourceContent(uri: params.uri)",
+        "description": "let content = loadResourceContent(uri: params.uri)",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Register resource subscribe handler",
+        "description": "// Register resource subscribe handler",
+        "action_type": "external_call",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "await server.withMethodHandler(ResourceSubscribe.self) { par",
+        "description": "await server.withMethodHandler(ResourceSubscribe.self) { params in",
+        "action_type": "external_call",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(\"Client subscribed to \\(params.uri)\")",
+        "description": "print(\"Client subscribed to \\(params.uri)\")",
+        "action_type": "external_call",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement prompt handlers for templated conversations:",
+        "description": "Implement prompt handlers for templated conversations:",
+        "action_type": "llm_inference",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Register prompt list handler",
+        "description": "// Register prompt list handler",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "description: \"Analyze a topic\",",
+        "description": "description: \"Analyze a topic\",",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "\"limit\": .number(\"Maximum results\")",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "\"required\": .array([.string(\"query\")])",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "let limit = params.arguments?[\"limit\"]?.intValue ?? 10",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "let results = performSearch(query: query, limit: limit)",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": ".init(name: \"topic\", description: \"Topic to analyze\", required: true),",
+        "condition": "adding prompts",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": ".init(name: \"depth\", description: \"Analysis depth\", required: false)",
+        "condition": "adding prompts",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "\"required\": .array([.string(\"name\")])",
+        "condition": "json schema with value type",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Validate client connections with an initialize hook:",
+        "condition": "initialize hook",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "When building MCP servers in Swift, follow these best practices and patterns using the official Swift SDK.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "await server.withMethodHandler(ListTools.self) { _ in",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "await server.withMethodHandler(CallTool.self) { params in",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "let query = params.arguments?[\"query\"]?.stringValue ?? \"\"",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "completion",
+        "description": "content: [.text(\"Found \\(results.count) results\")],",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "await server.withMethodHandler(ListResources.self) { params in",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "return .init(resources: resources, nextCursor: nil)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "throw MCPError.invalidParams(\"Unknown resource URI: \\(params.uri)\")",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "await server.withMethodHandler(ListPrompts.self) { params in",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "await server.withMethodHandler(GetPrompt.self) { params in",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

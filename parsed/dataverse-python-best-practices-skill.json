@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-best-practices",
+    "name": "dataverse-python-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Best Practices Skill",
+    "description": "dataverse-python-best-practices guidelines",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.355794Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-best-practices/SKILL.md",
+    "skill_name": "dataverse-python-best-practices",
+    "skill_description": "dataverse-python-best-practices guidelines"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run pip",
+        "description": "pip install PowerPlatform-Dataverse-Client",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Run git",
+        "description": "git clone https://github.com/microsoft/PowerPlatform-DataverseClient-Python.git",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "pip install PowerPlatform-Dataverse-Client",
+        "description": "pip install PowerPlatform-Dataverse-Client",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "git clone https://github.com/microsoft/PowerPlatform-Dataver",
+        "description": "git clone https://github.com/microsoft/PowerPlatform-DataverseClient-Python.git",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "pip install pytest pytest-cov black isort mypy ruff",
+        "description": "pip install pytest pytest-cov black isort mypy ruff",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse import __version__",
+        "description": "from PowerPlatform.Dataverse import __version__",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import InteractiveBrowserCredential",
+        "description": "from azure.identity import InteractiveBrowserCredential",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(\"Installation successful!\")",
+        "description": "print(\"Installation successful!\")",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When to use: Local development, interactive testing, single-",
+        "description": "When to use: Local development, interactive testing, single-user scenarios.",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import ClientSecretCredential",
+        "description": "from azure.identity import ClientSecretCredential",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import ClientCertificateCredential",
+        "description": "from azure.identity import ClientCertificateCredential",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import AzureCliCredential",
+        "description": "from azure.identity import AzureCliCredential",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When to use: Local testing with Azure CLI installed, Azure D",
+        "description": "When to use: Local testing with Azure CLI installed, Azure DevOps pipelines.",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.config import DataverseCon",
+        "description": "from PowerPlatform.Dataverse.core.config import DataverseConfig",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "When to use: Highly secure environments, certificate-pinning requirements.",
+        "condition": "certificate-based authentication",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "{\"name\": f\"Company {i}\", \"creditlimit\": 50000 + (i * 1000)}",
+        "condition": "sdk automatically uses createmultiple for arrays > 1 record",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Performance: Bulk create is optimized internally; no manual batching required.",
+        "condition": "sdk automatically uses createmultiple for arrays > 1 record",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "select=[\"name\", \"creditlimit\", \"telephone1\"],",
+        "condition": "returns paginated results (generator)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "print(f\"{account['name']}: ${account['creditlimit']}\")",
+        "condition": "returns paginated results (generator)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "`filter`: OData filter (must use lowercase logical names)",
+        "condition": "returns paginated results (generator)",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "SELECT TOP 10 name, creditlimit",
+        "condition": "sql queries are read-only; use for complex analytics",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "print(f\"{row['name']}: ${row['creditlimit']}\")",
+        "condition": "sql queries are read-only; use for complex analytics",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "\"id1\": {\"creditlimit\": 100000},",
+        "condition": "for different updates per record, send multiple calls",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "\"id2\": {\"creditlimit\": 200000},",
+        "condition": "for different updates per record, send multiple calls",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "preference",
+        "description": "Production-ready patterns and best practices extracted from Microsoft's official PowerPlatform-DataverseClient-Python repository, examples, and recomm",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "client = DataverseClient(\"https://yourorg.crm.dynamics.com\", credential)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "When to use: Server-side applications, Azure automation, scheduled jobs.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Best Practice: Create one `DataverseClient` instance and reuse it throughout your application.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "credential = InteractiveBrowserCredential()",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "return client.get(\"account\", account_id)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "cls._instance = DataverseClient(",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"https://yourorg.crm.dynamics.com\",",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "# Note: http_retries, http_backoff, http_timeout are reserved for internal use",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "credential = ClientSecretCredential(tenant_id, client_id, client_secret)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

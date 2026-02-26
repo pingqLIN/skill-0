@@ -1,0 +1,203 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__generate-modern-terraform-code-for-azure",
+    "name": "generate-modern-terraform-code-for-azure",
+    "skill_layer": "claude_skill",
+    "title": "Generate Modern Terraform Code For Azure Skill",
+    "description": "Guidelines for generating modern Terraform code for Azure Triggers on: **/*.tf",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.591253Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/generate-modern-terraform-code-for-azure/SKILL.md",
+    "skill_name": "generate-modern-terraform-code-for-azure",
+    "skill_description": "Guidelines for generating modern Terraform code for Azure Triggers on: **/*.tf"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Follow consistent naming conventions and formatting (`terraf",
+        "description": "Follow consistent naming conventions and formatting (`terraform fmt`)",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create a module with its own variables/outputs",
+        "description": "Create a module with its own variables/outputs",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The very latest Azure features",
+        "description": "The very latest Azure features",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write configurations that can be applied repeatedly with the",
+        "description": "Write configurations that can be applied repeatedly with the same outcome",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Scripts that run on every apply",
+        "description": "Scripts that run on every apply",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Resources that might conflict if created twice",
+        "description": "Resources that might conflict if created twice",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Update architecture diagrams to reflect infrastructure chang",
+        "description": "Update architecture diagrams to reflect infrastructure changes after each significant update",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always target the latest stable Terraform version and Azure providers. In code, specify the required Terraform and provider versions to enforce this. ",
+        "condition": "1. use latest terraform and providers",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Do not introduce additional providers or modules beyond the project's scope without confirmation",
+        "condition": "6. minimal dependencies",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Ensure the user approves it",
+        "condition": "6. minimal dependencies",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Keep the infrastructure stack lean and avoid unnecessary complexity",
+        "condition": "6. minimal dependencies",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Avoid non-idempotent actions:",
+        "condition": "7. ensure idempotency",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Test by doing multiple `terraform apply` runs and ensure the second run results in zero changes",
+        "condition": "7. ensure idempotency",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Never commit state files to source control",
+        "condition": "8. state management",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Update README.md with any new variables, outputs, or usage instructions whenever the code changes",
+        "condition": "9. document and diagram",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Well-documented code and diagrams ensure the whole team understands the infrastructure",
+        "condition": "9. document and diagram",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Run `terraform validate` and review the `terraform plan` output before applying changes",
+        "condition": "10. validate and test changes",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Structure Terraform configurations with logical file separation:",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Terraform modules to group reusable infrastructure components. For any resource set that will be used in multiple contexts:",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Parameterize all configurable values using variables with types and descriptions",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Provide default values where appropriate for optional variables",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Use outputs to expose key resource attributes for other modules or user reference",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Mark sensitive values accordingly to protect secrets",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `azurerm` provider for most scenarios – it offers high stability and covers the majority of Azure services",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `azapi` provider only for cases where you need:",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Both providers can be used together if needed, but prefer `azurerm` when in doubt",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "If a special provider (e.g., `random`, `tls`) or external module is needed:",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

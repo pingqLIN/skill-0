@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-pandas-integration",
+    "name": "dataverse-python-pandas-integration",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Pandas Integration Skill",
+    "description": "dataverse-python-pandas-integration guidelines",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.403920Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-pandas-integration/SKILL.md",
+    "skill_name": "dataverse-python-pandas-integration",
+    "skill_description": "dataverse-python-pandas-integration guidelines"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run pip",
+        "description": "pip install PowerPlatform-Dataverse-Client",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`PandasODataClient` is a thin wrapper around the standard `D",
+        "description": "`PandasODataClient` is a thin wrapper around the standard `DataverseClient` that returns data in pandas DataFrame format instead of raw JSON dictionar",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "pip install PowerPlatform-Dataverse-Client",
+        "description": "pip install PowerPlatform-Dataverse-Client",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "File upload operations",
+        "description": "File upload operations",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import InteractiveBrowserCredential",
+        "description": "from azure.identity import InteractiveBrowserCredential",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "df['createdon'] = pd.to_datetime(df['createdon'])",
+        "description": "df['createdon'] = pd.to_datetime(df['createdon'])",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "monthly = df.set_index('createdon').resample('M').size()",
+        "description": "monthly = df.set_index('createdon').resample('M').size()",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "df['year'] = df['createdon'].dt.year",
+        "description": "df['year'] = df['createdon'].dt.year",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "df['month'] = df['createdon'].dt.month",
+        "description": "df['month'] = df['createdon'].dt.month",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "df['day_of_week'] = df['createdon'].dt.day_name()",
+        "description": "df['day_of_week'] = df['createdon'].dt.day_name()",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import matplotlib.pyplot as plt",
+        "description": "import matplotlib.pyplot as plt",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from sklearn.preprocessing import StandardScaler",
+        "description": "from sklearn.preprocessing import StandardScaler",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from sklearn.model_selection import train_test_split",
+        "description": "from sklearn.model_selection import train_test_split",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "X_train, X_test, y_train, y_test = train_test_split(X, y, te",
+        "description": "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)",
+        "action_type": "llm_inference",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "select=[\"accountid\", \"name\", \"creditlimit\", \"telephone1\"],",
+        "condition": "query data",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "for page in client.get(\"account\", select=[\"accountid\", \"name\", \"creditlimit\", \"industrycode\"]):",
+        "condition": "load account data",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "high_value = df[df['creditlimit'] > 100000]",
+        "condition": "filter rows by condition",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "names_limits = df[['name', 'creditlimit']]",
+        "condition": "select specific columns",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "filtered = df[(df['creditlimit'] > 50000) & (df['industrycode'] == 1)]",
+        "condition": "multiple conditions",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "sorted_df = df.sort_values('creditlimit', ascending=False)",
+        "condition": "sort by column",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "'creditlimit': ['mean', 'sum', 'count'],",
+        "condition": "group by and aggregate",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "print(df.groupby('industrycode')['creditlimit'].describe())",
+        "condition": "group statistics",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "df['creditlimit'] = pd.to_numeric(df['creditlimit'])",
+        "condition": "data type conversion",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "'creditlimit': ['mean', 'min', 'max', 'sum'],",
+        "condition": "create summary report",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "Guide to integrating the Dataverse SDK for Python with pandas DataFrames for data science and analysis workflows. The SDK's JSON response format maps ",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "client = DataverseClient(base_url=base_url, credential=credential)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "client = DataverseClient(\"https://<myorg>.crm.dynamics.com\", InteractiveBrowserCredential())",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(df.info())          # Column info and null counts",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "principle",
+        "description": "df_clean = df.dropna()                    # Remove rows with NaN",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "df_filled = df.fillna(0)                  # Fill NaN with 0",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "df_ffill = df.fillna(method='ffill')      # Forward fill",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "'name': lambda x: ', '.join(x.head(3))  # Sample names",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "accounts = pd.DataFrame(client.get(\"account\", select=[\"accountid\", \"name\"]))",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "contacts = pd.DataFrame(client.get(\"contact\", select=[\"contactid\", \"parentcustomerid\", \"fullname\"]))",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

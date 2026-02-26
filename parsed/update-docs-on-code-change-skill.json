@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__update-docs-on-code-change",
+    "name": "update-docs-on-code-change",
+    "skill_layer": "claude_skill",
+    "title": "Update Docs On Code Change Skill",
+    "description": "Automatically update README.md and documentation files when application code changes require documentation updates Triggers on: **/*.{md,js,mjs,cjs,ts,tsx,jsx,py,java,cs,go,rb,php,rs,cpp,c,h,hpp}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.781156Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/update-docs-on-code-change/SKILL.md",
+    "skill_name": "update-docs-on-code-change",
+    "skill_description": "Automatically update README.md and documentation files when application code changes require documentation updates Triggers on: **/*.{md,js,mjs,cjs,ts,tsx,jsx,py,java,cs,go,rb,php,rs,cpp,c,h,hpp}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run npm",
+        "description": "npm run docs:check         # Verify docs build",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "method to easily modify how the Copilot instructions are imp",
+        "description": "method to easily modify how the Copilot instructions are implemented. Essentially the two parts",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "custom cases and conditions for when and how to implement ce",
+        "description": "custom cases and conditions for when and how to implement certain sections of this document.",
+        "action_type": "llm_inference",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "There are several instruction sections in this document. The",
+        "description": "There are several instruction sections in this document. The start of an instruction section is",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The configurable property will be declared and defined in th",
+        "description": "The configurable property will be declared and defined in the Instruction Configuration",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "implementation for that configurable instruction section.",
+        "description": "implementation for that configurable instruction section.",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "will determine the complete instructions to follow. Call thi",
+        "description": "will determine the complete instructions to follow. Call this the COMPILED INSTRUCTIONS.",
+        "action_type": "external_call",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The compiled instructions are dependent on the configuration",
+        "description": "The compiled instructions are dependent on the configuration. Each instruction section",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "included in the compiled instructions will be interpreted an",
+        "description": "included in the compiled instructions will be interpreted and utilized AS IF a separate set",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| apply-automation-tooling      | true    | Uses automation ",
+        "description": "| apply-automation-tooling      | true    | Uses automation tools to update documentation.                              | Disable if you prefer manual",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| apply-git-integration         | false   | Integrates docum",
+        "description": "| apply-git-integration         | false   | Integrates documentation updates with Git workflows.                        | Enable if you want automatic",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Installation or setup procedures change",
+        "description": "Installation or setup procedures change",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Command-line interfaces or scripts are updated",
+        "description": "Command-line interfaces or scripts are updated",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Update table of contents if present",
+        "description": "Update table of contents if present",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Modifying installation or setup process",
+        "description": "Modifying installation or setup process",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "sections are configurable. Some are not configurable and will always be used.",
+        "condition": "instruction sections and configurable instruction sections",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Instruction sections that ARE configurable are not required, and are subject to additional context",
+        "condition": "instruction sections and configurable instruction sections",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "section. This allows for custom cases and/or conditions to be checked that will determine the final",
+        "condition": "instruction sections and configurable instruction sections",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Before resolving on how to apply a configurable instruction section, check the",
+        "condition": "instruction sections and configurable instruction sections",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "| apply-doc-file-structure      | true    | Ensures documentation follows a consistent file structure.                  | Disable if you want to allow",
+        "condition": "instruction configuration",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "| apply-doc-quality-standard    | true    | Enforces documentation quality standards.                                   | Disable if quality standards",
+        "condition": "instruction configuration",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "| apply-best-practices          | true    | Enforces best practices in documentation.                                   | Disable if best practices ar",
+        "condition": "instruction configuration",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "| apply-validation-commands     | true    | Runs validation commands to check documentation correctness.                 | Disable if validation is no",
+        "condition": "instruction configuration",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Automatically check if documentation updates are needed when:",
+        "condition": "trigger conditions",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Dependencies or requirements change",
+        "condition": "trigger conditions",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Ensure documentation stays synchronized with code changes by automatically detecting when README.md,",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "API documentation, configuration guides, and other documentation files need updates based on code",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "The following parts of this section, `Instruction Sections and Configurable Instruction Sections`",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "and `Instruction Configuration` are only relevant to THIS instruction file, and are meant to be a",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "are meant to turn portions or sections of the actual Copilot instructions on or off, and allow for",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "indicated by a level two header. Call this an INSTRUCTION SECTION.  Some instruction",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "and/or conditions. Call these CONFIGURABLE INSTRUCTION SECTIONS.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Configurable instruction sections will have the section's configuration property appended to",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "the level two header, wrapped in backticks (e.g., `apply-this`). Call this the",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "portion of this section. They are booleans. If `true`, then apply, utilize, and/or follow the",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

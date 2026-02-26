@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__convert-jpa-to-spring-data-cosmos",
+    "name": "convert-jpa-to-spring-data-cosmos",
+    "skill_layer": "claude_skill",
+    "title": "Convert Jpa To Spring Data Cosmos Skill",
+    "description": "Step-by-step guide for converting Spring Boot JPA applications to use Azure Cosmos DB with Spring Data Cosmos Triggers on: **/*.java,**/pom.xml,**/build.gradle,**/application*.properties",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.175098Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/convert-jpa-to-spring-data-cosmos/SKILL.md",
+    "skill_name": "convert-jpa-to-spring-data-cosmos",
+    "skill_description": "Step-by-step guide for converting Spring Boot JPA applications to use Azure Cosmos DB with Spring Data Cosmos Triggers on: **/*.java,**/pom.xml,**/build.gradle,**/application*.properties"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "1. Swap build dependencies (remove JPA, add Cosmos + Identit",
+        "description": "1. Swap build dependencies (remove JPA, add Cosmos + Identity).",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Transform entities (ids → `String`, add `@Container` and ",
+        "description": "4. Transform entities (ids → `String`, add `@Container` and `@PartitionKey`, remove JPA mappings, adjust relationships).",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "5. Convert repositories (`JpaRepository` → `CosmosRepository",
+        "description": "5. Convert repositories (`JpaRepository` → `CosmosRepository`).",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "6. Create service layer for relationship management and temp",
+        "description": "6. Create service layer for relationship management and template compatibility.",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "7. CRITICAL: Update ALL test files to work with String IDs a",
+        "description": "7. CRITICAL: Update ALL test files to work with String IDs and Cosmos repositories.",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "8. Seed data via `CommandLineRunner`.",
+        "description": "8. Seed data via `CommandLineRunner`.",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "9. CRITICAL: Test runtime functionality and fix template com",
+        "description": "9. CRITICAL: Test runtime functionality and fix template compatibility issues.",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Remove dependency `spring-boot-starter-data-jpa`",
+        "description": "Remove dependency `spring-boot-starter-data-jpa`",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add `com.azure:azure-spring-data-cosmos:5.17.0` (or latest c",
+        "description": "Add `com.azure:azure-spring-data-cosmos:5.17.0` (or latest compatible version)",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Remove testcontainers and JPA-specific test dependencies",
+        "description": "Remove testcontainers and JPA-specific test dependencies",
+        "action_type": "llm_inference",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create `src/main/resources/application-cosmos.properties`:",
+        "description": "Create `src/main/resources/application-cosmos.properties`:",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "azure.cosmos.enable-multiple-write-locations=false",
+        "description": "azure.cosmos.enable-multiple-write-locations=false",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Update `src/main/resources/application.properties`:",
+        "description": "Update `src/main/resources/application.properties`:",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create `src/main/java/<rootpkg>/config/CosmosConfiguration.j",
+        "description": "Create `src/main/java/<rootpkg>/config/CosmosConfiguration.java`:",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "@EnableCosmosRepositories(basePackages = \"<rootpkg>\")",
+        "description": "@EnableCosmosRepositories(basePackages = \"<rootpkg>\")",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Add `com.azure:azure-identity:1.15.4` (required for DefaultAzureCredential)",
+        "condition": "step 1 — build dependencies",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "CRITICAL - Cosmos DB Serialization Requirements:",
+        "condition": "step 4 — entity transformation",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Authentication entities (User, Authority) MUST be fully serializable - no `@JsonIgnore` on password, authorities, or other persisted fields",
+        "condition": "step 4 — entity transformation",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Common authentication serialization errors: `Cannot pass null or empty values to constructor` usually means `@JsonIgnore` is blocking required field s",
+        "condition": "step 4 — entity transformation",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "private String password; // NO @JsonIgnore - must be serializable",
+        "condition": "step 4 — entity transformation",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Update entity method logic: `getNrOfSpecialties()` should use the transient list",
+        "condition": "step 4 — entity transformation",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Update count methods: `getNrOfSpecialties()` should use transient list, not ID list",
+        "condition": "step 4 — entity transformation",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "When converting ID types from Integer to String, check for method signature conflicts",
+        "condition": "step 4 — entity transformation",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Ensure all ID comparison logic uses `.equals()` instead of `==`",
+        "condition": "step 4 — entity transformation",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Key Authentication Requirements:",
+        "condition": "step 6.5 — **spring security integration** (critical for authentication)",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This generalized guide applies to any JPA to Spring Data Cosmos DB conversion project.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "3. Add Cosmos config with proper Azure identity authentication.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Remove database-specific dependencies (H2, MySQL, PostgreSQL) unless needed elsewhere",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Gradle: Apply same dependency changes for Gradle syntax",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "azure.cosmos.uri=${COSMOS_URI:https://localhost:8081}",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "public class CosmosConfiguration extends AbstractCosmosConfiguration {",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Target all classes with JPA annotations (`@Entity`, `@MappedSuperclass`, `@Embeddable`)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Add `@PartitionKey` field (typically `String partitionKey`)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Remove ALL `@JsonIgnore` annotations from fields that need to be persisted to Cosmos DB",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `@JsonProperty` instead of `@JsonIgnore` when you need to control JSON field names but still persist the data",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

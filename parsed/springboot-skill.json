@@ -1,0 +1,223 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__springboot",
+    "name": "springboot",
+    "skill_layer": "claude_skill",
+    "title": "Springboot Skill",
+    "description": "Guidelines for building Spring Boot base applications Triggers on: **/*.java, **/*.kt",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.583871Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/springboot/SKILL.md",
+    "skill_name": "springboot",
+    "skill_description": "Guidelines for building Spring Boot base applications Triggers on: **/*.java, **/*.kt"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Write code with good maintainability practices, including co",
+        "description": "Write code with good maintainability practices, including comments on why certain design decisions were made.",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Handle edge cases and write clear exception handling.",
+        "description": "Handle edge cases and write clear exception handling.",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Environment Profiles: Use Spring profiles for different envi",
+        "description": "Environment Profiles: Use Spring profiles for different environments (dev, test, prod)",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Package Structure: Organize by feature/domain rather than by",
+        "description": "Package Structure: Organize by feature/domain rather than by layer",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If the project uses Maven, run `mvn clean package`.",
+        "description": "If the project uses Maven, run `mvn clean package`.",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If the project uses Gradle, run `./gradlew build` (or `gradl",
+        "description": "If the project uses Gradle, run `./gradlew build` (or `gradlew.bat build` on Windows).",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `./gradlew bootRun`       |`./mvnw spring-boot:run`       ",
+        "description": "| `./gradlew bootRun`       |`./mvnw spring-boot:run`           | Run the application.                          |",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `./gradlew build`         |`./mvnw package`               ",
+        "description": "| `./gradlew build`         |`./mvnw package`                   | Build the application.                        |",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `./gradlew test`          |`./mvnw test`                  ",
+        "description": "| `./gradlew test`          |`./mvnw test`                      | Run tests.                                    |",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `./gradlew bootJar`       |`./mvnw spring-boot:repackage` ",
+        "description": "| `./gradlew bootJar`       |`./mvnw spring-boot:repackage`     | Package the application as a JAR.             |",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `./gradlew bootBuildImage`|`./mvnw spring-boot:build-image",
+        "description": "| `./gradlew bootBuildImage`|`./mvnw spring-boot:build-image`   | Package the application as a container image. |",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Use constructor injection for all required dependencies.",
+        "condition": "dependency injection",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Services should be stateless and testable.",
+        "condition": "service layer",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Service method signatures should use domain IDs or DTOs, not expose repository entities directly unless necessary.",
+        "condition": "service layer",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Do not use concrete implementations (Logback, Log4j2) or `System.out.println()` directly.",
+        "condition": "logging",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Use parameterized queries | Always use Spring Data JPA or `NamedParameterJdbcTemplate` to prevent SQL injection.",
+        "condition": "security & input handling",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Validate request bodies and parameters using JSR-380 (`@NotNull`, `@Size`, etc.) annotations and `BindingResult`",
+        "condition": "security & input handling",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "After adding or modifying code, verify the project continues to build successfully.",
+        "condition": "build and verification",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Ensure all tests pass as part of the build.",
+        "condition": "build and verification",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Make only high confidence suggestions when reviewing code changes.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "For libraries or external dependencies, mention their usage and purpose in comments.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use YAML files (`application.yml`) for externalized configuration.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Configuration Properties: Use @ConfigurationProperties for type-safe configuration binding",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Secrets Management: Externalize secrets using environment variables or secret management systems",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Separation of Concerns: Keep controllers thin, services focused, and repositories simple",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Utility Classes: Make utility classes final with private constructors",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Place business logic in `@Service`-annotated classes.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use SLF4J for all logging (`private static final Logger logger = LoggerFactory.getLogger(MyClass.class);`).",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use parameterized logging: `logger.info(\"User {} logged in\", userId);`.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

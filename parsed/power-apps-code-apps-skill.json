@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-apps-code-apps",
+    "name": "power-apps-code-apps",
+    "skill_layer": "claude_skill",
+    "title": "Power Apps Code Apps Skill",
+    "description": "Power Apps Code Apps development standards and best practices for TypeScript, React, and Power Platform integration Triggers on: **/*.{ts,tsx,js,jsx}, **/vite.config.*, **/package.json, **/tsconfig.js",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.203363Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-apps-code-apps/SKILL.md",
+    "skill_name": "power-apps-code-apps",
+    "skill_description": "Power Apps Code Apps development standards and best practices for TypeScript, React, and Power Platform integration Triggers on: **/*.{ts,tsx,js,jsx}, **/vite.config.*, **/package.json, **/tsconfig.js"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "├── services/           # Generated connector services (PAC ",
+        "description": "├── services/           # Generated connector services (PAC CLI)",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "├── models/            # Generated TypeScript models (PAC CL",
+        "description": "├── models/            # Generated TypeScript models (PAC CLI)",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Keep generated files (`services/`, `models/`) separate from ",
+        "description": "Keep generated files (`services/`, `models/`) separate from custom code",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"useDefineForClassFields\": true,",
+        "description": "\"useDefineForClassFields\": true,",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"allowImportingTsExtensions\": true,",
+        "description": "\"allowImportingTsExtensions\": true,",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use proper typing for Power Platform connector responses",
+        "description": "Use proper typing for Power Platform connector responses",
+        "action_type": "external_call",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure path alias with `\"@\": path.resolve(__dirname, \"./s",
+        "description": "Configure path alias with `\"@\": path.resolve(__dirname, \"./src\")` for cleaner imports",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define interfaces for app-specific data structures",
+        "description": "Define interfaces for app-specific data structures",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement error boundaries and proper error handling types",
+        "description": "Implement error boundaries and proper error handling types",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import { PCFControlWrapper } from './components/PCFControlWr",
+        "description": "import { PCFControlWrapper } from './components/PCFControlWrapper';",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Custom control deployment: Package and deploy PCF controls w",
+        "description": "Custom control deployment: Package and deploy PCF controls with Code Apps",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import { PowerBIEmbed } from 'powerbi-client-react';",
+        "description": "import { PowerBIEmbed } from 'powerbi-client-react';",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Report export functionality: Enable PDF, Excel, and image ex",
+        "description": "Report export functionality: Enable PDF, Excel, and image exports",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Cognitive services integration: Use AI Builder models for fo",
+        "description": "Cognitive services integration: Use AI Builder models for form processing, object detection",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Example: Document processing with AI Builder",
+        "description": "// Example: Document processing with AI Builder",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Store sensitive data in data sources, never in application code",
+        "condition": "data management",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Avoid prop drilling with context or state management libraries",
+        "condition": "state management",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Ensure mobile-friendly user interfaces",
+        "condition": "styling and ui",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Storage SAS IP restrictions not supported",
+        "condition": "known limitations",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Authentication failures: Verify environment setup and user permissions with `pac auth list`",
+        "condition": "development issues",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "TypeScript compilation errors: Check verbatimModuleSyntax setting and SDK compatibility",
+        "condition": "development issues",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Connector permission errors: Ensure proper consent flow and admin permissions",
+        "condition": "development issues",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "PowerProvider initialization errors: Check console for SDK initialization failures",
+        "condition": "development issues",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Vite dev server issues: Ensure host and port configuration match requirements",
+        "condition": "development issues",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Build failures: Verify all dependencies with `npm audit` and check build configuration",
+        "condition": "deployment issues",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Instructions for generating high-quality Power Apps Code Apps using TypeScript, React, and Power Platform SDK, following Microsoft's official best pra",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Power Apps Code Apps (Preview): Code-first web app development with Power Platform integration",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "preference",
+        "description": "TypeScript + React: Recommended frontend stack with Vite bundler",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Power Platform SDK: @microsoft/power-apps (current version ^0.3.1) for connector integration",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "PAC CLI: Power Platform CLI for project management and deployment",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Port 3000: Required for local development with Power Platform SDK",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Power Apps Premium: End-user licensing requirement for production use",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use well-organized folder structure with clear separation of concerns:",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "├── hooks/              # Custom React hooks for Power Platform",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "├── utils/             # Utility functions and helpers",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

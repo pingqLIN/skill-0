@@ -1,0 +1,253 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__instructions",
+    "name": "instructions",
+    "skill_layer": "claude_skill",
+    "title": "Instructions Skill",
+    "description": "Guidelines for creating high-quality custom instruction files for GitHub Copilot Triggers on: **/*.instructions.md",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.681723Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/instructions/SKILL.md",
+    "skill_name": "instructions",
+    "skill_description": "Guidelines for creating high-quality custom instruction files for GitHub Copilot Triggers on: **/*.instructions.md"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Code Standards: Naming conventions, formatting, style rules",
+        "description": "Code Standards: Naming conventions, formatting, style rules",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Architecture/Structure: Project organization and design patt",
+        "description": "Architecture/Structure: Project organization and design patterns",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Common Patterns: Frequently used implementations",
+        "description": "Common Patterns: Frequently used implementations",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Testing: Testing standards and approaches (if applicable)",
+        "description": "Testing: Testing standards and approaches (if applicable)",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Linting and formatting tools",
+        "description": "Linting and formatting tools",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use bullet points and lists for readability",
+        "description": "Use bullet points and lists for readability",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Keep sections focused and scannable",
+        "description": "Keep sections focused and scannable",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| Deep nesting     | Extract functions   | Refactor nested i",
+        "description": "| Deep nesting     | Extract functions   | Refactor nested if statements |",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For microservices: Consider domain-driven design patterns",
+        "description": "For microservices: Consider domain-driven design patterns",
+        "action_type": "llm_inference",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Test with Copilot: Try the instructions with actual promp",
+        "description": "1. Test with Copilot: Try the instructions with actual prompts in VS Code",
+        "action_type": "llm_inference",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Testing: `command to test`",
+        "description": "Testing: `command to test`",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Review instructions when dependencies or frameworks are upda",
+        "description": "Review instructions when dependencies or frameworks are updated",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Update examples to reflect current best practices",
+        "description": "Update examples to reflect current best practices",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add new patterns as they emerge in the community",
+        "description": "Add new patterns as they emerge in the community",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Every instruction file must include YAML frontmatter with the following fields:",
+        "condition": "required frontmatter",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "A well-structured instruction file should include the following sections:",
+        "condition": "file structure",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Build commands to verify code",
+        "condition": "4. validation and verification (optional but recommended)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Testing requirements",
+        "condition": "4. validation and verification (optional but recommended)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Write in imperative mood (\"Use\", \"Implement\", \"Avoid\")",
+        "condition": "writing style",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Avoid ambiguous terms like \"should\", \"might\", \"possibly\"",
+        "condition": "writing style",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "2. Verify Examples: Ensure code examples are correct and run without errors",
+        "condition": "testing your instructions",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "3. Check Glob Patterns: Confirm `applyTo` patterns match intended files",
+        "condition": "testing your instructions",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Build command: `command to verify`",
+        "condition": "validation",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Instructions for creating effective and maintainable custom instruction files that guide GitHub Copilot in generating domain-specific code and followi",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Target audience: Developers and GitHub Copilot working with domain-specific code",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "File format: Markdown with YAML frontmatter",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "File naming convention: lowercase with hyphens (e.g., `react-best-practices.instructions.md`)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Location: `.github/instructions/` directory",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Purpose: Provide context-aware guidance for code generation, review, and documentation",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "description: 'Brief description of the instruction purpose and scope'",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "applyTo: 'glob pattern for target files (e.g., /*.ts, /*.py)'",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "description: Single-quoted string, 1-500 characters, clearly stating the purpose",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "applyTo: Glob pattern(s) specifying which files these instructions apply to",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

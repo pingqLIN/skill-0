@@ -1,0 +1,213 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-community-resources",
+    "name": "pcf-community-resources",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Community Resources Skill",
+    "description": "PCF community resources including gallery, videos, blogs, and development tools Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.010432Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-community-resources/SKILL.md",
+    "skill_name": "pcf-community-resources",
+    "skill_description": "PCF community resources including gallery, videos, blogs, and development tools Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "The Power Apps Component Framework has a vibrant community t",
+        "description": "The Power Apps Component Framework has a vibrant community that creates and shares resources, tools, and knowledge. This guide provides links to key c",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Community-created components",
+        "description": "Community-created components",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Installation instructions",
+        "description": "Installation instructions",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Download components for your projects",
+        "description": "Download components for your projects",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Learn from real-world component implementations",
+        "description": "Learn from real-world component implementations",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Getting started with code components with OOB React and Flue",
+        "description": "Getting started with code components with OOB React and Fluent UI by PowerfulDevs - Introduction to building components with React and Fluent UI",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Getting Started With Power Apps Component Framework by April",
+        "description": "Getting Started With Power Apps Component Framework by April Dunnam - Beginner-friendly introduction to PCF",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "How to Upload and Display Images with Power Apps Component F",
+        "description": "How to Upload and Display Images with Power Apps Component Framework by April Dunnam - Image handling in components",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Stay updated with these excellent community blogs:",
+        "description": "Stay updated with these excellent community blogs:",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "6. Ramakrishnan Raman - Real-world implementation examples",
+        "description": "6. Ramakrishnan Raman - Real-world implementation examples",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "7. Temmy Wahyu Raharjo - Component design patterns",
+        "description": "7. Temmy Wahyu Raharjo - Component design patterns",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Generates boilerplate code",
+        "description": "Generates boilerplate code",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Streamlines component testing",
+        "description": "Streamlines component testing",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Visual manifest designer",
+        "description": "Visual manifest designer",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Quick component setup",
+        "description": "Quick component setup",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "The PCF community is welcoming and eager to help. Don't hesitate to reach out, ask questions, and share your own experiences!",
+        "condition": "finding the right resource",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "The PCF Gallery is the central hub for discovering, sharing, and learning about PCF components.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Submit your own components to share with the community",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Learn from expert developers through these comprehensive video tutorials:",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Power Apps Component Framework Manifest File Explained by April Dunnam - Detailed explanation of the manifest structure",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Easier Development with React Controls and Platform Libraries by Scott Durow - Using React and platform-provided libraries",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Understanding the Power Apps Component Framework by PowerfulDevs - Comprehensive overview of the framework",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "How to Debug Power Apps Component Framework Components by April Dunnam - Debugging techniques and tools",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Using React and the Fluent UI in Power Apps Component Framework by Microsoft - Official guidance on React/Fluent UI integration",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Power Apps Component Framework: Datasets with React and Azure Maps by Nishant Rana - Working with datasets and external APIs",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Deep Dive: Power Apps Component Framework API by PowerfulDevs - Comprehensive API exploration",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

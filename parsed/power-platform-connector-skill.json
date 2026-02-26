@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-platform-connector",
+    "name": "power-platform-connector",
+    "skill_layer": "claude_skill",
+    "title": "Power Platform Connector Skill",
+    "description": "Comprehensive development guidelines for Power Platform Custom Connectors using JSON Schema definitions. Covers API definitions (Swagger 2.0), API properties, and settings configuration with Microsoft",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.369607Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-platform-connector/SKILL.md",
+    "skill_name": "power-platform-connector",
+    "skill_description": "Comprehensive development guidelines for Power Platform Custom Connectors using JSON Schema definitions. Covers API definitions (Swagger 2.0), API properties, and settings configuration with Microsoft"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Custom format types specifically designed for Power Platform",
+        "description": "Custom format types specifically designed for Power Platform such as `date-no-tz` and `html`.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Dynamic schema support that provides runtime flexibility.",
+        "description": "Dynamic schema support that provides runtime flexibility.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Purpose: This file defines connector metadata, authenticatio",
+        "description": "Purpose: This file defines connector metadata, authentication configurations, and policy configurations.",
+        "action_type": "external_call",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Connection Parameters: These support various authentication ",
+        "description": "Connection Parameters: These support various authentication types including OAuth, API Key, and Gateway configurations.",
+        "action_type": "external_call",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Policy Template Instances: These handle data transformation ",
+        "description": "Policy Template Instances: These handle data transformation and routing policies for the connector.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Connector Metadata: This includes publisher information, cap",
+        "description": "Connector Metadata: This includes publisher information, capabilities, and branding elements.",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Purpose: This file provides environment and deployment confi",
+        "description": "Purpose: This file provides environment and deployment configuration settings for the paconn tool.",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "File path mappings for connector assets and configuration fi",
+        "description": "File path mappings for connector assets and configuration files.",
+        "action_type": "external_call",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "API endpoint URLs for both production and testing environmen",
+        "description": "API endpoint URLs for both production and testing environments (PROD/TIP1).",
+        "action_type": "external_call",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`x-ms-visibility`: Use this to control parameter visibility ",
+        "description": "`x-ms-visibility`: Use this to control parameter visibility with values of `important`, `advanced`, or `internal`.",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`x-ms-trigger-metadata`: Use this to define trigger configur",
+        "description": "`x-ms-trigger-metadata`: Use this to define trigger configuration settings including kind and mode properties.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`x-ms-notification`: Use this to configure webhook operation",
+        "description": "`x-ms-notification`: Use this to configure webhook operations for real-time notifications.",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`x-ms-no-generic-test`: Use this to disable automatic testin",
+        "description": "`x-ms-no-generic-test`: Use this to disable automatic testing for specific operations.",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`x-ms-operation-context`: Use this to configure operation si",
+        "description": "`x-ms-operation-context`: Use this to configure operation simulation settings for testing purposes.",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`x-ms-dynamic-values`: Use this to configure dynamic value s",
+        "description": "`x-ms-dynamic-values`: Use this to configure dynamic value sources that populate parameter options.",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "API version specifications to ensure compatibility with Power Platform services.",
+        "condition": "3. settings.json",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "1. Always validate against Swagger 2.0 spec - The schema enforces strict Swagger 2.0 compliance",
+        "condition": "when working with api definitions (swagger)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "`x-ms-summary`: Use this to provide user-friendly display names and ensure you use title case formatting.",
+        "condition": "when working with api definitions (swagger)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "`x-ms-safe-operation`: Use this to mark POST operations as safe when they don't have side effects.",
+        "condition": "when working with api definitions (swagger)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "`x-ms-test-value`: Use this to provide sample values for testing, but never include secrets or sensitive data.",
+        "condition": "when working with api definitions (swagger)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "You should define appropriate `securityDefinitions` for your API to ensure proper authentication.",
+        "condition": "when working with api definitions (swagger)",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "You should use `oauth2` for modern APIs, `apiKey` for simple token authentication, and consider `basic` auth only for internal/legacy systems.",
+        "condition": "when working with api definitions (swagger)",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Each security definition must be exactly one type (this constraint is enforced by oneOf validation).",
+        "condition": "when working with api definitions (swagger)",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "You should use descriptive `description` fields to help users understand each parameter's purpose.",
+        "condition": "when working with api definitions (swagger)",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "You should implement `x-ms-summary` for better user experience (title case is required).",
+        "condition": "when working with api definitions (swagger)",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This workspace contains JSON Schema definitions for Power Platform Custom Connectors, specifically for the `paconn` (Power Apps Connector) tool. The s",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "API Definitions (Swagger 2.0 format)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "API Properties (connector metadata and configuration)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Settings (environment and deployment configuration)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Purpose: This file contains Swagger 2.0 API definitions with Power Platform extensions.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Standard Swagger 2.0 properties including info, paths, definitions, and more.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Microsoft-specific extensions that begin with `x-ms-*` prefixes.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Security definitions that support OAuth2, API Key, and Basic Auth authentication methods.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Environment GUID targeting for specific Power Platform environments.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`x-ms-trigger`: Use this to mark operations as triggers with values of `batch` or `single`.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

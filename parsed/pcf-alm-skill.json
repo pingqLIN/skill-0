@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-alm",
+    "name": "pcf-alm",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Alm Skill",
+    "description": "Application lifecycle management (ALM) for PCF code components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj,sln}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.963765Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-alm/SKILL.md",
+    "skill_name": "pcf-alm",
+    "skill_description": "Application lifecycle management (ALM) for PCF code components Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj,sln}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "ALM is a term used to describe the lifecycle management of s",
+        "description": "ALM is a term used to describe the lifecycle management of software applications, which includes development, maintenance, and governance. More inform",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Versioning and deploying updates",
+        "description": "3. Versioning and deploying updates",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Create code component project (`pcfproj`) from a template",
+        "description": "1. Create code component project (`pcfproj`) from a template using `pac pcf init`. More information: [Create and build a code component](https://learn",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Implement code component logic. More information: [Compon",
+        "description": "2. Implement code component logic. More information: [Component implementation](https://learn.microsoft.com/en-us/power-apps/developer/component-frame",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Debug the code component using the local test harness. Mo",
+        "description": "3. Debug the code component using the local test harness. More information: [Debug code components](https://learn.microsoft.com/en-us/power-apps/devel",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Create a solution project (`cdsproj`) and add the code co",
+        "description": "4. Create a solution project (`cdsproj`) and add the code component project as a reference. More information: [Package a code component](https://learn",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "5. Build the code component in release mode for distribution",
+        "description": "5. Build the code component in release mode for distribution and deployment.",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When your code component is ready for testing inside a model",
+        "description": "When your code component is ready for testing inside a model-driven app, canvas app, or portal:",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. `pac pcf push`: This deploys a single code component at a",
+        "description": "1. `pac pcf push`: This deploys a single code component at a time to a solution specified by the `--solution-unique-name` parameter, or a temporary Po",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Using `pac solution init` and `msbuild`: Build a `cdsproj",
+        "description": "2. Using `pac solution init` and `msbuild`: Build a `cdsproj` solution project that has references to one or more code components. Each code component",
+        "action_type": "llm_inference",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "More information: [Package a code component](https://learn.m",
+        "description": "More information: [Package a code component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/import-custom-controls#package",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When building `pcfproj` projects, the generated JavaScript d",
+        "description": "When building `pcfproj` projects, the generated JavaScript depends on the command used to build and the `PcfBuildMode` in the `pcfproj` file.",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For `pac pcf push` to result in a release build, the `PcfBui",
+        "description": "For `pac pcf push` to result in a release build, the `PcfBuildMode` is set inside the `pcfproj` by adding a new element under the `OutputPath` element",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<OutputPath>$(MSBuildThisFileDirectory)out\\controls</OutputP",
+        "description": "<OutputPath>$(MSBuildThisFileDirectory)out\\controls</OutputPath>",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<PcfBuildMode>production</PcfBuildMode>",
+        "description": "<PcfBuildMode>production</PcfBuildMode>",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "You don't normally deploy a code component into Microsoft Dataverse that has been built in development mode since it's often too large to import and m",
+        "condition": "building pcfproj code component projects",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "| npm start watch | Always development |   |",
+        "condition": "build commands",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "When developing code components, it's recommended that you use a source code control provider such as Azure DevOps or GitHub. When committing changes ",
+        "condition": "source code control with code components",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Since the `/out` folder is excluded, the resulting `bundle.js` file (and related resources) built will not be added to the source control. When your c",
+        "condition": "msbuild output directories",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "The only files that are required are the `*.data.xml` files since they contain metadata that describes the resources required by the packaging process",
+        "condition": "example solution structure",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "A solution project is created using `pac solution init` and then using `pac solution add-reference` to add one or more code components. This solution ",
+        "condition": "1. segmented solutions",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "2. Shared use - You want to share your code components between multiple environments and therefore don't want to couple your code components with any ",
+        "condition": "1. segmented solutions",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "When deploying an update to a code component, the version in the `ControlManifest.Input.xml` must at minimum have its PATCH (the last part of the vers",
+        "condition": "incrementing the patch version",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Consuming code components in canvas apps is different from doing so in model-driven apps. Code components must be explicitly added to the app by selec",
+        "condition": "canvas apps alm considerations",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "To update to a new version of the code component after it's deployed (and the control version incremented), the app maker must first open the app in P",
+        "condition": "canvas apps alm considerations",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This article describes considerations and strategies for working with specific aspects of lifecycle management from the perspective of code components",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "When developing code components, you would follow the steps below:",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "The following diagram shows the one-to-many relationship between `cdsproj` and `pcfproj` projects:",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "![One-to-many relationship between cdsproj and pcfproj projects](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/code",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "<ProjectGuid>6aaf0d27-ec8b-471e-9ed4-7b3bbc35bbab</ProjectGuid>",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "|---------|-----------------|------------------------------|",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "│       │       └── {3d60f361-84c5-eb11-bacc-000d3a9d0f1d}.xml",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Under the `Controls` folder, you can see there are subfolders for each code component included in the solution. When committing this folder structure ",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "![Solution Strategies](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/solution-strategies.png)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "More information: [Package and distribute extensions using solutions](https://learn.microsoft.com/en-us/powerapps/developer/data-platform/introduction",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

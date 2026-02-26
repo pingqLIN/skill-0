@@ -1,0 +1,80 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python",
+    "name": "dataverse-python",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Skill",
+    "description": "dataverse-python guidelines Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.293129Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python/SKILL.md",
+    "skill_name": "dataverse-python",
+    "skill_description": "dataverse-python guidelines Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run pip",
+        "description": "pip install dataverse-sdk",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Install the Dataverse Python SDK and prerequisites.",
+        "description": "Install the Dataverse Python SDK and prerequisites.",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure environment variables for Dataverse tenant, client",
+        "description": "Configure environment variables for Dataverse tenant, client ID, secret, and resource URL.",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use the SDK to authenticate via OAuth and perform CRUD opera",
+        "description": "Use the SDK to authenticate via OAuth and perform CRUD operations.",
+        "action_type": "external_call",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Store secrets in `.env` and load via `python-dotenv`.",
+        "description": "Store secrets in `.env` and load via `python-dotenv`.",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create/update rows",
+        "description": "Create/update rows",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Reuse clients; avoid frequent re-auth.",
+        "condition": "tips",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": []
+  }
+}

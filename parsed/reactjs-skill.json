@@ -1,0 +1,243 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__reactjs",
+    "name": "reactjs",
+    "skill_layer": "claude_skill",
+    "title": "Reactjs Skill",
+    "description": "ReactJS development standards and best practices Triggers on: **/*.jsx, **/*.tsx, **/*.js, **/*.ts, **/*.css, **/*.scss",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.474359Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/reactjs/SKILL.md",
+    "skill_name": "reactjs",
+    "skill_description": "ReactJS development standards and best practices Triggers on: **/*.jsx, **/*.tsx, **/*.js, **/*.ts, **/*.css, **/*.scss"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Instructions for building high-quality ReactJS applications ",
+        "description": "Instructions for building high-quality ReactJS applications with modern patterns, hooks, and best practices following the official React documentation",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define proper types for event handlers and refs",
+        "description": "Define proper types for event handlers and refs",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement generic components where appropriate",
+        "description": "Implement generic components where appropriate",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create union types for component variants and states",
+        "description": "Create union types for component variants and states",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement `useReducer` for complex state logic",
+        "description": "Implement `useReducer` for complex state logic",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper state normalization and data structures",
+        "description": "Implement proper state normalization and data structures",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement cleanup functions in effects to prevent memory lea",
+        "description": "Implement cleanup functions in effects to prevent memory leaks",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create custom hooks for reusable stateful logic",
+        "description": "Create custom hooks for reusable stateful logic",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement responsive design with mobile-first approach",
+        "description": "Implement responsive design with mobile-first approach",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement consistent spacing, typography, and color systems",
+        "description": "Implement consistent spacing, typography, and color systems",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement code splitting with `React.lazy` and `Suspense`",
+        "description": "Implement code splitting with `React.lazy` and `Suspense`",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Optimize bundle size with tree shaking and dynamic imports",
+        "description": "Optimize bundle size with tree shaking and dynamic imports",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `useMemo` and `useCallback` judiciously to prevent unnec",
+        "description": "Use `useMemo` and `useCallback` judiciously to prevent unnecessary re-renders",
+        "action_type": "external_call",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement virtual scrolling for large lists",
+        "description": "Implement virtual scrolling for large lists",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use modern data fetching libraries (React Query, SWR, Apollo",
+        "description": "Use modern data fetching libraries (React Query, SWR, Apollo Client)",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Use `useEffect` with proper dependency arrays to avoid infinite loops",
+        "condition": "hooks and effects",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Ensure accessibility with proper ARIA attributes and semantic HTML",
+        "condition": "styling",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Validate and escape data before rendering",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Avoid storing sensitive data in localStorage or sessionStorage",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Ensure keyboard navigation works for all interactive elements",
+        "condition": "accessibility",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "11. Ensure accessibility compliance",
+        "condition": "implementation process",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Latest React version (React 19+)",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "TypeScript for type safety (when applicable)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Functional components with hooks as default",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Follow React's official style guide and best practices",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use modern build tools (Vite, Create React App, or custom Webpack setup)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Implement proper component composition and reusability patterns",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Use functional components with hooks as the primary pattern",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Implement component composition over inheritance",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Organize components by feature or domain for scalability",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Separate presentational and container components clearly",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

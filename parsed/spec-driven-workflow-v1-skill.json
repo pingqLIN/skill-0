@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__spec-driven-workflow-v1",
+    "name": "spec-driven-workflow-v1",
+    "skill_layer": "claude_skill",
+    "title": "Spec Driven Workflow V1 Skill",
+    "description": "Specification-Driven Workflow v1 provides a structured approach to software development, ensuring that requirements are clearly defined, designs are meticulously planned, and implementations are thoro",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.577101Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/spec-driven-workflow-v1/SKILL.md",
+    "skill_name": "spec-driven-workflow-v1",
+    "skill_description": "Specification-Driven Workflow v1 provides a structured approach to software development, ensuring that requirements are clearly defined, designs are meticulously planned, and implementations are thoro"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "`design.md`: Technical architecture, sequence diagrams, impl",
+        "description": "`design.md`: Technical architecture, sequence diagrams, implementation considerations.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`tasks.md`: Detailed, trackable implementation plan.",
+        "description": "`tasks.md`: Detailed, trackable implementation plan.",
+        "action_type": "llm_inference",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use only for concise artifacts such as changelogs and pull r",
+        "description": "Use only for concise artifacts such as changelogs and pull request descriptions.",
+        "action_type": "external_call",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Impact: [Anticipated consequences for implementation, mainta",
+        "description": "Impact: [Anticipated consequences for implementation, maintainability, and performance]",
+        "action_type": "llm_inference",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For use in pull request summaries or executive summaries.",
+        "description": "For use in pull request summaries or executive summaries.",
+        "action_type": "external_call",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Analyze the existing system.",
+        "description": "Analyze the existing system.",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Read all provided code, documentation, tests, and logs.",
+        "description": "[ ] Read all provided code, documentation, tests, and logs.",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Format: `WHEN [a condition or event], THE SYSTEM SHALL [expe",
+        "description": "Format: `WHEN [a condition or event], THE SYSTEM SHALL [expected behavior]`",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write production-quality code according to the design and pl",
+        "description": "Write production-quality code according to the design and plan.",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Code in small, testable increments.",
+        "description": "[ ] Code in small, testable increments.",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Document each increment with code changes, results, and test",
+        "description": "Document each increment with code changes, results, and test links.",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Implement from dependencies upward.",
+        "description": "[ ] Implement from dependencies upward.",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Create files as planned.",
+        "description": "[ ] Create files as planned.",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Update task status in real time.",
+        "description": "[ ] Update task status in real time.",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Execute automated tests.",
+        "description": "[ ] Execute automated tests.",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Bridge the gap between requirements and implementation.",
+        "condition": "spec driven workflow v1",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "`requirements.md`: User stories and acceptance criteria in structured EARS notation.",
+        "condition": "spec driven workflow v1",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Context: [Current state, requirements, and reference to prior steps]",
+        "condition": "[type] - [action] - [timestamp]",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Never skip any step. Use consistent terminology. Reduce ambiguity.",
+        "condition": "execution workflow (6-phase loop)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Produce a clear, testable set of requirements.",
+        "condition": "**phase 1: analyze**",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "[ ] Define requirements in EARS Notation:",
+        "condition": "**phase 1: analyze**",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Transform feature requests into structured, testable requirements.",
+        "condition": "**phase 1: analyze**",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Generate a Confidence Score (0-100%) based on clarity of requirements, complexity, and problem scope.",
+        "condition": "**phase 1: analyze**",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Do not proceed until all requirements are clear and documented.",
+        "condition": "**phase 1: analyze**",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Do not merge or deploy code until all implementation steps are documented and tested.",
+        "condition": "**phase 3: implement**",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use the detailed templates as the primary source of truth for all documentation.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Decision: [Approach chosen and rationale, referencing the Decision Record if applicable]",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Execution: [Steps taken with parameters and commands used. For code, include file paths.]",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Output: [Complete and unabridged results, logs, command outputs, and metrics]",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Validation: [Success verification method and results. If failed, include a remediation plan.]",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Next: [Automatic continuation plan to the next specific action]",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Context: [Situation requiring decision and data driving it]",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Options: [Alternatives evaluated with brief pros and cons]",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Rationale: [Why the selected option is superior, with trade-offs explicitly stated]",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Review: [Conditions or schedule for reassessing this decision]",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

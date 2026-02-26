@@ -1,0 +1,227 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dotnet-framework",
+    "name": "dotnet-framework",
+    "skill_layer": "claude_skill",
+    "title": "Dotnet Framework Skill",
+    "description": "Guidance for working with .NET Framework projects. Includes project structure, C# language version, NuGet management, and best practices. Triggers on: **/*.csproj, **/*.cs",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.512797Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dotnet-framework/SKILL.md",
+    "skill_name": "dotnet-framework",
+    "skill_description": "Guidance for working with .NET Framework projects. Includes project structure, C# language version, NuGet management, and best practices. Triggers on: **/*.csproj, **/*.cs"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": ".NET Framework projects use the legacy project format, which",
+        "description": ".NET Framework projects use the legacy project format, which differs significantly from modern SDK-style projects:",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Example: `<Compile Include=\"Path\\To\\NewFile.cs\" />`",
+        "description": "Example: `<Compile Include=\"Path\\To\\NewFile.cs\" />`",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Build Configuration: Contains explicit `<PropertyGroup>` sec",
+        "description": "Build Configuration: Contains explicit `<PropertyGroup>` sections for Debug/Release configurations",
+        "action_type": "llm_inference",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Null-coalescing assignment (`??=`)",
+        "description": "Null-coalescing assignment (`??=`)",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Readonly members in structs",
+        "description": "Readonly members in structs",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Culture-aware formatting: Use `CultureInfo.InvariantCulture`",
+        "description": "Culture-aware formatting: Use `CultureInfo.InvariantCulture` for serialization/parsing",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "StringBuilder for concatenation: Use `StringBuilder` for mul",
+        "description": "StringBuilder for concatenation: Use `StringBuilder` for multiple string concatenations",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Dispose pattern: Implement `IDisposable` properly for unmana",
+        "description": "Dispose pattern: Implement `IDisposable` properly for unmanaged resources",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Connection strings: Store in `<connectionStrings>` section, ",
+        "description": "Connection strings: Store in `<connectionStrings>` section, not `<appSettings>`",
+        "action_type": "external_call",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Transformations: Use web.config/app.config transformations f",
+        "description": "Transformations: Use web.config/app.config transformations for environment-specific settings",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always use `msbuild /t:rebuild` to build the solution or projects instead of `dotnet build`",
+        "condition": "build and compilation requirements",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Explicit File Inclusion: All new source files MUST be explicitly added to the project file (`.csproj`) using a `<Compile>` element",
+        "condition": "non-sdk style project structure",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": ".NET Framework projects do not automatically include files in the directory like SDK-style projects",
+        "condition": "non-sdk style project structure",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "No Implicit Imports: Unlike SDK-style projects, .NET Framework projects do not automatically import common namespaces or assemblies",
+        "condition": "non-sdk style project structure",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Installing and updating NuGet packages in .NET Framework projects is a complex task requiring coordinated changes to multiple files. Therefore, do not",
+        "condition": "nuget package management",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Instead, if changes to NuGet references are required, ask the user to install or update NuGet packages using the Visual Studio NuGet Package Manager o",
+        "condition": "nuget package management",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "When recommending NuGet packages, ensure they are compatible with .NET Framework or .NET Standard 2.0 (not only .NET Core or .NET 5+).",
+        "condition": "nuget package management",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "This project is limited to C# 7.3 features only. Please avoid using:",
+        "condition": "c# language version is 7.3",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Required members",
+        "condition": "c# 10+ features (not supported):",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Explicit null checks instead of null-coalescing assignment",
+        "condition": "use instead (c# 7.3 compatible):",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "completion",
+        "description": "Output Paths: Explicit `<OutputPath>` and `<IntermediateOutputPath>` definitions",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Target Framework: Uses `<TargetFrameworkVersion>` instead of `<TargetFramework>`",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Example: `<TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>`",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Await using statements (`await using var resource = ...`)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Range and index operators (`array[1..^1]`, `array[^1]`)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Nullable reference types (`string?`, `#nullable enable`)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Target-typed new expressions (`List<string> list = new()`)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Abstract classes or interfaces instead of default interface methods",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Use Windows-style paths with backslashes (e.g., `C:\\path\\to\\file.cs`)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Windows-appropriate commands when suggesting terminal operations",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

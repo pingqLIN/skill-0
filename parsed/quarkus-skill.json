@@ -1,0 +1,237 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__quarkus",
+    "name": "quarkus",
+    "skill_layer": "claude_skill",
+    "title": "Quarkus Skill",
+    "description": "Quarkus development standards and instructions Triggers on: *",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.450737Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/quarkus/SKILL.md",
+    "skill_name": "quarkus",
+    "skill_description": "Quarkus development standards and instructions Triggers on: *"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Implement build-time optimizations using Quarkus extensions ",
+        "description": "Implement build-time optimizations using Quarkus extensions and best practices.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure native builds with GraalVM for optimal performance",
+        "description": "Configure native builds with GraalVM for optimal performance (e.g., use the quarkus-maven-plugin).",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper pagination for list endpoints",
+        "description": "Implement proper pagination for list endpoints",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use profiles for different environments (dev, test, prod)",
+        "description": "Use profiles for different environments (dev, test, prod)",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `@QuarkusTest` for integration tests",
+        "description": "Use `@QuarkusTest` for integration tests",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use JUnit 5 for unit tests",
+        "description": "Use JUnit 5 for unit tests",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `@QuarkusIntegrationTest` for native build tests",
+        "description": "Use `@QuarkusIntegrationTest` for native build tests",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Mock external dependencies using `@QuarkusTestResource`",
+        "description": "Mock external dependencies using `@QuarkusTestResource`",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use RestAssured for REST endpoint testing (`@QuarkusTestReso",
+        "description": "Use RestAssured for REST endpoint testing (`@QuarkusTestResource`)",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `@Transactional` for tests that modify the database",
+        "description": "Use `@Transactional` for tests that modify the database",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use test-containers for database integration tests",
+        "description": "Use test-containers for database integration tests",
+        "action_type": "llm_inference",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Create entity with proper validation",
+        "description": "1. Create entity with proper validation",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Create repository with custom queries",
+        "description": "2. Create repository with custom queries",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Create service with business logic",
+        "description": "3. Create service with business logic",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Create REST resource with proper endpoints",
+        "description": "4. Create REST resource with proper endpoints",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always use JAX-RS annotations (`@Path`, `@GET`, `@POST`, etc.)",
+        "condition": "rest resources",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Validate input parameters using Bean Validation annotations",
+        "condition": "rest resources",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Implement rate limiting for public endpoints",
+        "condition": "rest resources",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Always use `@Transactional` for data modifications",
+        "condition": "data access",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Validate all input parameters",
+        "condition": "when implementing security:",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Instructions for high-quality Quarkus applications with Java 17 or later.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Latest Quarkus version: 3.x",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Java version: 17 or later",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Maven or Gradle for build management.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Focus on clean architecture, maintainability, and performance.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Write clear and concise comments for each class, method, and complex logic.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Use Javadoc for public APIs and methods to ensure clarity for consumers.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Maintain a consistent coding style across the project, adhering to Java conventions.",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Adhere to the Quarkus coding standards and best practices for optimal performance and maintainability.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Follow Jarkarta EE and MicroProfile conventions, ensuring clarity in package organization.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

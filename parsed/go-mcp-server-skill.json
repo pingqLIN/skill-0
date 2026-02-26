@@ -1,0 +1,243 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__go-mcp-server",
+    "name": "go-mcp-server",
+    "skill_layer": "claude_skill",
+    "title": "Go Mcp Server Skill",
+    "description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Go using the official github.com/modelcontextprotocol/go-sdk package. Triggers on: **/*.go, **/go.mod, **/go.sum",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.658113Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/go-mcp-server/SKILL.md",
+    "skill_name": "go-mcp-server",
+    "skill_description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Go using the official github.com/modelcontextprotocol/go-sdk package. Triggers on: **/*.go, **/go.mod, **/go.sum"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run go",
+        "description": "go mod init github.com/yourusername/yourserver",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create an MCP server using `mcp.NewServer`:",
+        "description": "Create an MCP server using `mcp.NewServer`:",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import \"github.com/modelcontextprotocol/go-sdk/mcp\"",
+        "description": "import \"github.com/modelcontextprotocol/go-sdk/mcp\"",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Description: \"Search for information\",",
+        "description": "Description: \"Search for information\",",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "func GetResource(ctx context.Context, req *mcp.ReadResourceR",
+        "description": "func GetResource(ctx context.Context, req *mcp.ReadResourceRequest) (*mcp.ReadResourceResult, error) {",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "content, err := loadResourceContent(ctx, req.URI)",
+        "description": "content, err := loadResourceContent(ctx, req.URI)",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "return &mcp.ReadResourceResult{",
+        "description": "return &mcp.ReadResourceResult{",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Topic string `json:\"topic\" jsonschema:\"the topic to analyze\"",
+        "description": "Topic string `json:\"topic\" jsonschema:\"the topic to analyze\"`",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "func AnalyzePrompt(ctx context.Context, req *mcp.GetPromptRe",
+        "description": "func AnalyzePrompt(ctx context.Context, req *mcp.GetPromptRequest, input PromptInput) (",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Description: \"Analyze the given topic\",",
+        "description": "Description: \"Analyze the given topic\",",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Text: fmt.Sprintf(\"Analyze this topic: %s\", input.Topic),",
+        "description": "Text: fmt.Sprintf(\"Analyze this topic: %s\", input.Topic),",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Description: \"Analyze a topic\",",
+        "description": "Description: \"Analyze a topic\",",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Description: \"The topic to analyze\",",
+        "description": "Description: \"The topic to analyze\",",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "if err := server.Run(ctx, &mcp.StdioTransport{}); err != nil",
+        "description": "if err := server.Run(ctx, &mcp.StdioTransport{}); err != nil {",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Optional: configure TLS, timeouts, etc.",
+        "description": "// Optional: configure TLS, timeouts, etc.",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Limit int    `json:\"limit,omitempty\" jsonschema:\"maximum results to return\"`",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "results := performSearch(ctx, input.Query, input.Limit)",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Always return proper errors and use context for cancellation:",
+        "condition": "error handling",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Name     string   `json:\"name\" jsonschema:\"required,description=User's name\"`",
+        "condition": "json schema tags",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "input := ToolInput{Query: \"test\", Limit: 10}",
+        "condition": "testing",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "require github.com/modelcontextprotocol/go-sdk v1.0.0",
+        "condition": "module setup",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "When building MCP servers in Go, follow these best practices and patterns using the official Go SDK.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Use `mcp.AddTool` with struct-based input and output for type safety:",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Query string `json:\"query\" jsonschema:\"the search query\"`",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Results []string `json:\"results\" jsonschema:\"list of search results\"`",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Count   int      `json:\"count\" jsonschema:\"number of results found\"`",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "func SearchTool(ctx context.Context, req *mcp.CallToolRequest, input ToolInput) (",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `mcp.AddResource` for providing accessible data:",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "For communication over stdin/stdout (most common for desktop integrations):",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "func MyTool(ctx context.Context, req *mcp.CallToolRequest, input MyInput) (",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "completion",
+        "description": "return nil, MyOutput{}, fmt.Errorf(\"query cannot be empty\")",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,225 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__azure-devops-pipelines",
+    "name": "azure-devops-pipelines",
+    "skill_layer": "claude_skill",
+    "title": "Azure Devops Pipelines Skill",
+    "description": "Best practices for Azure DevOps Pipeline YAML files Triggers on: **/azure-pipelines.yml, **/azure-pipelines*.yml, **/*.pipeline.yml",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:28.961250Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/azure-devops-pipelines/SKILL.md",
+    "skill_name": "azure-devops-pipelines",
+    "skill_description": "Best practices for Azure DevOps Pipeline YAML files Triggers on: **/azure-pipelines.yml, **/azure-pipelines*.yml, **/*.pipeline.yml"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Implement proper dependencies between stages and jobs",
+        "description": "Implement proper dependencies between stages and jobs",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Run unit tests as part of the build process",
+        "description": "Run unit tests as part of the build process",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Publish test results in standard formats (JUnit, VSTest, etc",
+        "description": "Publish test results in standard formats (JUnit, VSTest, etc.)",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement integration and end-to-end tests in appropriate st",
+        "description": "Implement integration and end-to-end tests in appropriate stages",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use test impact analysis when available to optimize test exe",
+        "description": "Use test impact analysis when available to optimize test execution",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Fail fast on test failures to provide quick feedback",
+        "description": "Fail fast on test failures to provide quick feedback",
+        "action_type": "llm_inference",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper secret management with variable groups",
+        "description": "Implement proper secret management with variable groups",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Enable security scans (dependency vulnerabilities, static an",
+        "description": "Enable security scans (dependency vulnerabilities, static analysis)",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement approval gates for production deployments",
+        "description": "Implement approval gates for production deployments",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper environment promotion (dev → staging → prod",
+        "description": "Implement proper environment promotion (dev → staging → production)",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use deployment jobs with proper environment targeting",
+        "description": "Use deployment jobs with proper environment targeting",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement blue-green or canary deployment strategies when ap",
+        "description": "Implement blue-green or canary deployment strategies when appropriate",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use infrastructure as code (ARM, Bicep, Terraform) for consi",
+        "description": "Use infrastructure as code (ARM, Bicep, Terraform) for consistent deployments",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper configuration management per environment",
+        "description": "Implement proper configuration management per environment",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement runtime parameters for flexible pipeline execution",
+        "description": "Implement runtime parameters for flexible pipeline execution",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Use service connections with minimal required permissions",
+        "condition": "security considerations",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Include rollback mechanisms and health checks",
+        "condition": "deployment strategies",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Include deployment health checks and automated rollback triggers",
+        "condition": "monitoring and observability",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use YAML syntax consistently with proper indentation (2 spaces)",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Always include meaningful names and display names for pipelines, stages, jobs, and steps",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Implement proper error handling and conditional execution",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use variables and parameters to make pipelines reusable and maintainable",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Follow the principle of least privilege for service connections and permissions",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Include comprehensive logging and diagnostics for troubleshooting",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Organize complex pipelines using stages for better visualization and control",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use jobs to group related steps and enable parallel execution when possible",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Keep pipeline files focused and modular - split large pipelines into multiple files",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use specific agent pool versions and VM images for consistency",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

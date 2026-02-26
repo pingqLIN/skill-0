@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-advanced-features",
+    "name": "dataverse-python-advanced-features",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Advanced Features Skill",
+    "description": "dataverse-python-advanced-features guidelines",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.304920Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-advanced-features/SKILL.md",
+    "skill_name": "dataverse-python-advanced-features",
+    "skill_description": "dataverse-python-advanced-features guidelines"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"new_priority\": Priority.HIGH,  # Automatically converted to",
+        "description": "\"new_priority\": Priority.HIGH,  # Automatically converted to int",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ids = client.create(\"new_tasktable\", record_data)",
+        "description": "ids = client.create(\"new_tasktable\", record_data)",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "priority_formatted = record.get(\"new_priority@OData.Communit",
+        "description": "priority_formatted = record.get(\"new_priority@OData.Community.Display.V1.FormattedValue\")  # Returns: \"High\"",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"Priority (Formatted): {priority_formatted}\")",
+        "description": "print(f\"Priority (Formatted): {priority_formatted}\")",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"new_Status\": TaskStatus,      # Creates option set column",
+        "description": "\"new_Status\": TaskStatus,      # Creates option set column",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"new_Priority\": TaskPriority,  # Creates option set column",
+        "description": "\"new_Priority\": TaskPriority,  # Creates option set column",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "table_info = client.create_table(",
+        "description": "table_info = client.create_table(",
+        "action_type": "io_write",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"Created table with {len(columns)} columns including ",
+        "description": "print(f\"Created table with {len(columns)} columns including enums\")",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "filter3 = \"createdon lt 2024-01-01\"",
+        "description": "filter3 = \"createdon lt 2024-01-01\"",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "filter5 = \"startswith(name, 'Con')\"",
+        "description": "filter5 = \"startswith(name, 'Con')\"",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"✓ Created table: {table_info['table_schema_name']}\")",
+        "description": "print(f\"✓ Created table: {table_info['table_schema_name']}\")",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"  Columns: {', '.join(table_info.get('columns_create",
+        "description": "print(f\"  Columns: {', '.join(table_info.get('columns_created', []))}\")",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "custom_tables = [t for t in all_tables if t['table_schema_na",
+        "description": "custom_tables = [t for t in all_tables if t['table_schema_name'].startswith('new_')]",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.create_columns(\"new_TaskTable\", {",
+        "description": "client.create_columns(\"new_TaskTable\", {",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "filter2 = \"creditlimit gt 50000\"",
+        "condition": "comparison operators",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "filter7 = \"(name eq 'Contoso') and (creditlimit gt 50000)\"",
+        "condition": "multiple conditions with and",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "filter10 = \"(creditlimit gt 50000) and ((industrycode eq 1) or (industrycode eq 2))\"",
+        "condition": "complex nested conditions",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "results = client.get(\"account\", filter=filter10, select=[\"name\", \"creditlimit\"])",
+        "condition": "using in get() calls",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "filter=\"creditlimit gt 100000\",",
+        "condition": "expand parent account information",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "expand=[\"parentaccountid($select=name,creditlimit)\"],",
+        "condition": "expand parent account information",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "select=[\"accountid\", \"name\", \"creditlimit\", \"parentaccountid\"]",
+        "condition": "expand parent account information",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "GROUP BY a.accountid, a.name, a.creditlimit",
+        "condition": "sql queries are read-only but powerful for analytics",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "sql = \"SELECT TOP 10000 name, creditlimit FROM account ORDER BY name\"",
+        "condition": "sql queries return paginated results by default",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "client.update(\"account\", record_id, {\"creditlimit\": 100000})",
+        "condition": "update single",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "Comprehensive guide to advanced Dataverse SDK features including enums, complex filtering, SQL queries, metadata operations, and production patterns. ",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "priority_int = record.get(\"new_priority\")  # Returns: 3",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "filter8 = \"(industrycode eq 1) or (industrycode eq 2)\"",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "parent_name = account.get(\"_parentaccountid_value\")",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Account: {account['name']}, Parent: {parent_name}\")",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "LEFT JOIN contact c ON a.accountid = c.parentcustomerid",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"{row['AccountName']}: {row['ContactCount']} contacts\")",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"  Primary Key: {table_info['primary_id_attribute']}\")",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Schema Name: {table_info.get('table_schema_name')}\")",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Logical Name: {table_info.get('table_logical_name')}\")",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

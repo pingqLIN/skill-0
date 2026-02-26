@@ -1,0 +1,179 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__self-explanatory-code-commenting",
+    "name": "self-explanatory-code-commenting",
+    "skill_layer": "claude_skill",
+    "title": "Self Explanatory Code Commenting Skill",
+    "description": "Guidelines for GitHub Copilot to write comments to achieve self-explanatory code with less comments. Examples are in JavaScript but it should work on any language that has comments. Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.559027Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/self-explanatory-code-commenting/SKILL.md",
+    "skill_name": "self-explanatory-code-commenting",
+    "skill_description": "Guidelines for GitHub Copilot to write comments to achieve self-explanatory code with less comments. Examples are in JavaScript but it should work on any language that has comments. Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "let counter = 0;  // Initialize counter to zero",
+        "description": "let counter = 0;  // Initialize counter to zero",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Using Floyd-Warshall for all-pairs shortest paths",
+        "description": "// Using Floyd-Warshall for all-pairs shortest paths",
+        "action_type": "llm_inference",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Match email format: username@domain.extension",
+        "description": "// Match email format: username@domain.extension",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "const response = await fetch(githubApiUrl);",
+        "description": "const response = await fetch(githubApiUrl);",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// FIXME: Memory leak in production - investigate connection",
+        "description": "// FIXME: Memory leak in production - investigate connection pooling",
+        "action_type": "external_call",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// NOTE: This implementation assumes UTC timezone for all ca",
+        "description": "// NOTE: This implementation assumes UTC timezone for all calculations",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// REFACTOR: Extract this logic into separate utility functi",
+        "description": "// REFACTOR: Extract this logic into separate utility function for reusability",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "// GitHub API rate limit: 5000 requests/hour for authenticated users",
+        "condition": "✅ write these comment types",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "// SECURITY: Validate input to prevent SQL injection before using in query",
+        "condition": "annotations",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "// Bad: Don't maintain history in comments",
+        "condition": "changelog comments",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "// Bad: Don't use decorative comments",
+        "condition": "divider comments",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Before committing, ensure your comments:",
+        "condition": "quality checklist",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Remember: The best comment is the one you don't need to write because the code is self-documenting.",
+        "condition": "summary",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Write code that speaks for itself. Comment only when necessary to explain WHY, not WHAT.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "We do not need comments most of the time.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "// Apply progressive tax brackets: 10% up to 10k, 20% above",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "const tax = calculateProgressiveTax(income, [0.10, 0.20], [10000]);",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "1. Is the code self-explanatory? → No comment needed",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "2. Would a better variable/function name eliminate the need? → Refactor instead",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "4. Will this help future maintainers? → Good comment",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Calculate compound interest using the standard formula.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "@param {number} principal - Initial amount invested",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

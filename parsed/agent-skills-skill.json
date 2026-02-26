@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__agent-skills",
+    "name": "agent-skills",
+    "skill_layer": "claude_skill",
+    "title": "Agent Skills Skill",
+    "description": "Guidelines for creating high-quality Agent Skills for GitHub Copilot Triggers on: **/.github/skills/**/SKILL.md, **/.claude/skills/**/SKILL.md",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:28.835689Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/agent-skills/SKILL.md",
+    "skill_name": "agent-skills",
+    "skill_description": "Guidelines for creating high-quality Agent Skills for GitHub Copilot Triggers on: **/.github/skills/**/SKILL.md, **/.claude/skills/**/SKILL.md"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Agent Skills are self-contained folders with instructions an",
+        "description": "Agent Skills are self-contained folders with instructions and bundled resources that teach AI agents specialized capabilities. Unlike custom instructi",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Progressive loading: Only loaded when relevant to the user's",
+        "description": "Progressive loading: Only loaded when relevant to the user's request",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Resource-bundled: Can include scripts, templates, examples a",
+        "description": "Resource-bundled: Can include scripts, templates, examples alongside instructions",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `name` | Yes | Lowercase, hyphens for spaces, max 64 chara",
+        "description": "| `name` | Yes | Lowercase, hyphens for spaces, max 64 characters (e.g., `webapp-testing`) |",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The body contains detailed instructions that Copilot loads A",
+        "description": "The body contains detailed instructions that Copilot loads AFTER the skill is activated. Recommended sections:",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `## References` | Links to bundled docs or external resour",
+        "description": "| `## References` | Links to bundled docs or external resources |",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| Folder | Purpose | Loaded into Context? | Example Files |",
+        "description": "| Folder | Purpose | Loaded into Context? | Example Files |",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `references/` | Documentation the AI agent reads to inform",
+        "description": "| `references/` | Documentation the AI agent reads to inform decisions | Yes, when referenced | `api_reference.md`, `schema.md`, `workflow_guide.md` |",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "| `templates/` | Starter code/scaffolds that the AI agent MO",
+        "description": "| `templates/` | Starter code/scaffolds that the AI agent MODIFIES and builds upon | Yes, when referenced | `viewer.html` (insert algorithm), `hello-w",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "├── references/           # Optional: Documentation loaded i",
+        "description": "├── references/           # Optional: Documentation loaded into context",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "│   ├── workflow-setup.md     # Detailed workflow (>5 steps)",
+        "description": "│   ├── workflow-setup.md     # Detailed workflow (>5 steps)",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "└── templates/            # Optional: Starter code the AI ag",
+        "description": "└── templates/            # Optional: Starter code the AI agent modifies",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "> LICENSE.txt: When creating a skill, download the Apache 2.",
+        "description": "> LICENSE.txt: When creating a skill, download the Apache 2.0 license text from https://www.apache.org/licenses/LICENSE-2.0.txt and save as `LICENSE.t",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "A `logo.png` that gets embedded into a generated document",
+        "description": "A `logo.png` that gets embedded into a generated document",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "A `report-template.html` copied as output format",
+        "description": "A `report-template.html` copied as output format",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Each skill must have its own subdirectory containing at minimum a `SKILL.md` file.",
+        "condition": "directory structure",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "description: Toolkit for testing local web applications using Playwright. Use when asked to verify frontend functionality, debug UI behavior, capture ",
+        "condition": "frontmatter (required)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "| Field | Required | Constraints |",
+        "condition": "frontmatter (required)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "| `## Prerequisites` | Required tools, dependencies, environment setup |",
+        "condition": "body content",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "| `scripts/` | Executable automation that performs specific operations | When executed | `helper.py`, `validate.sh`, `build.ts` |",
+        "condition": "supported resource types",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "├── SKILL.md              # Required: Main instructions",
+        "condition": "directory structure example",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "A `config.template` where the AI agent fills in values based on user requirements",
+        "condition": "assets vs templates: key distinction",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Use imperative mood: \"Run\", \"Create\", \"Configure\" (not \"You should run\")",
+        "condition": "writing style",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Avoid storing credentials or secrets",
+        "condition": "script requirements",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Testability matters — scripts can be unit tested and validated",
+        "condition": "when to bundle scripts",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Instructions for creating effective and portable Agent Skills that enhance GitHub Copilot with specialized capabilities, workflows, and bundled resour",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Portable: Works across VS Code, Copilot CLI, and Copilot coding agent",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "On-demand: Activated automatically based on prompt relevance",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "| `.github/skills/<skill-name>/` | Project/repository | Recommended for project skills |",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| `.claude/skills/<skill-name>/` | Project/repository | Legacy, for backward compatibility |",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "| `~/.github/skills/<skill-name>/` | Personal (user-wide) | Recommended for personal skills |",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| `~/.claude/skills/<skill-name>/` | Personal (user-wide) | Legacy, for backward compatibility |",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "| `description` | Yes | Clear description of capabilities AND use cases, max 1024 characters |",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "completion",
+        "description": "| `license` | No | Reference to LICENSE.txt (e.g., `Complete terms in LICENSE.txt`) or SPDX identifier |",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "CRITICAL: The `description` field is the PRIMARY mechanism for automatic skill discovery. Copilot reads ONLY the `name` and `description` to decide wh",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

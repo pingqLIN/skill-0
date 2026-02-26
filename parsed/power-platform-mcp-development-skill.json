@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-platform-mcp-development",
+    "name": "power-platform-mcp-development",
+    "skill_layer": "claude_skill",
+    "title": "Power Platform Mcp Development Skill",
+    "description": "Instructions for developing Power Platform custom connectors with Model Context Protocol (MCP) integration for Microsoft Copilot Studio Triggers on: **/*.{json,csx,md}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.379924Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-platform-mcp-development/SKILL.md",
+    "skill_name": "power-platform-mcp-development",
+    "skill_description": "Instructions for developing Power Platform custom connectors with Model Context Protocol (MCP) integration for Microsoft Copilot Studio Triggers on: **/*.{json,csx,md}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Transform responses to comply with Copilot Studio constraint",
+        "description": "Transform responses to comply with Copilot Studio constraints (no reference types, single types only)",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement OAuth 2.0 with MCP security best practices within ",
+        "description": "Implement OAuth 2.0 with MCP security best practices within Power Platform constraints",
+        "action_type": "llm_inference",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use connection parameter sets for flexible authentication co",
+        "description": "Use connection parameter sets for flexible authentication configuration",
+        "action_type": "external_call",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Handle JSON-RPC transformation in the custom script (script.",
+        "description": "Handle JSON-RPC transformation in the custom script (script.csx)",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement proper error handling with JSON-RPC error response",
+        "description": "Implement proper error handling with JSON-RPC error response format",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Transform MCP server responses for Copilot Studio compatibil",
+        "description": "Transform MCP server responses for Copilot Studio compatibility",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use connection parameters for dynamic security configuration",
+        "description": "Use connection parameters for dynamic security configuration",
+        "action_type": "external_call",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Support multiple authentication parameter sets for different",
+        "description": "Support multiple authentication parameter sets for different deployment scenarios",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Enable dynamic configuration through connection parameter va",
+        "description": "Enable dynamic configuration through connection parameter values",
+        "action_type": "external_call",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement comprehensive error responses following JSON-RPC 2",
+        "description": "Implement comprehensive error responses following JSON-RPC 2.0 error format",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add detailed logging for authentication, validation, and tra",
+        "description": "Add detailed logging for authentication, validation, and transformation steps",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test connector with actual MCP server implementations",
+        "description": "Test connector with actual MCP server implementations",
+        "action_type": "external_call",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test connection parameter configurations and dynamic behavio",
+        "description": "Test connection parameter configurations and dynamic behavior",
+        "action_type": "external_call",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Include comprehensive documentation (readme.md, CUSTOMIZE.md",
+        "description": "Include comprehensive documentation (readme.md, CUSTOMIZE.md)",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Provide clear setup and configuration instructions",
+        "description": "Provide clear setup and configuration instructions",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always implement JSON-RPC 2.0 standard for MCP communication",
+        "condition": "mcp protocol integration",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Validate token audience to prevent passthrough attacks",
+        "condition": "authentication and security",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Add token validation and audience checking in authentication flow",
+        "condition": "custom script implementation",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Ensure proper MIME type declarations for resource content",
+        "condition": "resource and tool management",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Implement resource transformation to meet Copilot Studio requirements",
+        "condition": "resource and tool management",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Validate schema transformations work correctly with Copilot Studio",
+        "condition": "testing and validation",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Verify authentication flows for all supported parameter sets",
+        "condition": "testing and validation",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Ensure proper error handling for various failure scenarios",
+        "condition": "testing and validation",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Ensure compliance with Power Platform connector certification standards",
+        "condition": "power platform certification requirements",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Ensure tool definitions work correctly within Copilot Studio's constraints",
+        "condition": "copilot studio integration",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use `x-ms-agentic-protocol: mcp-streamable-1.0` header for Copilot Studio compatibility",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Structure endpoints to support both standard REST operations and MCP tool invocation",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Remove `$ref` and other reference types from JSON schemas as Copilot Studio cannot handle them",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use single types instead of arrays of types in schema definitions",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Flatten `anyOf`/`oneOf` constructs to single schemas for Copilot Studio compatibility",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Ensure all tool input schemas are self-contained without external references",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Add MCP-specific security headers for enhanced validation",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Support multiple authentication methods (OAuth standard, OAuth enhanced, API key fallback)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use Swagger 2.0 specification for Power Platform compatibility",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Implement proper `operationId` values for each endpoint",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

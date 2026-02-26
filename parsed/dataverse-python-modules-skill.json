@@ -1,0 +1,206 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-modules",
+    "name": "dataverse-python-modules",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Modules Skill",
+    "description": "dataverse-python-modules guidelines Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.391923Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-modules/SKILL.md",
+    "skill_name": "dataverse-python-modules",
+    "skill_description": "dataverse-python-modules guidelines Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "│   └── errors (DataverseError, ValidationError, MetadataErr",
+        "description": "│   └── errors (DataverseError, ValidationError, MetadataError, HttpError, SQLParseError)",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "├── data (OData operations, metadata, SQL, file upload)",
+        "description": "├── data (OData operations, metadata, SQL, file upload)",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Manage client connection and behavior settings.",
+        "description": "Manage client connection and behavior settings.",
+        "action_type": "external_call",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.config import DataverseCon",
+        "description": "from PowerPlatform.Dataverse.core.config import DataverseConfig",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.errors import DataverseErr",
+        "description": "from PowerPlatform.Dataverse.core.errors import DataverseError",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"Message: {e.message}\")          # Human-readable",
+        "description": "print(f\"Message: {e.message}\")          # Human-readable",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "details = e.to_dict()                  # Convert to dict",
+        "description": "details = e.to_dict()                  # Convert to dict",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.errors import ValidationEr",
+        "description": "from PowerPlatform.Dataverse.core.errors import ValidationError",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.errors import MetadataErro",
+        "description": "from PowerPlatform.Dataverse.core.errors import MetadataError",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.create_table(\"MyTable\", {...})",
+        "description": "client.create_table(\"MyTable\", {...})",
+        "action_type": "io_write",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.errors import HttpError",
+        "description": "from PowerPlatform.Dataverse.core.errors import HttpError",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.errors import SQLParseErro",
+        "description": "from PowerPlatform.Dataverse.core.errors import SQLParseError",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"SQL parse error: {e.message}\")",
+        "description": "print(f\"SQL parse error: {e.message}\")",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The `data` package is primarily internal; the high-level `Da",
+        "description": "The `data` package is primarily internal; the high-level `DataverseClient` in the `client` module wraps and exposes:",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Metadata management (create/update/delete tables and columns",
+        "description": "Metadata management (create/update/delete tables and columns)",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Container for language, timeouts, retries. Immutable.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`language_code: int = 1033` — LCID for localized labels and messages.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "`http_retries: int | None` — (Reserved) Maximum retry attempts for transient errors.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`http_backoff: float | None` — (Reserved) Backoff multiplier between retries.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`http_timeout: float | None` — (Reserved) Request timeout in seconds.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Code: {e.code}\")                # Error category",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Subcode: {e.subcode}\")          # Specific error",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Status: {e.status_code}\")       # HTTP status (if applicable)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Transient: {e.is_transient}\")   # Retry-worthy?",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Table/column creation, deletion, or inspection failures.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

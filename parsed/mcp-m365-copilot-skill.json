@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__mcp-m365-copilot",
+    "name": "mcp-m365-copilot",
+    "skill_layer": "claude_skill",
+    "title": "Mcp M365 Copilot Skill",
+    "description": "Best practices for building MCP-based declarative agents and API plugins for Microsoft 365 Copilot with Model Context Protocol integration Triggers on: **/{*mcp*,*agent*,*plugin*,declarativeAgent.json",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.865099Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/mcp-m365-copilot/SKILL.md",
+    "skill_name": "mcp-m365-copilot",
+    "skill_description": "Best practices for building MCP-based declarative agents and API plugins for Microsoft 365 Copilot with Model Context Protocol integration Triggers on: **/{*mcp*,*agent*,*plugin*,declarativeAgent.json"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Define agent behavior through configuration, not code",
+        "description": "Define agent behavior through configuration, not code",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure MCP servers in mcp.json",
+        "description": "Configure MCP servers in mcp.json",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"authorization_url\": \"https://github.com/login/oauth/authori",
+        "description": "\"authorization_url\": \"https://github.com/login/oauth/authorize\",",
+        "action_type": "external_call",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"authorization_url\": \"https://login.microsoftonline.com/comm",
+        "description": "\"authorization_url\": \"https://login.microsoftonline.com/common/oauth2/v2.0/authorize\",",
+        "action_type": "external_call",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Conversation starters",
+        "description": "Conversation starters",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "MCP server tools import",
+        "description": "MCP server tools import",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Function definitions (auto-generated)",
+        "description": "Function definitions (auto-generated)",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use JSONPath to extract relevant data:",
+        "description": "Use JSONPath to extract relevant data:",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define in ai-plugin.json for consistent formatting:",
+        "description": "Define in ai-plugin.json for consistent formatting:",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Deploy: Teams Toolkit → Deploy",
+        "description": "2. Deploy: Teams Toolkit → Deploy",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Sideload: App uploaded to Teams",
+        "description": "3. Sideload: App uploaded to Teams",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Test: Visit [m365.cloud.microsoft/chat](https://m365.clou",
+        "description": "4. Test: Visit [m365.cloud.microsoft/chat](https://m365.cloud.microsoft/chat)",
+        "action_type": "llm_inference",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "5. Iterate: Fix issues and re-deploy",
+        "description": "5. Iterate: Fix issues and re-deploy",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] All MCP server tools tested individually",
+        "description": "[ ] All MCP server tools tested individually",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Adaptive cards render correctly across hubs",
+        "description": "[ ] Adaptive cards render correctly across hubs",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always use OAuth 2.0 or SSO for authentication",
+        "condition": "security and governance",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Validate MCP server endpoints are secure",
+        "condition": "security and governance",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Review compliance requirements before deployment",
+        "condition": "security and governance",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "├── .env.local                  # Credentials (NEVER commit)",
+        "condition": "project structure",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Requires approval in Microsoft 365 admin center",
+        "condition": "deployment options",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Requires rigorous security review",
+        "condition": "deployment options",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Check OAuth credentials in .env.local",
+        "condition": "authentication failures",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Verify scopes match required permissions",
+        "condition": "authentication failures",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Ensure token refresh logic works",
+        "condition": "authentication failures",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Validate JSONPath expressions in response semantics",
+        "condition": "response parsing failures",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Leverage MCP servers for external system integration",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Import tools from server endpoints, not manual definitions",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Let MCP handle schema discovery and function generation",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use point-and-click tool selection in Agents Toolkit",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use declarativeAgent.json for instructions and capabilities",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "principle",
+        "description": "Follow principle of least privilege for tool selection",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Create adaptive cards for rich visual responses",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Provide clear conversation starters",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Design for responsive experience across hubs",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Test thoroughly before organizational deployment",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

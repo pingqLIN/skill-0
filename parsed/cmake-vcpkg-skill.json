@@ -1,0 +1,81 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__cmake-vcpkg",
+    "name": "cmake-vcpkg",
+    "skill_layer": "claude_skill",
+    "title": "Cmake Vcpkg Skill",
+    "description": "C++ project configuration and package management Triggers on: **/*.cmake, **/CMakeLists.txt, **/*.cpp, **/*.h, **/*.hpp",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.053489Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/cmake-vcpkg/SKILL.md",
+    "skill_name": "cmake-vcpkg",
+    "skill_description": "C++ project configuration and package management Triggers on: **/*.cmake, **/CMakeLists.txt, **/*.cpp, **/*.h, **/*.hpp"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Give information about any CMake Policies that might affect ",
+        "description": "Give information about any CMake Policies that might affect CMake variables that are suggested or mentioned.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "This project needs to be cross-platform and cross-compiler f",
+        "description": "This project needs to be cross-platform and cross-compiler for MSVC, Clang, and GCC.",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "description: C++ project configuration and package managemen",
+        "description": "description: C++ project configuration and package management Triggers on: /*.cmake, /CMakeLists.txt, /*.cpp, /*.h, **/*.hpp",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "This project uses vcpkg in manifest mode. Please keep this in mind when giving vcpkg suggestions. Do not provide suggestions like vcpkg install librar",
+        "condition": "general",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "When providing OpenCV samples that use the file system to read files, please always use absolute file paths rather than file names, or relative file p",
+        "condition": "general",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "preference",
+        "description": "Prefer setting cache variables and other types of things through CMakePresets.json if possible.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "triggers: \"/*.cmake, /CMakeLists.txt, /*.cpp, /*.h, **/*.hpp\"",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "globs: \"/*.cmake, /CMakeLists.txt, /*.cpp, /*.h, **/*.hpp\"",
+        "decomposable": false,
+        "id": "d_003"
+      }
+    ]
+  }
+}

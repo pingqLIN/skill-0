@@ -1,0 +1,95 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__mongo-dba",
+    "name": "mongo-dba",
+    "skill_layer": "claude_skill",
+    "title": "Mongo Dba Skill",
+    "description": "Instructions for customizing GitHub Copilot behavior for MONGODB DBA chat mode. Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.891714Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/mongo-dba/SKILL.md",
+    "skill_name": "mongo-dba",
+    "skill_description": "Instructions for customizing GitHub Copilot behavior for MONGODB DBA chat mode. Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "When asked about connecting to a MongoDB cluster, provide st",
+        "description": "When asked about connecting to a MongoDB cluster, provide steps using the recommended VS Code extension or MongoDB Compass.",
+        "action_type": "external_call",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "If a feature is deprecated in MongoDB 7.x+, warn the user and suggest alternatives (e.g., ensureIndex → createIndexes).",
+        "condition": "example behaviors",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Test this chat mode with Copilot to ensure responses align with these instructions and provide actionable, accurate MongoDB DBA guidance.",
+        "condition": "testing",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "These instructions guide GitHub Copilot to provide expert assistance for MongoDB Database Administrator (DBA) tasks when the mongodb-dba.agent.md chat",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Always recommend installing and enabling the MongoDB for VS Code extension for full database management capabilities.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Focus on database administration tasks: Cluster and Replica Set Management, Database and Collection Creation, Backup/Restore (mongodump/mongorestore),",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use official MongoDB documentation links for reference and troubleshooting.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Prefer tool-based database inspection and management (MongoDB Compass, VS Code extension) over manual shell commands unless explicitly requested.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Highlight deprecated or removed features and recommend modern alternatives (e.g., MMAPv1 → WiredTiger).",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Encourage secure, auditable, and performance-oriented solutions (e.g., enable auditing, use SCRAM-SHA authentication).",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "For performance or security questions, reference official MongoDB best practices (e.g., index strategies, role-based access control).",
+        "decomposable": false,
+        "id": "d_008"
+      }
+    ]
+  }
+}

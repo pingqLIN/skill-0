@@ -1,0 +1,137 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__quarkus-mcp-server-sse",
+    "name": "quarkus-mcp-server-sse",
+    "skill_layer": "claude_skill",
+    "title": "Quarkus Mcp Server Sse Skill",
+    "description": "Quarkus and MCP Server with HTTP SSE transport development standards and instructions Triggers on: *",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.457807Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/quarkus-mcp-server-sse/SKILL.md",
+    "skill_name": "quarkus-mcp-server-sse",
+    "skill_description": "Quarkus and MCP Server with HTTP SSE transport development standards and instructions Triggers on: *"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Build MCP servers with Java 21, Quarkus, and HTTP SSE transp",
+        "description": "Build MCP servers with Java 21, Quarkus, and HTTP SSE transport.",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "quarkus create app --no-code -x rest-client-jackson,qute,mcp",
+        "description": "quarkus create app --no-code -x rest-client-jackson,qute,mcp-server-sse your-domain-mcp-server",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Organize in packages: `model`, `repository`, `service`, `mcp",
+        "description": "Organize in packages: `model`, `repository`, `service`, `mcp`",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test with edge cases (null, empty inputs)",
+        "description": "Test with edge cases (null, empty inputs)",
+        "action_type": "await_input",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "State management for immutable data must be managed by repository layer",
+        "condition": "structure",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Must be public methods in `@ApplicationScoped` CDI beans",
+        "condition": "mcp tools",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Never return `null` - return error messages instead",
+        "condition": "mcp tools",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Always validate parameters and handle errors gracefully",
+        "condition": "mcp tools",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Don't put business logic in MCP tools (use service layer)",
+        "condition": "common issues",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Don't throw exceptions from tools (return error strings)",
+        "condition": "common issues",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Don't forget to validate input parameters",
+        "condition": "common issues",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use standard Java naming conventions (PascalCase classes, camelCase methods)",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `@Tool(name=\"tool_name\", description=\"clear description\")`",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Separate concerns: MCP tools → Service layer → Repository",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `@Inject` for dependency injection",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Make data operations thread-safe",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `Optional<T>` to avoid null pointer exceptions",
+        "decomposable": false,
+        "id": "d_006"
+      }
+    ]
+  }
+}

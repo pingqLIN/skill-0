@@ -1,0 +1,243 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__copilot-sdk-nodejs",
+    "name": "copilot-sdk-nodejs",
+    "skill_layer": "claude_skill",
+    "title": "Copilot Sdk Nodejs Skill",
+    "description": "This file provides guidance on building Node.js/TypeScript applications using GitHub Copilot SDK. Triggers on: **.ts, **.js, package.json",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.213918Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/copilot-sdk-nodejs/SKILL.md",
+    "skill_name": "copilot-sdk-nodejs",
+    "skill_description": "This file provides guidance on building Node.js/TypeScript applications using GitHub Copilot SDK. Triggers on: **.ts, **.js, package.json"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run npm",
+        "description": "npm install @github/copilot-sdk",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "npm install @github/copilot-sdk",
+        "description": "npm install @github/copilot-sdk",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import { CopilotClient } from \"@github/copilot-sdk\";",
+        "description": "import { CopilotClient } from \"@github/copilot-sdk\";",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`cliUrl` - URL of existing CLI server (e.g., \"localhost:8080",
+        "description": "`cliUrl` - URL of existing CLI server (e.g., \"localhost:8080\"). When provided, client won't spawn a process",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`autoStart` - Auto-start server (default: true)",
+        "description": "`autoStart` - Auto-start server (default: true)",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`autoRestart` - Auto-restart on crash (default: true)",
+        "description": "`autoRestart` - Auto-restart on crash (default: true)",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`cwd` - Working directory for the CLI process (default: proc",
+        "description": "`cwd` - Working directory for the CLI process (default: process.cwd())",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`env` - Environment variables for the CLI process (default: ",
+        "description": "`env` - Environment variables for the CLI process (default: process.env)",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "const client = new CopilotClient({ autoStart: false });",
+        "description": "const client = new CopilotClient({ autoStart: false });",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `forceStop()` when `stop()` takes too long.",
+        "description": "Use `forceStop()` when `stop()` takes too long.",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "const session = await client.createSession({",
+        "description": "const session = await client.createSession({",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`await session.send({ prompt: \"...\", attachments: [...] })` ",
+        "description": "`await session.send({ prompt: \"...\", attachments: [...] })` - Send message, returns Promise<string>",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`await session.sendAndWait({ prompt: \"...\" }, timeout)` - Se",
+        "description": "`await session.sendAndWait({ prompt: \"...\" }, timeout)` - Send and wait for idle, returns Promise<AssistantMessageEvent | null>",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "`await session.abort()` - Abort current processing",
+        "description": "`await session.abort()` - Abort current processing",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The `on()` method returns a function that unsubscribes:",
+        "description": "The `on()` method returns a function that unsubscribes:",
+        "action_type": "external_call",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always install via npm/pnpm/yarn:",
+        "condition": "installation",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Note: Final events (`assistant.message`, `assistant.reasoning`) are ALWAYS sent regardless of streaming setting.",
+        "condition": "handling streaming events",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Always check for security vulnerabilities",
+        "condition": "append mode (default - preserves guardrails)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Use ping to verify server connectivity:",
+        "condition": "connectivity testing",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "const response = await client.ping(\"health check\");",
+        "condition": "connectivity testing",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "ALWAYS use try-finally or cleanup in a finally block:",
+        "condition": "automatic cleanup with try-finally",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "The SDK is in technical preview and may have breaking changes",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Requires Node.js 18.0 or later",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Requires GitHub Copilot CLI installed and in PATH",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Built with TypeScript for type safety",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Uses async/await patterns throughout",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Provides full TypeScript type definitions",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "When creating a CopilotClient, use `CopilotClientOptions`:",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "`cliPath` - Path to CLI executable (default: \"copilot\" from PATH)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`cliArgs` - Extra arguments prepended before SDK-managed flags (string[])",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "preference",
+        "description": "`useStdio` - Use stdio transport instead of TCP (default: true)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

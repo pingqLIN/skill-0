@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__makefile",
+    "name": "makefile",
+    "skill_layer": "claude_skill",
+    "title": "Makefile Skill",
+    "description": "Best practices for authoring GNU Make Makefiles Triggers on: **/Makefile, **/makefile, **/*.mk, **/GNUmakefile",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.847972Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/makefile/SKILL.md",
+    "skill_name": "makefile",
+    "skill_description": "Best practices for authoring GNU Make Makefiles Triggers on: **/Makefile, **/makefile, **/*.mk, **/GNUmakefile"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Place the default goal (primary build target) as the first r",
+        "description": "Place the default goal (primary build target) as the first rule in the makefile",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define variables at the top of the makefile before rules",
+        "description": "Define variables at the top of the makefile before rules",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define variables with `:=` (simple expansion) for immediate ",
+        "description": "Define variables with `:=` (simple expansion) for immediate evaluation, `=` for recursive expansion",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The example below shows a pattern rule that compiles objects",
+        "description": "The example below shows a pattern rule that compiles objects into an `obj/` directory. The directory itself is listed as an order-only prerequisite so",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Start every recipe line with a tab character (not spaces) un",
+        "description": "Start every recipe line with a tab character (not spaces) unless `.RECIPEPREFIX` is changed",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Keep recipes readable; break long commands across multiple l",
+        "description": "Keep recipes readable; break long commands across multiple lines with backslash continuation",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "install -m 755 program $(PREFIX)/bin",
+        "description": "install -m 755 program $(PREFIX)/bin",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use phony targets for actions like `clean`, `install`, `test",
+        "description": "Use phony targets for actions like `clean`, `install`, `test`, `all`",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use backslash-newline (`\\`) to split long lines for readabil",
+        "description": "Use backslash-newline (`\\`) to split long lines for readability",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Be aware that backslash-newline is converted to a single spa",
+        "description": "Be aware that backslash-newline is converted to a single space in non-recipe contexts",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Generate header dependencies automatically rather than maint",
+        "description": "Generate header dependencies automatically rather than maintaining them manually",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use compiler flags like `-MMD` and `-MP` to generate `.d` fi",
+        "description": "Use compiler flags like `-MMD` and `-MP` to generate `.d` files with dependencies",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `$(error text)` or `$(warning text)` functions for build",
+        "description": "Use `$(error text)` or `$(warning text)` functions for build-time diagnostics",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test makefiles with `make -n` (dry run) to see commands with",
+        "description": "Test makefiles with `make -n` (dry run) to see commands without executing",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "$(error \"gcc is not installed or not in PATH\")",
+        "description": "$(error \"gcc is not installed or not in PATH\")",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Use `.PHONY` to declare targets that don't represent files",
+        "condition": "file structure",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Use variables to avoid duplication and improve maintainability",
+        "condition": "variables and substitution",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Use order-only prerequisites (after `|`) for directories and dependencies that shouldn't trigger rebuilds",
+        "condition": "rules and prerequisites",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Include all actual dependencies to ensure correct rebuilds",
+        "condition": "rules and prerequisites",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Avoid circular dependencies between targets",
+        "condition": "rules and prerequisites",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Combine related commands with `&&` or `;` on the same line when they must execute together",
+        "condition": "recipes and commands",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Always declare phony targets with `.PHONY` to avoid conflicts with files of the same name",
+        "condition": "phony targets",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Avoid trailing whitespace after backslashes",
+        "condition": "splitting long lines",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Include generated dependency files with `-include $(deps)` to avoid errors if they don't exist",
+        "condition": "automatic prerequisites",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Validate required variables and tools at the beginning of the makefile",
+        "condition": "error handling and debugging",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "principle",
+        "description": "Instructions for writing clean, maintainable, and portable GNU Make Makefiles. These instructions are based on the [GNU Make manual](https://www.gnu.o",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Write clear and maintainable makefiles that follow GNU Make conventions",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use descriptive target names that clearly indicate their purpose",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Keep the default goal (first target) as the most common build operation",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Prioritize readability over brevity when writing rules and recipes",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Add comments to explain complex rules, variables, or non-obvious behavior",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Name your makefile `Makefile` (recommended for visibility) or `makefile`",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `GNUmakefile` only for GNU Make-specific features incompatible with other make implementations",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use standard variable names: `objects`, `OBJECTS`, `objs`, `OBJS`, `obj`, or `OBJ` for object file lists",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use uppercase for built-in variable names (e.g., `CC`, `CFLAGS`, `LDFLAGS`)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__codexer",
+    "name": "codexer",
+    "skill_layer": "claude_skill",
+    "title": "Codexer Skill",
+    "description": "Advanced Python research assistant with Context 7 MCP integration, focusing on speed, reliability, and 10+ years of software development expertise",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.087012Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/codexer/SKILL.md",
+    "skill_name": "codexer",
+    "skill_description": "Advanced Python research assistant with Context 7 MCP integration, focusing on speed, reliability, and 10+ years of software development expertise"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Create isolated environments for each project",
+        "description": "Create isolated environments for each project",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write Code That Doesn't Break the Universe:",
+        "description": "Write Code That Doesn't Break the Universe:",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Minimal dependencies - every import is a potential security ",
+        "description": "Minimal dependencies - every import is a potential security hole",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test Like Your Life Depends On It: Write unit tests with `py",
+        "description": "Test Like Your Life Depends On It: Write unit tests with `pytest`",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Focus on key topics like installation, API reference, bes",
+        "description": "2. Focus on key topics like installation, API reference, best practices",
+        "action_type": "external_call",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Extract code examples and implementation patterns",
+        "description": "3. Extract code examples and implementation patterns",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Use `#think` for complex reasoning and solution design",
+        "description": "1. Use `#think` for complex reasoning and solution design",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Analyze source code structure and patterns using Context ",
+        "description": "2. Analyze source code structure and patterns using Context 7",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Write clean, performant Python code following best practi",
+        "description": "3. Write clean, performant Python code following best practices",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Implement proper error handling and logging",
+        "description": "4. Implement proper error handling and logging",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. #think to analyze initial findings",
+        "description": "2. #think to analyze initial findings",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "6. Analyze API patterns and implementation examples",
+        "description": "6. Analyze API patterns and implementation examples",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Implement clean, efficient solution",
+        "description": "4. Implement clean, efficient solution",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "5. Test reliability and edge cases",
+        "description": "5. Test reliability and edge cases",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "self.logger = self._setup_logger()",
+        "description": "self.logger = self._setup_logger()",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Requires installation: `@workspace /new #websearch` command",
+        "condition": "web search tools",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "ALWAYS use `venv` or `conda` environments - no exceptions, no excuses",
+        "condition": "environment management",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Dependencies go into `requirements.txt` or `pyproject.toml` - pin versions",
+        "condition": "environment management",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Type hints are mandatory - use `typing` module",
+        "condition": "performance & reliability - speed over everything",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "2. Use `#think` to analyze requirements and plan approach",
+        "condition": "phase 1: planning & web search",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "4. Use Copilot Web Search Extension for enhanced search (requires Tavily API)",
+        "condition": "phase 1: planning & web search",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "raise ValueError(\"Text must be non-empty string\")",
+        "condition": "brutal code examples",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "BAD - Never Write Like This:",
+        "condition": "brutal code examples",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "5. Testing: Verify reliability and performance",
+        "condition": "🔄 research process",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "6. Final Steps: Ask about test scripts, export requirements.txt",
+        "condition": "🔄 research process",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "principle",
+        "description": "You are Codexer, an expert Python researcher with 10+ years of software development experience. Your goal is to conduct thorough research using Contex",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`resolve-library-id`: Resolves library names into Context7-compatible IDs",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`get-library-docs`: Fetches documentation for specific library IDs",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "#websearch: Built-in VS Code tool for web searching (part of standard Copilot Chat)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Copilot Web Search Extension: Enhanced web search requiring Tavily API keys (free tier with monthly resets)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "If you're not using environments, you're not a Python developer, you're a liability",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Readability Is Non-Negotiable:",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Follow PEP 8 religiously: 79 char max lines, 4-space indentation",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`snake_case` for variables/functions, `CamelCase` for classes",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Single-letter variables only for loop indices (`i`, `j`, `k`)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

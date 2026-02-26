@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__langchain-python",
+    "name": "langchain-python",
+    "skill_layer": "claude_skill",
+    "title": "Langchain Python Skill",
+    "description": "Instructions for using LangChain with Python Triggers on: **/*.py",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.818128Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/langchain-python/SKILL.md",
+    "skill_name": "langchain-python",
+    "skill_description": "Instructions for using LangChain with Python Triggers on: **/*.py"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "LangChain's `Runnable` interface is the foundation for compo",
+        "description": "LangChain's `Runnable` interface is the foundation for composing and executing chains, chat models, output parsers, retrievers, and LangGraph graphs. ",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "All major LangChain components (chat models, output parsers,",
+        "description": "All major LangChain components (chat models, output parsers, retrievers, graphs) implement the Runnable interface.",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Batching (`batch`, `batch_as_completed`) is optimized for pa",
+        "description": "Batching (`batch`, `batch_as_completed`) is optimized for parallel API calls; set `max_concurrency` in `RunnableConfig` to control parallelism.",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Input/output types are component-specific (e.g., chat models",
+        "description": "Input/output types are component-specific (e.g., chat models accept messages, retrievers accept strings, output parsers accept model outputs).",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Compose Runnables declaratively with LCEL: `chain = prompt |",
+        "description": "Compose Runnables declaratively with LCEL: `chain = prompt | chat_model | output_parser`.",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Propagate `RunnableConfig` (tags, metadata, callbacks, concu",
+        "description": "Propagate `RunnableConfig` (tags, metadata, callbacks, concurrency) automatically in Python 3.11+; manually in async code for Python 3.9/3.10.",
+        "action_type": "external_call",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure runtime attributes and alternatives with `configur",
+        "description": "Configure runtime attributes and alternatives with `configurable_fields` and `configurable_alternatives` for dynamic chains and LangServe deployments.",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use tags and metadata in `RunnableConfig` for tracing in Lan",
+        "description": "Use tags and metadata in `RunnableConfig` for tracing in LangSmith and debugging complex chains.",
+        "action_type": "llm_inference",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For custom logic, wrap functions with `RunnableLambda` or `R",
+        "description": "For custom logic, wrap functions with `RunnableLambda` or `RunnableGenerator` instead of subclassing.",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Import from `langchain.chat_models` or `langchain_openai` (e",
+        "description": "Import from `langchain.chat_models` or `langchain_openai` (e.g., `ChatOpenAI`).",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from langchain_openai import ChatOpenAI",
+        "description": "from langchain_openai import ChatOpenAI",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from langchain.schema import HumanMessage, SystemMessage",
+        "description": "from langchain.schema import HumanMessage, SystemMessage",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `response_format=\"json\"` for structured outputs (OpenAI ",
+        "description": "Use `response_format=\"json\"` for structured outputs (OpenAI models).",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Prompt templates: store templates under `prompts/` and load ",
+        "description": "Prompt templates: store templates under `prompts/` and load via a safe helper. Keep templates small and testable.",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Memory: default to stateless design. When memory is needed, ",
+        "description": "Memory: default to stateless design. When memory is needed, store minimal context and document retention/erasure policies.",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Create custom runnables with `RunnableLambda` (simple transforms) or `RunnableGenerator` (streaming transforms); avoid subclassing directly.",
+        "condition": "runnable interface (langchain-specific)",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Use batching for parallel API calls to LLMs or retrievers; set `max_concurrency` to avoid rate limits.",
+        "condition": "runnable interface (langchain-specific)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Always validate input/output schemas for custom chains and deployed endpoints.",
+        "condition": "runnable interface (langchain-specific)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Always validate model outputs before using them in downstream tasks.",
+        "condition": "runnable interface (langchain-specific)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Chains vs Agents: prefer Chains for deterministic pipelines (RAG, summarization). Use Agents when you require planning or dynamic tool selection.",
+        "condition": "runnable interface (langchain-specific)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Tools: implement typed adapter interfaces for tools; validate inputs and outputs strictly.",
+        "condition": "runnable interface (langchain-specific)",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Cache embeddings to avoid repeated cost for unchanged documents.",
+        "condition": "embeddings & vectorstores",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Always initialize vectorstores with a supported embedding model (e.g., OpenAIEmbeddings, HuggingFaceEmbeddings).",
+        "condition": "vector stores (langchain-specific)",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Use `add_documents(documents, ids=...)` to add/update documents. Always provide unique IDs for upserts.",
+        "condition": "vector stores (langchain-specific)",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Always validate the vectorstore integration and API version in your environment; breaking changes are common between LangChain releases.",
+        "condition": "vector stores (langchain-specific)",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "These instructions guide GitHub Copilot in generating code and documentation for LangChain applications in Python. Focus on LangChain-specific pattern",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Supports synchronous (`invoke`, `batch`, `stream`) and asynchronous (`ainvoke`, `abatch`, `astream`) execution.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Streaming APIs (`stream`, `astream`, `astream_events`) yield outputs as they are produced, critical for responsive LLM apps.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Inspect schemas with `get_input_schema`, `get_output_schema`, and their JSONSchema variants for validation and OpenAPI generation.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Use `with_types` to override inferred input/output types for complex LCEL chains.",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Prefer streaming APIs for chat UIs and long outputs.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "For advanced configuration, expose fields and alternatives via `configurable_fields` and `configurable_alternatives`.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use LangChain's chat model integrations for conversational AI:",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Compose messages using `SystemMessage`, `HumanMessage`, `AIMessage`.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "completion",
+        "description": "For structured outputs, use `with_structured_output(schema)`.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

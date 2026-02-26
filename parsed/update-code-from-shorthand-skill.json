@@ -1,0 +1,255 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__update-code-from-shorthand",
+    "name": "update-code-from-shorthand",
+    "skill_layer": "claude_skill",
+    "title": "Update Code From Shorthand Skill",
+    "description": "Shorthand code will be in the file provided from the prompt or raw data in the prompt, and will be used to update the code file when the prompt has the text `UPDATE CODE FROM SHORTHAND`. Triggers on: ",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.767947Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/update-code-from-shorthand/SKILL.md",
+    "skill_name": "update-code-from-shorthand",
+    "skill_description": "Shorthand code will be in the file provided from the prompt or raw data in the prompt, and will be used to update the code file when the prompt has the text `UPDATE CODE FROM SHORTHAND`. Triggers on: "
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "All the content between the edit markers may include natural",
+        "description": "All the content between the edit markers may include natural language and shorthand; convert it into",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "gives an architect. You extract the big picture and apply ex",
+        "description": "gives an architect. You extract the big picture and apply expert judgment to produce a complete,",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "The text `${openPrompt}` at the very start of the prompt.",
+        "description": "The text `${openPrompt}` at the very start of the prompt.",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use the shorthand to edit, or sometimes essentially create t",
+        "description": "Use the shorthand to edit, or sometimes essentially create the contents of a code file.",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "on formatting and adding additional data matching the existi",
+        "description": "on formatting and adding additional data matching the existing format of the data file.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "This is only relevant when the text `${openPrompt}` is at th",
+        "description": "This is only relevant when the text `${openPrompt}` is at the start of the prompt.",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If the text `${openPrompt}` is not at the start of the promp",
+        "description": "If the text `${openPrompt}` is not at the start of the prompt, discard these instructions for",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "After applying the updates, remove the `${openMarker}` and `",
+        "description": "After applying the updates, remove the `${openMarker}` and `${closeMarker}` lines from the",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Remove all occurrences of the openMarker or `${language:comm",
+        "description": "Remove all occurrences of the openMarker or `${language:comment} start-shorthand`.",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "e.g. `// start-shorthand`.",
+        "description": "e.g. `// start-shorthand`.",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "When lines have `()=>` as the starting set of characters, us",
+        "description": "When lines have `()=>` as the starting set of characters, use your role to determine a",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "openPrompt = \"UPDATE CODE FROM SHORTHAND\";",
+        "description": "openPrompt = \"UPDATE CODE FROM SHORTHAND\";",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "openMarker = \"${language:comment} start-shorthand\";",
+        "description": "openMarker = \"${language:comment} start-shorthand\";",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use #file:index.html:94-99 to see where converted",
+        "description": "Use #file:index.html:94-99 to see where converted",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "markdown to html will be parsed `id=\"a\"`.",
+        "description": "markdown to html will be parsed `id=\"a\"`.",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "The `${REQUIRED_FILE}` following the `${openPrompt}`.",
+        "condition": "rules for updating code file from shorthand",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "is to update a data file i.e. `JSON` or `XML` and means the edits should be focused on formatting",
+        "condition": "rules for updating code file from shorthand",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "probability this is to update a data file i.e. `JSON` or `XML` and means the edits should be focused",
+        "condition": "rules for updating code file from shorthand",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "The `${REQUIRED_FILE}` will have two markers:",
+        "condition": "when to apply instructions and rules",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "The content between the edit markers determines what to update in the `${REQUIRED_FILE}` or other",
+        "condition": "when to apply instructions and rules",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "> Edit the code file ${REQUIRED_FILE}.",
+        "condition": "prompt back following rules",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "> ${openMarker} - edit the code file ${REQUIRED_FILE}.",
+        "condition": "prompt back following rules",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "REQUIRED_FILE = `${input:file}`;",
+        "condition": "variables",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "One or more files will be provided in the prompt. For each file in the prompt, look for the markers",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "valid code appropriate for the target file type and its extension.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Expert 10x software engineer. Great at problem solving and generating creative solutions when given",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "shorthand instructions, similar to brainstorming. The shorthand is like a hand-drawn sketch a client",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "If any comment has the text `REMOVE COMMENT`, `NOTE`, or similar within the comment, that",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "comment is to be removed; and in all probability that line will need the correct syntax,",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "If any text, following the file name implies `no need to edit code`, then in all probability this",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "> Did you mean to prepend the prompt with \"${openPrompt}\"?",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Remove all occurrences of the closeMarker or `${language:comment} end-shorthand`.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`()=>` = 90% comment and 10% pseudo code blocks of mixed languages.",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

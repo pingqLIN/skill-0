@@ -1,0 +1,205 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-overview",
+    "name": "pcf-overview",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Overview Skill",
+    "description": "Power Apps Component Framework overview and fundamentals Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.068095Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-overview/SKILL.md",
+    "skill_name": "pcf-overview",
+    "skill_description": "Power Apps Component Framework overview and fundamentals Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Transform a list into an entirely different visual experienc",
+        "description": "Transform a list into an entirely different visual experience bound to the dataset, like a `Calendar` or `Map`",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Rendered as part of the same context",
+        "description": "Rendered as part of the same context",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Loaded at the same time as any other components",
+        "description": "Loaded at the same time as any other components",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Used across the full breadth of Power Apps capabilities",
+        "description": "Used across the full breadth of Power Apps capabilities",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Bundled with all HTML, CSS, and TypeScript files into a sing",
+        "description": "Bundled with all HTML, CSS, and TypeScript files into a single solution package",
+        "action_type": "state_change",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Utility and data formatting methods",
+        "description": "Utility and data formatting methods",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "User experience elements: dialogs, lookups, full-page render",
+        "description": "User experience elements: dialogs, lookups, full-page rendering",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Optimized for performance",
+        "description": "Optimized for performance",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Bundle all files into a single solution file",
+        "description": "Bundle all files into a single solution file",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Handle being destroyed and reloaded for performance reasons ",
+        "description": "Handle being destroyed and reloaded for performance reasons while preserving state",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Power Apps component framework licensing is based on the typ",
+        "description": "Power Apps component framework licensing is based on the type of data and connections used:",
+        "action_type": "external_call",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Code components that connect to external services or data di",
+        "description": "Code components that connect to external services or data directly via the user's browser client (not through connectors):",
+        "action_type": "external_call",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Create and build a code component](https://learn.microsoft.",
+        "description": "[Create and build a code component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/create-custom-controls-using-pcf)",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Create components with Power Apps Component Framework - Tra",
+        "description": "[Create components with Power Apps Component Framework - Training](https://learn.microsoft.com/en-us/training/paths/create-components-power-apps-compo",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "End-users require Power Apps licenses",
+        "condition": "premium code components",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Power Apps component framework empowers professional developers and app makers to create code components for model-driven and canvas apps. These code ",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Replace a column on a form that displays a numeric text value with a `dial` or `slider` code component",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Power Apps component framework works only on Unified Interface and not on the legacy web client",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Power Apps component framework is currently not supported for on-premises environments",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Reused many times across different tables and forms",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Code components that don't connect to external services or data:",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Apps using these with standard features remain standard",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "constraint",
+        "description": "End-users require minimum Office 365 license",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Note: If using code components in model-driven apps connected to Microsoft Dataverse, end users will require Power Apps licenses.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[What are code components?](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/custom-controls-overview)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

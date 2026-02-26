@@ -1,0 +1,255 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__typespec-m365-copilot",
+    "name": "typespec-m365-copilot",
+    "skill_layer": "claude_skill",
+    "title": "Typespec M365 Copilot Skill",
+    "description": "Guidelines and best practices for building TypeSpec-based declarative agents and API plugins for Microsoft 365 Copilot Triggers on: **/*.tsp",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.753358Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/typespec-m365-copilot/SKILL.md",
+    "skill_name": "typespec-m365-copilot",
+    "skill_description": "Guidelines and best practices for building TypeSpec-based declarative agents and API plugins for Microsoft 365 Copilot Triggers on: **/*.tsp"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "import \"@microsoft/typespec-m365-copilot\";",
+        "description": "import \"@microsoft/typespec-m365-copilot\";",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Make descriptions informative but concise",
+        "description": "Make descriptions informative but concise",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write in second person (\"You are...\")",
+        "description": "Write in second person (\"You are...\")",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define both what to do AND what not to do",
+        "description": "Define both what to do AND what not to do",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use clear, structured formatting",
+        "description": "Use clear, structured formatting",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Provide 2-4 diverse starters",
+        "description": "Provide 2-4 diverse starters",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Write realistic example queries",
+        "description": "Write realistic example queries",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Copilot Connectors - Specify connection IDs:",
+        "description": "Copilot Connectors - Specify connection IDs:",
+        "action_type": "external_call",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "op copilotConnectors is AgentCapabilities.GraphConnectors<",
+        "description": "op copilotConnectors is AgentCapabilities.GraphConnectors<",
+        "action_type": "external_call",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "{ connectionId: \"your-connector-id\" }",
+        "description": "{ connectionId: \"your-connector-id\" }",
+        "action_type": "external_call",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "authorizationUrl: \"https://auth.example.com/authorize\";",
+        "description": "authorizationUrl: \"https://auth.example.com/authorize\";",
+        "action_type": "external_call",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Operations: camelCase (e.g., `listProjects`, `createTicket`)",
+        "description": "Operations: camelCase (e.g., `listProjects`, `createTicket`)",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Model Properties: camelCase (e.g., `projectId`, `createdDate",
+        "description": "Model Properties: camelCase (e.g., `projectId`, `createdDate`)",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "op create(@body project: CreateProject): Project;",
+        "description": "op create(@body project: CreateProject): Project;",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "op update(@path id: string, @body project: UpdateProject): P",
+        "description": "op update(@path id: string, @body project: UpdateProject): Project;",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always include required imports at the top of TypeSpec files:",
+        "condition": "import statements",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Avoid generic names like \"Helper\" or \"Bot\"",
+        "condition": "agent declaration",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "title: \"Action-Oriented Title\",  // e.g., \"Check Status\"",
+        "condition": "conversation starters",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "2. Check all file paths in `@card` decorators exist",
+        "condition": "before provisioning",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "3. Verify authentication references match configuration",
+        "condition": "before provisioning",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "4. Ensure capability scoping is appropriate",
+        "condition": "before provisioning",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "1. Scope Capabilities: Don't grant access to all data if only subset needed",
+        "condition": "performance optimization",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "2. Limit Operations: Only expose API operations the agent actually uses",
+        "condition": "performance optimization",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "When working with TypeSpec for Microsoft 365 Copilot:",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "1. Type Safety First: Leverage TypeSpec's strong typing for all models and operations",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "principle",
+        "description": "2. Declarative Approach: Use decorators to describe intent, not implementation",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "3. Scoped Capabilities: Always scope capabilities to specific resources when possible",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "4. Clear Instructions: Write explicit, detailed agent instructions",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "5. User-Centric: Design for the end-user experience in Microsoft 365 Copilot",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "│   ├── cards/              # Adaptive Card templates",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "│   ├── .generated/         # Generated manifests (auto-generated)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "│   └── manifest.json       # Teams app manifest",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "│   ├── main.tsp           # Agent definition",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

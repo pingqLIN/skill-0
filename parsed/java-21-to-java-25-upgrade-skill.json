@@ -1,0 +1,259 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__java-21-to-java-25-upgrade",
+    "name": "java-21-to-java-25-upgrade",
+    "skill_layer": "claude_skill",
+    "title": "Java 21 To Java 25 Upgrade Skill",
+    "description": "Comprehensive best practices for adopting new Java 25 features since the release of Java 21. Triggers on: ['*']",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.735773Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/java-21-to-java-25-upgrade/SKILL.md",
+    "skill_name": "java-21-to-java-25-upgrade",
+    "skill_description": "Comprehensive best practices for adopting new Java 25 features since the release of Java 21. Triggers on: ['*']"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Person updated = person with { age = 30; };",
+        "description": "Person updated = person with { age = 30; };",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Update JVM flags if explicitly using non-generational ZGC:",
+        "description": "Update JVM flags if explicitly using non-generational ZGC:",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "May see improved compilation performance with C2 compiler",
+        "description": "May see improved compilation performance with C2 compiler",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add `--enable-preview` to compiler arguments",
+        "description": "Add `--enable-preview` to compiler arguments",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Add `--enable-preview` to runtime arguments",
+        "description": "Add `--enable-preview` to runtime arguments",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<artifactId>maven-compiler-plugin</artifactId>",
+        "description": "<artifactId>maven-compiler-plugin</artifactId>",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "options.compilerArgs.add(\"--enable-preview\")",
+        "description": "options.compilerArgs.add(\"--enable-preview\")",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "5. Test Thoroughly: Especially for applications using JNI or",
+        "description": "5. Test Thoroughly: Especially for applications using JNI or sun.misc.Unsafe",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Convert complex HTML JavaDoc to Markdown",
+        "description": "[ ] Convert complex HTML JavaDoc to Markdown",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[ ] Update build configuration for preview features",
+        "description": "[ ] Update build configuration for preview features",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test with `--enable-preview` flag for preview features",
+        "description": "Test with `--enable-preview` flag for preview features",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Performance test with new ZGC generational mode",
+        "description": "Performance test with new ZGC generational mode",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ZGC generational mode may improve performance for most workl",
+        "description": "ZGC generational mode may improve performance for most workloads",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Remember to test thoroughly in staging environments before d",
+        "description": "Remember to test thoroughly in staging environments before deploying Java 25 upgrades to production systems.",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Warn about upcoming restrictions on JNI usage",
+        "condition": "jni usage warnings (jep 472 - warnings in 24)",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "requires jdk.unsupported; // for remaining JNI usage",
+        "condition": "jni usage warnings (jep 472 - warnings in 24)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "No code changes required - internal JVM optimization",
+        "condition": "g1 improvements (jep 475 - implemented in 24)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "1. Update Build Tools: Ensure Maven/Gradle supports JDK 25",
+        "condition": "step-by-step upgrade process",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "2. Update Dependencies: Check for JDK 25 compatibility",
+        "condition": "step-by-step upgrade process",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "6. Performance Testing: Verify GC behavior with new ZGC defaults",
+        "condition": "step-by-step upgrade process",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Verify JNI applications work with native access warnings",
+        "condition": "testing considerations",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Validate JavaDoc generation with Markdown comments",
+        "condition": "testing considerations",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "1. Preview Feature Dependencies: Don't use preview features in library code without clear documentation",
+        "condition": "common pitfalls",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "3. Unsafe Migration: Don't delay migrating from sun.misc.Unsafe - deprecation warnings indicate future removal",
+        "condition": "common pitfalls",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "These instructions help GitHub Copilot assist developers in upgrading Java projects from JDK 21 to JDK 25, focusing on new language features, API chan",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Primitive Types in Patterns, instanceof, and switch",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "When working with pattern matching:",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Suggest using primitive type patterns in switch expressions and instanceof checks",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Example upgrade from traditional switch:",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "default -> \"unknown status: \" + x.getStatus();",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "principle",
+        "description": "// New approach (Java 25 Preview)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "case int i -> \"unknown status: \" + i;",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Enable preview features with `--enable-preview` flag",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Suggest guard patterns for more complex conditions:",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

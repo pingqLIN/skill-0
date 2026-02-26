@@ -1,0 +1,255 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__kotlin-mcp-server",
+    "name": "kotlin-mcp-server",
+    "skill_layer": "claude_skill",
+    "title": "Kotlin Mcp Server Skill",
+    "description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Kotlin using the official io.modelcontextprotocol:kotlin-sdk library. Triggers on: **/*.kt, **/*.kts, **/build.gradle.k",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.781764Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/kotlin-mcp-server/SKILL.md",
+    "skill_name": "kotlin-mcp-server",
+    "skill_description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Kotlin using the official io.modelcontextprotocol:kotlin-sdk library. Triggers on: **/*.kt, **/*.kts, **/build.gradle.k"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Create an MCP server using the `Server` class:",
+        "description": "Create an MCP server using the `Server` class:",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.modelcontextprotocol.kotlin.sdk.server.Server",
+        "description": "import io.modelcontextprotocol.kotlin.sdk.server.Server",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.modelcontextprotocol.kotlin.sdk.Implementation",
+        "description": "import io.modelcontextprotocol.kotlin.sdk.Implementation",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.modelcontextprotocol.kotlin.sdk.ServerCapabilities",
+        "description": "import io.modelcontextprotocol.kotlin.sdk.ServerCapabilities",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `server.addTool()` to register tools with typed request/",
+        "description": "Use `server.addTool()` to register tools with typed request/response handling:",
+        "action_type": "external_call",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.modelcontextprotocol.kotlin.sdk.CallToolRequest",
+        "description": "import io.modelcontextprotocol.kotlin.sdk.CallToolRequest",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.modelcontextprotocol.kotlin.sdk.TextContent",
+        "description": "import io.modelcontextprotocol.kotlin.sdk.TextContent",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "description = \"Search for information\",",
+        "description": "description = \"Search for information\",",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "inputSchema = buildJsonObject {",
+        "description": "inputSchema = buildJsonObject {",
+        "action_type": "await_input",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.modelcontextprotocol.kotlin.sdk.ReadResourceReques",
+        "description": "import io.modelcontextprotocol.kotlin.sdk.ReadResourceRequest",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.modelcontextprotocol.kotlin.sdk.TextResourceConten",
+        "description": "import io.modelcontextprotocol.kotlin.sdk.TextResourceContents",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": ") { request: ReadResourceRequest ->",
+        "description": ") { request: ReadResourceRequest ->",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "val content = loadResourceContent(request.uri)",
+        "description": "val content = loadResourceContent(request.uri)",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.modelcontextprotocol.kotlin.sdk.GetPromptRequest",
+        "description": "import io.modelcontextprotocol.kotlin.sdk.GetPromptRequest",
+        "action_type": "io_read",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "import io.modelcontextprotocol.kotlin.sdk.PromptMessage",
+        "description": "import io.modelcontextprotocol.kotlin.sdk.PromptMessage",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "?: throw IllegalArgumentException(\"query is required\")",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "val limit = (request.params.arguments[\"limit\"] as? Number)?.toInt() ?: 10",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "val results = performSearch(query, limit)",
+        "condition": "adding tools",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "?: throw IllegalArgumentException(\"topic is required\")",
+        "condition": "adding prompts",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "description = \"Process validated input\"",
+        "condition": "error handling",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "?: throw IllegalArgumentException(\"input is required\")",
+        "condition": "error handling",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "require(input.isNotBlank()) { \"input cannot be blank\" }",
+        "condition": "error handling",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "arguments = mapOf(\"query\" to \"test\", \"limit\" to 5)",
+        "condition": "testing",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "When building MCP servers in Kotlin, follow these best practices and patterns using the official Kotlin SDK.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "prompts = ServerCapabilities.Prompts(listChanged = true)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "val query = request.params.arguments[\"query\"] as? String",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `server.addResource()` to provide accessible data:",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `server.addPrompt()` for reusable prompt templates:",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "val topic = request.params.arguments?.get(\"topic\") as? String",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "For HTTP-based communication using Server-Sent Events:",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "All MCP operations are suspending functions. Use Kotlin coroutines properly:",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "description = \"Search multiple sources in parallel\"",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "completion",
+        "description": "content = listOf(TextContent(text = results.joinToString(\"\\n\")))",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

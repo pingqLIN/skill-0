@@ -1,0 +1,237 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__ruby-mcp-server",
+    "name": "ruby-mcp-server",
+    "skill_layer": "claude_skill",
+    "title": "Ruby Mcp Server Skill",
+    "description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Ruby using the official MCP Ruby SDK gem. Triggers on: **/*.rb, **/Gemfile, **/*.gemspec, **/Rakefile",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.485991Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/ruby-mcp-server/SKILL.md",
+    "skill_name": "ruby-mcp-server",
+    "skill_description": "Best practices and patterns for building Model Context Protocol (MCP) servers in Ruby using the official MCP Ruby SDK gem. Triggers on: **/*.rb, **/Gemfile, **/*.gemspec, **/Rakefile"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Define tools using classes or blocks:",
+        "description": "Define tools using classes or blocks:",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "description 'Generate a greeting message'",
+        "description": "description 'Generate a greeting message'",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "timestamp: { type: 'string', format: 'date-time' }",
+        "description": "timestamp: { type: 'string', format: 'date-time' }",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define resources for data access:",
+        "description": "Define resources for data access:",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "server.resources_read_handler do |params|",
+        "description": "server.resources_read_handler do |params|",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "description 'Generate a code review prompt'",
+        "description": "description 'Generate a code review prompt'",
+        "action_type": "io_write",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "description: 'Analyze a topic',",
+        "description": "description: 'Analyze a topic',",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "content: MCP::Content::Text.new(\"Please analyze: #{topic}\")",
+        "description": "content: MCP::Content::Text.new(\"Please analyze: #{topic}\")",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "render json: server.handle_json(request.body.read)",
+        "description": "render json: server.handle_json(request.body.read)",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "server.define_tool(name: 'new_tool') { |**args| { result: 'o",
+        "description": "server.define_tool(name: 'new_tool') { |**args| { result: 'ok' } }",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Monitor MCP server performance:",
+        "description": "Monitor MCP server performance:",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "read_only_hint: true,      # Tool only reads data",
+        "description": "read_only_hint: true,      # Tool only reads data",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define expected output structure:",
+        "description": "Define expected output structure:",
+        "action_type": "io_write",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define custom JSON-RPC methods:",
+        "description": "Define custom JSON-RPC methods:",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "server.define_custom_method(method_name: 'add') do |params|",
+        "description": "server.define_custom_method(method_name: 'add') do |params|",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "required: ['operation', 'a', 'b']",
+        "condition": "tool with block",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "MCP::Prompt::Argument.new(name: 'topic', description: 'Topic to analyze', required: true),",
+        "condition": "prompt with block",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "MCP::Prompt::Argument.new(name: 'depth', description: 'Analysis depth', required: false)",
+        "condition": "prompt with block",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "required: ['temperature', 'condition']",
+        "condition": "tool output schemas",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "output_schema.validate_result(weather_data)",
+        "condition": "tool output schemas",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "When building MCP servers in Ruby, follow these best practices and patterns using the official Ruby SDK.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "name: { type: 'string', description: 'Name to greet' }",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "operation: { type: 'string', enum: ['add', 'subtract', 'multiply', 'divide'] },",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "return MCP::Tool::Response.new([{ type: 'text', text: 'Division by zero' }], is_error: true) if b == 0",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "completion",
+        "description": "MCP::Tool::Response.new([{ type: 'text', text: \"Result: #{result}\" }])",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "text: { message: 'Example data', timestamp: Time.now }.to_json",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "description: \"Code review for #{language} with focus on #{focus}\",",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "content: MCP::Content::Text.new(\"Please review this #{language} code with focus on #{focus}.\")",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "content: MCP::Content::Text.new(\"I'll review the code focusing on #{focus}. Please share the code.\")",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "description: \"Analysis of #{topic} at #{depth} level\",",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

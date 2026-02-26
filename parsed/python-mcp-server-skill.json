@@ -1,0 +1,213 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__python-mcp-server",
+    "name": "python-mcp-server",
+    "skill_layer": "claude_skill",
+    "title": "Python Mcp Server Skill",
+    "description": "Instructions for building Model Context Protocol (MCP) servers using the Python SDK Triggers on: **/*.py, **/pyproject.toml, **/requirements.txt",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.439035Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/python-mcp-server/SKILL.md",
+    "skill_name": "python-mcp-server",
+    "skill_description": "Instructions for building Model Context Protocol (MCP) servers using the Python SDK Triggers on: **/*.py, **/pyproject.toml, **/requirements.txt"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Import FastMCP from `mcp.server.fastmcp`: `from mcp.server.f",
+        "description": "Import FastMCP from `mcp.server.fastmcp`: `from mcp.server.fastmcp import FastMCP`",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For stdio transport, use `mcp.run()` or `mcp.run(transport=\"",
+        "description": "For stdio transport, use `mcp.run()` or `mcp.run(transport=\"stdio\")`",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For HTTP servers, use `mcp.run(transport=\"streamable-http\")`",
+        "description": "For HTTP servers, use `mcp.run(transport=\"streamable-http\")` or mount to Starlette/FastAPI",
+        "action_type": "external_call",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Send logs with `await ctx.debug()`, `await ctx.info()`, `awa",
+        "description": "Send logs with `await ctx.debug()`, `await ctx.info()`, `await ctx.warning()`, `await ctx.error()`",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use LLM sampling with `await ctx.session.create_message(mess",
+        "description": "Use LLM sampling with `await ctx.session.create_message(messages, max_tokens)`",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure icons with `Icon(src=\"path\", mimeType=\"image/png\")",
+        "description": "Configure icons with `Icon(src=\"path\", mimeType=\"image/png\")` for server, tools, resources, prompts",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `Image` class for automatic image handling: `return Imag",
+        "description": "Use `Image` class for automatic image handling: `return Image(data=bytes, format=\"png\")`",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define resource templates with URI patterns: `@mcp.resource(",
+        "description": "Define resource templates with URI patterns: `@mcp.resource(\"greeting://{name}\")`",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement completion support by accepting partial values and",
+        "description": "Implement completion support by accepting partial values and returning suggestions",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use lifespan context managers for startup/shutdown with shar",
+        "description": "Use lifespan context managers for startup/shutdown with shared resources",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test servers with: `uv run mcp dev server.py` (Inspector) or",
+        "description": "Test servers with: `uv run mcp dev server.py` (Inspector) or `uv run mcp install server.py` (Claude Desktop)",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Configure CORS for browser clients: expose `Mcp-Session-Id` ",
+        "description": "Configure CORS for browser clients: expose `Mcp-Session-Id` header",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from mcp.server.fastmcp import FastMCP",
+        "description": "from mcp.server.fastmcp import FastMCP",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "mcp.run(transport=\"streamable-http\")",
+        "description": "mcp.run(transport=\"streamable-http\")",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from pydantic import BaseModel, Field",
+        "description": "from pydantic import BaseModel, Field",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Type hints are mandatory - they're used for schema generation and validation",
+        "condition": "instructions",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use uv for project management: `uv init mcp-server-demo` and `uv add \"mcp[cli]\"`",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `@mcp.tool()`, `@mcp.resource()`, and `@mcp.prompt()` decorators for registration",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Use Pydantic models, TypedDicts, or dataclasses for structured output",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "completion",
+        "description": "Tools automatically return structured output when return types are compatible",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use `Context` parameter in tools/resources to access MCP capabilities: `ctx: Context`",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Report progress with `await ctx.report_progress(progress, total, message)`",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Request user input with `await ctx.elicit(message, schema)`",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Access lifespan context in tools via `ctx.request_context.lifespan_context`",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "For stateless HTTP servers, set `stateless_http=True` in FastMCP initialization",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Enable JSON responses for modern clients: `json_response=True`",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

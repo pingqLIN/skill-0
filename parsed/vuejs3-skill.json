@@ -1,0 +1,261 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__vuejs3",
+    "name": "vuejs3",
+    "skill_layer": "claude_skill",
+    "title": "Vuejs3 Skill",
+    "description": "VueJS 3 development standards and best practices with Composition API and TypeScript Triggers on: **/*.vue, **/*.ts, **/*.js, **/*.scss",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.807222Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/vuejs3/SKILL.md",
+    "skill_name": "vuejs3",
+    "skill_description": "VueJS 3 development standards and best practices with Composition API and TypeScript Triggers on: **/*.vue, **/*.ts, **/*.js, **/*.scss"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Instructions for building high-quality VueJS 3 applications ",
+        "description": "Instructions for building high-quality VueJS 3 applications with the Composition API, TypeScript, and modern best practices.",
+        "action_type": "external_call",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `defineComponent` or `<script setup lang=\"ts\">` with `de",
+        "description": "Use `defineComponent` or `<script setup lang=\"ts\">` with `defineProps` and `defineEmits`",
+        "action_type": "state_change",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Define types for event handlers, refs, and `useRoute`/`useRo",
+        "description": "Define types for event handlers, refs, and `useRoute`/`useRouter` hooks",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement generic components and composables where applicabl",
+        "description": "Implement generic components and composables where applicable",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use Pinia for global state: define stores with `defineStore`",
+        "description": "Use Pinia for global state: define stores with `defineStore`",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For simple local state, use `ref` and `reactive` within `set",
+        "description": "For simple local state, use `ref` and `reactive` within `setup`",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Leverage CSS custom properties for theming and design tokens",
+        "description": "Leverage CSS custom properties for theming and design tokens",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement mobile-first, responsive design with CSS Grid and ",
+        "description": "Implement mobile-first, responsive design with CSS Grid and Flexbox",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Lazy-load components with dynamic imports and `defineAsyncCo",
+        "description": "Lazy-load components with dynamic imports and `defineAsyncComponent`",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use `<Suspense>` for async component loading fallbacks",
+        "description": "Use `<Suspense>` for async component loading fallbacks",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use composables like `useFetch` (Nuxt) or libraries like Vue",
+        "description": "Use composables like `useFetch` (Nuxt) or libraries like Vue Query",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Handle loading, error, and success states explicitly",
+        "description": "Handle loading, error, and success states explicitly",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement optimistic updates with rollbacks on failure",
+        "description": "Implement optimistic updates with rollbacks on failure",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Build forms with controlled `v-model` bindings",
+        "description": "Build forms with controlled `v-model` bindings",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Handle file uploads and complex multi-step forms in composab",
+        "description": "Handle file uploads and complex multi-step forms in composables",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Ensure styles are accessible (contrast, focus states)",
+        "condition": "styling",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Avoid unnecessary watchers; prefer `computed` where possible",
+        "condition": "performance optimization",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Use libraries like VeeValidate or @vueuse/form for declarative validation",
+        "condition": "forms and validation",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Validate on blur or input with debouncing for performance",
+        "condition": "forms and validation",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Ensure accessible labeling, error announcements, and focus management",
+        "condition": "forms and validation",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Avoid using `v-html`; sanitize any HTML inputs rigorously",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Validate and escape data in templates and directives",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Ensure color contrast meets WCAG AA standards",
+        "condition": "accessibility",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "11. Ensure accessibility compliance",
+        "condition": "implementation process",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "preference",
+        "description": "Vue 3.x with Composition API as default",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "TypeScript for type safety",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Single File Components (`.vue`) with `<script setup>` syntax",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Modern build tooling (Vite recommended)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Pinia for application state management",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Official Vue style guide and best practices",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Favor the Composition API (`setup` functions and composables) over the Options API",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Organize components and composables by feature or domain for scalability",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Separate UI-focused components (presentational) from logic-focused components (containers)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Extract reusable logic into composable functions in a `composables/` directory",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

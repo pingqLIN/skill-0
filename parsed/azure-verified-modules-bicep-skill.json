@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__azure-verified-modules-bicep",
+    "name": "azure-verified-modules-bicep",
+    "skill_layer": "claude_skill",
+    "title": "Azure Verified Modules Bicep Skill",
+    "description": "Azure Verified Modules (AVM) and Bicep Triggers on: **/*.bicep, **/*.bicepparam",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.010465Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/azure-verified-modules-bicep/SKILL.md",
+    "skill_name": "azure-verified-modules-bicep",
+    "skill_description": "Azure Verified Modules (AVM) and Bicep Triggers on: **/*.bicep, **/*.bicepparam"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "README: Each module contains comprehensive documentation wit",
+        "description": "README: Each module contains comprehensive documentation with examples",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Review module README in `https://github.com/Azure/bicep-r",
+        "description": "1. Review module README in `https://github.com/Azure/bicep-registry-modules/tree/main/avm/res/{service}/{resource}`",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "name: 'storage-account-deployment'",
+        "description": "name: 'storage-account-deployment'",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "If no AVM module exists for a resource type, use native Bice",
+        "description": "If no AVM module exists for a resource type, use native Bicep resource declarations with latest stable API version.",
+        "action_type": "external_call",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Review module documentation and examples before implementati",
+        "description": "Review module documentation and examples before implementation",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use types from modules when available (import types from mod",
+        "description": "Use types from modules when available (import types from module)",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Set default values safe for test environments (low-cost SKUs",
+        "description": "Set default values safe for test environments (low-cost SKUs)",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Leverage `loadJsonContent()` for external configuration file",
+        "description": "Leverage `loadJsonContent()` for external configuration files",
+        "action_type": "io_read",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create dependencies through symbolic names, not explicit `de",
+        "description": "Create dependencies through symbolic names, not explicit `dependsOn`",
+        "action_type": "io_write",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Import types from modules when available: `import { deployme",
+        "description": "Import types from modules when available: `import { deploymentType } from './module.bicep'`",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use user-defined types for complex parameter structures",
+        "description": "Use user-defined types for complex parameter structures",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Document non-obvious design decisions",
+        "description": "Document non-obvious design decisions",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "az bicep build --file main.bicep",
+        "description": "az bicep build --file main.bicep",
+        "action_type": "llm_inference",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Test deployments with parameter files before committing",
+        "description": "Test deployments with parameter files before committing",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Schema Information: Use `azure_get_schema_for_Bicep` for res",
+        "description": "Schema Information: Use `azure_get_schema_for_Bicep` for resource schemas",
+        "action_type": "io_read",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "4. Configure required and optional parameters",
+        "condition": "from examples",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Avoid 'name' suffix in symbolic names as they represent the resource, not the resource's name",
+        "condition": "symbolic names",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Avoid distinguishing variables and parameters by suffixes",
+        "condition": "symbolic names",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Always check for existing AVM modules before creating raw resources",
+        "condition": "module discovery and usage",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Use `@allowed()` decorator sparingly to avoid blocking valid deployments",
+        "condition": "code structure",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Add prefixes since some resources don't allow names starting with numbers",
+        "condition": "resource naming",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Avoid excessive nesting of child resources",
+        "condition": "child resources",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Never include secrets or keys in outputs",
+        "condition": "security",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "After any changes to Bicep files, run the following commands to ensure all files build successfully:",
+        "condition": "build validation (mandatory)",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Always update accompanying `*.bicepparam` files when modifying `*.bicep` files",
+        "condition": "bicep parameter files",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Azure Verified Modules (AVM) are pre-built, tested, and validated Bicep modules that follow Azure best practices. Use these modules to create, update,",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Search for modules: `br/public:avm/res/{service}/{resource}:{version}`",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Browse available modules: `https://github.com/Azure/bicep-registry-modules/tree/main/avm/res`",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Example: `br/public:avm/res/storage/storage-account:0.30.0`",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Bicep Resource Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/BicepResourceModule",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Bicep Pattern Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/BicepPatternModules.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "GitHub Repository: `https://github.com/Azure/bicep-registry-modules/tree/main/avm/res/{service}/{resource}`",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "3. Reference module using `br/public:avm/res/{service}/{resource}:{version}`",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "module storageAccount 'br/public:avm/res/storage/storage-account:0.30.0' = {",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Resource Modules: `br/public:avm/res/{service}/{resource}:{version}`",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

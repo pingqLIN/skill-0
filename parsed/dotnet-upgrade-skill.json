@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dotnet-upgrade",
+    "name": "dotnet-upgrade",
+    "skill_layer": "claude_skill",
+    "title": "Dotnet Upgrade Skill",
+    "description": "Specialized agent for comprehensive .NET framework upgrades with progressive tracking and validation",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.569172Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dotnet-upgrade/SKILL.md",
+    "skill_name": "dotnet-upgrade",
+    "skill_description": "Specialized agent for comprehensive .NET framework upgrades with progressive tracking and validation"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run dotnet",
+        "description": "dotnet list <ProjectName>.csproj reference",
+        "action_type": "transform",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "You are a specialized agent for upgrades of .NET Framework. ",
+        "description": "You are a specialized agent for upgrades of .NET Framework. Please keep going until the desired frameworks upgrade are completely resolved, tested usi",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "This document provides structured guidance for upgrading a m",
+        "description": "This document provides structured guidance for upgrading a multi-project .NET solution to a higher framework version (e.g., .NET 6 → .NET 8). Upgrade ",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": ".NET (Core/Modern): Upgrade to the latest LTS (e.g., `net8.0",
+        "description": ".NET (Core/Modern): Upgrade to the latest LTS (e.g., `net8.0`).",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": ".NET Framework: Upgrade to at least 4.8, or migrate to .NET ",
+        "description": ".NET Framework: Upgrade to at least 4.8, or migrate to .NET 6+ if feasible.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "dotnet CLI → run:",
+        "description": "dotnet CLI → run:",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "dotnet msbuild <SolutionName>.sln /t:GenerateRestoreGraphFil",
+        "description": "dotnet msbuild <SolutionName>.sln /t:GenerateRestoreGraphFile /p:RestoreGraphOutputPath=graph.json",
+        "action_type": "io_write",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<PackageReference Include=\"Newtonsoft.Json\" Version=\"13.0.1\"",
+        "description": "<PackageReference Include=\"Newtonsoft.Json\" Version=\"13.0.1\" />",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "<PackageReference Include=\"Moq\" Version=\"4.16.1\" />",
+        "description": "<PackageReference Include=\"Moq\" Version=\"4.16.1\" />",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "dotnet add package <PackageName> --version <LatestVersion>",
+        "description": "dotnet add package <PackageName> --version <LatestVersion>",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. If `packages.config` is used (legacy), migrate to `Packag",
+        "description": "3. If `packages.config` is used (legacy), migrate to `PackageReference`:",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "var obj = JsonConvert.DeserializeObject<MyClass>(jsonString)",
+        "description": "var obj = JsonConvert.DeserializeObject<MyClass>(jsonString);",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "IWebHostBuilder builder = new WebHostBuilder();",
+        "description": "IWebHostBuilder builder = new WebHostBuilder();",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "IHostBuilder builder = Host.CreateDefaultBuilder(args);",
+        "description": "IHostBuilder builder = Host.CreateDefaultBuilder(args);",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "CloudBlobClient client = storageAccount.CreateCloudBlobClien",
+        "description": "CloudBlobClient client = storageAccount.CreateCloudBlobClient();",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Your thinking should be thorough and so it's fine if it's very long. However, avoid unnecessary repetition and verbosity. You should be concise, but t",
+        "condition": "general",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "You MUST iterate and keep going until the problem is solved.",
+        "condition": "general",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Follow the steps sequentially and do not attempt to upgrade all projects at once.",
+        "condition": ".net project upgrade instructions",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "`PackageReference` → Verify if each NuGet package supports the new framework.",
+        "condition": "3. analyze each project",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "After analyzing the nuget packages, review code for any required changes.",
+        "condition": "3. analyze each project",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "3. After upgrading and restoring the latest DLLs, review code for any required changes.",
+        "condition": "4. upgrade process per project",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "When upgrading .NET projects, remember that build pipelines must also reference the correct SDK, NuGet versions, and tasks.",
+        "condition": "7. tools & automation",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Check common folders such as:",
+        "condition": "7. tools & automation",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "d. Update NuGet Tool version if required",
+        "condition": "7. tools & automation",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Ensure the NuGet installer task matches the upgraded framework’s needs.",
+        "condition": "7. tools & automation",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": ".NET Standard: Prefer migrating to .NET 6+ if possible. If staying, target `netstandard2.1`.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[.NET Core/.NET Upgrade Docs](https://learn.microsoft.com/dotnet/core/whats-new/)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[.NET Framework 4.x Docs](https://learn.microsoft.com/dotnet/framework/whats-new/)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "1. Upgrade projects sequentially, not all at once.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "2. Start with independent class library projects (least dependencies).",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "3. Gradually move to projects with higher dependencies (e.g., APIs, Azure Functions).",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "4. Ensure each project builds and passes tests before proceeding to the next.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "completion",
+        "description": "5. Post Builds are successfull only after success completion update the CI/CD files",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Visual Studio → `Dependencies` in Solution Explorer.",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`TargetFramework` → Change to the desired version (e.g., `net8.0`).",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__power-bi-dax-best-practices",
+    "name": "power-bi-dax-best-practices",
+    "skill_layer": "claude_skill",
+    "title": "Power Bi Dax Best Practices Skill",
+    "description": "Comprehensive Power BI DAX best practices and patterns based on Microsoft guidance for creating efficient, maintainable, and performant DAX formulas. Triggers on: **/*.{pbix,dax,md,txt}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.280583Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/power-bi-dax-best-practices/SKILL.md",
+    "skill_name": "power-bi-dax-best-practices",
+    "skill_description": "Comprehensive Power BI DAX best practices and patterns based on Microsoft guidance for creating efficient, maintainable, and performant DAX formulas. Triggers on: **/*.{pbix,dax,md,txt}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Readability: Complex formulas become self-documenting",
+        "description": "Readability: Complex formulas become self-documenting",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Debugging: Can temporarily return variable values for testin",
+        "description": "Debugging: Can temporarily return variable values for testing",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Implement robust error handling using appropriate patterns:",
+        "description": "Implement robust error handling using appropriate patterns:",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "//  PREFERRED: Use defensive strategies in model design",
+        "description": "//  PREFERRED: Use defensive strategies in model design",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "-- Return different variables for testing:",
+        "description": "-- Return different variables for testing:",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "-- Step1  -- Test current year sales",
+        "description": "-- Step1  -- Test current year sales",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "-- Step2  -- Test previous year sales",
+        "description": "-- Step2  -- Test previous year sales",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "-- Step3  -- Test difference calculation",
+        "description": "-- Step3  -- Test difference calculation",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// Build measures hierarchically for reusability",
+        "description": "// Build measures hierarchically for reusability",
+        "action_type": "external_call",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"Current: \" & FORMAT(Step1_FilteredSales, \"#,0\") &",
+        "description": "\"Current: \" & FORMAT(Step1_FilteredSales, \"#,0\") &",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\" | Previous: \" & FORMAT(Step2_PreviousYear, \"#,0\") &",
+        "description": "\" | Previous: \" & FORMAT(Step2_PreviousYear, \"#,0\") &",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\" | Growth: \" & FORMAT(Step4_GrowthPercentage, \"0.00%\")",
+        "description": "\" | Growth: \" & FORMAT(Step4_GrowthPercentage, \"0.00%\")",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "-- Step1_FilteredSales    -- Test current year",
+        "description": "-- Step1_FilteredSales    -- Test current year",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "-- Step2_PreviousYear     -- Test previous year",
+        "description": "-- Step2_PreviousYear     -- Test previous year",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "-- Step3_GrowthAbsolute   -- Test absolute growth",
+        "description": "-- Step3_GrowthAbsolute   -- Test absolute growth",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Always use variables to improve performance, readability, and debugging:",
+        "condition": "1. formula structure and variables",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "//  AVOID: Repeated calculations without variables",
+        "condition": "1. formula structure and variables",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "//  ALWAYS fully qualify column references",
+        "condition": "2. proper reference syntax",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "//  NEVER fully qualify measure references",
+        "condition": "2. proper reference syntax",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "//  AVOID: Unqualified column references",
+        "condition": "2. proper reference syntax",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "//  AVOID: Fully qualified measure references",
+        "condition": "2. proper reference syntax",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "//  AVOID: ISERROR and IFERROR functions (performance impact)",
+        "condition": "3. error handling strategies",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "//  AVOID: Complex error handling that could be prevented",
+        "condition": "3. error handling strategies",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "// Avoid COUNT when COUNTROWS is more appropriate",
+        "condition": "aggregation functions",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "// When direct relationships don't exist",
+        "condition": "2. handle missing relationships",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "This document provides comprehensive instructions for writing efficient, maintainable, and performant DAX (Data Analysis Expressions) formulas in Powe",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "preference",
+        "description": "//  PREFERRED: Using variables for clarity and performance",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DIVIDE(CurrentSales - PreviousYearSales, PreviousYearSales)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Total Sales] - CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date])),",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Performance: Calculations are evaluated once and cached",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Maintainability: Changes need to be made in only one place",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Follow Microsoft's recommended patterns for column and measure references:",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "DIVIDE([YTD Sales] - [YTD Sales PY], [YTD Sales PY])",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Customer Count = DISTINCTCOUNT([CustomerID])  // Ambiguous",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

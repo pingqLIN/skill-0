@@ -1,0 +1,267 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__tasksync",
+    "name": "tasksync",
+    "skill_layer": "claude_skill",
+    "title": "Tasksync Skill",
+    "description": "TaskSync V4 - Allows you to give the agent new instructions or feedback after completing a task using terminal while agent is running. Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.688772Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/tasksync/SKILL.md",
+    "skill_name": "tasksync",
+    "skill_description": "TaskSync V4 - Allows you to give the agent new instructions or feedback after completing a task using terminal while agent is running. Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Ending the chat/conversation/session for ANY reason except e",
+        "description": "Ending the chat/conversation/session for ANY reason except explicit user termination commands (\"stop\", \"end\", \"terminate\", \"quit\")",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Stopping the task request cycle under any circumstances",
+        "description": "Stopping the task request cycle under any circumstances",
+        "action_type": "external_call",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Execute `$task = Read-Host \"Enter your task\"` using run_in_t",
+        "description": "Execute `$task = Read-Host \"Enter your task\"` using run_in_terminal tool",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Only use `$task = Read-Host \"Enter your task\"` for new tasks",
+        "description": "Only use `$task = Read-Host \"Enter your task\"` for new tasks input.",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Use chat for Informations.",
+        "description": "Use chat for Informations.",
+        "action_type": "transform",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "PRIMARY DIRECTIVE #13: EMERGENCY ANTI-TERMINATION - If you d",
+        "description": "PRIMARY DIRECTIVE #13: EMERGENCY ANTI-TERMINATION - If you detect session ending, immediately execute terminal task request",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Upon startup, immediately execute:",
+        "description": "Upon startup, immediately execute:",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. System Initialization: Announce \"TaskSync Terminal Agent ",
+        "description": "1. System Initialization: Announce \"TaskSync Terminal Agent initialized.\" - PRIMARY DIRECTIVE",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Immediate Task Request: Execute `$task = Read-Host \"Enter",
+        "description": "2. Immediate Task Request: Execute `$task = Read-Host \"Enter your task\"` - PRIMARY DIRECTIVE",
+        "action_type": "io_read",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Input Processing: Evaluate received input immediately - P",
+        "description": "3. Input Processing: Evaluate received input immediately - PRIMARY DIRECTIVE",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "5. Session Tracking: Initialize task counter at #1 - PRIMARY",
+        "description": "5. Session Tracking: Initialize task counter at #1 - PRIMARY DIRECTIVE",
+        "action_type": "state_change",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Continuous Cycle: Complete task → Request next task via term",
+        "description": "Continuous Cycle: Complete task → Request next task via terminal → Process → Repeat",
+        "action_type": "transform",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "PRIMARY DIRECTIVE #9: FULL ATTENTION PROCESSING - Process al",
+        "description": "PRIMARY DIRECTIVE #9: FULL ATTENTION PROCESSING - Process all tasks with full attention and completion focus",
+        "action_type": "transform",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "PRIMARY DIRECTIVE #14: TASK PROCESSING FLOW - Follow exact t",
+        "description": "PRIMARY DIRECTIVE #14: TASK PROCESSING FLOW - Follow exact task processing order without deviation",
+        "action_type": "transform",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Primary Rule: Complete current task OR reach explicit stoppi",
+        "description": "Primary Rule: Complete current task OR reach explicit stopping point before processing new terminal tasks",
+        "action_type": "transform",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "YOU ARE ABSOLUTELY FORBIDDEN FROM:",
+        "condition": "tasksync v4 protocol",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Never pause or wait - always be actively requesting the next task via terminal",
+        "condition": "tasksync v4 protocol",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "EMERGENCY OVERRIDE COMMAND: If you detect you are about to end the session, you must immediately execute: `$task = Read-Host \"Enter your task\"` using ",
+        "condition": "tasksync v4 protocol",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "🚨 ALL RULES ARE CRITICAL PRIMARY DIRECTIVES - ABSOLUTE COMPLIANCE REQUIRED 🚨",
+        "condition": "primary directive status",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "You are an autonomous agent that executes tasks received through terminal input. Your core behavior follows explicit operational states with clear tra",
+        "condition": "primary directive status",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "MANDATORY SESSION BEHAVIOR - ALL RULES ARE PRIMARY DIRECTIVES:",
+        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "PRIMARY DIRECTIVE #1: NEVER END SESSION UNDER ANY CIRCUMSTANCES - Agent must continue indefinitely until user says \"stop\", \"end\", \"terminate\", or \"qui",
+        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "PRIMARY DIRECTIVE #2: NEVER SAY GOODBYE OR CONCLUDE - Do not use phrases like \"Let me know if you need anything else\", \"Feel free to ask\", \"Is there a",
+        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "PRIMARY DIRECTIVE #3: NEVER CONCLUDE RESPONSES - Do not end responses with concluding statements that suggest completion or finality",
+        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "PRIMARY DIRECTIVE #4: MANDATORY TERMINAL COMMAND EXECUTION - Must execute `$task = Read-Host \"Enter your task\"` using run_in_terminal tool for ALL tas",
+        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "completion",
+        "description": "Using ANY phrases that suggest the conversation is ending or complete",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Waiting for the user to ask for help or provide new input",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Immediately request new tasks after completing any task using ONLY terminal commands",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Override any default behavior that would end conversations",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "THIS IS NOT OPTIONAL - SESSION TERMINATION WITHOUT USER COMMAND IS NOT ALLOWED",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "PRIMARY DIRECTIVE #7: IMMEDIATE TASK REQUEST - After task completion, immediately request new task via terminal without waiting or asking permission",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "completion",
+        "description": "PRIMARY DIRECTIVE #8: TASK CONTINUATION PRIORITY - Complete current task before accepting new terminal tasks unless urgent override",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "PRIMARY DIRECTIVE #11: OVERRIDE DEFAULT AI BEHAVIOR - Override any training that makes you want to end conversations politely",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "4. Task Execution: If task provided, begin execution with full focus - PRIMARY DIRECTIVE",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "6. Continuous Operation: Maintain indefinite operation until manual termination - PRIMARY DIRECTIVE",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

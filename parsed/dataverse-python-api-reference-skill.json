@@ -1,0 +1,195 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-api-reference",
+    "name": "dataverse-python-api-reference",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Api Reference Skill",
+    "description": "dataverse-python-api-reference guidelines Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.328511Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-api-reference/SKILL.md",
+    "skill_name": "dataverse-python-api-reference",
+    "skill_description": "dataverse-python-api-reference guidelines Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Main client for interacting with Dataverse. Initialize with ",
+        "description": "Main client for interacting with Dataverse. Initialize with base URL and Azure credentials.",
+        "action_type": "state_change",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Create single or bulk records. Returns list of GUIDs.",
+        "description": "Create single or bulk records. Returns list of GUIDs.",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ids = client.create(\"account\", {\"name\": \"Acme\"})",
+        "description": "ids = client.create(\"account\", {\"name\": \"Acme\"})",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ids = client.create(\"account\", [{\"name\": \"Contoso\"}, {\"name\"",
+        "description": "ids = client.create(\"account\", [{\"name\": \"Contoso\"}, {\"name\": \"Fabrikam\"}])",
+        "action_type": "io_write",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Fetch single record or query multiple with OData options.",
+        "description": "Fetch single record or query multiple with OData options.",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.update(\"account\", \"guid-here\", {\"telephone1\": \"555-01",
+        "description": "client.update(\"account\", \"guid-here\", {\"telephone1\": \"555-0100\"})",
+        "action_type": "state_change",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.update(\"account\", [id1, id2, id3], {\"statecode\": 1})",
+        "description": "client.update(\"account\", [id1, id2, id3], {\"statecode\": 1})",
+        "action_type": "state_change",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.update(\"account\", [id1, id2], [{\"name\": \"A\"}, {\"name\"",
+        "description": "client.update(\"account\", [id1, id2], [{\"name\": \"A\"}, {\"name\": \"B\"}])",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.delete(\"account\", \"guid-here\")",
+        "description": "client.delete(\"account\", \"guid-here\")",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "job_id = client.delete(\"account\", [id1, id2, id3])",
+        "description": "job_id = client.delete(\"account\", [id1, id2, id3])",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "info = client.create_table(\"new_MyTable\", {",
+        "description": "info = client.create_table(\"new_MyTable\", {",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "created = client.create_columns(\"new_MyTable\", {",
+        "description": "created = client.create_columns(\"new_MyTable\", {",
+        "action_type": "io_write",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "removed = client.delete_columns(\"new_MyTable\", [\"new_Notes\",",
+        "description": "removed = client.delete_columns(\"new_MyTable\", [\"new_Notes\", \"new_Count\"])",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Delete custom table (irreversible).",
+        "description": "Delete custom table (irreversible).",
+        "action_type": "state_change",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "client.delete_table(\"new_MyTable\")",
+        "description": "client.delete_table(\"new_MyTable\")",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Catch `DataverseError` for SDK-specific exceptions. Check `is_transient` to decide retry.",
+        "condition": "error handling",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "record = client.get(\"account\", record_id=\"guid-here\")",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "client = DataverseClient(base_url=url, credential=cred, config=cfg)",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Use exact logical names (lowercase) in filter expressions",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Navigation property names in `expand` are case-sensitive",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "API docs: https://learn.microsoft.com/en-us/python/api/powerplatform-dataverse-client/powerplatform.dataverse.client.dataverseclient",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Config docs: https://learn.microsoft.com/en-us/python/api/powerplatform-dataverse-client/powerplatform.dataverse.core.config.dataverseconfig",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Errors: https://learn.microsoft.com/en-us/python/api/powerplatform-dataverse-client/powerplatform.dataverse.core.errors",
+        "decomposable": false,
+        "id": "d_007"
+      }
+    ]
+  }
+}

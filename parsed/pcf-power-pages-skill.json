@@ -1,0 +1,219 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__pcf-power-pages",
+    "name": "pcf-power-pages",
+    "skill_layer": "claude_skill",
+    "title": "Pcf Power Pages Skill",
+    "description": "Using code components in Power Pages sites Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.077769Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/pcf-power-pages/SKILL.md",
+    "skill_name": "pcf-power-pages",
+    "skill_description": "Using code components in Power Pages sites Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Power Pages now support controls built for model-driven apps",
+        "description": "Power Pages now support controls built for model-driven apps created using Power Apps component framework. To use code components in Power Pages site ",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "![Create code component using component framework, then add ",
+        "description": "![Create code component using component framework, then add the code component to a model-driven app form, and configure the code component field insi",
+        "action_type": "io_write",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "After completing these steps, users can interact with the co",
+        "description": "After completing these steps, users can interact with the code component using the webpage that has the respective [form](https://learn.microsoft.com/",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Your starter site package needs to be [9.2.2103.x](https://l",
+        "description": "Your starter site package needs to be [9.2.2103.x](https://learn.microsoft.com/en-us/power-apps/maker/portals/versions/package-version-9.2.2103) or hi",
+        "action_type": "state_change",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "To learn about creating and packaging code components in Pow",
+        "description": "To learn about creating and packaging code components in Power Apps component framework, go to [Create your first component](https://learn.microsoft.c",
+        "action_type": "io_write",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "For more information, see [Attributes list and descriptions]",
+        "description": "For more information, see [Attributes list and descriptions](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schem",
+        "action_type": "transform",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "> Important: Code components for Power Pages are available f",
+        "description": "> Important: Code components for Power Pages are available for web browsers using the client option of Web.",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "You can also add a code component to a form using [Data work",
+        "description": "You can also add a code component to a form using [Data workspace](https://learn.microsoft.com/en-us/power-pages/configure/data-workspace-forms).",
+        "action_type": "state_change",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. When editing a Dataverse form in the Data workspace form ",
+        "description": "1. When editing a Dataverse form in the Data workspace form designer, select a field",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "![Add component to form](https://learn.microsoft.com/en-us/p",
+        "description": "![Add component to form](https://learn.microsoft.com/en-us/power-pages/configure/media/component-framework/add-component-to-form.png)",
+        "action_type": "state_change",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Select Save and Publish form",
+        "description": "3. Select Save and Publish form",
+        "action_type": "io_write",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "After the code component is added to a field in a model-driv",
+        "description": "After the code component is added to a field in a model-driven app, you can configure Power Pages to use the code component on a form.",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Open the [Portals Management](https://learn.microsoft.com",
+        "description": "1. Open the [Portals Management](https://learn.microsoft.com/en-us/power-pages/configure/portal-management-app) app",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "A code component can be built and added to a webpage that ca",
+        "description": "A code component can be built and added to a webpage that can use the [portal Web API](https://learn.microsoft.com/en-us/power-pages/configure/web-api",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "[Tutorial: Use code components in portals](https://learn.mic",
+        "description": "[Tutorial: Use code components in portals](https://learn.microsoft.com/en-us/power-pages/configure/component-framework-tutorial)",
+        "action_type": "state_change",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Power Pages supports restricted field types and formats for using code components. The following table lists all supported field data types and format",
+        "condition": "supported field types and formats",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "The [uses-feature](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/uses-feature) element must not",
+        "condition": "unsupported code components in power pages",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "You need system administrator privileges to enable the code component feature in the environment",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Your Power Pages site version needs to be [9.3.3.x](https://learn.microsoft.com/en-us/power-apps/maker/portals/versions/version-9.3.3.x) or higher",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "The following code component APIs aren't supported:",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Device.captureAudio](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/captureaudio)",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Device.captureImage](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/captureimage)",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Device.captureVideo](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/capturevideo)",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Device.getBarcodeValue](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/getbarcodevalue)",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Device.getCurrentPosition](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/getcurrentposition)",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Device.pickFile](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/pickfile)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "[Utility](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/utility)",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}

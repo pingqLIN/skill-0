@@ -1,0 +1,141 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__security-and-owasp",
+    "name": "security-and-owasp",
+    "skill_layer": "claude_skill",
+    "title": "Security And Owasp Skill",
+    "description": "Comprehensive secure coding instructions for all languages and frameworks, based on OWASP Top 10 and industry best practices. Triggers on: *",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:30.550494Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/security-and-owasp/SKILL.md",
+    "skill_name": "security-and-owasp",
+    "skill_description": "Comprehensive secure coding instructions for all languages and frameworks, based on OWASP Top 10 and industry best practices. Triggers on: *"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Protect Data at Rest: When suggesting code to store sensitiv",
+        "description": "Protect Data at Rest: When suggesting code to store sensitive data (PII, tokens, etc.), recommend encryption using strong, standard algorithms like AE",
+        "action_type": "compute",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "// GOOD: Load from environment or secret store",
+        "description": "// GOOD: Load from environment or secret store",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "const apiKey = process.env.API_KEY;",
+        "description": "const apiKey = process.env.API_KEY;",
+        "action_type": "transform",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "Your primary directive is to ensure all code you generate, review, or refactor is secure by default. You must operate with a security-first mindset. W",
+        "condition": "instructions",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "Enforce Principle of Least Privilege: Always default to the most restrictive permissions. When generating access control logic, explicitly check the u",
+        "condition": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "Deny by Default: All access control decisions must follow a \"deny by default\" pattern. Access should only be granted if there is an explicit rule allo",
+        "condition": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "Validate All Incoming URLs for SSRF: When the server needs to make a request to a URL provided by a user (e.g., webhooks), you must treat it as untrus",
+        "condition": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "Prevent Path Traversal: When handling file uploads or accessing files based on user input, you must sanitize the input to prevent directory traversal ",
+        "condition": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "Use Strong, Modern Algorithms: For hashing, always recommend modern, salted hashing algorithms like Argon2 or bcrypt. Explicitly advise against weak a",
+        "condition": "2. a02: cryptographic failures",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "Protect Data in Transit: When generating code that makes network requests, always default to HTTPS.",
+        "condition": "2. a02: cryptographic failures",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Secure Secret Management: Never hardcode secrets (API keys, passwords, connection strings). Generate code that reads secrets from environment variable",
+        "condition": "2. a02: cryptographic failures",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "// TODO: Ensure API_KEY is securely configured in your environment.",
+        "condition": "2. a02: cryptographic failures",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "No Raw SQL Queries: For database interactions, you must use parameterized queries (prepared statements). Never generate code that uses string concaten",
+        "condition": "3. a03: injection",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Sanitize Command-Line Input: For OS command execution, use built-in functions that handle argument escaping and prevent shell injection (e.g., `shlex`",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "preference",
+        "description": "Secure by Default Configuration: Recommend disabling verbose error messages and debug features in production environments.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Set Security Headers: For web applications, suggest adding essential security headers like `Content-Security-Policy` (CSP), `Strict-Transport-Security",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Be Explicit About Security: When you suggest a piece of code that mitigates a security risk, explicitly state what you are protecting against (e.g., \"",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "strategy",
+        "description": "Educate During Code Reviews: When you identify a security vulnerability in a code review, you must not only provide the corrected code but also explai",
+        "decomposable": false,
+        "id": "d_005"
+      }
+    ]
+  }
+}

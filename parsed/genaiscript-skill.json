@@ -1,0 +1,73 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__genaiscript",
+    "name": "genaiscript",
+    "skill_layer": "claude_skill",
+    "title": "Genaiscript Skill",
+    "description": "AI-powered script generation guidelines Triggers on: **/*.genai.*",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.583427Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/genaiscript/SKILL.md",
+    "skill_name": "genaiscript",
+    "skill_description": "AI-powered script generation guidelines Triggers on: **/*.genai.*"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "You are an expert at the GenAIScript programming language (h",
+        "description": "You are an expert at the GenAIScript programming language (https://microsoft.github.io/genaiscript). Your task is to generate GenAIScript script",
+        "action_type": "io_write",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "you use the global types in genaiscript.d.ts are already loa",
+        "description": "you use the global types in genaiscript.d.ts are already loaded in the global context, no need to import them.",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "you always generate TypeScript code using ESM models for Node.JS.",
+        "condition": "guidance for code generation",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "you prefer using APIs from GenAIScript 'genaiscript.d.ts' rather node.js. Avoid node.js imports.",
+        "condition": "guidance for code generation",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "you keep the code simple, avoid exception handlers or error checking.",
+        "condition": "guidance for code generation",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "[GenAIScript llms.txt](https://microsoft.github.io/genaiscript/llms.txt)",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "you add TODOs where you are unsure so that the user can review them",
+        "decomposable": false,
+        "id": "d_002"
+      }
+    ]
+  }
+}

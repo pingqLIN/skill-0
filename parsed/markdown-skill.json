@@ -1,0 +1,167 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__markdown",
+    "name": "markdown",
+    "skill_layer": "claude_skill",
+    "title": "Markdown Skill",
+    "description": "Documentation and content creation standards Triggers on: **/*.md",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.855382Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/markdown/SKILL.md",
+    "skill_name": "markdown",
+    "skill_description": "Documentation and content creation standards Triggers on: **/*.md"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "8. Whitespace: Use appropriate whitespace to separate sectio",
+        "description": "8. Whitespace: Use appropriate whitespace to separate sections and improve readability.",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Follow these guidelines for formatting and structuring your ",
+        "description": "Follow these guidelines for formatting and structuring your markdown content:",
+        "action_type": "transform",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Code Blocks: Use triple backticks (`) to create fenced code ",
+        "description": "Code Blocks: Use triple backticks (`) to create fenced code blocks. Specify the language after the opening backticks for syntax highlighting (e.g., `c",
+        "action_type": "io_write",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Line Length: Break lines at 80 characters to improve readabi",
+        "description": "Line Length: Break lines at 80 characters to improve readability. Use soft line breaks for long paragraphs.",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "The following markdown content rules are enforced in the validators:",
+        "condition": "markdown content rules",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "1. Headings: Use appropriate heading levels (H2, H3, etc.) to structure your content. Do not use an H1 heading, as this will be generated based on the",
+        "condition": "markdown content rules",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      },
+      {
+        "description": "2. Lists: Use bullet points or numbered lists for lists. Ensure proper indentation and spacing.",
+        "condition": "markdown content rules",
+        "output": "proceed_or_halt",
+        "id": "r_003"
+      },
+      {
+        "description": "4. Links: Use proper markdown syntax for links. Ensure that links are valid and accessible.",
+        "condition": "markdown content rules",
+        "output": "proceed_or_halt",
+        "id": "r_004"
+      },
+      {
+        "description": "6. Tables: Use markdown tables for tabular data. Ensure proper formatting and alignment.",
+        "condition": "markdown content rules",
+        "output": "proceed_or_halt",
+        "id": "r_005"
+      },
+      {
+        "description": "7. Line Length: Limit line length to 400 characters for readability.",
+        "condition": "markdown content rules",
+        "output": "proceed_or_halt",
+        "id": "r_006"
+      },
+      {
+        "description": "9. Front Matter: Include YAML front matter at the beginning of the file with required metadata fields.",
+        "condition": "markdown content rules",
+        "output": "proceed_or_halt",
+        "id": "r_007"
+      },
+      {
+        "description": "Headings: Use `##` for H2 and `###` for H3. Ensure that headings are used in a hierarchical manner. Recommend restructuring if content includes H4, an",
+        "condition": "formatting and structure",
+        "output": "proceed_or_halt",
+        "id": "r_008"
+      },
+      {
+        "description": "Links: Use `[link text](URL)` for links. Ensure that the link text is descriptive and the URL is valid.",
+        "condition": "formatting and structure",
+        "output": "proceed_or_halt",
+        "id": "r_009"
+      },
+      {
+        "description": "Tables: Use `|` to create tables. Ensure that columns are properly aligned and headers are included.",
+        "condition": "formatting and structure",
+        "output": "proceed_or_halt",
+        "id": "r_010"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "3. Code Blocks: Use fenced code blocks for code snippets. Specify the language for syntax highlighting.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "5. Images: Use proper markdown syntax for images. Include alt text for accessibility.",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Lists: Use `-` for bullet points and `1.` for numbered lists. Indent nested lists with two spaces.",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Images: Use `![alt text](image URL)` for images. Include a brief description of the image in the alt text.",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Front Matter: Include the following fields in the YAML front matter:",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`microsoft_alias`: The Microsoft alias of the author.",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "`ai_note`: Indicate if AI was used in the creation of the post.",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "preference",
+        "description": "`summary`: A brief summary of the post. Recommend a summary based on the content when possible.",
+        "decomposable": false,
+        "id": "d_008"
+      }
+    ]
+  }
+}

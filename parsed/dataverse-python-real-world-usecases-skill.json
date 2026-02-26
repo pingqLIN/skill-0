@@ -1,0 +1,219 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__dataverse-python-real-world-usecases",
+    "name": "dataverse-python-real-world-usecases",
+    "skill_layer": "claude_skill",
+    "title": "Dataverse Python Real World Usecases Skill",
+    "description": "dataverse-python-real-world-usecases guidelines Triggers on: **",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-02-26T14:47:29.429508Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/dataverse-python-real-world-usecases/SKILL.md",
+    "skill_name": "dataverse-python-real-world-usecases",
+    "skill_description": "dataverse-python-real-world-usecases guidelines Triggers on: **"
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "description": "from PowerPlatform.Dataverse.client import DataverseClient",
+        "action_type": "io_read",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from PowerPlatform.Dataverse.core.errors import DataverseErr",
+        "description": "from PowerPlatform.Dataverse.core.errors import DataverseError",
+        "action_type": "io_read",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "from azure.identity import DefaultAzureCredential",
+        "description": "from azure.identity import DefaultAzureCredential",
+        "action_type": "io_read",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Migrate data from legacy system to Dataverse.\"\"\"",
+        "description": "\"\"\"Migrate data from legacy system to Dataverse.\"\"\"",
+        "action_type": "transform",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def extract_from_legacy(self, legacy_db_connection, query: s",
+        "description": "def extract_from_legacy(self, legacy_db_connection, query: str):",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Extract data from source system.\"\"\"",
+        "description": "\"\"\"Extract data from source system.\"\"\"",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "return pd.read_sql(query, legacy_db_connection)",
+        "description": "return pd.read_sql(query, legacy_db_connection)",
+        "action_type": "io_read",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def transform_accounts(self, df: pd.DataFrame) -> list:",
+        "description": "def transform_accounts(self, df: pd.DataFrame) -> list:",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Transform source data to Dataverse schema.\"\"\"",
+        "description": "\"\"\"Transform source data to Dataverse schema.\"\"\"",
+        "action_type": "transform",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"new_importsequencenumber\": row[\"legacy_id\"]",
+        "description": "\"new_importsequencenumber\": row[\"legacy_id\"]",
+        "action_type": "io_read",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "def load_to_dataverse(self, payloads: list, batch_size: int ",
+        "description": "def load_to_dataverse(self, payloads: list, batch_size: int = 200):",
+        "action_type": "io_read",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"\"\"Load data to Dataverse with error tracking.\"\"\"",
+        "description": "\"\"\"Load data to Dataverse with error tracking.\"\"\"",
+        "action_type": "io_read",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "batch = payloads[i:i + batch_size]",
+        "description": "batch = payloads[i:i + batch_size]",
+        "action_type": "io_read",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "ids = self.client.create(\"account\", batch)",
+        "description": "ids = self.client.create(\"account\", batch)",
+        "action_type": "io_write",
+        "id": "a_014",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "print(f\"✓ Created {len(ids)} records ({len(self.success_reco",
+        "description": "print(f\"✓ Created {len(ids)} records ({len(self.success_records)}/{total})\")",
+        "action_type": "io_write",
+        "id": "a_015",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "\"name\": row[\"company_name\"][:100],  # Limit to 100 chars",
+        "condition": "complete migration example",
+        "output": "proceed_or_halt",
+        "id": "r_001"
+      },
+      {
+        "description": "\"\"\"Verify migration and track results.\"\"\"",
+        "condition": "complete migration example",
+        "output": "proceed_or_halt",
+        "id": "r_002"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "strategy",
+        "description": "Based on official Dataverse data migration and integration patterns.",
+        "decomposable": false,
+        "id": "d_001"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Legacy System → Staging Database → Dataverse",
+        "decomposable": false,
+        "id": "d_002"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "(Extract)    (Transform)        (Load)",
+        "decomposable": false,
+        "id": "d_003"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"revenue\": float(row[\"annual_revenue\"]) if row[\"annual_revenue\"] else None,",
+        "decomposable": false,
+        "id": "d_004"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"numberofemployees\": int(row[\"employees\"]) if row[\"employees\"] else None,",
+        "decomposable": false,
+        "id": "d_005"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "print(f\"Failed: {len(self.failed_records)} records\")",
+        "decomposable": false,
+        "id": "d_006"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "pipeline = DataMigrationPipeline(\"https://myorg.crm.dynamics.com\")",
+        "decomposable": false,
+        "id": "d_007"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "\"SELECT id, company_name, phone, website, annual_revenue, employees FROM companies\"",
+        "decomposable": false,
+        "id": "d_008"
+      },
+      {
+        "directive_type": "completion",
+        "description": "results = pipeline.reconcile_migration(source_data)",
+        "decomposable": false,
+        "id": "d_009"
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "def find_potential_duplicates(self, table_name: str, match_fields: list):",
+        "decomposable": false,
+        "id": "d_010"
+      }
+    ]
+  }
+}
