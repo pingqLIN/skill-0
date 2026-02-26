@@ -4,9 +4,9 @@
 
 > 一個解析 Claude Skills 與 MCP Tools 內部結構的三元分類系統
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Schema Version](https://img.shields.io/badge/schema-v2.1.0-green.svg)](schema/skill-decomposition.schema.json)
+[![Schema Version](https://img.shields.io/badge/schema-v2.4.0-green.svg)](schema/skill-decomposition.schema.json)
 
 ## Overview 概述
 
@@ -76,23 +76,28 @@ Skill-0 是一個分類系統，用於將 AI/Chatbot Skills（特別是 Claude S
 
 ```
 skill-0/
-├── README.md                              # 英文文件
-├── README.zh-TW.md                        # 中文文件
-├── schema/
-│   └── skill-decomposition.schema.json   # JSON Schema v2.1
-├── parsed/                                # 已解析的 skill 範例 (32 skills)
-├── analysis/                              # 分析報告
-├── tools/                                 # 分析工具
-│   ├── analyzer.py                       # 結構分析器
-│   ├── pattern_extractor.py              # 模式提取器
-│   ├── evaluate.py                       # 覆蓋率評估
-│   └── batch_parse.py                    # 批次解析器
-├── vector_db/                             # 向量資料庫模組
-│   ├── embedder.py                       # 嵌入產生器
-│   ├── vector_store.py                   # SQLite-vec 儲存
-│   └── search.py                         # 語義搜尋 CLI
-├── skills.db                              # 向量資料庫
-└── docs/                                  # 文件
+├── api/                               # REST API（FastAPI，port 8000）
+│   ├── main.py                       # 主要 API（JWT 驗證與速率限制）
+│   └── logging_config.py            # 結構化日誌（structlog）
+├── vector_db/                         # 向量資料庫模組
+│   ├── embedder.py                   # 嵌入產生器（all-MiniLM-L6-v2）
+│   ├── vector_store.py               # SQLite-vec 儲存
+│   └── search.py                     # 語義搜尋引擎
+├── skill-0-dashboard/                 # 治理儀表板
+│   └── apps/
+│       ├── api/                      # 儀表板 API（FastAPI，port 8001）
+│       └── web/                      # React 19 + Vite 前端
+├── governance/                        # 治理系統
+│   └── db/governance.db              # Skill 審核工作流程 DB
+├── schema/                            # JSON Schema v2.4
+├── parsed/                            # 已解析的 skill 範例（32 skills）
+├── tools/                             # 分析與治理工具
+├── scripts/                           # 維護腳本
+├── tests/                             # 測試套件（111+ 項測試）
+├── docker-compose.yml                 # 開發環境 Docker 設定
+├── docker-compose.prod.yml            # 正式環境 Docker 設定
+├── Dockerfile.{api,dashboard,web}     # 容器映像
+└── skills.db                          # 向量資料庫
 ```
 
 ## Installation 安裝
@@ -234,12 +239,25 @@ clusters = search.cluster_skills(n_clusters=5)
 
 ## Version 版本
 
-- Schema Version: 2.0.0
+- Schema Version: 2.4.0
 - Created: 2026-01-23
-- Updated: 2026-01-26
+- Updated: 2026-02-26
 - Author: pingqLIN
 
 ## Changelog 更新紀錄
+
+### v2.4.0 (2026-02-26) - 安全性、測試與正式環境就緒
+- **安全性**: 兩個 API 伺服器均加入 JWT 驗證
+- **安全性**: 速率限制（各端點獨立控制）
+- **安全性**: CORS 透過環境變數設定
+- **安全性**: 正式環境安全強制執行（設定錯誤時快速失敗）
+- **監控**: Prometheus 指標端點（`/metrics`）
+- **監控**: 使用 structlog 進行結構化日誌（JSON/console 輸出）
+- **測試**: 新增 79 項測試（總計 111+ 項）— 儀表板 API、驗證流程、速率限制、前端
+- **DevOps**: Docker 容器化（3 個 Dockerfile + docker-compose）
+- **DevOps**: CI/CD 流程（pytest-cov、Web 建置、Docker 建置驗證）
+- **工具**: 附治理交叉參照的向量 DB 同步腳本
+- **Schema**: v2.4.0 加入 Hive 啟發功能（品質信號、成功條件、失敗模式）
 
 ### v2.1.0 (2026-01-26) - Stage 2
 - **新功能**: 向量嵌入語義搜尋

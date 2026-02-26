@@ -2,9 +2,9 @@
 
 > A ternary classification system for parsing the internal structure of Claude Skills and MCP Tools
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Schema Version](https://img.shields.io/badge/schema-v2.1.0-green.svg)](schema/skill-decomposition.schema.json)
+[![Schema Version](https://img.shields.io/badge/schema-v2.4.0-green.svg)](schema/skill-decomposition.schema.json)
 
 ## Overview
 
@@ -74,22 +74,28 @@ Skills/Tools may come from diverse sources where the original intent cannot be f
 
 ```
 skill-0/
-├── README.md                              # Documentation
-├── schema/
-│   └── skill-decomposition.schema.json   # JSON Schema v2.1
-├── parsed/                                # Parsed skill examples (32 skills)
-├── analysis/                              # Analysis reports
-├── tools/                                 # Analysis tools
-│   ├── analyzer.py                       # Structure analyzer
-│   ├── pattern_extractor.py              # Pattern extractor
-│   ├── evaluate.py                       # Coverage evaluator
-│   └── batch_parse.py                    # Batch parser
-├── vector_db/                             # Vector database module
-│   ├── embedder.py                       # Embedding generator
-│   ├── vector_store.py                   # SQLite-vec storage
-│   └── search.py                         # Semantic search CLI
-├── skills.db                              # Vector database
-└── docs/                                  # Documentation
+├── api/                               # REST API (FastAPI, port 8000)
+│   ├── main.py                       # Main API with JWT auth & rate limiting
+│   └── logging_config.py            # Structured logging (structlog)
+├── vector_db/                         # Vector database module
+│   ├── embedder.py                   # Embedding generator (all-MiniLM-L6-v2)
+│   ├── vector_store.py               # SQLite-vec storage
+│   └── search.py                     # Semantic search engine
+├── skill-0-dashboard/                 # Governance Dashboard
+│   └── apps/
+│       ├── api/                      # Dashboard API (FastAPI, port 8001)
+│       └── web/                      # React 19 + Vite frontend
+├── governance/                        # Governance system
+│   └── db/governance.db              # Skill approval workflow DB
+├── schema/                            # JSON Schema v2.4
+├── parsed/                            # Parsed skill examples (32 skills)
+├── tools/                             # Analysis & governance tools
+├── scripts/                           # Maintenance scripts
+├── tests/                             # Test suite (111+ tests)
+├── docker-compose.yml                 # Development Docker setup
+├── docker-compose.prod.yml            # Production Docker setup
+├── Dockerfile.{api,dashboard,web}     # Container images
+└── skills.db                          # Vector database
 ```
 
 ## Installation
@@ -108,26 +114,64 @@ python -m vector_db.search --db skills.db --parsed-dir parsed index
 
 ## Testing
 
-The project includes a comprehensive test suite for tool and code equivalence verification:
+The project includes a comprehensive test suite with 111+ tests:
 
 ```bash
-# Run all tests
-python3 -m pytest tests/ -v
+# Run all Python tests
+python -m pytest tests/ -v
 
-# Run specific test categories
-python3 -m pytest tests/test_helper.py::TestSkillValidator -v
-python3 -m pytest tests/test_helper.py::TestIntegrationWorkflows -v
+# Run Dashboard API tests
+python -m pytest skill-0-dashboard/apps/api/tests/ -v
+
+# Run frontend tests
+cd skill-0-dashboard/apps/web && npm test
 ```
 
-**Test Coverage**: 32 tests covering:
-- ✅ Schema validation (tool equivalence)
-- ✅ Format conversion (code equivalence)
-- ✅ Execution path testing
-- ✅ Template generation
-- ✅ Error handling
+**Test Coverage**:
+- ✅ API security & rate limiting (tests/test_api_security.py)
+- ✅ JWT authentication flow (tests/integration/test_auth_flow.py)
+- ✅ Rate limiting behavior (tests/integration/test_rate_limiting.py)
+- ✅ Dashboard API — all 5 routers (skill-0-dashboard/apps/api/tests/)
+- ✅ Frontend smoke tests — 18 component tests (Vitest)
+- ✅ Schema validation & format conversion
 - ✅ Integration workflows
 
-See [tests/README.md](tests/README.md) for detailed test documentation.
+## REST API
+
+Skill-0 provides two FastAPI servers:
+
+### Main API (port 8000)
+
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/api/search` | POST/GET | No | Semantic skill search |
+| `/api/similar/{name}` | GET | No | Find similar skills |
+| `/api/cluster` | GET | No | K-Means clustering |
+| `/api/stats` | GET | No | Database statistics |
+| `/api/skills` | GET | No | List all skills (paginated) |
+| `/api/index` | POST | JWT | Re-index skills |
+| `/api/auth/token` | POST | No | Get JWT token |
+| `/health` | GET | No | Health check |
+| `/metrics` | GET | No | Prometheus metrics |
+
+### Governance Dashboard API (port 8001)
+
+| Endpoint | Method | Auth | Description |
+|----------|--------|------|-------------|
+| `/api/stats` | GET | JWT | Dashboard statistics |
+| `/api/skills` | GET | JWT | Skills with governance status |
+| `/api/reviews` | GET | JWT | Pending review queue |
+| `/api/scans` | GET | JWT | Security scan results |
+| `/api/audit` | GET | JWT | Audit event log |
+
+```bash
+# Start both servers
+uvicorn api.main:app --port 8000
+uvicorn apps.api.main:app --port 8001
+
+# Or use Docker
+docker compose up
+```
 
 ## Semantic Search
 
@@ -285,12 +329,25 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 
 ## Version
 
-- Schema Version: 2.0.0
+- Schema Version: 2.4.0
 - Created: 2026-01-23
-- Updated: 2026-01-26
+- Updated: 2026-02-26
 - Author: pingqLIN
 
 ## Changelog
+
+### v2.4.0 (2026-02-26) - Security, Testing & Production Readiness
+- **Security**: JWT authentication for both API servers
+- **Security**: Rate limiting with per-endpoint controls
+- **Security**: CORS environment variable configuration
+- **Security**: Production security enforcement (fail-fast on misconfiguration)
+- **Monitoring**: Prometheus metrics endpoint (`/metrics`)
+- **Monitoring**: Structured logging with structlog (JSON/console output)
+- **Testing**: 79 new tests (111+ total) — Dashboard API, auth flow, rate limiting, frontend
+- **DevOps**: Docker containerization (3 Dockerfiles + docker-compose)
+- **DevOps**: CI/CD pipeline with pytest-cov, web build, Docker build verification
+- **Tools**: Vector DB sync script with governance cross-reference
+- **Schema**: v2.4.0 with Hive-inspired features (quality signals, success criteria, failure patterns)
 
 ### v2.3.0 (2026-01-28) - Testing & Quality Assurance
 - **New Feature**: Comprehensive automated test suite
