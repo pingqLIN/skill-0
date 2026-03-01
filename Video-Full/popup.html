@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video-Full</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      width: 220px;
+      padding: 12px;
+      margin: 0;
+      background: #1a1a2e;
+      color: #eee;
+    }
+    h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      text-align: center;
+      color: #e94560;
+    }
+    .grid-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: opacity 0.15s;
+    }
+    button:hover { opacity: 0.85; }
+    .split-btn {
+      background: #16213e;
+      color: #e94560;
+      border: 1px solid #e94560;
+    }
+    .reset-btn {
+      grid-column: 1 / -1;
+      background: #e94560;
+      color: #fff;
+    }
+    #status {
+      font-size: 11px;
+      text-align: center;
+      color: #aaa;
+      min-height: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h2>📺 Video-Full</h2>
+  <div class="grid-btns">
+    <button class="split-btn" data-cols="2">2 Split</button>
+    <button class="split-btn" data-cols="4">4 Split</button>
+    <button class="split-btn" data-cols="6">6 Split</button>
+    <button class="split-btn" data-cols="9">9 Split</button>
+    <button class="reset-btn" id="reset-btn">⟳ Reset</button>
+  </div>
+  <div id="status"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

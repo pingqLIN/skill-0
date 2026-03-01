@@ -1,0 +1,30 @@
+/* Video-Full content styles */
+
+#vf-overlay {
+  position: fixed;
+  inset: 0;
+  /* INT32_MAX: ensures the overlay sits above all other page content */
+  z-index: 2147483647;
+  background: #000;
+  display: grid;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.vf-tile {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vf-tile video,
+.vf-tile iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border: none;
+  display: block;
+}
