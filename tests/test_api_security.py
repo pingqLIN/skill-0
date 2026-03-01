@@ -7,6 +7,7 @@ from api.main import (
     _parse_rate_limit,
     _is_rate_limit_exempt_path,
     find_production_security_issues,
+    generate_request_id,
     is_production_env,
 )
 
@@ -23,6 +24,12 @@ def test_is_local_origin_detects_loopback_and_wildcard():
     assert _is_local_origin('http://localhost:3000') is True
     assert _is_local_origin('https://127.0.0.1:8443') is True
     assert _is_local_origin('https://example.com') is False
+
+
+def test_generate_request_id_is_short_hex():
+    request_id = generate_request_id()
+    assert len(request_id) == 8
+    int(request_id, 16)
 
 
 def test_find_production_security_issues_returns_empty_for_non_production():
