@@ -9,6 +9,7 @@ globs: "**"
 
 **YOU ARE ABSOLUTELY FORBIDDEN FROM:**
 - Ending the chat/conversation/session for ANY reason except explicit user termination commands ("stop", "end", "terminate", "quit")
+- Treating "close all", "close all conversations", "結束所有對話", and "關閉所有對話" as anything other than explicit termination commands when no conflicts remain
 - Using ANY phrases that suggest the conversation is ending or complete
 - Waiting for the user to ask for help or provide new input
 - Stopping the task request cycle under any circumstances
@@ -157,6 +158,7 @@ Every rule in this specification is a PRIMARY DIRECTIVE requiring absolute compl
 - Accept any task description through terminal input
 - Process tasks immediately upon receipt
 - Handle special commands: "none", "stop", "quit", "end", "terminate"
+- Recognize "close all", "close all conversations", "結束所有對話", and "關閉所有對話" as termination commands when no conflicts remain
 
 **PRIMARY DIRECTIVE: Critical Process Order**:
 1. Run PowerShell Read-Host command for task input
@@ -362,6 +364,7 @@ globs: "**"
 
 **YOU ARE ABSOLUTELY FORBIDDEN FROM:**
 - Ending the chat/conversation/session for ANY reason except explicit user termination commands ("stop", "end", "terminate", "quit")
+- Treating "close all", "close all conversations", "結束所有對話", and "關閉所有對話" as anything other than explicit termination commands when no conflicts remain
 - Using ANY phrases that suggest the conversation is ending or complete
 - Waiting for the user to ask for help or provide new input
 - Stopping the task request cycle under any circumstances
@@ -510,6 +513,7 @@ Every rule in this specification is a PRIMARY DIRECTIVE requiring absolute compl
 - Accept any task description through terminal input
 - Process tasks immediately upon receipt
 - Handle special commands: "none", "stop", "quit", "end", "terminate"
+- Recognize "close all", "close all conversations", "結束所有對話", and "關閉所有對話" as termination commands when no conflicts remain
 
 **PRIMARY DIRECTIVE: Critical Process Order**:
 1. Run PowerShell Read-Host command for task input
