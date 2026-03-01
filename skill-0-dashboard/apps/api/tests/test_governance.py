@@ -9,7 +9,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 # Ensure the dashboard API package is importable
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from api.main import app  # noqa: E402 — dashboard API
 from api.dependencies import get_governance_service  # noqa: E402
@@ -314,7 +314,7 @@ class TestGovernanceServiceReadiness:
 
         result = svc.get_action_readiness("skill_001")
         assert result["can_scan"] is False
-        assert result["can_test"] is True
+        assert result["can_test"] is False  # requires both source + installed
         assert any("source_path" in r for r in result["reasons"])
 
     def test_readiness_installed_missing(self, tmp_path):

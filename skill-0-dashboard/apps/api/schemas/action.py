@@ -1,6 +1,6 @@
 """Action schemas for the Governance Dashboard API"""
 
-from typing import List, Optional
+from typing import List, Literal, Optional
 
 from pydantic import BaseModel
 
@@ -19,7 +19,7 @@ class ActionReadiness(BaseModel):
 class ActionResult(BaseModel):
     """Result of a governance action (scan or test)"""
 
-    status: str  # "success" | "failed" | "noop"
+    status: Literal["success", "failed", "noop", "partial"]
     skill_id: Optional[str] = None
     processed: int = 0
     results: List[dict] = []

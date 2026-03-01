@@ -440,7 +440,7 @@ class GovernanceService:
         return {
             "skill_id": skill_id,
             "can_scan": source_path_exists,
-            "can_test": installed_path_exists,
+            "can_test": source_path_exists and installed_path_exists,
             "source_path_exists": source_path_exists,
             "installed_path_exists": installed_path_exists,
             "reasons": reasons,
@@ -475,7 +475,6 @@ class GovernanceService:
             }
 
         try:
-            sys.path.insert(0, str(TOOLS_DIR))
             from advanced_skill_analyzer import AdvancedSkillAnalyzer
             from datetime import datetime as _dt
 
@@ -524,7 +523,7 @@ class GovernanceService:
         if skill_ids is not None and len(skill_ids) == 0:
             return {"status": "noop", "processed": 0, "results": []}
 
-        skills = self.db.list_skills(limit=1000)
+        skills = self.db.list_skills(status="pending", limit=1000)
         targets = [s for s in skills if skill_ids is None or s.skill_id in skill_ids]
 
         if not targets:
@@ -583,7 +582,6 @@ class GovernanceService:
             }
 
         try:
-            sys.path.insert(0, str(TOOLS_DIR))
             from skill_tester import SkillEquivalenceTester
             from datetime import datetime as _dt
 
@@ -634,7 +632,7 @@ class GovernanceService:
         if skill_ids is not None and len(skill_ids) == 0:
             return {"status": "noop", "processed": 0, "results": []}
 
-        skills = self.db.list_skills(limit=1000)
+        skills = self.db.list_skills(status="pending", limit=1000)
         targets = [s for s in skills if skill_ids is None or s.skill_id in skill_ids]
 
         if not targets:
