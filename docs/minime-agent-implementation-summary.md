@@ -22,7 +22,7 @@
 - **檔案**: `data/parsed/minime-agent-skill.json`
 - **行數**: 1,127 lines
 - **Schema 版本**: 2.2.0
-- **Skill ID**: `github__global__minime_agent`
+- **Skill ID**: `claude__global__minime_agent`
 
 ### 元件統計 (Component Statistics)
 ```
