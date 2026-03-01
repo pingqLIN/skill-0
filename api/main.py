@@ -30,8 +30,8 @@ logger = structlog.get_logger(__name__)
 
 
 def generate_request_id() -> str:
-    """Generate a unique request ID using UUID4."""
-    return str(uuid.uuid4())
+    """Generate a short unique request ID."""
+    return uuid.uuid4().hex[:8]
 
 
 request_id_var: ContextVar[str] = ContextVar('request_id', default='')
@@ -153,16 +153,7 @@ app.add_middleware(
 
 # ==================== Prometheus Metrics ====================
 
-import uuid
-from contextvars import ContextVar
 from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST
-
-request_id_var: ContextVar[str] = ContextVar('request_id', default='')
-
-
-def generate_request_id() -> str:
-    """Generate a short unique request ID."""
-    return uuid.uuid4().hex[:8]
 
 
 REQUEST_COUNT = Counter(
