@@ -202,7 +202,7 @@ a_002 (刪除檔案) → a_017 (commit/push)
 ## 技術規格
 
 - **Schema 版本**: 2.2.0
-- **Skill ID**: `github__global__minime_agent`
+- **Skill ID**: `claude__global__minime_agent`
 - **Skill Layer**: `claude_skill`
 - **動作總數**: 20
 - **規則總數**: 12

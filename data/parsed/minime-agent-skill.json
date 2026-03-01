@@ -1,7 +1,7 @@
 {
-  "$schema": "../schema/skill-decomposition.schema.json",
+  "$schema": "../../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "github__global__minime_agent",
+    "skill_id": "claude__global__minime_agent",
     "name": "minime-agent",
     "skill_layer": "claude_skill",
     "title": "MiniMe Agent - Global GitHub File System Operations Agent",

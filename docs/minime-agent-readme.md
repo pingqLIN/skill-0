@@ -69,7 +69,7 @@ All operations are protected by:
 ## Technical Specifications
 
 - **Schema Version**: 2.2.0
-- **Skill ID**: `github__global__minime_agent`
+- **Skill ID**: `claude__global__minime_agent`
 - **Skill Layer**: `claude_skill`
 - **Total Actions**: 20
 - **Total Rules**: 12
