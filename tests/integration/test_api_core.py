@@ -9,10 +9,17 @@ Tests all 14+ endpoints with real skills.db:
   - Rate limiting, error cases
 """
 
+import os
 import sys
 from pathlib import Path
 
 import pytest
+
+# Skip entire module when CI runs in offline mode (no HuggingFace model downloads)
+pytestmark = pytest.mark.skipif(
+    os.getenv("HF_HUB_OFFLINE") == "1" or os.getenv("TRANSFORMERS_OFFLINE") == "1",
+    reason="Integration tests require HuggingFace model downloads (offline mode)",
+)
 
 # Ensure project root is on path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
