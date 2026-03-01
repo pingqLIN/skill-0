@@ -13,20 +13,25 @@
         showStatus('No active tab found.');
         return;
       }
-      // Ensure content script is injected (handles cases where extension was
-      // just installed and the page hasn't reloaded yet).
-      // Errors on restricted pages (e.g. chrome://) are surfaced to the user.
-      await chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        files: ['content.js'],
-      }).catch((err) => {
-        // Ignore "already injected" errors; surface genuine failures.
-        if (!err.message.includes('already been injected')) {
+      let response;
+      try {
+        // First, try to send a message to an already-injected content script.
+        response = await chrome.tabs.sendMessage(tab.id, payload);
+      } catch (err) {
+        const msg = err && err.message ? err.message : String(err);
+        // If there is no receiving end, the content script is likely not injected yet.
+        if (msg.includes('Could not establish connection') || msg.includes('Receiving end does not exist')) {
+          // Inject the content script once, then retry the message.
+          await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            files: ['content.js'],
+          });
+          response = await chrome.tabs.sendMessage(tab.id, payload);
+        } else {
+          // Re-throw any other kind of messaging error.
           throw err;
         }
-      });
-
-      const response = await chrome.tabs.sendMessage(tab.id, payload);
+      }
       if (response && response.count !== undefined) {
         showStatus(`Applied to ${response.count} player(s).`);
       } else if (response && response.status) {

@@ -82,8 +82,8 @@
       return { count: 0 };
     }
 
-    // Remove any existing overlay first (full reset without DOM restore, since
-    // we are about to re-collect).
+    // Remove any existing overlay first, restoring moved players before
+    // we re-collect.
     destroyOverlay();
 
     const players = collectPlayers();
@@ -91,27 +91,48 @@
       return { count: 0 };
     }
 
-    // Number of tiles = min(cols, players.length), but at least 1.
+    // Number of tiles = min(requested split size, players.length), but at least 1.
     const tileCount = Math.min(cols, players.length);
-    const rows = Math.ceil(tileCount / cols);
+
+    // Derive effective grid columns from the requested split and the actual
+    // tile count. This ensures:
+    // - 2 Split → up to 1x2
+    // - 4 Split → up to 2x2
+    // - 6 Split → up to 3x2
+    // - 9 Split → up to 3x3
+    // - For other values, fall back to cols as the max column count.
+    let gridCols;
+    if (cols === 4) {
+      gridCols = Math.min(2, tileCount);
+    } else if (cols === 6) {
+      gridCols = Math.min(3, tileCount);
+    } else if (cols === 9) {
+      gridCols = Math.min(3, tileCount);
+    } else {
+      gridCols = Math.min(cols, tileCount);
+    }
+
+    const gridRows = Math.ceil(tileCount / gridCols);
 
     // Build overlay
     const overlay = document.createElement('div');
     overlay.id = OVERLAY_ID;
-    overlay.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-    overlay.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+    overlay.style.gridTemplateColumns = `repeat(${gridCols}, 1fr)`;
+    overlay.style.gridTemplateRows = `repeat(${gridRows}, 1fr)`;
 
     for (let i = 0; i < tileCount; i++) {
       const player = players[i];
       const tile = document.createElement('div');
       tile.className = 'vf-tile';
 
-      // Save original placement & style before moving
+      // Save original placement & style before moving.
+      // Use hasAttribute to correctly distinguish "no style attr" from style="".
       movedPlayers.push({
         el: player,
         parent: player.parentNode,
         nextSibling: player.nextSibling,
-        origStyle: player.getAttribute('style') || null,
+        hadStyle: player.hasAttribute('style'),
+        origStyle: player.getAttribute('style'),
       });
 
       // Move player into tile
@@ -141,11 +162,13 @@
   function destroyOverlay() {
     // Restore all moved players to their original DOM positions
     while (movedPlayers.length > 0) {
-      const { el, parent, nextSibling, origStyle } = movedPlayers.pop();
+      const { el, parent, nextSibling, hadStyle, origStyle } = movedPlayers.pop();
       if (!parent) continue;
 
-      // Restore original inline style (or remove the attribute)
-      if (origStyle === null) {
+      // Restore original inline style exactly:
+      // - had no style attr → remove it entirely
+      // - had style="" or non-empty → restore that value
+      if (!hadStyle) {
         el.removeAttribute('style');
       } else {
         el.setAttribute('style', origStyle);
@@ -181,8 +204,15 @@
     } else if (message.action === 'reset') {
       const result = applyReset();
       sendResponse(result);
+    } else {
+      // Respond with an error for unsupported actions to avoid hanging the port
+      sendResponse({
+        status: 'error',
+        message: 'Unknown action',
+        action: message && message.action,
+      });
     }
-    // Return true to keep the message channel open for async responses if needed
-    return true;
+    // Return false because all responses are sent synchronously
+    return false;
   });
 })();
