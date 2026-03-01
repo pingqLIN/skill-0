@@ -461,3 +461,252 @@ class GovernanceService:
             "page": page,
             "page_size": page_size,
         }
+
+    # ============ Action Readiness ============
+
+    def get_action_readiness(self, skill_id: str) -> Optional[Dict[str, Any]]:
+        """Check whether scan and test actions can be executed for a skill"""
+        skill = self.db.get_skill(skill_id)
+        if not skill:
+            return None
+
+        source_path = getattr(skill, "source_path", None) or ""
+        installed_path = getattr(skill, "installed_path", None) or ""
+
+        source_exists = bool(source_path) and Path(source_path).exists()
+        installed_exists = bool(installed_path) and Path(installed_path).exists()
+
+        reasons: List[str] = []
+        if not source_exists:
+            reasons.append(
+                f"source_path does not exist: {source_path or '(not set)'}"
+            )
+        if not installed_exists:
+            reasons.append(
+                "installed_path is not set" if not installed_path
+                else f"installed_path does not exist: {installed_path}"
+            )
+
+        can_scan = source_exists
+        can_test = source_exists and installed_exists
+
+        return {
+            "skill_id": skill_id,
+            "can_scan": can_scan,
+            "can_test": can_test,
+            "source_path_exists": source_exists,
+            "installed_path_exists": installed_exists,
+            "reasons": reasons,
+        }
+
+    # ============ Scan / Test Execution ============
+
+    def run_scan(self, skill_id: str) -> Dict[str, Any]:
+        """Run a security scan for a single skill"""
+        skill = self.db.get_skill(skill_id)
+        if not skill:
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "PATH_NOT_FOUND",
+                "error_message": f"Skill not found: {skill_id}",
+                "hint": "Verify the skill_id is correct.",
+            }
+
+        source_path = getattr(skill, "source_path", None) or ""
+        if not source_path or not Path(source_path).exists():
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "SOURCE_PATH_MISSING",
+                "error_message": f"Source path does not exist: {source_path or '(not set)'}",
+                "hint": "Ensure the skill's source_path is set and the file is accessible.",
+            }
+
+        try:
+            from advanced_skill_analyzer import AdvancedSkillAnalyzer
+            from datetime import datetime as _dt
+
+            analyzer = AdvancedSkillAnalyzer()
+            analysis = analyzer.analyze_skill_file(Path(source_path))
+
+            risk_level = analysis.get("risk_level", "unknown")
+            risk_score = analysis.get("risk_score", 0)
+            findings = analysis.get("findings", [])
+
+            scan_data = {
+                "scanned_at": _dt.now().isoformat(),
+                "scanner_version": "1.0.0",
+                "risk_level": risk_level,
+                "risk_score": risk_score,
+                "findings_count": len(findings),
+                "findings_json": json.dumps(findings),
+            }
+            self.db.record_scan(skill_id, scan_data)
+
+            item = {
+                "skill_id": skill_id,
+                "status": "success",
+                "risk_level": risk_level,
+                "risk_score": risk_score,
+                "findings_count": len(findings),
+            }
+            return {
+                "status": "success",
+                "skill_id": skill_id,
+                "processed": 1,
+                "results": [item],
+            }
+        except Exception as exc:
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "SCAN_RUNTIME_ERROR",
+                "error_message": str(exc),
+                "hint": "Check that the source file is a valid skill definition.",
+            }
+
+    def run_scan_batch(self, skill_ids: Optional[List[str]] = None) -> Dict[str, Any]:
+        """Run security scan for multiple skills"""
+        if skill_ids is not None and len(skill_ids) == 0:
+            return {"status": "noop", "processed": 0, "results": []}
+
+        skills = self.db.list_skills(status="pending", limit=1000)
+        targets = [s for s in skills if skill_ids is None or s.skill_id in skill_ids]
+
+        if not targets:
+            return {"status": "noop", "processed": 0, "results": []}
+
+        results = []
+        for skill in targets:
+            result = self.run_scan(skill.skill_id)
+            results.append(result)
+
+        success_count = sum(1 for r in results if r.get("status") == "success")
+        overall = (
+            "success" if success_count == len(results)
+            else ("failed" if success_count == 0 else "partial")
+        )
+        return {
+            "status": overall,
+            "processed": len(results),
+            "results": results,
+        }
+
+    def run_test(self, skill_id: str) -> Dict[str, Any]:
+        """Run an equivalence test for a single skill"""
+        skill = self.db.get_skill(skill_id)
+        if not skill:
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "PATH_NOT_FOUND",
+                "error_message": f"Skill not found: {skill_id}",
+                "hint": "Verify the skill_id is correct.",
+            }
+
+        source_path = getattr(skill, "source_path", None) or ""
+        installed_path = getattr(skill, "installed_path", None) or ""
+
+        if not installed_path or not Path(installed_path).exists():
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "INSTALLED_PATH_MISSING",
+                "error_message": f"Installed path does not exist: {installed_path or '(not set)'}",
+                "hint": "Ensure the skill has been installed and installed_path is set.",
+            }
+
+        if not source_path or not Path(source_path).exists():
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "SOURCE_PATH_MISSING",
+                "error_message": f"Source path does not exist: {source_path or '(not set)'}",
+                "hint": "Ensure the skill's source_path is set and the file is accessible.",
+            }
+
+        try:
+            from skill_tester import SkillEquivalenceTester
+            from datetime import datetime as _dt
+
+            tester = SkillEquivalenceTester()
+            test_result = tester.test_equivalence(Path(source_path), Path(installed_path))
+
+            test_data = {
+                "tested_at": _dt.now().isoformat(),
+                "tester_version": getattr(tester, "VERSION", "1.0.0"),
+                "original_path": source_path,
+                "converted_path": installed_path,
+                "scores": {
+                    "semantic_similarity": test_result.semantic_similarity,
+                    "structure_similarity": test_result.structure_similarity,
+                    "keyword_similarity": test_result.keyword_similarity,
+                    "metadata_completeness": test_result.metadata_completeness,
+                    "overall": test_result.overall_score,
+                },
+                "passed": test_result.passed,
+            }
+            self.db.record_equivalence_test(skill_id, test_data)
+
+            item = {
+                "skill_id": skill_id,
+                "status": "success",
+                "overall_score": test_result.overall_score,
+                "passed": test_result.passed,
+            }
+            return {
+                "status": "success",
+                "skill_id": skill_id,
+                "processed": 1,
+                "results": [item],
+            }
+        except Exception as exc:
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "TEST_RUNTIME_ERROR",
+                "error_message": str(exc),
+                "hint": "Check that both source and installed paths contain valid skill files.",
+            }
+
+    def run_test_batch(self, skill_ids: Optional[List[str]] = None) -> Dict[str, Any]:
+        """Run equivalence test for multiple skills"""
+        if skill_ids is not None and len(skill_ids) == 0:
+            return {"status": "noop", "processed": 0, "results": []}
+
+        skills = self.db.list_skills(status="pending", limit=1000)
+        targets = [s for s in skills if skill_ids is None or s.skill_id in skill_ids]
+
+        if not targets:
+            return {"status": "noop", "processed": 0, "results": []}
+
+        results = []
+        for skill in targets:
+            result = self.run_test(skill.skill_id)
+            results.append(result)
+
+        success_count = sum(1 for r in results if r.get("status") == "success")
+        overall = (
+            "success" if success_count == len(results)
+            else ("failed" if success_count == 0 else "partial")
+        )
+        return {
+            "status": overall,
+            "processed": len(results),
+            "results": results,
+        }
