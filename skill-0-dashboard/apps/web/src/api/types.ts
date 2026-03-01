@@ -150,3 +150,22 @@ export interface AuditListResponse {
   page: number;
   page_size: number;
 }
+
+export interface ActionReadiness {
+  skill_id: string;
+  can_scan: boolean;
+  can_test: boolean;
+  source_path_exists: boolean;
+  installed_path_exists: boolean;
+  reasons: string[];
+}
+
+export interface ActionResult {
+  status: 'success' | 'failed' | 'noop' | 'partial';
+  skill_id: string | null;
+  processed: number;
+  results: Array<Record<string, unknown>>;
+  error_code: string | null;
+  error_message: string | null;
+  hint: string | null;
+}
