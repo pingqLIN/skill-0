@@ -9,10 +9,22 @@ Tests all 14+ endpoints with real skills.db:
   - Rate limiting, error cases
 """
 
+import os
 import sys
 from pathlib import Path
 
 import pytest
+
+# Skip entire module when running in offline mode (CI) — these tests need
+# a real SentenceTransformer model which requires network access to download.
+_offline = (
+    os.environ.get("HF_HUB_OFFLINE") == "1"
+    or os.environ.get("TRANSFORMERS_OFFLINE") == "1"
+)
+pytestmark = pytest.mark.skipif(
+    _offline,
+    reason="Requires SentenceTransformer model download (HF offline mode is active)",
+)
 
 # Ensure project root is on path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
