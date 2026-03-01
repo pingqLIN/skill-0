@@ -29,7 +29,7 @@ def test_is_local_origin_detects_loopback_and_wildcard():
 def test_generate_request_id_is_short_hex():
     request_id = generate_request_id()
     assert len(request_id) == 8
-    int(request_id, 16)
+    assert int(request_id, 16) >= 0
 
 
 def test_find_production_security_issues_returns_empty_for_non_production():
