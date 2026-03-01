@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # Python dependencies (pip)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # JavaScript/Node dependencies (npm)
+  - package-ecosystem: "npm"
+    directory: "/skill-0-dashboard/apps/web"
+    schedule:
+      interval: "weekly"
+
+  # Python dependencies – dashboard API
+  - package-ecosystem: "pip"
+    directory: "/skill-0-dashboard/apps/api"
+    schedule:
+      interval: "weekly"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
