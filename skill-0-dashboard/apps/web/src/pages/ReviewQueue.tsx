@@ -29,12 +29,14 @@ export function ReviewQueue() {
   const safeCount = skills?.filter(s => ['safe', 'low'].includes(s.risk_level)).length || 0;
   const riskyCount = skills?.filter(s => ['medium', 'high', 'critical'].includes(s.risk_level)).length || 0;
 
+  const extractErrorDetail = (err: unknown) =>
+    (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+
   const handleApprove = (skillId: string, reason: string) => {
     approveMutation.mutate({ skillId, reason }, {
       onSuccess: (data) => setFeedback({ message: `Skill ${data.skill_id}: ${data.status}`, type: 'success' }),
       onError: (err: unknown) => {
-        const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-        setFeedback({ message: detail || 'Approve failed', type: 'error' });
+        setFeedback({ message: extractErrorDetail(err) || 'Approve failed', type: 'error' });
       },
     });
   };
@@ -43,8 +45,7 @@ export function ReviewQueue() {
     rejectMutation.mutate({ skillId, reason }, {
       onSuccess: (data) => setFeedback({ message: `Skill ${data.skill_id}: ${data.status}`, type: 'success' }),
       onError: (err: unknown) => {
-        const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-        setFeedback({ message: detail || 'Reject failed', type: 'error' });
+        setFeedback({ message: extractErrorDetail(err) || 'Reject failed', type: 'error' });
       },
     });
   };

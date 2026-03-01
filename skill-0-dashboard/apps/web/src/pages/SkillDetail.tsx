@@ -77,7 +77,8 @@ export function SkillDetail() {
     if (!result) return;
     setActionResult(result);
     if (result.status === 'success') {
-      setActionMessage({ text: `Test complete — score: ${Math.round(((result.results[0]?.overall_score as number) ?? 0) * 100)}%`, ok: true });
+      const score = (result.results[0]?.overall_score as number | undefined) ?? 0;
+      setActionMessage({ text: `Test complete — score: ${Math.round(score * 100)}%`, ok: true });
     } else {
       setActionMessage({ text: result.error_message ?? result.error_code ?? 'Test failed', ok: false });
     }
@@ -171,7 +172,7 @@ export function SkillDetail() {
                 </TableHeader>
                 <TableBody>
                   {actionResult.results.map((row, idx) => (
-                    <TableRow key={row.skill_id !== undefined ? String(row.skill_id) : idx}>
+                    <TableRow key={row.skill_id !== undefined ? String(row.skill_id) : `${actionKind}-${idx}`}>
                       <TableCell className="font-mono text-xs">{String(row.skill_id ?? '-')}</TableCell>
                       <TableCell>
                         <Badge className={actionStatusColors[String(row.status)] ?? 'bg-gray-100 text-gray-800'}>
