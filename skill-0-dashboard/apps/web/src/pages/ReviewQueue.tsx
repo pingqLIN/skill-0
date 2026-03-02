@@ -8,8 +8,14 @@ import { CheckCircle } from 'lucide-react';
 
 type FilterType = 'all' | 'safe' | 'risky';
 
+interface Feedback {
+  message: string;
+  type: 'success' | 'error';
+}
+
 export function ReviewQueue() {
   const [filter, setFilter] = useState<FilterType>('all');
+  const [feedback, setFeedback] = useState<Feedback | null>(null);
   const { data: skills, isLoading } = usePendingReviews();
   const approveMutation = useApproveSkill();
   const rejectMutation = useRejectSkill();
@@ -23,12 +29,25 @@ export function ReviewQueue() {
   const safeCount = skills?.filter(s => ['safe', 'low'].includes(s.risk_level)).length || 0;
   const riskyCount = skills?.filter(s => ['medium', 'high', 'critical'].includes(s.risk_level)).length || 0;
 
+  const extractErrorDetail = (err: unknown) =>
+    (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+
   const handleApprove = (skillId: string, reason: string) => {
-    approveMutation.mutate({ skillId, reason });
+    approveMutation.mutate({ skillId, reason }, {
+      onSuccess: (data) => setFeedback({ message: `Skill ${data.skill_id}: ${data.status}`, type: 'success' }),
+      onError: (err: unknown) => {
+        setFeedback({ message: extractErrorDetail(err) || 'Approve failed', type: 'error' });
+      },
+    });
   };
 
   const handleReject = (skillId: string, reason: string) => {
-    rejectMutation.mutate({ skillId, reason });
+    rejectMutation.mutate({ skillId, reason }, {
+      onSuccess: (data) => setFeedback({ message: `Skill ${data.skill_id}: ${data.status}`, type: 'success' }),
+      onError: (err: unknown) => {
+        setFeedback({ message: extractErrorDetail(err) || 'Reject failed', type: 'error' });
+      },
+    });
   };
 
   if (isLoading) {
@@ -52,6 +71,14 @@ export function ReviewQueue() {
           </Button>
         )}
       </div>
+
+      {/* Backend response feedback */}
+      {feedback && (
+        <div className={`mb-4 px-4 py-3 rounded-lg text-sm flex justify-between items-center ${feedback.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
+          <span>{feedback.message}</span>
+          <button onClick={() => setFeedback(null)} aria-label="Dismiss feedback message" className="ml-4 font-bold">×</button>
+        </div>
+      )}
 
       {/* Filter Tabs */}
       <div className="flex gap-2 mb-6">
