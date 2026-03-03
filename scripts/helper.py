@@ -10,6 +10,7 @@ Provides:
 
 import json
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -290,3 +291,64 @@ def generate_template(output_path: str) -> None:
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(template, f, indent=2, ensure_ascii=False)
+
+
+def main() -> None:
+    """CLI entrypoint for helper utilities."""
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Skill-0 helper utilities",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    # validate subcommand
+    validate_parser = subparsers.add_parser("validate", help="Validate a skill JSON file")
+    validate_parser.add_argument("path", help="Path to the skill JSON file")
+
+    # convert subcommand
+    convert_parser = subparsers.add_parser("convert", help="Convert a markdown skill file to JSON")
+    convert_parser.add_argument("input", help="Path to the input markdown file")
+    convert_parser.add_argument("output", help="Path to the output JSON file")
+
+    # test subcommand
+    test_parser = subparsers.add_parser("test", help="Test execution paths in a skill JSON file")
+    test_parser.add_argument("path", help="Path to the skill JSON file")
+    test_parser.add_argument("--complexity", action="store_true", help="Also analyze complexity")
+
+    # template subcommand
+    template_parser = subparsers.add_parser("template", help="Generate a skeleton skill template")
+    template_parser.add_argument("output", help="Path to write the template JSON file")
+
+    args = parser.parse_args()
+
+    if args.command == "validate":
+        validator = SkillValidator()
+        valid = validator.validate(args.path)
+        for err in validator.errors:
+            print(f"ERROR: {err}", file=sys.stderr)
+        for warn in validator.warnings:
+            print(f"WARNING: {warn}", file=sys.stderr)
+        if valid:
+            print(f"OK: {args.path}")
+        sys.exit(0 if valid else 1)
+
+    elif args.command == "convert":
+        converter = SkillConverter()
+        converter.markdown_to_json(args.input, args.output)
+        print(f"Converted '{args.input}' -> '{args.output}'")
+
+    elif args.command == "test":
+        tester = SkillTester(args.path)
+        tester.test_execution_paths()
+        if args.complexity:
+            tester.analyze_complexity()
+
+    elif args.command == "template":
+        generate_template(args.output)
+        print(f"Template written to '{args.output}'")
+
+
+if __name__ == "__main__":
+    main()
