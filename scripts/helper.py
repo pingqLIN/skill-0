@@ -88,12 +88,12 @@ class SkillValidator:
         for rule in decomp.get("rules", []):
             rule_id = rule.get("id", "")
             if not RULE_ID_PATTERN.match(rule_id):
-                self.warnings.append(f"Rule ID '{rule_id}' does not match r_NNN pattern")
+                self.errors.append(f"Invalid rule ID '{rule_id}'. Must match r_NNN pattern")
 
         for directive in decomp.get("directives", []):
             directive_id = directive.get("id", "")
             if not DIRECTIVE_ID_PATTERN.match(directive_id):
-                self.warnings.append(f"Directive ID '{directive_id}' does not match d_NNN pattern")
+                self.errors.append(f"Invalid directive ID '{directive_id}'. Must match d_NNN pattern")
 
 
 class SkillConverter:

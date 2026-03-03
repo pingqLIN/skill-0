@@ -166,6 +166,67 @@ class TestSkillValidator:
         assert result is False
         assert any("action_type" in error for error in validator.errors)
 
+    def test_validate_invalid_rule_id(self, validator, tmp_path):
+        """Test validation fails for invalid rule ID pattern"""
+        skill = {
+            "meta": {
+                "skill_id": "test",
+                "name": "test",
+                "skill_layer": "claude_skill",
+                "title": "Test",
+                "description": "Test",
+                "schema_version": "2.0.0"
+            },
+            "decomposition": {
+                "actions": [],
+                "rules": [{
+                    "id": "bad",
+                    "name": "Test Rule",
+                    "condition_type": "validation",
+                    "condition": "some condition",
+                    "output": "boolean",
+                    "description": "Test"
+                }],
+                "directives": []
+            }
+        }
+
+        skill_path = tmp_path / "test_skill.json"
+        skill_path.write_text(json.dumps(skill))
+
+        result = validator.validate(str(skill_path))
+        assert result is False
+        assert any("Invalid rule ID" in error for error in validator.errors)
+
+    def test_validate_invalid_directive_id(self, validator, tmp_path):
+        """Test validation fails for invalid directive ID pattern"""
+        skill = {
+            "meta": {
+                "skill_id": "test",
+                "name": "test",
+                "skill_layer": "claude_skill",
+                "title": "Test",
+                "description": "Test",
+                "schema_version": "2.0.0"
+            },
+            "decomposition": {
+                "actions": [],
+                "rules": [],
+                "directives": [{
+                    "id": "bad",
+                    "directive_type": "completion",
+                    "description": "Test directive"
+                }]
+            }
+        }
+
+        skill_path = tmp_path / "test_skill.json"
+        skill_path.write_text(json.dumps(skill))
+
+        result = validator.validate(str(skill_path))
+        assert result is False
+        assert any("Invalid directive ID" in error for error in validator.errors)
+
 
 class TestSkillConverter:
     """Test suite for SkillConverter class - Code Equivalence Tests"""
