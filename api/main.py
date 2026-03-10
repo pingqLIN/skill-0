@@ -554,7 +554,6 @@ async def search_skills(request: SearchRequest):
     
     Use natural language query to find relevant skills.
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
@@ -580,7 +579,6 @@ async def search_skills_get(
     
     Use natural language query to find relevant skills.
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
@@ -603,7 +601,6 @@ async def find_similar_skills(request: SimilarRequest):
     
     Find other skills with similar functionality based on the specified skill name.
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
@@ -630,7 +627,6 @@ async def find_similar_skills_get(
     """
     Find similar Skills (GET)
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
@@ -729,7 +725,6 @@ async def index_skills(request: IndexRequest, _user: dict = Depends(require_auth
     
     Rebuild vector index from parsed directory.
     """
-    import time
     start = time.time()
     
     engine = get_search_engine()
