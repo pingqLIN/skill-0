@@ -10,6 +10,29 @@
 
 Skill-0 is a classification system that parses AI/Chatbot Skills (especially Claude Skills and MCP Tools) into structured components. It includes **semantic search** powered by vector embeddings for intelligent skill discovery.
 
+## Compatibility with Existing Skills
+
+### Low-risk adoption path
+
+1. **Keep existing skills intact**: do sidecar parsing first (`SKILL.md`/tool definitions → Skill-0 JSON).
+2. **Build a mapping layer**: map original text blocks to `actions/rules/directives` for shared vocabulary.
+3. **Roll out incrementally**: start with search/governance/review workflows before enforcing authoring changes.
+
+### Practical applications
+
+- **Skill inventory and deduplication** with semantic search.
+- **Governance review** with structured checks on rules, constraints, and failure patterns.
+- **Operational handover** by turning tacit knowledge into queryable elements.
+
+### Pros and trade-offs
+
+| Area | Pros | Trade-offs |
+|------|------|------------|
+| Compatibility | Sidecar rollout avoids full rewrite | Two artifacts to maintain in early stages |
+| Dev productivity | Structured data improves search, comparison, templating | Initial decomposition and tagging cost |
+| Governance quality | Rules/directives become reviewable and standardizable | Analysis quality depends on decomposition accuracy |
+| Scalability | Integrates with API, dashboard, vector search | Schema upgrades require migration planning |
+
 ## Ternary Classification System
 
 Organizes and defines the immutable parts of a Skill (or parts that change behavior when modified) into three categories:
