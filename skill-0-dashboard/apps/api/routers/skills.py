@@ -5,6 +5,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from ..schemas.skill import SkillSummary, SkillDetail, SkillListResponse
+from ..schemas.action import ActionReadiness, ActionResult
 from ..services.governance import GovernanceService
 from ..dependencies import get_governance_service
 
@@ -40,6 +41,18 @@ def list_skills(
     )
 
 
+@router.get("/skills/{skill_id}/action-readiness", response_model=ActionReadiness)
+def get_action_readiness(
+    skill_id: str,
+    service: GovernanceService = Depends(get_governance_service),
+) -> ActionReadiness:
+    """Check whether scan and test actions can be executed for a skill"""
+    data = service.get_action_readiness(skill_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Skill not found")
+    return ActionReadiness(**data)
+
+
 @router.get("/skills/{skill_id}", response_model=SkillDetail)
 def get_skill(
     skill_id: str,
@@ -52,27 +65,31 @@ def get_skill(
     return SkillDetail(**data)
 
 
-@router.post("/skills/scan")
+@router.post("/skills/scan", response_model=ActionResult)
 def trigger_scan(
     skill_id: Optional[str] = Query(
         None, description="Skill ID to scan (or scan all pending)"
     ),
-) -> dict:
-    """Trigger a security scan (stub - to be implemented)"""
-    return {
-        "status": "queued",
-        "message": f"Security scan queued for {'skill ' + skill_id if skill_id else 'all pending skills'}",
-    }
+    service: GovernanceService = Depends(get_governance_service),
+) -> ActionResult:
+    """Trigger a security scan for one or all pending skills"""
+    if skill_id:
+        result = service.run_scan(skill_id)
+    else:
+        result = service.run_scan_batch()
+    return ActionResult(**result)
 
 
-@router.post("/skills/test")
+@router.post("/skills/test", response_model=ActionResult)
 def trigger_test(
     skill_id: Optional[str] = Query(
         None, description="Skill ID to test (or test all pending)"
     ),
-) -> dict:
-    """Trigger an equivalence test (stub - to be implemented)"""
-    return {
-        "status": "queued",
-        "message": f"Equivalence test queued for {'skill ' + skill_id if skill_id else 'all pending skills'}",
-    }
+    service: GovernanceService = Depends(get_governance_service),
+) -> ActionResult:
+    """Trigger an equivalence test for one or all pending skills"""
+    if skill_id:
+        result = service.run_test(skill_id)
+    else:
+        result = service.run_test_batch()
+    return ActionResult(**result)
