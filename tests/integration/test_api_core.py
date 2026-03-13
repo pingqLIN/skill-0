@@ -9,6 +9,7 @@ Tests all 14+ endpoints with real skills.db:
   - Rate limiting, error cases
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -16,6 +17,12 @@ import pytest
 
 # Ensure project root is on path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+
+# Skip entire module when running in offline CI mode (HuggingFace models cannot be downloaded)
+pytestmark = pytest.mark.skipif(
+    os.environ.get("HF_HUB_OFFLINE") == "1" or os.environ.get("TRANSFORMERS_OFFLINE") == "1",
+    reason="Skipped in offline CI mode: SentenceTransformer model download not available",
+)
 
 from fastapi.testclient import TestClient
 from api.main import app, create_access_token, _rate_limit_store, search_engine as _global_engine
