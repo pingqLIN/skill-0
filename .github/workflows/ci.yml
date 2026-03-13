@@ -84,6 +84,9 @@ jobs:
           pip install pytest-cov pytest-timeout
 
       - name: Run tests
+        env:
+          HF_HUB_OFFLINE: "1"
+          TRANSFORMERS_OFFLINE: "1"
         run: |
           python -m pytest tests/ -v --timeout=120 --cov=api --cov=vector_db --cov=tools --cov-report=term-missing --cov-report=xml:coverage.xml
 

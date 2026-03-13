@@ -9,10 +9,19 @@ Tests all 14+ endpoints with real skills.db:
   - Rate limiting, error cases
 """
 
+import os
 import sys
 from pathlib import Path
 
 import pytest
+
+# Skip all tests in this module if running in offline mode
+# (HuggingFace model downloads are blocked by firewall)
+# This must be set BEFORE any imports that might trigger model downloads
+pytestmark = pytest.mark.skipif(
+    os.getenv("HF_HUB_OFFLINE") == "1" or os.getenv("TRANSFORMERS_OFFLINE") == "1",
+    reason="Skipping tests that require HuggingFace model downloads (offline mode)"
+)
 
 # Ensure project root is on path
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
