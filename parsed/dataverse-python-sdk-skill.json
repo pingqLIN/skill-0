@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-sdk",
+    "skill_id": "claude__skill__dataverse_python_sdk",
     "name": "dataverse-python-sdk",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Sdk Skill",
@@ -145,31 +145,36 @@
         "directive_type": "knowledge",
         "description": "This instruction summarizes Microsoft Learn guidance for the Dataverse SDK for Python (preview) and provides copyable snippets.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This instruction summarizes Microsoft Learn guidance..."
       },
       {
         "directive_type": "preference",
         "description": "cfg = DataverseConfig()  # defaults to language_code=1033",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "cfg = DataverseConfig() # defaults to..."
       },
       {
         "directive_type": "knowledge",
         "description": "Optional HTTP settings: `cfg.http_retries`, `cfg.http_backoff`, `cfg.http_timeout`.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Optional HTTP settings: `cfg.http_retries`, `cfg.http_backoff`, `cfg.http_timeou"
       },
       {
         "directive_type": "knowledge",
         "description": "Working with data: https://learn.microsoft.com/en-us/power-apps/developer/data-platform/sdk-python/work-data",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Working with data: https://learn.microsoft.com/en-us/power-apps/developer/data-p"
       },
       {
         "directive_type": "knowledge",
         "description": "SDK source/examples: https://github.com/microsoft/PowerPlatform-DataverseClient-Python",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "SDK source/examples: https://github.com/microsoft/PowerPlatform-DataverseClient-"
       }
     ]
   }

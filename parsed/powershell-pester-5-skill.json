@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__powershell-pester-5",
+    "skill_id": "claude__skill__powershell_pester",
     "name": "powershell-pester-5",
     "skill_layer": "claude_skill",
     "title": "Powershell Pester 5 Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "It 'Should behavior' { # Individual test }",
-        "condition": "test structure hierarchy",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "It 'Should behavior' { # Individual...",
+        "condition_expression": "test structure hierarchy",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "`Should`: Assertion keyword for test validation",
-        "condition": "core keywords",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "`Should`: Assertion keyword for test validation",
+        "condition_expression": "core keywords",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "`Should -Invoke`: Verify mock was called specific number of times",
-        "condition": "mocking",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "`Should -Invoke`: Verify mock was called...",
+        "condition_expression": "mocking",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "`Should -InvokeVerifiable`: Verify all verifiable mocks were called",
-        "condition": "mocking",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "`Should -InvokeVerifiable`: Verify all verifiable mocks...",
+        "condition_expression": "mocking",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Should -Invoke Get-Service -Exactly 1 -ParameterFilter { $Name -eq 'TestService' }",
-        "condition": "mocking",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Should -Invoke Get-Service -Exactly 1 -ParameterFilter...",
+        "condition_expression": "mocking",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "It 'Should return <Expected> for <Input>' -TestCases @(",
-        "condition": "test cases (data-driven tests)",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "It 'Should return <Expected> for <Input>'...",
+        "condition_expression": "test cases (data-driven tests)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Get-Function $Input | Should -Be $Expected",
-        "condition": "test cases (data-driven tests)",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Get-Function $Input | Should -Be $Expected",
+        "condition_expression": "test cases (data-driven tests)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "It 'Should work' -Tag 'Fast', 'Stable' { }",
-        "condition": "tags",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "It 'Should work' -Tag 'Fast', 'Stable'...",
+        "condition_expression": "tags",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "It 'Should be slow' -Tag 'Slow', 'Integration' { }",
-        "condition": "tags",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "It 'Should be slow' -Tag 'Slow',...",
+        "condition_expression": "tags",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "It 'Should work on Windows' -Skip:(-not $IsWindows) { }",
-        "condition": "skip",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "It 'Should work on Windows' -Skip:(-not...",
+        "condition_expression": "skip",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "This guide provides PowerShell-specific instructions for creating automated tests using PowerShell Pester v5 module. Follow PowerShell cmdlet developm",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This guide provides PowerShell-specific instructions for..."
       },
       {
         "directive_type": "knowledge",
         "description": "No Direct Code: Put ALL code inside Pester blocks (`BeforeAll`, `Describe`, `Context`, `It`, etc.)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "No Direct Code: Put ALL code..."
       },
       {
         "directive_type": "knowledge",
         "description": "`Context`: Sub-grouping within Describe for specific scenarios",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "`Context`: Sub-grouping within Describe for specific..."
       },
       {
         "directive_type": "knowledge",
         "description": "Numeric: `-BeGreaterThan`, `-BeLessThan`, `-BeGreaterOrEqual`",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Numeric: `-BeGreaterThan`, `-BeLessThan`, `-BeGreaterOrEqual`"
       },
       {
         "directive_type": "knowledge",
         "description": "`Mock CommandName { ScriptBlock }`: Replace command behavior",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "`Mock CommandName { ScriptBlock }`: Replace..."
       },
       {
         "directive_type": "knowledge",
         "description": "`-ParameterFilter`: Mock only when parameters match condition",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "`-ParameterFilter`: Mock only when parameters match..."
       },
       {
         "directive_type": "knowledge",
         "description": "It 'Returns <Expected> for <Name>' -ForEach @(",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "It 'Returns <Expected> for <Name>' -ForEach..."
       },
       {
         "directive_type": "completion",
         "description": "@{ Name = 'test1'; Expected = 'result1' }",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "@{ Name = 'test1'; Expected =..."
       },
       {
         "directive_type": "completion",
         "description": "@{ Name = 'test2'; Expected = 'result2' }",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "@{ Name = 'test2'; Expected =..."
       },
       {
         "directive_type": "knowledge",
         "description": ") { Get-Function $Name | Should -Be $Expected }",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": ") { Get-Function $Name | Should..."
       }
     ]
   }

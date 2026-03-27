@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__agents",
+    "skill_id": "claude__skill__agents",
     "name": "agents",
     "skill_layer": "claude_skill",
     "title": "Agents Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Every agent file must include YAML frontmatter with the following fields:",
-        "condition": "required frontmatter",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Every agent file must include YAML...",
+        "condition_expression": "required frontmatter",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Should be concise (50-150 characters) and actionable",
-        "condition": "**description** (required)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Should be concise (50-150 characters) and...",
+        "condition_expression": "**description** (required)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Specifies which AI model the agent should use",
-        "condition": "**model** (strongly recommended)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Specifies which AI model the agent...",
+        "condition_expression": "**model** (strongly recommended)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Choose based on agent complexity and required capabilities",
-        "condition": "**model** (strongly recommended)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Choose based on agent complexity and...",
+        "condition_expression": "**model** (strongly recommended)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Set to `false` to require manual agent selection",
-        "condition": "**infer** (optional)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Set to `false` to require manual...",
+        "condition_expression": "**infer** (optional)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Each handoff in the list must include the following properties:",
-        "condition": "handoff properties",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Each handoff in the list must...",
+        "condition_expression": "handoff properties",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| Property | Type | Required | Description |",
-        "condition": "handoff properties",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "| Property | Type | Required...",
+        "condition_expression": "handoff properties",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Manual vs Auto: When `send: false`, users must review and manually send the pre-filled prompt; when `send: true`, the prompt is automatically submitte",
-        "condition": "handoff behavior",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Manual vs Auto: When `send: false`,...",
+        "condition_expression": "handoff behavior",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "4. Identify testing requirements",
-        "condition": "planner agent",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "4. Identify testing requirements",
+        "condition_expression": "planner agent",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do not write any code - focus only on planning.",
-        "condition": "planner agent",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Do not write any code -...",
+        "condition_expression": "planner agent",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Instructions for creating effective and maintainable custom agent files that provide specialized expertise for specific development tasks in GitHub Co",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Instructions for creating effective and maintainable..."
       },
       {
         "directive_type": "knowledge",
         "description": "Target audience: Developers creating custom agents for GitHub Copilot",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Target audience: Developers creating custom agents..."
       },
       {
         "directive_type": "knowledge",
         "description": "File format: Markdown with YAML frontmatter",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "File format: Markdown with YAML frontmatter"
       },
       {
         "directive_type": "preference",
         "description": "File naming convention: lowercase with hyphens (e.g., `test-specialist.agent.md`)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "File naming convention: lowercase with hyphens..."
       },
       {
         "directive_type": "knowledge",
         "description": "Location: `.github/agents/` directory (repository-level) or `agents/` directory (organization/enterprise-level)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Location: `.github/agents/` directory (repository-level) or `agents/`..."
       },
       {
         "directive_type": "knowledge",
         "description": "Purpose: Define specialized agents with tailored expertise, tools, and instructions for specific tasks",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Purpose: Define specialized agents with tailored..."
       },
       {
         "directive_type": "knowledge",
         "description": "Official documentation: https://docs.github.com/en/copilot/how-tos/use-copilot-agents/coding-agent/create-custom-agents",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Official documentation: https://docs.github.com/en/copilot/how-tos/use-copilot-a"
       },
       {
         "directive_type": "knowledge",
         "description": "description: 'Brief description of the agent purpose and capabilities'",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "description: 'Brief description of the agent..."
       },
       {
         "directive_type": "knowledge",
         "description": "Single-quoted string, clearly stating the agent's purpose and domain expertise",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Single-quoted string, clearly stating the agent's..."
       },
       {
         "directive_type": "preference",
         "description": "If omitted, defaults to filename (without `.md` or `.agent.md`)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "If omitted, defaults to filename (without..."
       }
     ]
   }

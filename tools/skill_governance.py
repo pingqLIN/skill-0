@@ -5,7 +5,7 @@ Skill Governance CLI
 Unified command-line interface for skill governance:
 - Import skills with full pipeline (scan → convert → test → register)
 - Security scanning
-- Equivalence testing
+- Fidelity testing
 - Review and approval workflow
 - Audit trail
 
@@ -37,7 +37,7 @@ from typing import Optional, List, Dict, Any
 # Import local modules
 from governance_db import GovernanceDB, SkillRecord
 from skill_scanner import SkillSecurityScanner, ScanResult, RiskLevel
-from skill_tester import SkillEquivalenceTester, EquivalenceResult
+from skill_tester import SkillFidelityTester, FidelityResult
 from skill_converter import SkillConverter  # Assuming this exists
 from skill_installer import OpenCodeSkillInstaller
 
@@ -56,7 +56,7 @@ class SkillGovernanceCLI:
         self.verbose = verbose
         self.db = GovernanceDB(db_path=db_path)
         self.scanner = SkillSecurityScanner(verbose=verbose)
-        self.tester = SkillEquivalenceTester(verbose=verbose)
+        self.tester = SkillFidelityTester(verbose=verbose)
 
         # Directories
         self.converted_dir = (
@@ -85,7 +85,7 @@ class SkillGovernanceCLI:
         1. Detect source format
         2. Security scan
         3. Convert if needed
-        4. Equivalence test
+        4. Fidelity test
         5. Register in database
         6. Auto-approve if safe
         """
@@ -165,15 +165,15 @@ class SkillGovernanceCLI:
                 {"step": "convert", "skipped": True, "reason": skip_convert}
             )
 
-        # 4. Equivalence test
+        # 4. Fidelity test
         if (
             not skip_equivalence
             and converted_path
             and source_format == "instructions.md"
         ):
-            self.log("Step 4: Equivalence testing...")
+            self.log("Step 4: Fidelity testing...")
             try:
-                test_result = self.tester.test_equivalence(skill_file, converted_path)
+                test_result = self.tester.test_fidelity(skill_file, converted_path)
                 result["steps"].append(
                     {
                         "step": "test",
@@ -184,7 +184,7 @@ class SkillGovernanceCLI:
 
                 if not test_result.passed:
                     result["warning"] = (
-                        "Equivalence test failed but continuing registration"
+                        "Fidelity test failed but continuing registration"
                     )
             except Exception as e:
                 result["steps"].append({"step": "test", "error": str(e)})
@@ -239,7 +239,7 @@ class SkillGovernanceCLI:
                         {
                             "step": "approve",
                             "skipped": True,
-                            "reason": "Equivalence test failed",
+                            "reason": "Fidelity test failed",
                         }
                     )
             else:
@@ -313,9 +313,9 @@ class SkillGovernanceCLI:
         original_path: Path,
         converted_path: Path,
         output_format: str = "text",
-    ) -> EquivalenceResult:
-        """Run equivalence test"""
-        result = self.tester.test_equivalence(original_path, converted_path)
+    ) -> FidelityResult:
+        """Run fidelity test"""
+        result = self.tester.test_fidelity(original_path, converted_path)
 
         if output_format == "json":
             print(self.tester.format_report_json(result))
@@ -348,7 +348,7 @@ class SkillGovernanceCLI:
             print(f"     Source: {skill.source_path}")
             if skill.equivalence_score:
                 equiv_icon = "✅" if skill.equivalence_score >= 0.8 else "⚠️"
-                print(f"     Equivalence: {equiv_icon} {skill.equivalence_score:.1%}")
+                print(f"     Fidelity: {equiv_icon} {skill.equivalence_score:.1%}")
             print()
 
         return skills
@@ -479,7 +479,7 @@ class SkillGovernanceCLI:
             )
             if skill.equivalence_score:
                 equiv_icon = "✅" if skill.equivalence_score >= 0.8 else "⚠️"
-                print(f"Equivalence: {equiv_icon} {skill.equivalence_score:.1%}")
+                print(f"Fidelity: {equiv_icon} {skill.equivalence_score:.1%}")
             print()
             print(f"Created:     {skill.created_at[:19]}")
             print(f"Updated:     {skill.updated_at[:19]}")
@@ -661,7 +661,7 @@ def main():
         "--skip-security", action="store_true", help="Skip security scan"
     )
     import_parser.add_argument(
-        "--skip-equivalence", action="store_true", help="Skip equivalence test"
+        "--skip-equivalence", action="store_true", help="Skip fidelity test"
     )
     import_parser.add_argument(
         "--skip-convert", action="store_true", help="Skip conversion"
@@ -676,7 +676,7 @@ def main():
     scan_parser.add_argument("--format", choices=["text", "json"], default="text")
 
     # test command
-    test_parser = subparsers.add_parser("test", help="Equivalence test")
+    test_parser = subparsers.add_parser("test", help="Fidelity test")
     test_parser.add_argument("original", type=Path)
     test_parser.add_argument("converted", type=Path)
     test_parser.add_argument("--format", choices=["text", "json"], default="text")

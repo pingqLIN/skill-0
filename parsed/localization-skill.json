@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__localization",
+    "skill_id": "claude__skill__localization",
     "name": "localization",
     "skill_layer": "claude_skill",
     "title": "Localization Skill",
@@ -30,57 +30,75 @@
     "rules": [
       {
         "description": "All localized documents should be placed under the `localization/{{locale}}` directory.",
-        "condition": "instruction",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "All localized documents should be placed...",
+        "condition_expression": "instruction",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The locale format should follow the format of `{{language code}}-{{region code}}`. The language code is defined in ISO 639-1, and the region code is d",
-        "condition": "instruction",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "The locale format should follow the...",
+        "condition_expression": "instruction",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "DO NOT miss any sections nor any paragraphs while localizing.",
-        "condition": "instruction",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "DO NOT miss any sections nor...",
+        "condition_expression": "instruction",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "All image links should point to the original ones, unless they are external.",
-        "condition": "instruction",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "All image links should point to...",
+        "condition_expression": "instruction",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "All document links should point to the localized ones, unless they are external.",
-        "condition": "instruction",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "All document links should point to...",
+        "condition_expression": "instruction",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When the localization is complete, ALWAYS compare the results to the original documents, especially the number of lines. If the number of lines of eac",
-        "condition": "instruction",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "When the localization is complete, ALWAYS...",
+        "condition_expression": "instruction",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "ALWAYS add the disclaimer to the end of each localized document.",
-        "condition": "disclaimer",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "ALWAYS add the disclaimer to the...",
+        "condition_expression": "disclaimer",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The disclaimer should also be localized.",
-        "condition": "disclaimer",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "The disclaimer should also be localized",
+        "condition_expression": "disclaimer",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Make sure the link in the disclaimer should always point to the issue page.",
-        "condition": "disclaimer",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Make sure the link in the...",
+        "condition_expression": "disclaimer",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -88,19 +106,22 @@
         "directive_type": "knowledge",
         "description": "You're an expert of localization for technical documents. Follow the instruction to localize documents.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "You're an expert of localization for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Find all markdown documents and localize them into given locale.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Find all markdown documents and localize..."
       },
       {
         "directive_type": "knowledge",
         "description": "Localize all the sections and paragraphs in the original documents.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Localize all the sections and paragraphs..."
       }
     ]
   }

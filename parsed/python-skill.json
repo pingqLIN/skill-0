@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__python",
+    "skill_id": "claude__skill__python",
     "name": "python",
     "skill_layer": "claude_skill",
     "title": "Python Skill",
@@ -62,27 +62,35 @@
     "rules": [
       {
         "description": "Ensure functions have descriptive names and include type hints.",
-        "condition": "python instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Ensure functions have descriptive names and...",
+        "condition_expression": "python instructions",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Always prioritize readability and clarity.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Always prioritize readability and clarity",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure lines do not exceed 79 characters.",
-        "condition": "code style and formatting",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Ensure lines do not exceed 79...",
+        "condition_expression": "code style and formatting",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Always include test cases for critical paths of the application.",
-        "condition": "edge cases and testing",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Always include test cases for critical...",
+        "condition_expression": "edge cases and testing",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -90,61 +98,71 @@
         "directive_type": "knowledge",
         "description": "Use the `typing` module for type annotations (e.g., `List[str]`, `Dict[str, int]`).",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use the `typing` module for type..."
       },
       {
         "directive_type": "knowledge",
         "description": "Break down complex functions into smaller, more manageable functions.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Break down complex functions into smaller,..."
       },
       {
         "directive_type": "principle",
         "description": "For algorithm-related code, include explanations of the approach used.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "For algorithm-related code, include explanations of..."
       },
       {
         "directive_type": "knowledge",
         "description": "For libraries or external dependencies, mention their usage and purpose in comments.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "For libraries or external dependencies, mention..."
       },
       {
         "directive_type": "preference",
         "description": "Use consistent naming conventions and follow language-specific best practices.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use consistent naming conventions and follow..."
       },
       {
         "directive_type": "knowledge",
         "description": "Maintain proper indentation (use 4 spaces for each level of indentation).",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Maintain proper indentation (use 4 spaces..."
       },
       {
         "directive_type": "knowledge",
         "description": "Place function and class docstrings immediately after the `def` or `class` keyword.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Place function and class docstrings immediately..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use blank lines to separate functions, classes, and code blocks where appropriate.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use blank lines to separate functions,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Account for common edge cases like empty inputs, invalid data types, and large datasets.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Account for common edge cases like..."
       },
       {
         "directive_type": "knowledge",
         "description": "Include comments for edge cases and the expected behavior in those cases.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Include comments for edge cases and..."
       }
     ]
   }

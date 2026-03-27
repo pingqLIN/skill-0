@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__java-17-to-java-21-upgrade",
+    "skill_id": "claude__skill__java_to_java_upgrade",
     "name": "java-17-to-java-21-upgrade",
     "skill_layer": "claude_skill",
     "title": "Java 17 To Java 21 Upgrade Skill",
@@ -142,15 +142,19 @@
     "rules": [
       {
         "description": "No special JVM flags required (standard feature in 21)",
-        "condition": "virtual threads configuration",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "No special JVM flags required (standard...",
+        "condition_expression": "virtual threads configuration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "1. Update Build Tools: Ensure Maven/Gradle supports JDK 21",
-        "condition": "step-by-step upgrade process",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "1. Update Build Tools: Ensure Maven/Gradle...",
+        "condition_expression": "step-by-step upgrade process",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -158,61 +162,71 @@
         "directive_type": "knowledge",
         "description": "These instructions help GitHub Copilot assist developers in upgrading Java projects from JDK 17 to JDK 21, focusing on new language features, API chan",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "These instructions help GitHub Copilot assist..."
       },
       {
         "directive_type": "knowledge",
         "description": "Enhanced switch Expressions and Statements",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Enhanced switch Expressions and Statements"
       },
       {
         "directive_type": "knowledge",
         "description": "When working with switch constructs:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "When working with switch constructs"
       },
       {
         "directive_type": "strategy",
         "description": "Suggest converting traditional switch to pattern matching where appropriate",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Suggest converting traditional switch to pattern..."
       },
       {
         "directive_type": "strategy",
         "description": "Use pattern matching for type checking and destructuring",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use pattern matching for type checking..."
       },
       {
         "directive_type": "strategy",
         "description": "Example upgrade patterns:",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Example upgrade patterns"
       },
       {
         "directive_type": "strategy",
         "description": "public String processObject(Object obj) {",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "public String processObject(Object obj) {"
       },
       {
         "directive_type": "knowledge",
         "description": "} else if (obj instanceof Integer) {",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "} else if (obj instanceof Integer)..."
       },
       {
         "directive_type": "knowledge",
         "description": "case String s -> s.toUpperCase();",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "case String s -> s.toUpperCase();"
       },
       {
         "directive_type": "knowledge",
         "description": "case Integer i -> i.toString();",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "case Integer i -> i.toString();"
       }
     ]
   }

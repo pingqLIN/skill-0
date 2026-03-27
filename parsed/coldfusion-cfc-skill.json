@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__coldfusion-cfc",
+    "skill_id": "claude__skill__coldfusion_cfc",
     "name": "coldfusion-cfc",
     "skill_layer": "claude_skill",
     "title": "Coldfusion Cfc Skill",
@@ -24,61 +24,71 @@
         "directive_type": "principle",
         "description": "Use CFScript where possible for cleaner syntax.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use CFScript where possible for cleaner..."
       },
       {
         "directive_type": "knowledge",
         "description": "Avoid using deprecated tags and functions.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Avoid using deprecated tags and functions"
       },
       {
         "directive_type": "preference",
         "description": "Follow consistent naming conventions for variables and components.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Follow consistent naming conventions for variables..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `cfqueryparam` to prevent SQL injection.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use `cfqueryparam` to prevent SQL injection"
       },
       {
         "directive_type": "completion",
         "description": "Escape CSS hash symbols inside <cfoutput> blocks using ##",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Escape CSS hash symbols inside <cfoutput>..."
       },
       {
         "directive_type": "strategy",
         "description": "Use `this` scope for component properties and methods when appropriate.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use `this` scope for component properties..."
       },
       {
         "directive_type": "preference",
         "description": "Document all functions with purpose, parameters, and return values (use Javadoc or similar style).",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Document all functions with purpose, parameters,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use access modifiers (`public`, `private`, `package`, `remote`) for functions and variables.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use access modifiers (`public`, `private`, `package`,..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer dependency injection for component collaboration.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Prefer dependency injection for component collaboration"
       },
       {
         "directive_type": "knowledge",
         "description": "Avoid business logic in setters/getters; keep them simple.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Avoid business logic in setters/getters; keep..."
       }
     ]
   }

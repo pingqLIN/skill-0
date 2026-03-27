@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-sample-components",
+    "skill_id": "claude__skill__pcf_sample_components",
     "name": "pcf-sample-components",
     "skill_layer": "claude_skill",
     "title": "Pcf Sample Components Skill",
@@ -142,9 +142,11 @@
     "rules": [
       {
         "description": "To try the sample components, you must first:",
-        "condition": "before you can try the sample components",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "To try the sample components, you...",
+        "condition_expression": "before you can try the sample components",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -152,49 +154,57 @@
         "directive_type": "completion",
         "description": "The individual sample component topics under this section provide you an overview of the sample component, its visual appearance, and a link to the co",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "The individual sample component topics under..."
       },
       {
         "directive_type": "knowledge",
         "description": "Open a [Developer Command Prompt for Visual Studio](https://learn.microsoft.com/visualstudio/ide/reference/command-prompt-powershell) and navigate to ",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Open a [Developer Command Prompt for..."
       },
       {
         "directive_type": "knowledge",
         "description": "pac solution add-reference --path ../../IncrementControl",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "pac solution add-reference --path ../../IncrementControl"
       },
       {
         "directive_type": "knowledge",
         "description": "Now that you have the zip file, you have two options:",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Now that you have the zip..."
       },
       {
         "directive_type": "knowledge",
         "description": "Finally, to add code components to your model-driven and canvas apps, see:",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Finally, to add code components to..."
       },
       {
         "directive_type": "knowledge",
         "description": "[Add components to model-driven apps](https://learn.microsoft.com/powerapps/developer/component-framework/add-custom-controls-to-a-field-or-entity)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "[Add components to model-driven apps](https://learn.microsoft.com/powerapps/deve"
       },
       {
         "directive_type": "knowledge",
         "description": "[Add components to canvas apps](https://learn.microsoft.com/powerapps/developer/component-framework/component-framework-for-canvas-apps#add-components",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "[Add components to canvas apps](https://learn.microsoft.com/powerapps/developer/"
       },
       {
         "directive_type": "knowledge",
         "description": "The repository contains numerous sample components including:",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "The repository contains numerous sample components..."
       }
     ]
   }

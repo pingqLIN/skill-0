@@ -1,14 +1,14 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pptx",
+    "skill_id": "claude__skill__pptx",
     "name": "pptx",
     "skill_layer": "claude_skill",
     "title": "Pptx Skill",
     "description": "Presentation creation, editing, and analysis with support for layouts, comments, and speaker notes.",
-    "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-26T13:25:10.973364Z",
-    "parser_version": "skill-0 v2.1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-03-27T11:53:43.761040Z",
+    "parser_version": "skill-0 v2.4",
     "parsed_by": "skill-0-batch"
   },
   "original_definition": {
@@ -70,38 +70,47 @@
     "rules": [
       {
         "id": "r_001",
+        "name": "State design approach before writing code",
         "description": "State design approach before writing code",
-        "condition": "before_creation",
-        "output": "proceed_or_halt"
+        "condition_type": "state_check",
+        "condition_expression": "before_creation",
+        "returns": "boolean"
       },
       {
         "id": "r_002",
+        "name": "Match layout structure to actual content...",
         "description": "Match layout structure to actual content count",
-        "condition": "when_selecting_layout",
-        "output": "proceed_or_halt"
+        "condition_type": "consistency_check",
+        "condition_expression": "when_selecting_layout",
+        "returns": "boolean"
       },
       {
         "id": "r_003",
+        "name": "Visual validate after creation",
         "description": "Visual validate after creation",
-        "condition": "after_creation",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "after_creation",
+        "returns": "boolean"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Use web-safe fonts only",
         "directive_type": "principle",
         "description": "Use web-safe fonts only",
         "decomposable": true
       },
       {
         "id": "d_002",
+        "name": "Create clear visual hierarchy through size,...",
         "directive_type": "principle",
         "description": "Create clear visual hierarchy through size, weight, color",
         "decomposable": true
       },
       {
         "id": "d_003",
+        "name": "Nothing falls off page, nothing overlaps",
         "directive_type": "constraint",
         "description": "Nothing falls off page, nothing overlaps",
         "decomposable": true

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dotnet-architecture-good-practices",
+    "skill_id": "claude__skill__dotnet_architecture_good_practices",
     "name": "dotnet-architecture-good-practices",
     "skill_layer": "claude_skill",
     "title": "Dotnet Architecture Good Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "BEFORE any implementation, you MUST:",
-        "condition": "mandatory thinking process",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "BEFORE any implementation, you MUST",
+        "condition_expression": "mandatory thinking process",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "1.  Show Your Analysis - Always start by explaining:",
-        "condition": "mandatory thinking process",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "1. Show Your Analysis - Always...",
+        "condition_expression": "mandatory thinking process",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "2.  Review Against Guidelines - Explicitly check:",
-        "condition": "mandatory thinking process",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "2. Review Against Guidelines - Explicitly...",
+        "condition_expression": "mandatory thinking process",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "3.  Validate Implementation Plan - Before coding, state:",
-        "condition": "mandatory thinking process",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "3. Validate Implementation Plan - Before...",
+        "condition_expression": "mandatory thinking process",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Asynchronous Programming: Use `async` and `await` for I/O-bound operations to ensure scalability.",
-        "condition": "3. **.net good practices**",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Asynchronous Programming: Use `async` and `await`...",
+        "condition_expression": "3. **.net good practices**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Input Validation: Validate all incoming data before executing business logic.",
-        "condition": "application layer",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Input Validation: Validate all incoming data...",
+        "condition_expression": "application layer",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Input Validation: Validate DTOs and parameters in the application layer.",
-        "condition": "development practices",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Input Validation: Validate DTOs and parameters...",
+        "condition_expression": "development practices",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Aggregate boundaries and consistency requirements.",
-        "condition": "step 1: domain analysis (required)",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Aggregate boundaries and consistency requirements",
+        "condition_expression": "step 1: domain analysis (required)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Business rules and invariants to enforce.",
-        "condition": "step 1: domain analysis (required)",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Business rules and invariants to enforce",
+        "condition_expression": "step 1: domain analysis (required)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "All quality checklist items are met.",
-        "condition": "step 5: post-implementation review (required)",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "All quality checklist items are met",
+        "condition_expression": "step 5: post-implementation review (required)",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "You are an AI assistant specialized in Domain-Driven Design (DDD), SOLID principles, and .NET good practices for software Development. Follow these gu",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "You are an AI assistant specialized..."
       },
       {
         "directive_type": "principle",
         "description": "What DDD patterns and SOLID principles apply to the request.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "What DDD patterns and SOLID principles..."
       },
       {
         "directive_type": "knowledge",
         "description": "Which layer(s) will be affected (Domain/Application/Infrastructure).",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Which layer(s) will be affected (Domain/Application/Infrastructure)"
       },
       {
         "directive_type": "principle",
         "description": "How interfaces and classes will be structured according to SOLID principles.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "How interfaces and classes will be..."
       },
       {
         "directive_type": "knowledge",
         "description": "Ubiquitous Language: Use consistent business terminology across code and documentation.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Ubiquitous Language: Use consistent business terminology..."
       },
       {
         "directive_type": "knowledge",
         "description": "Bounded Contexts: Clear service boundaries with well-defined responsibilities.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Bounded Contexts: Clear service boundaries with..."
       },
       {
         "directive_type": "knowledge",
         "description": "Aggregates: Ensure consistency boundaries and transactional integrity.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Aggregates: Ensure consistency boundaries and transactional..."
       },
       {
         "directive_type": "knowledge",
         "description": "Domain Events: Capture and propagate business-significant occurrences.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Domain Events: Capture and propagate business-significant..."
       },
       {
         "directive_type": "knowledge",
         "description": "Rich Domain Models: Business logic belongs in the domain layer, not in application services.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Rich Domain Models: Business logic belongs..."
       },
       {
         "directive_type": "principle",
         "description": "Single Responsibility Principle (SRP): A class should have only one reason to change.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Single Responsibility Principle (SRP): A class..."
       }
     ]
   }

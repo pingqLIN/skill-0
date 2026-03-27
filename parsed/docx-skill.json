@@ -1,14 +1,14 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__docx",
+    "skill_id": "claude__skill__docx",
     "name": "docx",
     "skill_layer": "claude_skill",
     "title": "Docx Skill",
     "description": "Comprehensive document creation, editing, and analysis with support for tracked changes, comments, and formatting preservation.",
-    "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-26T13:25:10.971023Z",
-    "parser_version": "skill-0 v2.1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-03-27T11:53:43.760320Z",
+    "parser_version": "skill-0 v2.4",
     "parsed_by": "skill-0-batch"
   },
   "original_definition": {
@@ -70,32 +70,40 @@
     "rules": [
       {
         "id": "r_001",
+        "name": "Use redlining workflow for editing others'...",
         "description": "Use redlining workflow for editing others' documents",
-        "condition": "when_editing_external",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "when_editing_external",
+        "returns": "boolean"
       },
       {
         "id": "r_002",
+        "name": "Mark only changed text, not entire...",
         "description": "Mark only changed text, not entire sentences",
-        "condition": "when_tracking_changes",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "when_tracking_changes",
+        "returns": "boolean"
       },
       {
         "id": "r_003",
+        "name": "Read documentation file before editing",
         "description": "Read documentation file before editing",
-        "condition": "before_edit",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "before_edit",
+        "returns": "boolean"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Minimal, precise edits - only mark...",
         "directive_type": "principle",
         "description": "Minimal, precise edits - only mark text that actually changes",
         "decomposable": true
       },
       {
         "id": "d_002",
+        "name": "All tracked changes implemented and verified",
         "directive_type": "completion",
         "description": "All tracked changes implemented and verified",
         "decomposable": true

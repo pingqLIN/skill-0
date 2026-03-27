@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__typescript-mcp-server",
+    "skill_id": "claude__skill__typescript_mcp_server",
     "name": "typescript-mcp-server",
     "skill_layer": "claude_skill",
     "title": "Typescript Mcp Server Skill",
@@ -142,9 +142,11 @@
     "rules": [
       {
         "description": "Always provide `title` field for tools, resources, and prompts for better UI display",
-        "condition": "instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always provide `title` field for tools,...",
+        "condition_expression": "instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -152,61 +154,71 @@
         "directive_type": "knowledge",
         "description": "Use `Server` class for low-level control with manual request handlers",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use `Server` class for low-level control..."
       },
       {
         "directive_type": "knowledge",
         "description": "Return both `content` (for display) and `structuredContent` (for structured data) from tools",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Return both `content` (for display) and..."
       },
       {
         "directive_type": "knowledge",
         "description": "For HTTP servers, use `StreamableHTTPServerTransport` with Express or similar frameworks",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "For HTTP servers, use `StreamableHTTPServerTransport` with..."
       },
       {
         "directive_type": "knowledge",
         "description": "For local integrations, use `StdioServerTransport` for stdio-based communication",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "For local integrations, use `StdioServerTransport` for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use session management with `sessionIdGenerator` for stateful servers",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use session management with `sessionIdGenerator` for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Enable DNS rebinding protection for local servers: `enableDnsRebindingProtection: true`",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Enable DNS rebinding protection for local..."
       },
       {
         "directive_type": "knowledge",
         "description": "Support completions for better UX using `completable()` wrapper from `@modelcontextprotocol/sdk/server/completable.js`",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Support completions for better UX using..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `server.server.elicitInput()` to request additional user input during tool execution",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use `server.server.elicitInput()` to request additional user..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `getDisplayName()` from `@modelcontextprotocol/sdk/shared/metadataUtils.js` for UI display names",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use `getDisplayName()` from `@modelcontextprotocol/sdk/shared/metadataUtils.js` "
       },
       {
         "directive_type": "knowledge",
         "description": "Keep tool implementations focused on single responsibilities",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Keep tool implementations focused on single..."
       }
     ]
   }

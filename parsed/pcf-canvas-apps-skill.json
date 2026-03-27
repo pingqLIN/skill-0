@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-canvas-apps",
+    "skill_id": "claude__skill__pcf_canvas_apps",
     "name": "pcf-canvas-apps",
     "skill_layer": "claude_skill",
     "title": "Pcf Canvas Apps Skill",
@@ -142,45 +142,59 @@
     "rules": [
       {
         "description": "> Note: Certain APIs might not be available in canvas apps. We recommend that you check each API to determine where it's available.",
-        "condition": "code components for canvas apps",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "> Note: Certain APIs might not...",
+        "condition_expression": "code components for canvas apps",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "When you open a canvas app that contains code components in Power Apps Studio, a warning message about potentially unsafe code appears. Code component",
-        "condition": "security warning in power apps studio",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "When you open a canvas app...",
+        "condition_expression": "security warning in power apps studio",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Administrators and system customizers should review and validate all code components before importing them into an environment",
-        "condition": "security warning in power apps studio",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Administrators and system customizers should review...",
+        "condition_expression": "security warning in power apps studio",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "A Power Apps license is required. More information: [Power Apps component framework licensing](https://learn.microsoft.com/en-us/power-apps/developer/",
-        "condition": "prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "A Power Apps license is required....",
+        "condition_expression": "prerequisites",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "System administrator privileges are required to enable the Power Apps component framework feature in the environment",
-        "condition": "prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "System administrator privileges are required to...",
+        "condition_expression": "prerequisites",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Recommendation: Check the [limitations](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/limitations) of code components in ",
-        "condition": "implementing code components",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Recommendation: Check the [limitations](https://learn.microsoft.com/en-us/power-",
+        "condition_expression": "implementing code components",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Whenever you update the code components and want to see the runtime changes, you need to change the `version` property in the manifest file. We recomm",
-        "condition": "update existing code components",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Whenever you update the code components...",
+        "condition_expression": "update existing code components",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -188,61 +202,71 @@
         "directive_type": "knowledge",
         "description": "Make components available to makers only after validation",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Make components available to makers only..."
       },
       {
         "directive_type": "knowledge",
         "description": "![Safety warning](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/canvas-app-safety-warning.png)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "![Safety warning](https://learn.microsoft.com/en-us/power-apps/developer/compone"
       },
       {
         "directive_type": "preference",
         "description": "To add code components to an app, you need to enable the Power Apps component framework feature in each environment where you want to use them. By def",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "To add code components to an..."
       },
       {
         "directive_type": "knowledge",
         "description": "2. Select Settings ![Settings](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/settings.png), and then select Admin C",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "2. Select Settings ![Settings](https://learn.microsoft.com/en-us/power-apps/deve"
       },
       {
         "directive_type": "knowledge",
         "description": "![Settings and Admin Center](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/select-admin-center-from-settings.png)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "![Settings and Admin Center](https://learn.microsoft.com/en-us/power-apps/develo"
       },
       {
         "directive_type": "knowledge",
         "description": "3. On the left pane, select Environments, select the environment where you want to enable this feature, and then select Settings",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "3. On the left pane, select..."
       },
       {
         "directive_type": "knowledge",
         "description": "![Enable Power Apps component framework](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/enable-pcf-feature.png)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "![Enable Power Apps component framework](https://learn.microsoft.com/en-us/power"
       },
       {
         "directive_type": "knowledge",
         "description": "3. On the left pane, select Add (+), and then select Get more components",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "3. On the left pane, select..."
       },
       {
         "directive_type": "knowledge",
         "description": "![Insert components](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/insert-code-components-using-get-more-components",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "![Insert components](https://learn.microsoft.com/en-us/power-apps/developer/comp"
       },
       {
         "directive_type": "knowledge",
         "description": "5. On the left pane, select +, expand Code components, and then select the component to add it to the app",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "5. On the left pane, select..."
       }
     ]
   }

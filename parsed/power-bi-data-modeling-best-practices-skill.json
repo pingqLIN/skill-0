@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-bi-data-modeling-best-practices",
+    "skill_id": "claude__skill__power_bi_data_modeling_best_practices",
     "name": "power-bi-data-modeling-best-practices",
     "skill_layer": "claude_skill",
     "title": "Power Bi Data Modeling Best Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "High Precision → Lower Precision: Match business requirements",
-        "condition": "data reduction techniques for import",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "High Precision → Lower Precision: Match...",
+        "condition_expression": "data reduction techniques for import",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid calculated columns on large tables",
-        "condition": "directquery performance optimization",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Avoid calculated columns on large tables",
+        "condition_expression": "directquery performance optimization",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Limit high-cardinality filtering",
-        "condition": "directquery performance optimization",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Limit high-cardinality filtering",
+        "condition_expression": "directquery performance optimization",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Consider OLAP cubes for complex analytical requirements",
-        "condition": "1. model size optimization",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Consider OLAP cubes for complex analytical...",
+        "condition_expression": "1. model size optimization",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure referential integrity in source data",
-        "condition": "2. relationship performance",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Ensure referential integrity in source data",
+        "condition_expression": "2. relationship performance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid many-to-many relationships when possible",
-        "condition": "2. relationship performance",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Avoid many-to-many relationships when possible",
+        "condition_expression": "2. relationship performance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Enable bi-directional only when required",
-        "condition": "2. relationship performance",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Enable bi-directional only when required",
+        "condition_expression": "2. relationship performance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Document security requirements clearly",
-        "condition": "1. row-level security (rls)",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Document security requirements clearly",
+        "condition_expression": "1. row-level security (rls)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Validate business rule implementation",
-        "condition": "2. data governance",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Validate business rule implementation",
+        "condition_expression": "2. data governance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "□ Queries execute within SLA requirements",
-        "condition": "1. model testing checklist",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "□ Queries execute within SLA requirements",
+        "condition_expression": "1. model testing checklist",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "This document provides comprehensive instructions for designing efficient, scalable, and maintainable Power BI semantic models following Microsoft's o",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This document provides comprehensive instructions for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Dimension Tables - Store descriptive business entities:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Dimension Tables - Store descriptive business..."
       },
       {
         "directive_type": "preference",
         "description": "Contain unique key columns (preferably surrogate keys)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Contain unique key columns (preferably surrogate..."
       },
       {
         "directive_type": "knowledge",
         "description": "Used for filtering, grouping, and providing context",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Used for filtering, grouping, and providing..."
       },
       {
         "directive_type": "knowledge",
         "description": "Sales transactions, website clicks, manufacturing events",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Sales transactions, website clicks, manufacturing events"
       },
       {
         "directive_type": "knowledge",
         "description": "DimProduct (Dimension)          FactSales (Fact)              DimCustomer (Dimension)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "DimProduct (Dimension) FactSales (Fact) DimCustomer (Dimension)"
       },
       {
         "directive_type": "knowledge",
         "description": "├── ProductKey (PK)             ├── SalesKey (PK)             ├── CustomerKey (PK)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "├── ProductKey (PK) ├── SalesKey (PK)..."
       },
       {
         "directive_type": "knowledge",
         "description": "├── ProductName                 ├── ProductKey (FK)           ├── CustomerName",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "├── ProductName ├── ProductKey (FK) ├──..."
       },
       {
         "directive_type": "knowledge",
         "description": "├── Category                    ├── CustomerKey (FK)          ├── CustomerType",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "├── Category ├── CustomerKey (FK) ├──..."
       },
       {
         "directive_type": "knowledge",
         "description": "├── SubCategory                 ├── DateKey (FK)              ├── Region",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "├── SubCategory ├── DateKey (FK) ├──..."
       }
     ]
   }

@@ -1,14 +1,14 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__webapp_testing",
+    "skill_id": "claude__skill__webapp_testing",
     "name": "webapp-testing",
     "skill_layer": "claude_skill",
     "title": "Webapp-Testing Skill",
     "description": "Toolkit for testing local web applications using Playwright.",
-    "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-26T13:25:10.977467Z",
-    "parser_version": "skill-0 v2.1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-03-27T11:53:43.762534Z",
+    "parser_version": "skill-0 v2.4",
     "parsed_by": "skill-0-batch"
   },
   "original_definition": {
@@ -62,26 +62,32 @@
     "rules": [
       {
         "id": "r_001",
+        "name": "Wait for networkidle before DOM inspection",
         "description": "Wait for networkidle before DOM inspection",
-        "condition": "on_dynamic_pages",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "on_dynamic_pages",
+        "returns": "boolean"
       },
       {
         "id": "r_002",
+        "name": "Use scripts as black boxes -...",
         "description": "Use scripts as black boxes - run --help first",
-        "condition": "when_using_helpers",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "when_using_helpers",
+        "returns": "boolean"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Reconnaissance-then-action pattern: inspect, identify, execute",
         "directive_type": "strategy",
         "description": "Reconnaissance-then-action pattern: inspect, identify, execute",
         "decomposable": true
       },
       {
         "id": "d_002",
+        "name": "Always close browser when done",
         "directive_type": "principle",
         "description": "Always close browser when done",
         "decomposable": true

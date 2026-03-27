@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__performance-optimization",
+    "skill_id": "claude__skill__performance_optimization",
     "name": "performance-optimization",
     "skill_layer": "claude_skill",
     "title": "Performance Optimization Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Performance isn't just a buzzword—it's the difference between a product people love and one they abandon. I've seen firsthand how a slow app can frust",
-        "condition": "introduction",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Performance isn't just a buzzword—it's the...",
+        "condition_expression": "introduction",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Virtual DOM Frameworks: Use React, Vue, or similar efficiently—avoid unnecessary re-renders.",
-        "condition": "rendering and dom",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Virtual DOM Frameworks: Use React, Vue,...",
+        "condition_expression": "rendering and dom",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Keys in Lists: Always use stable keys in lists to help virtual DOM diffing. Avoid using array indices as keys unless the list is static.",
-        "condition": "rendering and dom",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Keys in Lists: Always use stable...",
+        "condition_expression": "rendering and dom",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid Inline Styles: Inline styles can trigger layout thrashing. Prefer CSS classes.",
-        "condition": "rendering and dom",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Avoid Inline Styles: Inline styles can...",
+        "condition_expression": "rendering and dom",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Defer/Async Scripts: Use `defer` or `async` for non-critical JS to avoid blocking rendering.",
-        "condition": "network optimization",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Defer/Async Scripts: Use `defer` or `async`...",
+        "condition_expression": "network optimization",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid Blocking the Main Thread: Offload heavy computation to Web Workers.",
-        "condition": "javascript performance",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Avoid Blocking the Main Thread: Offload...",
+        "condition_expression": "javascript performance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Debounce/Throttle Events: For scroll, resize, and input events, use debounce/throttle to limit handler frequency.",
-        "condition": "javascript performance",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Debounce/Throttle Events: For scroll, resize, and...",
+        "condition_expression": "javascript performance",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Memory Leaks: Clean up event listeners, intervals, and DOM references. Use browser dev tools to check for detached nodes.",
-        "condition": "javascript performance",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Memory Leaks: Clean up event listeners,...",
+        "condition_expression": "javascript performance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid Global Variables: Globals can cause memory leaks and unpredictable performance.",
-        "condition": "javascript performance",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Avoid Global Variables: Globals can cause...",
+        "condition_expression": "javascript performance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid Deep Object Cloning: Use shallow copies or libraries like lodash's `cloneDeep` only when necessary.",
-        "condition": "javascript performance",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Avoid Deep Object Cloning: Use shallow...",
+        "condition_expression": "javascript performance",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Measure First, Optimize Second: Always profile and measure before optimizing. Use benchmarks, profilers, and monitoring tools to identify real bottlen",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Measure First, Optimize Second: Always profile..."
       },
       {
         "directive_type": "knowledge",
         "description": "*Pro Tip:* Use tools like Chrome DevTools, Lighthouse, New Relic, Datadog, Py-Spy, or your language's built-in profilers.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "*Pro Tip:* Use tools like Chrome..."
       },
       {
         "directive_type": "knowledge",
         "description": "Optimize for the Common Case: Focus on optimizing code paths that are most frequently executed. Don't waste time on rare edge cases unless they're cri",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Optimize for the Common Case: Focus..."
       },
       {
         "directive_type": "knowledge",
         "description": "Avoid Premature Optimization: Write clear, maintainable code first; optimize only when necessary. Premature optimization can make code harder to read ",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Avoid Premature Optimization: Write clear, maintainable..."
       },
       {
         "directive_type": "completion",
         "description": "Minimize Resource Usage: Use memory, CPU, network, and disk resources efficiently. Always ask: \"Can this be done with less?\"",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Minimize Resource Usage: Use memory, CPU,..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer Simplicity: Simple algorithms and data structures are often faster and easier to optimize. Don't over-engineer.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Prefer Simplicity: Simple algorithms and data..."
       },
       {
         "directive_type": "knowledge",
         "description": "Document Performance Assumptions: Clearly comment on any code that is performance-critical or has non-obvious optimizations. Future maintainers (inclu",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Document Performance Assumptions: Clearly comment on..."
       },
       {
         "directive_type": "knowledge",
         "description": "Understand the Platform: Know the performance characteristics of your language, framework, and runtime. What's fast in Python may be slow in JavaScrip",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Understand the Platform: Know the performance..."
       },
       {
         "directive_type": "knowledge",
         "description": "Automate Performance Testing: Integrate performance tests and benchmarks into your CI/CD pipeline. Catch regressions early.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Automate Performance Testing: Integrate performance tests..."
       },
       {
         "directive_type": "constraint",
         "description": "Set Performance Budgets: Define acceptable limits for load time, memory usage, API latency, etc. Enforce them with automated checks.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Set Performance Budgets: Define acceptable limits..."
       }
     ]
   }

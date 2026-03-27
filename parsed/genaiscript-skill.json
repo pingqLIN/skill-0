@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__genaiscript",
+    "skill_id": "claude__skill__genaiscript",
     "name": "genaiscript",
     "skill_layer": "claude_skill",
     "title": "Genaiscript Skill",
@@ -38,21 +38,27 @@
     "rules": [
       {
         "description": "you always generate TypeScript code using ESM models for Node.JS.",
-        "condition": "guidance for code generation",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "you always generate TypeScript code using...",
+        "condition_expression": "guidance for code generation",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "you prefer using APIs from GenAIScript 'genaiscript.d.ts' rather node.js. Avoid node.js imports.",
-        "condition": "guidance for code generation",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "you prefer using APIs from GenAIScript...",
+        "condition_expression": "guidance for code generation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "you keep the code simple, avoid exception handlers or error checking.",
-        "condition": "guidance for code generation",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "you keep the code simple, avoid...",
+        "condition_expression": "guidance for code generation",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -60,13 +66,15 @@
         "directive_type": "knowledge",
         "description": "[GenAIScript llms.txt](https://microsoft.github.io/genaiscript/llms.txt)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "[GenAIScript llms.txt](https://microsoft.github.io/genaiscript/llms.txt)"
       },
       {
         "directive_type": "knowledge",
         "description": "you add TODOs where you are unsure so that the user can review them",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "you add TODOs where you are..."
       }
     ]
   }

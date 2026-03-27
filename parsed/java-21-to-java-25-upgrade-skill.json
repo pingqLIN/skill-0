@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__java-21-to-java-25-upgrade",
+    "skill_id": "claude__skill__java_to_java_upgrade",
     "name": "java-21-to-java-25-upgrade",
     "skill_layer": "claude_skill",
     "title": "Java 21 To Java 25 Upgrade Skill",
@@ -134,63 +134,83 @@
     "rules": [
       {
         "description": "Warn about upcoming restrictions on JNI usage",
-        "condition": "jni usage warnings (jep 472 - warnings in 24)",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Warn about upcoming restrictions on JNI...",
+        "condition_expression": "jni usage warnings (jep 472 - warnings in 24)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "requires jdk.unsupported; // for remaining JNI usage",
-        "condition": "jni usage warnings (jep 472 - warnings in 24)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "requires jdk.unsupported; // for remaining JNI...",
+        "condition_expression": "jni usage warnings (jep 472 - warnings in 24)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "No code changes required - internal JVM optimization",
-        "condition": "g1 improvements (jep 475 - implemented in 24)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "No code changes required - internal...",
+        "condition_expression": "g1 improvements (jep 475 - implemented in 24)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "1. Update Build Tools: Ensure Maven/Gradle supports JDK 25",
-        "condition": "step-by-step upgrade process",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "1. Update Build Tools: Ensure Maven/Gradle...",
+        "condition_expression": "step-by-step upgrade process",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "2. Update Dependencies: Check for JDK 25 compatibility",
-        "condition": "step-by-step upgrade process",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "2. Update Dependencies: Check for JDK...",
+        "condition_expression": "step-by-step upgrade process",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "6. Performance Testing: Verify GC behavior with new ZGC defaults",
-        "condition": "step-by-step upgrade process",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "6. Performance Testing: Verify GC behavior...",
+        "condition_expression": "step-by-step upgrade process",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Verify JNI applications work with native access warnings",
-        "condition": "testing considerations",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Verify JNI applications work with native...",
+        "condition_expression": "testing considerations",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate JavaDoc generation with Markdown comments",
-        "condition": "testing considerations",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Validate JavaDoc generation with Markdown comments",
+        "condition_expression": "testing considerations",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "1. Preview Feature Dependencies: Don't use preview features in library code without clear documentation",
-        "condition": "common pitfalls",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "1. Preview Feature Dependencies: Don't use...",
+        "condition_expression": "common pitfalls",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "3. Unsafe Migration: Don't delay migrating from sun.misc.Unsafe - deprecation warnings indicate future removal",
-        "condition": "common pitfalls",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "3. Unsafe Migration: Don't delay migrating...",
+        "condition_expression": "common pitfalls",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -198,61 +218,71 @@
         "directive_type": "knowledge",
         "description": "These instructions help GitHub Copilot assist developers in upgrading Java projects from JDK 21 to JDK 25, focusing on new language features, API chan",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "These instructions help GitHub Copilot assist..."
       },
       {
         "directive_type": "strategy",
         "description": "Primitive Types in Patterns, instanceof, and switch",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Primitive Types in Patterns, instanceof, and..."
       },
       {
         "directive_type": "strategy",
         "description": "When working with pattern matching:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "When working with pattern matching"
       },
       {
         "directive_type": "strategy",
         "description": "Suggest using primitive type patterns in switch expressions and instanceof checks",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Suggest using primitive type patterns in..."
       },
       {
         "directive_type": "knowledge",
         "description": "Example upgrade from traditional switch:",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Example upgrade from traditional switch"
       },
       {
         "directive_type": "knowledge",
         "description": "default -> \"unknown status: \" + x.getStatus();",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "default -> \"unknown status: \" +..."
       },
       {
         "directive_type": "principle",
         "description": "// New approach (Java 25 Preview)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "// New approach (Java 25 Preview)"
       },
       {
         "directive_type": "knowledge",
         "description": "case int i -> \"unknown status: \" + i;",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "case int i -> \"unknown status:..."
       },
       {
         "directive_type": "knowledge",
         "description": "Enable preview features with `--enable-preview` flag",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Enable preview features with `--enable-preview` flag"
       },
       {
         "directive_type": "strategy",
         "description": "Suggest guard patterns for more complex conditions:",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Suggest guard patterns for more complex..."
       }
     ]
   }

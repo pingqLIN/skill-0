@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dotnet-maui-9-to-dotnet-maui-10-upgrade",
+    "skill_id": "claude__skill__dotnet_maui_to_dotnet_maui_upgrade",
     "name": "dotnet-maui-9-to-dotnet-maui-10-upgrade",
     "skill_layer": "claude_skill",
     "title": "Dotnet Maui 9 To Dotnet Maui 10 Upgrade Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "This guide helps you upgrade your .NET MAUI application from .NET 9 to .NET 10 by focusing on the critical breaking changes and obsolete APIs that req",
-        "condition": "upgrading from .net maui 9 to .net maui 10",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "This guide helps you upgrade your...",
+        "condition_expression": "upgrading from .net maui 9 to .net maui 10",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "3. [Breaking Changes (P0 - Must Fix)](#breaking-changes-p0---must-fix)",
-        "condition": "table of contents",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "3. [Breaking Changes (P0 - Must...",
+        "condition_expression": "table of contents",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "2. Update CommunityToolkit.Maui to 12.3.0+ (if you use it) - REQUIRED",
-        "condition": "quick start",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "2. Update CommunityToolkit.Maui to 12.3.0+ (if...",
+        "condition_expression": "quick start",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "> - CommunityToolkit.Maui must be version 12.3.0 or later",
-        "condition": "quick start",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "> - CommunityToolkit.Maui must be version...",
+        "condition_expression": "quick start",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "<!-- Start with Android (always supported) -->",
-        "condition": "optional: linux compatibility (github copilot, wsl, etc.)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "<!-- Start with Android (always supported)...",
+        "condition_expression": "optional: linux compatibility (github copilot, wsl, etc.)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Compiles successfully on Linux (no iOS/Mac tools required)",
-        "condition": "optional: linux compatibility (github copilot, wsl, etc.)",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Compiles successfully on Linux (no iOS/Mac...",
+        "condition_expression": "optional: linux compatibility (github copilot, wsl, etc.)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": ">  CRITICAL: If you use CommunityToolkit.Maui, you must update to version 12.3.0 or later. Earlier versions are not compatible with .NET 10 and will c",
-        "condition": "update required nuget packages",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "> CRITICAL: If you use CommunityToolkit.Maui,...",
+        "condition_expression": "update required nuget packages",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Check all your NuGet packages:",
-        "condition": "update other common packages to .net 10 compatible versions",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Check all your NuGet packages",
+        "condition_expression": "update other common packages to .net 10 compatible versions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Must remember to unregister!",
-        "condition": "complete before/after example",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Must remember to unregister!",
+        "condition_expression": "complete before/after example",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "3. Context actions - Must convert to SwipeView",
-        "condition": "why this takes time",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "3. Context actions - Must convert...",
+        "condition_expression": "why this takes time",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "[MessagingCenter Made Internal](#messagingcenter-made-internal)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "[MessagingCenter Made Internal](#messagingcenter-made-internal)"
       },
       {
         "directive_type": "knowledge",
         "description": "[ListView and TableView Deprecated](#listview-and-tableview-deprecated)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "[ListView and TableView Deprecated](#listview-and-tableview-deprecated)"
       },
       {
         "directive_type": "knowledge",
         "description": "4. [Deprecated APIs (P1 - Fix Soon)](#deprecated-apis-p1---fix-soon)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "4. [Deprecated APIs (P1 - Fix..."
       },
       {
         "directive_type": "knowledge",
         "description": "[DisplayAlert and DisplayActionSheet](#2-displayalert-and-displayactionsheet)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "[DisplayAlert and DisplayActionSheet](#2-displayalert-and-displayactionsheet)"
       },
       {
         "directive_type": "preference",
         "description": "5. [Recommended Changes (P2)](#recommended-changes-p2)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "5. [Recommended Changes (P2)](#recommended-changes-p2)"
       },
       {
         "directive_type": "strategy",
         "description": "5. Fix deprecated APIs - Animation methods, DisplayAlert, IsBusy, MediaPicker (P1)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "5. Fix deprecated APIs - Animation..."
       },
       {
         "directive_type": "knowledge",
         "description": "<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst;net10.0-windows10.0.19041.0</TargetFrameworks>",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "<TargetFrameworks>net10.0-android;net10.0-ios;net10.0-maccatalyst;net10.0-window"
       },
       {
         "directive_type": "knowledge",
         "description": "<TargetFrameworks>net10.0-android</TargetFrameworks>",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "<TargetFrameworks>net10.0-android</TargetFrameworks>"
       },
       {
         "directive_type": "knowledge",
         "description": "<!-- Add iOS/Mac Catalyst only when NOT on Linux -->",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "<!-- Add iOS/Mac Catalyst only when..."
       },
       {
         "directive_type": "knowledge",
         "description": "No changes needed when switching between OS environments",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "No changes needed when switching between..."
       }
     ]
   }

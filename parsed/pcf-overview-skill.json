@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-overview",
+    "skill_id": "claude__skill__pcf_overview",
     "name": "pcf-overview",
     "skill_layer": "claude_skill",
     "title": "Pcf Overview Skill",
@@ -134,9 +134,11 @@
     "rules": [
       {
         "description": "End-users require Power Apps licenses",
-        "condition": "premium code components",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "End-users require Power Apps licenses",
+        "condition_expression": "premium code components",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -144,61 +146,71 @@
         "directive_type": "knowledge",
         "description": "Power Apps component framework empowers professional developers and app makers to create code components for model-driven and canvas apps. These code ",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Power Apps component framework empowers professional..."
       },
       {
         "directive_type": "knowledge",
         "description": "Replace a column on a form that displays a numeric text value with a `dial` or `slider` code component",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Replace a column on a form..."
       },
       {
         "directive_type": "knowledge",
         "description": "Power Apps component framework works only on Unified Interface and not on the legacy web client",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Power Apps component framework works only..."
       },
       {
         "directive_type": "knowledge",
         "description": "Power Apps component framework is currently not supported for on-premises environments",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Power Apps component framework is currently..."
       },
       {
         "directive_type": "knowledge",
         "description": "Reused many times across different tables and forms",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Reused many times across different tables..."
       },
       {
         "directive_type": "knowledge",
         "description": "Code components that don't connect to external services or data:",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Code components that don't connect to..."
       },
       {
         "directive_type": "knowledge",
         "description": "Apps using these with standard features remain standard",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Apps using these with standard features..."
       },
       {
         "directive_type": "constraint",
         "description": "End-users require minimum Office 365 license",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "End-users require minimum Office 365 license"
       },
       {
         "directive_type": "knowledge",
         "description": "Note: If using code components in model-driven apps connected to Microsoft Dataverse, end users will require Power Apps licenses.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Note: If using code components in..."
       },
       {
         "directive_type": "knowledge",
         "description": "[What are code components?](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/custom-controls-overview)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "[What are code components?](https://learn.microsoft.com/en-us/power-apps/develop"
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__rust-mcp-server",
+    "skill_id": "claude__skill__rust_mcp_server",
     "name": "rust-mcp-server",
     "skill_layer": "claude_skill",
     "title": "Rust Mcp Server Skill",
@@ -142,21 +142,27 @@
     "rules": [
       {
         "description": ".ok_or_else(|| ErrorData::invalid_params(\"language required\"))?;",
-        "condition": "prompt handler",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "ok_or_else(|| ErrorData::invalid_params(\"language required\"))?;",
+        "condition_expression": "prompt handler",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "fn validate_params(value: &str) -> Result<(), ErrorData> {",
-        "condition": "errordata usage",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "fn validate_params(value: &str) -> Result<(), ErrorData>...",
+        "condition_expression": "errordata usage",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "validate_params(&request.name)?;",
-        "condition": "errordata usage",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "validate_params(&request.name)?;",
+        "condition_expression": "errordata usage",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -164,61 +170,71 @@
         "directive_type": "knowledge",
         "description": "This guide provides best practices for building Model Context Protocol (MCP) servers using the official Rust SDK (`rmcp`).",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This guide provides best practices for..."
       },
       {
         "directive_type": "knowledge",
         "description": "rmcp = { version = \"0.8.1\", features = [\"server\"] }",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "rmcp = { version = \"0.8.1\",..."
       },
       {
         "directive_type": "knowledge",
         "description": "schemars = { version = \"0.8\", features = [\"derive\"] }",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "schemars = { version = \"0.8\",..."
       },
       {
         "directive_type": "knowledge",
         "description": "server::{RequestContext, ServerHandler, RoleServer},",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "server::{RequestContext, ServerHandler, RoleServer},"
       },
       {
         "directive_type": "knowledge",
         "description": "let tcc = ToolCallContext::new(self, request, context);",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "let tcc = ToolCallContext::new(self, request, context);"
       },
       {
         "directive_type": "knowledge",
         "description": "Use the `#[tool]` macro for declarative tool definitions:",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use the `#[tool]` macro for declarative..."
       },
       {
         "directive_type": "knowledge",
         "description": "description = \"Performs basic arithmetic operations\",",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "description = \"Performs basic arithmetic operations\","
       },
       {
         "directive_type": "completion",
         "description": "pub async fn calculate(params: Parameters<CalculateParams>) -> Result<f64, String> {",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "pub async fn calculate(params: Parameters<CalculateParams>) ->..."
       },
       {
         "directive_type": "knowledge",
         "description": "async fn greet(params: Parameters<GreetParams>) -> String {",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "async fn greet(params: Parameters<GreetParams>) -> String..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use annotations to provide hints about tool behavior:",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use annotations to provide hints about..."
       }
     ]
   }

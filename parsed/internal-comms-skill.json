@@ -1,14 +1,14 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__internal_comms",
+    "skill_id": "claude__skill__internal_comms",
     "name": "internal-comms",
     "skill_layer": "claude_skill",
     "title": "Internal-Comms Skill",
     "description": "Resources for writing internal communications like status reports, newsletters, FAQs.",
-    "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-26T13:25:10.987644Z",
-    "parser_version": "skill-0 v2.1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-03-27T11:53:43.764297Z",
+    "parser_version": "skill-0 v2.4",
     "parsed_by": "skill-0-batch"
   },
   "original_definition": {
@@ -46,20 +46,24 @@
     "rules": [
       {
         "id": "r_001",
+        "name": "Match communication type to guideline file",
         "description": "Match communication type to guideline file",
-        "condition": "always",
-        "output": "proceed_or_halt"
+        "condition_type": "type_check",
+        "condition_expression": "always",
+        "returns": "boolean"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Communication types: 3P updates, newsletters, FAQs,...",
         "directive_type": "knowledge",
         "description": "Communication types: 3P updates, newsletters, FAQs, status reports",
         "decomposable": true
       },
       {
         "id": "d_002",
+        "name": "Communication written following company format",
         "directive_type": "completion",
         "description": "Communication written following company format",
         "decomposable": true

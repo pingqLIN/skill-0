@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__astro",
+    "skill_id": "claude__skill__astro",
     "name": "astro",
     "skill_layer": "claude_skill",
     "title": "Astro Skill",
@@ -142,21 +142,27 @@
     "rules": [
       {
         "description": "Minimize bundle size by avoiding unnecessary client-side JavaScript",
-        "condition": "performance optimization",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Minimize bundle size by avoiding unnecessary...",
+        "condition_expression": "performance optimization",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure accessibility with semantic HTML and proper ARIA attributes",
-        "condition": "styling",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Ensure accessibility with semantic HTML and...",
+        "condition_expression": "styling",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Enable SSR mode for dynamic content requirements",
-        "condition": "api routes and ssr",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Enable SSR mode for dynamic content...",
+        "condition_expression": "api routes and ssr",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -164,61 +170,71 @@
         "directive_type": "knowledge",
         "description": "Astro 5.x with Islands Architecture and Content Layer API",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Astro 5.x with Islands Architecture and..."
       },
       {
         "directive_type": "knowledge",
         "description": "TypeScript for type safety and better DX with auto-generated types",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "TypeScript for type safety and better..."
       },
       {
         "directive_type": "knowledge",
         "description": "Content-driven websites (blogs, marketing, e-commerce, documentation)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Content-driven websites (blogs, marketing, e-commerce, documentation)"
       },
       {
         "directive_type": "knowledge",
         "description": "Server-first rendering with selective client-side hydration",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Server-first rendering with selective client-side hydration"
       },
       {
         "directive_type": "principle",
         "description": "Support for multiple UI frameworks (React, Vue, Svelte, Solid, etc.)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Support for multiple UI frameworks (React,..."
       },
       {
         "directive_type": "preference",
         "description": "Static site generation (SSG) by default with optional server-side rendering (SSR)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Static site generation (SSG) by default..."
       },
       {
         "directive_type": "knowledge",
         "description": "Enhanced performance with modern content loading and build optimizations",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Enhanced performance with modern content loading..."
       },
       {
         "directive_type": "preference",
         "description": "Embrace the Islands Architecture: server-render by default, hydrate selectively",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Embrace the Islands Architecture: server-render by..."
       },
       {
         "directive_type": "knowledge",
         "description": "Organize content with Content Collections for type-safe Markdown/MDX management",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Organize content with Content Collections for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Structure projects by feature or content type for scalability",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Structure projects by feature or content..."
       }
     ]
   }

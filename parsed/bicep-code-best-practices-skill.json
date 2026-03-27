@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__bicep-code-best-practices",
+    "skill_id": "claude__skill__bicep_code_best_practices",
     "name": "bicep-code-best-practices",
     "skill_layer": "claude_skill",
     "title": "Bicep Code Best Practices Skill",
@@ -70,33 +70,43 @@
     "rules": [
       {
         "description": "Always declare parameters at the top of files with @description decorators",
-        "condition": "structure and declaration",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always declare parameters at the top...",
+        "condition_expression": "structure and declaration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use @allowed decorator sparingly to avoid blocking valid deployments",
-        "condition": "parameters",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Use @allowed decorator sparingly to avoid...",
+        "condition_expression": "parameters",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Add prefixes to uniqueString() results since some resources don't allow names starting with numbers",
-        "condition": "resource names",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Add prefixes to uniqueString() results since...",
+        "condition_expression": "resource names",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid excessive nesting of child resources",
-        "condition": "child resources",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Avoid excessive nesting of child resources",
+        "condition_expression": "child resources",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never include secrets or keys in outputs",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Never include secrets or keys in...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -104,61 +114,71 @@
         "directive_type": "knowledge",
         "description": "When writing Bicep code, use lowerCamelCase for all names (variables, parameters, resources)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "When writing Bicep code, use lowerCamelCase..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use resource type descriptive symbolic names (e.g., 'storageAccount' not 'storageAccountName')",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use resource type descriptive symbolic names..."
       },
       {
         "directive_type": "knowledge",
         "description": "Avoid using 'name' in a symbolic name as it represents the resource, not the resource's name",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Avoid using 'name' in a symbolic..."
       },
       {
         "directive_type": "knowledge",
         "description": "Avoid distinguishing variables and parameters by the use of suffixes",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Avoid distinguishing variables and parameters by..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use descriptive @description decorators for all parameters",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use descriptive @description decorators for all..."
       },
       {
         "directive_type": "constraint",
         "description": "Specify minimum and maximum character length for naming parameters",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Specify minimum and maximum character length..."
       },
       {
         "directive_type": "knowledge",
         "description": "Variables automatically infer type from the resolved value",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Variables automatically infer type from the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use variables to contain complex expressions instead of embedding them directly in resource properties",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use variables to contain complex expressions..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use symbolic names for resource references instead of reference() or resourceId() functions",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use symbolic names for resource references..."
       },
       {
         "directive_type": "completion",
         "description": "For accessing properties from other resources, use the 'existing' keyword instead of passing values through outputs",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "For accessing properties from other resources,..."
       }
     ]
   }

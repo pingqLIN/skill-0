@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__html-css-style-color-guide",
+    "skill_id": "claude__skill__html_css_style_color_guide",
     "name": "html-css-style-color-guide",
     "skill_layer": "claude_skill",
     "title": "Html Css Style Color Guide Skill",
@@ -62,27 +62,35 @@
     "rules": [
       {
         "description": "Ensure background is a light color",
-        "condition": "text colors",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Ensure background is a light color",
+        "condition_expression": "text colors",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure background is a dark color",
-        "condition": "text colors",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Ensure background is a dark color",
+        "condition_expression": "text colors",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Unless explicitly required by design specifications or user request, avoid:",
-        "condition": "colors to avoid",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Unless explicitly required by design specifications...",
+        "condition_expression": "colors to avoid",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Limit to small accent areas rather than large sections",
-        "condition": "colors to use sparingly",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Limit to small accent areas rather...",
+        "condition_expression": "colors to use sparingly",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -90,61 +98,71 @@
         "directive_type": "knowledge",
         "description": "represent the full spectrum of their respective hue ranges (e.g., \"blue\" includes navy, sky blue, etc.).",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "represent the full spectrum of their..."
       },
       {
         "directive_type": "knowledge",
         "description": "Primary Color: Use 60% of the time (*cool or light color*)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Primary Color: Use 60% of the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Secondary Color: Use 30% of the time (*cool or light color*)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Secondary Color: Use 30% of the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Accent: Use 10% of the time (*complementary hot color*)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Accent: Use 10% of the time..."
       },
       {
         "directive_type": "knowledge",
         "description": "Balance the colors used by applying the 60-30-10 rule to graphic design elements like backgrounds,",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Balance the colors used by applying..."
       },
       {
         "directive_type": "knowledge",
         "description": "Light cool colors (e.g., light blues, light greens)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Light cool colors (e.g., light blues,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Colors with low contrast ratios (fails WCAG accessibility standards)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Colors with low contrast ratios (fails..."
       },
       {
         "directive_type": "knowledge",
         "description": "Reserve for critical alerts, warnings, or error messages",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Reserve for critical alerts, warnings, or..."
       },
       {
         "directive_type": "knowledge",
         "description": "Consider alternatives like icons or bold text before using hot colors",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Consider alternatives like icons or bold..."
       },
       {
         "directive_type": "knowledge",
         "description": "Apply gradients with subtle color transitions to maintain professional aesthetics.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Apply gradients with subtle color transitions..."
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dotnet-upgrade",
+    "skill_id": "claude__skill__dotnet_upgrade",
     "name": "dotnet-upgrade",
     "skill_layer": "claude_skill",
     "title": "Dotnet Upgrade Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Your thinking should be thorough and so it's fine if it's very long. However, avoid unnecessary repetition and verbosity. You should be concise, but t",
-        "condition": "general",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Your thinking should be thorough and...",
+        "condition_expression": "general",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "You MUST iterate and keep going until the problem is solved.",
-        "condition": "general",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "You MUST iterate and keep going...",
+        "condition_expression": "general",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Follow the steps sequentially and do not attempt to upgrade all projects at once.",
-        "condition": ".net project upgrade instructions",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Follow the steps sequentially and do...",
+        "condition_expression": ".net project upgrade instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "`PackageReference` → Verify if each NuGet package supports the new framework.",
-        "condition": "3. analyze each project",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "`PackageReference` → Verify if each NuGet...",
+        "condition_expression": "3. analyze each project",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "After analyzing the nuget packages, review code for any required changes.",
-        "condition": "3. analyze each project",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "After analyzing the nuget packages, review...",
+        "condition_expression": "3. analyze each project",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "3. After upgrading and restoring the latest DLLs, review code for any required changes.",
-        "condition": "4. upgrade process per project",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "3. After upgrading and restoring the...",
+        "condition_expression": "4. upgrade process per project",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When upgrading .NET projects, remember that build pipelines must also reference the correct SDK, NuGet versions, and tasks.",
-        "condition": "7. tools & automation",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "When upgrading .NET projects, remember that...",
+        "condition_expression": "7. tools & automation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Check common folders such as:",
-        "condition": "7. tools & automation",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Check common folders such as",
+        "condition_expression": "7. tools & automation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "d. Update NuGet Tool version if required",
-        "condition": "7. tools & automation",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "d. Update NuGet Tool version if...",
+        "condition_expression": "7. tools & automation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure the NuGet installer task matches the upgraded framework’s needs.",
-        "condition": "7. tools & automation",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Ensure the NuGet installer task matches...",
+        "condition_expression": "7. tools & automation",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": ".NET Standard: Prefer migrating to .NET 6+ if possible. If staying, target `netstandard2.1`.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "NET Standard: Prefer migrating to .NET..."
       },
       {
         "directive_type": "knowledge",
         "description": "[.NET Core/.NET Upgrade Docs](https://learn.microsoft.com/dotnet/core/whats-new/)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "[.NET Core/.NET Upgrade Docs](https://learn.microsoft.com/dotnet/core/whats-new/"
       },
       {
         "directive_type": "knowledge",
         "description": "[.NET Framework 4.x Docs](https://learn.microsoft.com/dotnet/framework/whats-new/)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "[.NET Framework 4.x Docs](https://learn.microsoft.com/dotnet/framework/whats-new"
       },
       {
         "directive_type": "knowledge",
         "description": "1. Upgrade projects sequentially, not all at once.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "1. Upgrade projects sequentially, not all..."
       },
       {
         "directive_type": "knowledge",
         "description": "2. Start with independent class library projects (least dependencies).",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "2. Start with independent class library..."
       },
       {
         "directive_type": "knowledge",
         "description": "3. Gradually move to projects with higher dependencies (e.g., APIs, Azure Functions).",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "3. Gradually move to projects with..."
       },
       {
         "directive_type": "knowledge",
         "description": "4. Ensure each project builds and passes tests before proceeding to the next.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "4. Ensure each project builds and..."
       },
       {
         "directive_type": "completion",
         "description": "5. Post Builds are successfull only after success completion update the CI/CD files",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "5. Post Builds are successfull only..."
       },
       {
         "directive_type": "knowledge",
         "description": "Visual Studio → `Dependencies` in Solution Explorer.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Visual Studio → `Dependencies` in Solution..."
       },
       {
         "directive_type": "knowledge",
         "description": "`TargetFramework` → Change to the desired version (e.g., `net8.0`).",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "`TargetFramework` → Change to the desired..."
       }
     ]
   }

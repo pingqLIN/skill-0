@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__angular",
+    "skill_id": "claude__skill__angular",
     "name": "angular",
     "skill_layer": "claude_skill",
     "title": "Angular Skill",
@@ -142,27 +142,35 @@
     "rules": [
       {
         "description": "Use type guards and union types for robust type checking",
-        "condition": "typescript",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Use type guards and union types...",
+        "condition_expression": "typescript",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate form inputs with Angular's reactive forms and custom validators",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Validate form inputs with Angular's reactive...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Follow Angular's security best practices (e.g., avoid direct DOM manipulation)",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Follow Angular's security best practices (e.g.,...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure high test coverage for critical functionality",
-        "condition": "testing",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Ensure high test coverage for critical...",
+        "condition_expression": "testing",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -170,61 +178,71 @@
         "directive_type": "preference",
         "description": "Latest Angular version (use standalone components by default)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Latest Angular version (use standalone components..."
       },
       {
         "directive_type": "knowledge",
         "description": "TypeScript for type safety",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "TypeScript for type safety"
       },
       {
         "directive_type": "knowledge",
         "description": "Angular CLI for project setup and scaffolding",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Angular CLI for project setup and..."
       },
       {
         "directive_type": "preference",
         "description": "Follow Angular Style Guide (https://angular.dev/style-guide)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Follow Angular Style Guide (https://angular.dev/style-guide)"
       },
       {
         "directive_type": "knowledge",
         "description": "Use Angular Material or other modern UI libraries for consistent styling (if specified)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use Angular Material or other modern..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use standalone components unless modules are explicitly required",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use standalone components unless modules are..."
       },
       {
         "directive_type": "knowledge",
         "description": "Organize code by standalone feature modules or domains for scalability",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Organize code by standalone feature modules..."
       },
       {
         "directive_type": "knowledge",
         "description": "Implement lazy loading for feature modules to optimize performance",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Implement lazy loading for feature modules..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use Angular's built-in dependency injection system effectively",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use Angular's built-in dependency injection system..."
       },
       {
         "directive_type": "knowledge",
         "description": "Structure components with a clear separation of concerns (smart vs. presentational components)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Structure components with a clear separation..."
       }
     ]
   }
