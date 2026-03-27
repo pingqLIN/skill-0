@@ -1,7 +1,7 @@
 """
 Comprehensive test suite for scripts/helper.py
 
-Tests for tool equivalence and code equivalence verification:
+Tests for validator consistency and converter determinism verification:
 - SkillValidator: Schema validation logic
 - SkillConverter: Format conversion correctness
 - SkillTester: Execution path testing
@@ -118,7 +118,7 @@ class TestSkillValidator:
                 "skill_layer": "invalid_layer",
                 "title": "Test",
                 "description": "Test",
-                "schema_version": "2.0.0"
+                "schema_version": "2.4.0"
             },
             "decomposition": {
                 "actions": [],
@@ -143,7 +143,7 @@ class TestSkillValidator:
                 "skill_layer": "claude_skill",
                 "title": "Test",
                 "description": "Test",
-                "schema_version": "2.0.0"
+                "schema_version": "2.4.0"
             },
             "decomposition": {
                 "actions": [{
@@ -174,7 +174,7 @@ class TestSkillValidator:
                 "skill_layer": "claude_skill",
                 "title": "Test",
                 "description": "Test",
-                "schema_version": "2.0.0"
+                "schema_version": "2.4.0"
             },
             "decomposition": {
                 "actions": [{
@@ -240,13 +240,17 @@ class TestSkillConverter:
         assert "meta" in template
         assert template["meta"]["title"] == "Test Title"
         assert template["meta"]["description"] == "Test Description"
-        assert template["meta"]["schema_version"] == "2.0.0"
+        assert template["meta"]["schema_version"] == "2.4.0"
+        assert template["meta"]["skill_id"] == "claude__skill__test_title"
         
         # Check decomposition section
         assert "decomposition" in template
         assert "actions" in template["decomposition"]
         assert "rules" in template["decomposition"]
         assert "directives" in template["decomposition"]
+        assert template["decomposition"]["actions"] == []
+        assert template["decomposition"]["rules"] == []
+        assert template["decomposition"]["directives"] == []
     
     def test_markdown_to_json_conversion(self, converter, sample_markdown_path, tmp_path):
         """Test complete markdown to JSON conversion"""
@@ -421,9 +425,14 @@ class TestTemplateGeneration:
         
         # Check elements exist with correct IDs
         assert len(template["decomposition"]["actions"]) > 0
+        assert template["meta"]["schema_version"] == "2.4.0"
+        assert template["meta"]["skill_id"] == "claude__skill__template"
         assert template["decomposition"]["actions"][0]["id"] == "a_001"
         assert template["decomposition"]["rules"][0]["id"] == "r_001"
         assert template["decomposition"]["directives"][0]["id"] == "d_001"
+        assert template["decomposition"]["rules"][0]["condition_expression"] == "Condition to evaluate"
+        assert template["decomposition"]["rules"][0]["returns"] == "boolean"
+        assert template["decomposition"]["directives"][0]["name"] == "Example Directive"
     
     def test_generated_template_validates(self, tmp_path):
         """Test generated template passes validation (code equivalence)"""
@@ -571,7 +580,7 @@ class TestErrorHandling:
                 "skill_layer": "claude_skill",
                 "title": "Test",
                 "description": "Test",
-                "schema_version": "2.0.0"
+                "schema_version": "2.4.0"
             },
             "decomposition": {
                 "actions": [],

@@ -102,23 +102,26 @@ def main() -> int:
             missing += 1
             continue
 
-        updates = {
+        skill_updates = {
+            "author_name": AUTHOR_NAME,
+            "author_org": AUTHOR_ORG,
+            "license_spdx": LICENSE_SPDX,
+            "license_url": license_url,
+        }
+
+        revision_updates = {
             "source_type": "github",
             "source_url": repo_url,
             "source_commit": commit,
             "source_path": str(original_path),
             "original_format": "instructions.md",
             "fetched_at": _iso_from_mtime(original_path),
-            "author_name": AUTHOR_NAME,
-            "author_org": AUTHOR_ORG,
-            "license_spdx": LICENSE_SPDX,
-            "license_url": license_url,
             "converter_version": CONVERTER_VERSION,
             "target_format": TARGET_FORMAT,
         }
 
         if converted_path.exists():
-            updates["converted_at"] = _iso_from_mtime(converted_path)
+            revision_updates["converted_at"] = _iso_from_mtime(converted_path)
         else:
             print(f"⚠️  Missing converted: {name} -> {converted_path}")
 
@@ -126,7 +129,8 @@ def main() -> int:
             updated += 1
             continue
 
-        if db.update_skill(skill.skill_id, **updates):
+        success = db.update_skill(skill.skill_id, **skill_updates)
+        if success and db.register_revision(skill.skill_id, **revision_updates):
             updated += 1
         else:
             skipped += 1

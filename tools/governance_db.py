@@ -14,6 +14,7 @@ import sys
 import json
 import sqlite3
 import uuid
+import hashlib
 from pathlib import Path
 from datetime import datetime
 from typing import Optional, List, Dict, Any
@@ -64,9 +65,14 @@ class SkillRecord:
     installed_at: Optional[str]
     created_at: str
     updated_at: str
+    current_revision_id: Optional[str] = None
+    revision_id: Optional[str] = None
+    revision_number: Optional[int] = None
+    source_checksum: Optional[str] = None
 
     @classmethod
     def from_row(cls, row: sqlite3.Row) -> "SkillRecord":
+        keys = set(row.keys())
         return cls(
             skill_id=row["skill_id"],
             name=row["name"],
@@ -103,13 +109,103 @@ class SkillRecord:
             installed_at=row["installed_at"],
             created_at=row["created_at"],
             updated_at=row["updated_at"],
+            current_revision_id=row["current_revision_id"] if "current_revision_id" in keys else None,
+            revision_id=row["revision_id"] if "revision_id" in keys else None,
+            revision_number=row["revision_number"] if "revision_number" in keys else None,
+            source_checksum=row["source_checksum"] if "source_checksum" in keys else None,
+        )
+
+
+@dataclass
+class SkillRevisionRecord:
+    """A skill revision record from the database"""
+
+    revision_id: str
+    skill_id: str
+    revision_number: int
+    status: str
+    version: str
+    source_type: Optional[str]
+    source_url: Optional[str]
+    source_commit: Optional[str]
+    source_path: Optional[str]
+    original_format: Optional[str]
+    fetched_at: Optional[str]
+    converted_at: Optional[str]
+    converter_version: Optional[str]
+    target_format: Optional[str]
+    security_scanned_at: Optional[str]
+    scanner_version: Optional[str]
+    risk_level: Optional[str]
+    risk_score: int
+    approved_by: Optional[str]
+    approved_at: Optional[str]
+    equivalence_tested_at: Optional[str]
+    equivalence_score: Optional[float]
+    equivalence_passed: Optional[bool]
+    installed_path: Optional[str]
+    installed_at: Optional[str]
+    source_checksum: Optional[str]
+    provenance_json: Optional[str]
+    is_current: bool
+    created_at: str
+    updated_at: str
+
+    @classmethod
+    def from_row(cls, row: sqlite3.Row) -> "SkillRevisionRecord":
+        return cls(
+            revision_id=row["revision_id"],
+            skill_id=row["skill_id"],
+            revision_number=row["revision_number"],
+            status=row["status"],
+            version=row["version"] or "1.0.0",
+            source_type=row["source_type"],
+            source_url=row["source_url"],
+            source_commit=row["source_commit"],
+            source_path=row["source_path"],
+            original_format=row["original_format"],
+            fetched_at=row["fetched_at"],
+            converted_at=row["converted_at"],
+            converter_version=row["converter_version"],
+            target_format=row["target_format"],
+            security_scanned_at=row["security_scanned_at"],
+            scanner_version=row["scanner_version"],
+            risk_level=row["risk_level"],
+            risk_score=row["risk_score"] or 0,
+            approved_by=row["approved_by"],
+            approved_at=row["approved_at"],
+            equivalence_tested_at=row["equivalence_tested_at"],
+            equivalence_score=row["equivalence_score"],
+            equivalence_passed=bool(row["equivalence_passed"]) if row["equivalence_passed"] is not None else None,
+            installed_path=row["installed_path"],
+            installed_at=row["installed_at"],
+            source_checksum=row["source_checksum"],
+            provenance_json=row["provenance_json"],
+            is_current=bool(row["is_current"]),
+            created_at=row["created_at"],
+            updated_at=row["updated_at"],
         )
 
 
 class GovernanceDB:
     """SQLite database for skill governance"""
 
-    SCHEMA_VERSION = "1.0.0"
+    SCHEMA_VERSION = "1.1.0"
+    SKILL_MUTABLE_FIELDS = {
+        "name",
+        "author_name",
+        "author_email",
+        "author_url",
+        "author_org",
+        "license_spdx",
+        "license_url",
+        "requires_attribution",
+        "commercial_allowed",
+        "modification_allowed",
+    }
+    REVISION_MUTABLE_STATE_FIELDS = {
+        "status",
+    }
 
     def __init__(self, db_path: Optional[Path] = None):
         self.db_path = Path(db_path) if db_path else DEFAULT_DB_PATH
@@ -130,6 +226,312 @@ class GovernanceDB:
         finally:
             conn.close()
 
+    def _table_columns(self, conn: sqlite3.Connection, table: str) -> set[str]:
+        cursor = conn.cursor()
+        cursor.execute(f"PRAGMA table_info({table})")
+        return {row["name"] for row in cursor.fetchall()}
+
+    def _ensure_column(self, conn: sqlite3.Connection, table: str, definition: str) -> None:
+        column_name = definition.split()[0]
+        if column_name not in self._table_columns(conn, table):
+            conn.execute(f"ALTER TABLE {table} ADD COLUMN {definition}")
+
+    def _compute_source_checksum(self, payload: Dict[str, Any]) -> str:
+        checksum_payload = {
+            "source_type": payload.get("source_type") or "",
+            "source_url": payload.get("source_url") or "",
+            "source_commit": payload.get("source_commit") or "",
+            "source_path": payload.get("source_path") or "",
+            "version": payload.get("version") or "",
+            "fetched_at": payload.get("fetched_at") or "",
+            "converted_at": payload.get("converted_at") or "",
+        }
+        encoded = json.dumps(checksum_payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+    def _skill_projection_query(self) -> str:
+        return """
+            SELECT
+                s.skill_id AS skill_id,
+                s.name AS name,
+                COALESCE(sr.version, s.version) AS version,
+                COALESCE(sr.status, s.status) AS status,
+                COALESCE(sr.source_type, s.source_type) AS source_type,
+                COALESCE(sr.source_url, s.source_url) AS source_url,
+                COALESCE(sr.source_commit, s.source_commit) AS source_commit,
+                COALESCE(sr.source_path, s.source_path) AS source_path,
+                COALESCE(sr.original_format, s.original_format) AS original_format,
+                COALESCE(sr.fetched_at, s.fetched_at) AS fetched_at,
+                s.author_name AS author_name,
+                s.author_email AS author_email,
+                s.author_url AS author_url,
+                s.author_org AS author_org,
+                s.license_spdx AS license_spdx,
+                s.license_url AS license_url,
+                s.requires_attribution AS requires_attribution,
+                s.commercial_allowed AS commercial_allowed,
+                s.modification_allowed AS modification_allowed,
+                COALESCE(sr.converted_at, s.converted_at) AS converted_at,
+                COALESCE(sr.converter_version, s.converter_version) AS converter_version,
+                COALESCE(sr.target_format, s.target_format) AS target_format,
+                COALESCE(sr.security_scanned_at, s.security_scanned_at) AS security_scanned_at,
+                COALESCE(sr.scanner_version, s.scanner_version) AS scanner_version,
+                COALESCE(sr.risk_level, s.risk_level) AS risk_level,
+                COALESCE(sr.risk_score, s.risk_score) AS risk_score,
+                COALESCE(sr.approved_by, s.approved_by) AS approved_by,
+                COALESCE(sr.approved_at, s.approved_at) AS approved_at,
+                COALESCE(sr.equivalence_tested_at, s.equivalence_tested_at) AS equivalence_tested_at,
+                COALESCE(sr.equivalence_score, s.equivalence_score) AS equivalence_score,
+                COALESCE(sr.equivalence_passed, s.equivalence_passed) AS equivalence_passed,
+                COALESCE(sr.installed_path, s.installed_path) AS installed_path,
+                COALESCE(sr.installed_at, s.installed_at) AS installed_at,
+                s.created_at AS created_at,
+                COALESCE(sr.updated_at, s.updated_at) AS updated_at,
+                s.current_revision_id AS current_revision_id,
+                sr.revision_id AS revision_id,
+                sr.revision_number AS revision_number,
+                sr.source_checksum AS source_checksum
+            FROM skills s
+            LEFT JOIN skill_revisions sr ON sr.revision_id = s.current_revision_id
+        """
+
+    def _revision_payload_from_row(self, row: sqlite3.Row) -> Dict[str, Any]:
+        payload = {
+            "version": row["version"] or "1.0.0",
+            "status": row["status"] or "pending",
+            "source_type": row["source_type"],
+            "source_url": row["source_url"],
+            "source_commit": row["source_commit"],
+            "source_path": row["source_path"],
+            "original_format": row["original_format"],
+            "fetched_at": row["fetched_at"],
+            "converted_at": row["converted_at"],
+            "converter_version": row["converter_version"],
+            "target_format": row["target_format"],
+            "security_scanned_at": row["security_scanned_at"],
+            "scanner_version": row["scanner_version"],
+            "risk_level": row["risk_level"],
+            "risk_score": row["risk_score"] or 0,
+            "security_findings": row["security_findings"],
+            "approved_by": row["approved_by"],
+            "approved_at": row["approved_at"],
+            "equivalence_tested_at": row["equivalence_tested_at"],
+            "equivalence_score": row["equivalence_score"],
+            "semantic_similarity": row["semantic_similarity"],
+            "structure_similarity": row["structure_similarity"],
+            "keyword_similarity": row["keyword_similarity"],
+            "equivalence_passed": row["equivalence_passed"],
+            "installed_path": row["installed_path"],
+            "installed_at": row["installed_at"],
+        }
+        payload["source_checksum"] = self._compute_source_checksum(payload)
+        payload["provenance_json"] = json.dumps(
+            {
+                "source_type": payload["source_type"],
+                "source_url": payload["source_url"],
+                "source_commit": payload["source_commit"],
+                "source_path": payload["source_path"],
+                "fetched_at": payload["fetched_at"],
+            }
+        )
+        return payload
+
+    def _create_revision(
+        self,
+        conn: sqlite3.Connection,
+        skill_id: str,
+        payload: Dict[str, Any],
+        *,
+        revision_number: Optional[int] = None,
+        is_current: bool = True,
+    ) -> str:
+        cursor = conn.cursor()
+        if revision_number is None:
+            cursor.execute(
+                "SELECT COALESCE(MAX(revision_number), 0) + 1 FROM skill_revisions WHERE skill_id = ?",
+                (skill_id,),
+            )
+            revision_number = cursor.fetchone()[0]
+
+        revision_id = self.generate_id()
+        now = datetime.now().isoformat()
+        checksum = payload.get("source_checksum") or self._compute_source_checksum(payload)
+        provenance_json = payload.get("provenance_json")
+        if provenance_json is None:
+            provenance_json = json.dumps(
+                {
+                    "source_type": payload.get("source_type"),
+                    "source_url": payload.get("source_url"),
+                    "source_commit": payload.get("source_commit"),
+                    "source_path": payload.get("source_path"),
+                    "fetched_at": payload.get("fetched_at"),
+                }
+            )
+
+        if is_current:
+            cursor.execute(
+                "UPDATE skill_revisions SET is_current = 0, updated_at = ? WHERE skill_id = ? AND is_current = 1",
+                (now, skill_id),
+            )
+
+        cursor.execute(
+            """
+            INSERT INTO skill_revisions (
+                revision_id, skill_id, revision_number, version, status,
+                source_type, source_url, source_commit, source_path, original_format, fetched_at,
+                converted_at, converter_version, target_format,
+                security_scanned_at, scanner_version, risk_level, risk_score, security_findings,
+                approved_by, approved_at,
+                equivalence_tested_at, equivalence_score, semantic_similarity, structure_similarity,
+                keyword_similarity, equivalence_passed,
+                installed_path, installed_at,
+                source_checksum, provenance_json, is_current, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                revision_id,
+                skill_id,
+                revision_number,
+                payload.get("version", "1.0.0"),
+                payload.get("status", "pending"),
+                payload.get("source_type"),
+                payload.get("source_url"),
+                payload.get("source_commit"),
+                payload.get("source_path"),
+                payload.get("original_format"),
+                payload.get("fetched_at"),
+                payload.get("converted_at"),
+                payload.get("converter_version"),
+                payload.get("target_format"),
+                payload.get("security_scanned_at"),
+                payload.get("scanner_version"),
+                payload.get("risk_level"),
+                payload.get("risk_score", 0),
+                payload.get("security_findings"),
+                payload.get("approved_by"),
+                payload.get("approved_at"),
+                payload.get("equivalence_tested_at"),
+                payload.get("equivalence_score"),
+                payload.get("semantic_similarity"),
+                payload.get("structure_similarity"),
+                payload.get("keyword_similarity"),
+                payload.get("equivalence_passed"),
+                payload.get("installed_path"),
+                payload.get("installed_at"),
+                checksum,
+                provenance_json,
+                1 if is_current else 0,
+                payload.get("created_at", now),
+                payload.get("updated_at", now),
+            ),
+        )
+
+        if is_current:
+            cursor.execute(
+                """
+                UPDATE skills SET
+                    current_revision_id = ?,
+                    version = ?,
+                    status = ?,
+                    source_type = ?,
+                    source_url = ?,
+                    source_commit = ?,
+                    source_path = ?,
+                    original_format = ?,
+                    fetched_at = ?,
+                    converted_at = ?,
+                    converter_version = ?,
+                    target_format = ?,
+                    security_scanned_at = ?,
+                    scanner_version = ?,
+                    risk_level = ?,
+                    risk_score = ?,
+                    security_findings = ?,
+                    approved_by = ?,
+                    approved_at = ?,
+                    equivalence_tested_at = ?,
+                    equivalence_score = ?,
+                    semantic_similarity = ?,
+                    structure_similarity = ?,
+                    keyword_similarity = ?,
+                    equivalence_passed = ?,
+                    installed_path = ?,
+                    installed_at = ?,
+                    updated_at = ?
+                WHERE skill_id = ?
+                """,
+                (
+                    revision_id,
+                    payload.get("version", "1.0.0"),
+                    payload.get("status", "pending"),
+                    payload.get("source_type"),
+                    payload.get("source_url"),
+                    payload.get("source_commit"),
+                    payload.get("source_path"),
+                    payload.get("original_format"),
+                    payload.get("fetched_at"),
+                    payload.get("converted_at"),
+                    payload.get("converter_version"),
+                    payload.get("target_format"),
+                    payload.get("security_scanned_at"),
+                    payload.get("scanner_version"),
+                    payload.get("risk_level"),
+                    payload.get("risk_score", 0),
+                    payload.get("security_findings"),
+                    payload.get("approved_by"),
+                    payload.get("approved_at"),
+                    payload.get("equivalence_tested_at"),
+                    payload.get("equivalence_score"),
+                    payload.get("semantic_similarity"),
+                    payload.get("structure_similarity"),
+                    payload.get("keyword_similarity"),
+                    payload.get("equivalence_passed"),
+                    payload.get("installed_path"),
+                    payload.get("installed_at"),
+                    now,
+                    skill_id,
+                ),
+            )
+
+        return revision_id
+
+    def _backfill_revisions(self, conn: sqlite3.Connection) -> None:
+        """Ensure every skill has at least one immutable revision row."""
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM skills ORDER BY created_at ASC")
+        skills = cursor.fetchall()
+
+        for row in skills:
+            cursor.execute(
+                "SELECT revision_id FROM skill_revisions WHERE skill_id = ? ORDER BY revision_number ASC LIMIT 1",
+                (row["skill_id"],),
+            )
+            existing_revision = cursor.fetchone()
+            current_revision_id = row["current_revision_id"] if "current_revision_id" in set(row.keys()) else None
+
+            if existing_revision:
+                if not current_revision_id:
+                    cursor.execute(
+                        "UPDATE skills SET current_revision_id = ?, updated_at = ? WHERE skill_id = ?",
+                        (existing_revision["revision_id"], datetime.now().isoformat(), row["skill_id"]),
+                    )
+                cursor.execute(
+                    "UPDATE skill_revisions SET is_current = CASE WHEN revision_id = ? THEN 1 ELSE 0 END WHERE skill_id = ?",
+                    (current_revision_id or existing_revision["revision_id"], row["skill_id"]),
+                )
+                continue
+
+            payload = self._revision_payload_from_row(row)
+            payload["created_at"] = row["created_at"]
+            payload["updated_at"] = row["updated_at"]
+            self._create_revision(
+                conn,
+                row["skill_id"],
+                payload,
+                revision_number=1,
+                is_current=True,
+            )
+
     def _init_db(self):
         """Initialize database schema"""
         with self.connection() as conn:
@@ -148,6 +550,7 @@ class GovernanceDB:
                 CREATE TABLE IF NOT EXISTS skills (
                     skill_id TEXT PRIMARY KEY,
                     name TEXT NOT NULL UNIQUE,
+                    current_revision_id TEXT,
                     version TEXT DEFAULT '1.0.0',
                     status TEXT DEFAULT 'pending',
                     
@@ -203,12 +606,54 @@ class GovernanceDB:
                     installed_at TEXT
                 )
             """)
+            self._ensure_column(conn, "skills", "current_revision_id TEXT")
+
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS skill_revisions (
+                    revision_id TEXT PRIMARY KEY,
+                    skill_id TEXT NOT NULL,
+                    revision_number INTEGER NOT NULL,
+                    version TEXT DEFAULT '1.0.0',
+                    status TEXT DEFAULT 'pending',
+                    source_type TEXT,
+                    source_url TEXT,
+                    source_commit TEXT,
+                    source_path TEXT,
+                    original_format TEXT,
+                    fetched_at TEXT,
+                    converted_at TEXT,
+                    converter_version TEXT,
+                    target_format TEXT,
+                    security_scanned_at TEXT,
+                    scanner_version TEXT,
+                    risk_level TEXT,
+                    risk_score INTEGER DEFAULT 0,
+                    security_findings TEXT,
+                    approved_by TEXT,
+                    approved_at TEXT,
+                    equivalence_tested_at TEXT,
+                    equivalence_score REAL,
+                    semantic_similarity REAL,
+                    structure_similarity REAL,
+                    keyword_similarity REAL,
+                    equivalence_passed INTEGER,
+                    installed_path TEXT,
+                    installed_at TEXT,
+                    source_checksum TEXT,
+                    provenance_json TEXT,
+                    is_current INTEGER DEFAULT 1,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    FOREIGN KEY (skill_id) REFERENCES skills(skill_id)
+                )
+            """)
 
             # Security scans table
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS security_scans (
                     scan_id TEXT PRIMARY KEY,
                     skill_id TEXT NOT NULL,
+                    revision_id TEXT,
                     scanned_at TEXT NOT NULL,
                     scanner_version TEXT NOT NULL,
                     risk_level TEXT NOT NULL,
@@ -222,12 +667,14 @@ class GovernanceDB:
                     FOREIGN KEY (skill_id) REFERENCES skills(skill_id)
                 )
             """)
+            self._ensure_column(conn, "security_scans", "revision_id TEXT")
 
             # Equivalence tests table
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS equivalence_tests (
                     test_id TEXT PRIMARY KEY,
                     skill_id TEXT NOT NULL,
+                    revision_id TEXT,
                     tested_at TEXT NOT NULL,
                     tester_version TEXT NOT NULL,
                     original_path TEXT,
@@ -247,6 +694,7 @@ class GovernanceDB:
                     FOREIGN KEY (skill_id) REFERENCES skills(skill_id)
                 )
             """)
+            self._ensure_column(conn, "equivalence_tests", "revision_id TEXT")
 
             # Audit log table
             cursor.execute("""
@@ -255,6 +703,7 @@ class GovernanceDB:
                     timestamp TEXT NOT NULL,
                     event_type TEXT NOT NULL,
                     skill_id TEXT,
+                    revision_id TEXT,
                     skill_name TEXT,
                     actor TEXT DEFAULT 'system',
                     details_json TEXT,
@@ -262,6 +711,7 @@ class GovernanceDB:
                     new_state_json TEXT
                 )
             """)
+            self._ensure_column(conn, "audit_log", "revision_id TEXT")
 
             # Create indexes
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_skills_name ON skills(name)")
@@ -278,7 +728,16 @@ class GovernanceDB:
                 "CREATE INDEX IF NOT EXISTS idx_tests_skill ON equivalence_tests(skill_id)"
             )
             cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_revisions_skill ON skill_revisions(skill_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_revisions_current ON skill_revisions(skill_id, is_current)"
+            )
+            cursor.execute(
                 "CREATE INDEX IF NOT EXISTS idx_audit_skill ON audit_log(skill_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_audit_revision ON audit_log(revision_id)"
             )
             cursor.execute(
                 "CREATE INDEX IF NOT EXISTS idx_audit_type ON audit_log(event_type)"
@@ -298,6 +757,13 @@ class GovernanceDB:
                     "INSERT INTO schema_version (version, applied_at) VALUES (?, ?)",
                     (self.SCHEMA_VERSION, datetime.now().isoformat()),
                 )
+            elif row["version"] != self.SCHEMA_VERSION:
+                cursor.execute(
+                    "INSERT INTO schema_version (version, applied_at) VALUES (?, ?)",
+                    (self.SCHEMA_VERSION, datetime.now().isoformat()),
+                )
+
+            self._backfill_revisions(conn)
 
     def generate_id(self) -> str:
         """Generate a unique ID"""
@@ -341,13 +807,33 @@ class GovernanceDB:
                 ),
             )
 
+            revision_payload = {
+                "version": kwargs.get("version", "1.0.0"),
+                "status": kwargs.get("status", "pending"),
+                "source_type": source_type,
+                "source_url": source_url,
+                "source_commit": kwargs.get("source_commit"),
+                "source_path": source_path,
+                "original_format": kwargs.get("original_format"),
+                "fetched_at": kwargs.get("fetched_at"),
+                "converted_at": kwargs.get("converted_at"),
+                "converter_version": kwargs.get("converter_version"),
+                "target_format": kwargs.get("target_format"),
+                "installed_path": kwargs.get("installed_path"),
+                "installed_at": kwargs.get("installed_at"),
+                "created_at": now,
+                "updated_at": now,
+            }
+            revision_id = self._create_revision(conn, skill_id, revision_payload, revision_number=1, is_current=True)
+
             # Log the creation
             self._log_event(
                 conn,
                 "create",
                 skill_id=skill_id,
+                revision_id=revision_id,
                 skill_name=name,
-                details={"source_type": source_type, "source_path": source_path},
+                details={"source_type": source_type, "source_path": source_path, "revision_id": revision_id},
             )
 
         return skill_id
@@ -358,11 +844,12 @@ class GovernanceDB:
         """Get a skill by ID or name"""
         with self.connection() as conn:
             cursor = conn.cursor()
+            base_query = self._skill_projection_query()
 
             if skill_id:
-                cursor.execute("SELECT * FROM skills WHERE skill_id = ?", (skill_id,))
+                cursor.execute(f"{base_query} WHERE s.skill_id = ?", (skill_id,))
             elif name:
-                cursor.execute("SELECT * FROM skills WHERE name = ?", (name,))
+                cursor.execute(f"{base_query} WHERE s.name = ?", (name,))
             else:
                 return None
 
@@ -370,29 +857,80 @@ class GovernanceDB:
             return SkillRecord.from_row(row) if row else None
 
     def update_skill(self, skill_id: str, **updates) -> bool:
-        """Update a skill record"""
+        """Update skill-row metadata only.
+
+        Artifact and revision-bound fields must not be mutated in place via
+        this method. Use `register_revision()` for artifact changes and
+        `update_current_revision_state()` for narrow workflow state changes.
+        """
         if not updates:
             return False
-
-        updates["updated_at"] = datetime.now().isoformat()
-
-        set_clause = ", ".join(f"{k} = ?" for k in updates.keys())
-        values = list(updates.values()) + [skill_id]
 
         with self.connection() as conn:
             cursor = conn.cursor()
 
             # Get previous state for audit
-            cursor.execute("SELECT * FROM skills WHERE skill_id = ?", (skill_id,))
+            cursor.execute(self._skill_projection_query() + " WHERE s.skill_id = ?", (skill_id,))
             prev_row = cursor.fetchone()
+            if not prev_row:
+                return False
 
-            cursor.execute(f"UPDATE skills SET {set_clause} WHERE skill_id = ?", values)
+            revision_fields = {
+                "version",
+                "status",
+                "source_type",
+                "source_url",
+                "source_commit",
+                "source_path",
+                "original_format",
+                "fetched_at",
+                "converted_at",
+                "converter_version",
+                "target_format",
+                "security_scanned_at",
+                "scanner_version",
+                "risk_level",
+                "risk_score",
+                "security_findings",
+                "approved_by",
+                "approved_at",
+                "equivalence_tested_at",
+                "equivalence_score",
+                "semantic_similarity",
+                "structure_similarity",
+                "keyword_similarity",
+                "equivalence_passed",
+                "installed_path",
+                "installed_at",
+            }
 
-            if cursor.rowcount > 0:
+            skill_updates = {k: v for k, v in updates.items() if k in self.SKILL_MUTABLE_FIELDS}
+            revision_updates = {k: v for k, v in updates.items() if k in revision_fields}
+            invalid_updates = [k for k in updates.keys() if k not in self.SKILL_MUTABLE_FIELDS and k not in revision_fields]
+
+            if invalid_updates:
+                raise ValueError(f"Unsupported skill update fields: {', '.join(sorted(invalid_updates))}")
+            if revision_updates:
+                raise ValueError(
+                    "Artifact and revision-bound fields cannot be mutated via update_skill(); "
+                    "use register_revision() for artifact changes or update_current_revision_state() "
+                    "for allowed revision workflow state."
+                )
+
+            now = datetime.now().isoformat()
+
+            if skill_updates:
+                skill_updates["updated_at"] = now
+                set_clause = ", ".join(f"{k} = ?" for k in skill_updates.keys())
+                values = list(skill_updates.values()) + [skill_id]
+                cursor.execute(f"UPDATE skills SET {set_clause} WHERE skill_id = ?", values)
+
+            if skill_updates:
                 self._log_event(
                     conn,
                     "update",
                     skill_id=skill_id,
+                    revision_id=prev_row["current_revision_id"],
                     skill_name=prev_row["name"] if prev_row else None,
                     details=updates,
                     previous_state=dict(prev_row) if prev_row else None,
@@ -400,6 +938,49 @@ class GovernanceDB:
                 return True
 
         return False
+
+    def update_current_revision_state(self, skill_id: str, **updates) -> bool:
+        """Update mutable workflow state on the current revision only."""
+        if not updates:
+            return False
+
+        invalid_updates = [k for k in updates.keys() if k not in self.REVISION_MUTABLE_STATE_FIELDS]
+        if invalid_updates:
+            raise ValueError(
+                "Unsupported current revision state fields: " + ", ".join(sorted(invalid_updates))
+            )
+
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(self._skill_projection_query() + " WHERE s.skill_id = ?", (skill_id,))
+            prev_row = cursor.fetchone()
+            if not prev_row or not prev_row["current_revision_id"]:
+                return False
+
+            now = datetime.now().isoformat()
+            revision_updates = dict(updates)
+            revision_updates["updated_at"] = now
+
+            set_clause = ", ".join(f"{k} = ?" for k in revision_updates.keys())
+            values = list(revision_updates.values()) + [prev_row["current_revision_id"]]
+            cursor.execute(f"UPDATE skill_revisions SET {set_clause} WHERE revision_id = ?", values)
+
+            projection_updates = dict(updates)
+            projection_updates["updated_at"] = now
+            set_clause = ", ".join(f"{k} = ?" for k in projection_updates.keys())
+            values = list(projection_updates.values()) + [skill_id]
+            cursor.execute(f"UPDATE skills SET {set_clause} WHERE skill_id = ?", values)
+
+            self._log_event(
+                conn,
+                "revision_state_update",
+                skill_id=skill_id,
+                revision_id=prev_row["current_revision_id"],
+                skill_name=prev_row["name"],
+                details=updates,
+                previous_state=dict(prev_row),
+            )
+            return True
 
     def list_skills(
         self,
@@ -411,7 +992,7 @@ class GovernanceDB:
         with self.connection() as conn:
             cursor = conn.cursor()
 
-            query = "SELECT * FROM skills WHERE 1=1"
+            query = self._skill_projection_query() + " WHERE 1=1"
             params = []
 
             if status:
@@ -428,30 +1009,87 @@ class GovernanceDB:
             cursor.execute(query, params)
             return [SkillRecord.from_row(row) for row in cursor.fetchall()]
 
+    def get_current_revision(self, skill_id: str) -> Optional[SkillRevisionRecord]:
+        """Return the current revision for a skill."""
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT sr.* FROM skill_revisions sr
+                JOIN skills s ON s.current_revision_id = sr.revision_id
+                WHERE s.skill_id = ?
+                """,
+                (skill_id,),
+            )
+            row = cursor.fetchone()
+            return SkillRevisionRecord.from_row(row) if row else None
+
+    def list_revisions(self, skill_id: str, limit: int = 20) -> List[SkillRevisionRecord]:
+        """List revisions for a skill, newest first."""
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT * FROM skill_revisions
+                WHERE skill_id = ?
+                ORDER BY revision_number DESC
+                LIMIT ?
+                """,
+                (skill_id, limit),
+            )
+            return [SkillRevisionRecord.from_row(row) for row in cursor.fetchall()]
+
+    def register_revision(self, skill_id: str, **updates) -> Optional[str]:
+        """Create a new current revision for an existing skill."""
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(self._skill_projection_query() + " WHERE s.skill_id = ?", (skill_id,))
+            row = cursor.fetchone()
+            if not row:
+                return None
+
+            payload = dict(row)
+            payload.update(updates)
+            payload["updated_at"] = datetime.now().isoformat()
+            revision_id = self._create_revision(conn, skill_id, payload, is_current=True)
+            self._log_event(
+                conn,
+                "revision_create",
+                skill_id=skill_id,
+                revision_id=revision_id,
+                skill_name=row["name"],
+                details={"updates": updates, "revision_id": revision_id},
+            )
+            return revision_id
+
     # ============ Security Scans ============
 
     def record_security_scan(
         self,
         skill_id: str,
         scan_result: Dict[str, Any],
+        revision_id: Optional[str] = None,
     ) -> str:
         """Record a security scan result"""
         scan_id = self.generate_id()
 
         with self.connection() as conn:
             cursor = conn.cursor()
+            current_revision_record = self.get_current_revision(skill_id) if revision_id is None else None
+            current_revision = revision_id or (current_revision_record.revision_id if current_revision_record else None)
 
             cursor.execute(
                 """
                 INSERT INTO security_scans (
-                    scan_id, skill_id, scanned_at, scanner_version,
+                    scan_id, skill_id, revision_id, scanned_at, scanner_version,
                     risk_level, risk_score, files_scanned, findings_count,
                     findings_json, blocked, blocked_reason
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
                 (
                     scan_id,
                     skill_id,
+                    current_revision,
                     scan_result.get("scanned_at", datetime.now().isoformat()),
                     scan_result.get("scanner_version", "1.0.0"),
                     scan_result.get("risk_level", "unknown"),
@@ -487,6 +1125,31 @@ class GovernanceDB:
                 ),
             )
 
+            if current_revision:
+                cursor.execute(
+                    """
+                    UPDATE skill_revisions SET
+                        security_scanned_at = ?,
+                        scanner_version = ?,
+                        risk_level = ?,
+                        risk_score = ?,
+                        security_findings = ?,
+                        status = CASE WHEN ? THEN 'blocked' ELSE status END,
+                        updated_at = ?
+                    WHERE revision_id = ?
+                    """,
+                    (
+                        scan_result.get("scanned_at"),
+                        scan_result.get("scanner_version"),
+                        scan_result.get("risk_level"),
+                        scan_result.get("risk_score"),
+                        json.dumps(scan_result.get("findings", [])),
+                        1 if scan_result.get("blocked") else 0,
+                        datetime.now().isoformat(),
+                        current_revision,
+                    ),
+                )
+
             # Update status if blocked
             if scan_result.get("blocked"):
                 cursor.execute(
@@ -498,7 +1161,9 @@ class GovernanceDB:
                 conn,
                 "scan",
                 skill_id=skill_id,
+                revision_id=current_revision,
                 details={
+                    "revision_id": current_revision,
                     "risk_level": scan_result.get("risk_level"),
                     "risk_score": scan_result.get("risk_score"),
                     "findings_count": scan_result.get("findings_count"),
@@ -529,6 +1194,7 @@ class GovernanceDB:
         self,
         skill_id: str,
         test_result: Dict[str, Any],
+        revision_id: Optional[str] = None,
     ) -> str:
         """Record an equivalence test result"""
         test_id = self.generate_id()
@@ -537,21 +1203,24 @@ class GovernanceDB:
 
         with self.connection() as conn:
             cursor = conn.cursor()
+            current_revision_record = self.get_current_revision(skill_id) if revision_id is None else None
+            current_revision = revision_id or (current_revision_record.revision_id if current_revision_record else None)
 
             cursor.execute(
                 """
                 INSERT INTO equivalence_tests (
-                    test_id, skill_id, tested_at, tester_version,
+                    test_id, skill_id, revision_id, tested_at, tester_version,
                     original_path, converted_path,
                     semantic_similarity, structure_similarity,
                     keyword_similarity, metadata_completeness,
                     overall_score, passed,
                     details_json, warnings_json, errors_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
                 (
                     test_id,
                     skill_id,
+                    current_revision,
                     test_result.get("tested_at", datetime.now().isoformat()),
                     test_result.get("tester_version", "1.0.0"),
                     test_result.get("original_path", ""),
@@ -593,11 +1262,38 @@ class GovernanceDB:
                 ),
             )
 
+            if current_revision:
+                cursor.execute(
+                    """
+                    UPDATE skill_revisions SET
+                        equivalence_tested_at = ?,
+                        equivalence_score = ?,
+                        semantic_similarity = ?,
+                        structure_similarity = ?,
+                        keyword_similarity = ?,
+                        equivalence_passed = ?,
+                        updated_at = ?
+                    WHERE revision_id = ?
+                    """,
+                    (
+                        test_result.get("tested_at"),
+                        scores.get("overall", 0),
+                        scores.get("semantic_similarity", 0),
+                        scores.get("structure_similarity", 0),
+                        scores.get("keyword_similarity", 0),
+                        1 if test_result.get("passed") else 0,
+                        datetime.now().isoformat(),
+                        current_revision,
+                    ),
+                )
+
             self._log_event(
                 conn,
                 "test",
                 skill_id=skill_id,
+                revision_id=current_revision,
                 details={
+                    "revision_id": current_revision,
                     "overall_score": scores.get("overall"),
                     "passed": test_result.get("passed"),
                 },
@@ -623,13 +1319,20 @@ class GovernanceDB:
 
     # ============ Approval Workflow ============
 
-    def approve_skill(self, skill_id: str, approved_by: str, reason: str = "") -> bool:
+    def approve_skill(
+        self,
+        skill_id: str,
+        approved_by: str,
+        reason: str = "",
+        revision_id: Optional[str] = None,
+    ) -> bool:
         """Approve a skill for use"""
         with self.connection() as conn:
             cursor = conn.cursor()
 
             cursor.execute(
-                "SELECT status, name FROM skills WHERE skill_id = ?", (skill_id,)
+                self._skill_projection_query() + " WHERE s.skill_id = ?",
+                (skill_id,),
             )
             row = cursor.fetchone()
 
@@ -638,6 +1341,8 @@ class GovernanceDB:
 
             if row["status"] == "blocked":
                 return False  # Cannot approve blocked skills
+
+            current_revision = revision_id or row["current_revision_id"]
 
             cursor.execute(
                 """
@@ -656,31 +1361,59 @@ class GovernanceDB:
                 ),
             )
 
+            if current_revision:
+                cursor.execute(
+                    """
+                    UPDATE skill_revisions SET
+                        status = 'approved',
+                        approved_by = ?,
+                        approved_at = ?,
+                        updated_at = ?
+                    WHERE revision_id = ?
+                    """,
+                    (
+                        approved_by,
+                        datetime.now().isoformat(),
+                        datetime.now().isoformat(),
+                        current_revision,
+                    ),
+                )
+
             self._log_event(
                 conn,
                 "approve",
                 skill_id=skill_id,
+                revision_id=current_revision,
                 skill_name=row["name"],
                 actor=approved_by,
-                details={"reason": reason},
+                details={"reason": reason, "revision_id": current_revision},
                 previous_state={"status": row["status"]},
                 new_state={"status": "approved"},
             )
 
             return True
 
-    def reject_skill(self, skill_id: str, rejected_by: str, reason: str) -> bool:
+    def reject_skill(
+        self,
+        skill_id: str,
+        rejected_by: str,
+        reason: str,
+        revision_id: Optional[str] = None,
+    ) -> bool:
         """Reject a skill"""
         with self.connection() as conn:
             cursor = conn.cursor()
 
             cursor.execute(
-                "SELECT status, name FROM skills WHERE skill_id = ?", (skill_id,)
+                self._skill_projection_query() + " WHERE s.skill_id = ?",
+                (skill_id,),
             )
             row = cursor.fetchone()
 
             if not row:
                 return False
+
+            current_revision = revision_id or row["current_revision_id"]
 
             cursor.execute(
                 """
@@ -688,17 +1421,29 @@ class GovernanceDB:
                     status = 'rejected',
                     updated_at = ?
                 WHERE skill_id = ?
-            """,
+                """,
                 (datetime.now().isoformat(), skill_id),
             )
+
+            if current_revision:
+                cursor.execute(
+                    """
+                    UPDATE skill_revisions SET
+                        status = 'rejected',
+                        updated_at = ?
+                    WHERE revision_id = ?
+                    """,
+                    (datetime.now().isoformat(), current_revision),
+                )
 
             self._log_event(
                 conn,
                 "reject",
                 skill_id=skill_id,
+                revision_id=current_revision,
                 skill_name=row["name"],
                 actor=rejected_by,
-                details={"reason": reason},
+                details={"reason": reason, "revision_id": current_revision},
                 previous_state={"status": row["status"]},
                 new_state={"status": "rejected"},
             )
@@ -712,6 +1457,7 @@ class GovernanceDB:
         conn: sqlite3.Connection,
         event_type: str,
         skill_id: str = None,
+        revision_id: str = None,
         skill_name: str = None,
         actor: str = "system",
         details: Dict = None,
@@ -723,15 +1469,16 @@ class GovernanceDB:
         cursor.execute(
             """
             INSERT INTO audit_log (
-                event_id, timestamp, event_type, skill_id, skill_name,
+                event_id, timestamp, event_type, skill_id, revision_id, skill_name,
                 actor, details_json, previous_state_json, new_state_json
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
             (
                 self.generate_id(),
                 datetime.now().isoformat(),
                 event_type,
                 skill_id,
+                revision_id,
                 skill_name,
                 actor,
                 json.dumps(details) if details else None,

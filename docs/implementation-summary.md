@@ -2,6 +2,17 @@
 
 > 完成報告：格式整合專案
 
+Status note:
+- This is a historical completion report from an earlier format-integration phase.
+- It is not the authoritative description of the current schema, parsed dataset, or governance baseline.
+- For the live project baseline, use [final-development-phase-plan-2026-03-23.md](<repo-root>/docs/final-development-phase-plan-2026-03-23.md) and [project-improvement-plan-2026-03-27.zh-TW.md](<repo-root>/docs/project-improvement-plan-2026-03-27.zh-TW.md).
+- References here to `reference.md`, `v2.0.0`, or early parsed-skill counts should be read as historical context only.
+
+Superseded-claims note:
+- Byte counts, skill counts, completion claims, and version labels in this document describe the `2026-01-28` milestone only.
+- Command examples below are archived workflow examples, not the current authoritative runbook.
+- For current document authority, see [document-authority-index-2026-03-27.md](<repo-root>/docs/document-authority-index-2026-03-27.md).
+
 ## 任務目標 (Task Objectives)
 
 根據問題陳述，本專案需要：
@@ -53,7 +64,7 @@ Complete tool portal and workflow guide
 - Integration patterns
 
 #### 3. reference.md (16,705 字節)
-完整 Schema 參考文件
+歷史版 Schema 參考文件快照
 - 所有欄位規格
 - 列舉定義
 - ID 格式規則
@@ -61,7 +72,7 @@ Complete tool portal and workflow guide
 - 進階功能
 - 故障排除
 
-Complete schema reference
+Historical schema reference snapshot
 - All field specifications
 - Enum definitions
 - ID formatting rules
@@ -138,14 +149,14 @@ Complete utility script providing:
 
 ### ✅ 測試結果 (Test Results)
 
-所有功能已測試並驗證：
+此歷史階段將下列功能標記為已測試並驗證：
 
-All functions tested and verified:
+This historical phase reported the following functions as tested and verified:
 
 | 測試 Test | 功能 Feature | 狀態 Status | 說明 Notes |
 |----------|-------------|-----------|-----------|
 | 1 | 模板生成 Template Generation | ✅ PASS | 建立有效的技能模板 |
-| 2 | Schema 驗證 Validation | ✅ PASS | 根據 v2.0.0 驗證 |
+| 2 | Schema 驗證 Validation | ✅ PASS | 當時依據 v2.0.0 驗證；current canonical baseline is now v2.4.0 |
 | 3 | Markdown 轉換 Conversion | ✅ PASS | 提取標題與描述 |
 | 4 | 執行路徑測試 Path Testing | ✅ PASS | 驗證元素序列 |
 | 5 | 複雜度分析 Complexity Analysis | ✅ PASS | 提供技能指標 |
@@ -191,7 +202,7 @@ Extracted patterns from existing parsed skills and schema:
    - 理解 ID 模式規則
 
 2. **範例研究** (Example Study)
-   - 分析 32 個已解析技能
+   - 當時分析 32 個已解析技能（historical snapshot; current checked-in dataset is larger）
    - 提取常見結構模式
    - 識別最佳實踐
 
@@ -238,7 +249,7 @@ From agents.md format:
 ✅ **格式分析** - 成功分析並整合兩種格式原則  
 ✅ **文檔建立** - 建立完整的文檔套件  
 ✅ **工具開發** - 開發可運行的輔助工具  
-✅ **執行驗證** - 所有功能經測試驗證  
+✅ **執行驗證** - 該歷史階段中的功能經測試驗證  
 ✅ **整合完成** - 與現有工具鏈無縫整合
 
 ✅ **Format Analysis** - Successfully analyzed and integrated both format principles  
@@ -295,6 +306,9 @@ From agents.md format:
 
 ### 📈 可測量改進 (Measurable Improvements)
 
+Historical interpretation:
+- The improvement percentages below were milestone-era estimates, not a current benchmark series.
+
 | 指標 Metric | 改進 Improvement |
 |------------|-----------------|
 | 技能建立時間 Skill Creation Time | -50% (自動模板生成) |
@@ -304,6 +318,10 @@ From agents.md format:
 | 工具整合度 Tool Integration | +100% (統一工作流程) |
 
 ## 使用範例 (Usage Examples)
+
+Historical usage note:
+- The commands in this section illustrate the archived workflow shape from that phase.
+- Do not treat this section as the current operational runbook.
 
 ### 完整工作流程 (Complete Workflow)
 
@@ -373,30 +391,30 @@ README.md (主要入口)
 
 ## 結論 (Conclusion)
 
-本專案成功完成了所有目標：
+就 `2026-01-28` 的格式整合階段而言，該階段文件將目標視為已完成：
 
-This project successfully completed all objectives:
+For the `2026-01-28` format-integration phase, this report treated that milestone as complete:
 
 1. ✅ **格式整合** - 將 Claude 最佳實踐與 agents.md 格式整合到 skill-0
 2. ✅ **文檔建立** - 建立完整、實用的文檔套件
 3. ✅ **工具開發** - 開發並測試功能完整的輔助工具
-4. ✅ **執行驗證** - 所有功能經實際測試驗證有效
-5. ✅ **專案提升** - 顯著提升專案可用性和開發體驗
+4. ✅ **執行驗證** - 該歷史階段中的功能經實際測試驗證有效
+5. ✅ **專案提升** - 在該歷史階段中提升專案可用性和開發體驗
 
 1. ✅ **Format Integration** - Integrated Claude best practices and agents.md format into skill-0
 2. ✅ **Documentation** - Created complete, practical documentation suite
 3. ✅ **Tool Development** - Developed and tested fully functional utilities
-4. ✅ **Execution Validation** - All functions verified through actual testing
-5. ✅ **Project Enhancement** - Significantly improved project usability and developer experience
+4. ✅ **Execution Validation** - The functions in that historical phase were verified through testing
+5. ✅ **Project Enhancement** - That milestone improved project usability and developer experience
 
-專案現在提供：
+在該歷史里程碑結束時，專案被描述為提供：
 - 完整的開發者文檔
 - 自動化工具支援
 - 清晰的工作流程
 - AI 代理整合指南
 - 實用的範例和測試
 
-The project now provides:
+At the end of that historical milestone, the project was described as providing:
 - Complete developer documentation
 - Automated tool support
 - Clear workflow processes
@@ -405,7 +423,7 @@ The project now provides:
 
 ---
 
-**專案狀態** (Project Status): ✅ 完成 (COMPLETED)  
-**版本** (Version): v2.2.0  
-**日期** (Date): 2026-01-28  
+**歷史階段狀態** (Historical Phase Status): ✅ 完成 (COMPLETED)  
+**歷史版本標記** (Historical Version Marker): `v2.2.0`  
+**日期** (Date): `2026-01-28`  
 **作者** (Author): GitHub Copilot Agent

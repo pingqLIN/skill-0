@@ -11,6 +11,7 @@ Tests all 14+ endpoints with real skills.db:
 
 import os
 import sys
+import shutil
 from pathlib import Path
 
 import pytest
@@ -26,7 +27,7 @@ pytestmark = pytest.mark.skipif(
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 from fastapi.testclient import TestClient
-from api.main import app, create_access_token, _rate_limit_store, search_engine as _global_engine
+from api.main import API_VERSION, app, create_access_token, _rate_limit_store, search_engine as _global_engine
 
 
 @pytest.fixture(autouse=True)
@@ -38,10 +39,17 @@ def clear_rate_limits():
 
 
 @pytest.fixture
-def client():
-    """TestClient for the core API"""
+def client(tmp_path, monkeypatch):
+    """TestClient for the core API using an isolated DB copy."""
     # Reset the global search engine to avoid stale SQLite connections
     import api.main as api_module
+
+    repo_root = Path(__file__).parent.parent.parent
+    test_db_path = tmp_path / "skills.db"
+    shutil.copyfile(repo_root / "skills.db", test_db_path)
+
+    monkeypatch.setattr(api_module, "DB_PATH", str(test_db_path))
+    monkeypatch.setattr(api_module, "PARSED_DIR", str(repo_root / "parsed"))
     api_module.search_engine = None
     return TestClient(app)
 
@@ -65,7 +73,7 @@ class TestRootAndHealth:
         assert resp.status_code == 200
         data = resp.json()
         assert data["name"] == "Skill-0 API"
-        assert data["version"] == "2.1.0"
+        assert data["version"] == API_VERSION
         assert "endpoints" in data
 
     def test_health_check(self, client):
@@ -83,7 +91,7 @@ class TestRootAndHealth:
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] in ("healthy", "degraded")
-        assert data["version"] == "2.1.0"
+        assert data["version"] == API_VERSION
         assert data["db_exists"] is True
         assert data["db_size_bytes"] > 0
         assert data["total_skills"] > 0
