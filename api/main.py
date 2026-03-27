@@ -63,6 +63,7 @@ API_RATE_LIMIT = os.getenv('API_RATE_LIMIT', '100/minute')
 AUTH_RATE_LIMIT = os.getenv('AUTH_RATE_LIMIT', '10/minute')
 API_USERNAME_ENV = "API_USERNAME"
 API_PASSWORD_ENV = "API_PASSWORD"
+API_VERSION = "2.4.0"
 
 # Startup timestamp (module import time)
 _startup_time = time.time()
@@ -71,6 +72,14 @@ _startup_time = time.time()
 def is_production_env(env_value: str) -> bool:
     """Return True when environment value represents production."""
     return env_value.strip().lower() in {'production', 'prod'}
+
+
+def _env_flag(name: str, default: bool) -> bool:
+    """Parse a boolean environment flag."""
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {'1', 'true', 'yes', 'on'}
 
 
 def _is_local_origin(origin: str) -> bool:
@@ -131,14 +140,19 @@ def enforce_production_security_configuration() -> None:
 
 
 enforce_production_security_configuration()
+ENABLE_DOCS = _env_flag(
+    'SKILL0_ENABLE_DOCS',
+    default=not is_production_env(SKILL0_ENV),
+)
 
 # FastAPI application
 app = FastAPI(
     title="Skill-0 API",
     description="Claude Skills & MCP Tools Semantic Search API",
-    version="2.1.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+    version=API_VERSION,
+    docs_url="/docs" if ENABLE_DOCS else None,
+    redoc_url="/redoc" if ENABLE_DOCS else None,
+    openapi_url="/openapi.json" if ENABLE_DOCS else None,
 )
 
 # CORS — controlled by CORS_ORIGINS env var
@@ -462,7 +476,7 @@ async def root():
     """API root path"""
     return {
         "name": "Skill-0 API",
-        "version": "2.1.0",
+        "version": API_VERSION,
         "description": "Claude Skills & MCP Tools Semantic Search API",
         "endpoints": {
             "search": "/api/search",
@@ -499,7 +513,7 @@ class HealthDetailResponse(BaseModel):
     total_skills: int
     embedding_model: str
     uptime_seconds: float
-    version: str = Field("2.1.0", description="API version")
+    version: str = Field(API_VERSION, description="API version")
 
 
 @app.get("/api/health/detail", response_model=HealthDetailResponse, tags=["Health"])
@@ -543,7 +557,7 @@ async def health_detail():
         total_skills=total_skills,
         embedding_model=embedding_model,
         uptime_seconds=uptime_seconds,
-        version="2.1.0",
+        version=API_VERSION,
     )
 
 
@@ -799,7 +813,7 @@ def main():
     
     print(f"""
 ╔════════════════════════════════════════════════════════════╗
-║              Skill-0 API Server v2.1.0                     ║
+║              Skill-0 API Server v{API_VERSION:<24}║
 ╠════════════════════════════════════════════════════════════╣
 ║  API Docs:  http://127.0.0.1:8000/docs                     ║
 ║  ReDoc:     http://127.0.0.1:8000/redoc                    ║
