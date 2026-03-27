@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__quarkus-mcp-server-sse",
+    "skill_id": "claude__skill__quarkus_mcp_server_sse",
     "name": "quarkus-mcp-server-sse",
     "skill_layer": "claude_skill",
     "title": "Quarkus Mcp Server Sse Skill",
@@ -54,45 +54,59 @@
     "rules": [
       {
         "description": "State management for immutable data must be managed by repository layer",
-        "condition": "structure",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "State management for immutable data must...",
+        "condition_expression": "structure",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Must be public methods in `@ApplicationScoped` CDI beans",
-        "condition": "mcp tools",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Must be public methods in `@ApplicationScoped`...",
+        "condition_expression": "mcp tools",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never return `null` - return error messages instead",
-        "condition": "mcp tools",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Never return `null` - return error...",
+        "condition_expression": "mcp tools",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always validate parameters and handle errors gracefully",
-        "condition": "mcp tools",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Always validate parameters and handle errors...",
+        "condition_expression": "mcp tools",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Don't put business logic in MCP tools (use service layer)",
-        "condition": "common issues",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Don't put business logic in MCP...",
+        "condition_expression": "common issues",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Don't throw exceptions from tools (return error strings)",
-        "condition": "common issues",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Don't throw exceptions from tools (return...",
+        "condition_expression": "common issues",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Don't forget to validate input parameters",
-        "condition": "common issues",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Don't forget to validate input parameters",
+        "condition_expression": "common issues",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -100,37 +114,43 @@
         "directive_type": "knowledge",
         "description": "Use standard Java naming conventions (PascalCase classes, camelCase methods)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use standard Java naming conventions (PascalCase..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `@Tool(name=\"tool_name\", description=\"clear description\")`",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use `@Tool(name=\"tool_name\", description=\"clear description\")`"
       },
       {
         "directive_type": "knowledge",
         "description": "Separate concerns: MCP tools → Service layer → Repository",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Separate concerns: MCP tools → Service..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `@Inject` for dependency injection",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use `@Inject` for dependency injection"
       },
       {
         "directive_type": "knowledge",
         "description": "Make data operations thread-safe",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Make data operations thread-safe"
       },
       {
         "directive_type": "knowledge",
         "description": "Use `Optional<T>` to avoid null pointer exceptions",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use `Optional<T>` to avoid null pointer..."
       }
     ]
   }

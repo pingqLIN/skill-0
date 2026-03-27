@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-advanced-features",
+    "skill_id": "claude__skill__dataverse_python_advanced_features",
     "name": "dataverse-python-advanced-features",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Advanced Features Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "filter2 = \"creditlimit gt 50000\"",
-        "condition": "comparison operators",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "filter2 = \"creditlimit gt 50000\"",
+        "condition_expression": "comparison operators",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "filter7 = \"(name eq 'Contoso') and (creditlimit gt 50000)\"",
-        "condition": "multiple conditions with and",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "filter7 = \"(name eq 'Contoso') and...",
+        "condition_expression": "multiple conditions with and",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "filter10 = \"(creditlimit gt 50000) and ((industrycode eq 1) or (industrycode eq 2))\"",
-        "condition": "complex nested conditions",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "filter10 = \"(creditlimit gt 50000) and...",
+        "condition_expression": "complex nested conditions",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "results = client.get(\"account\", filter=filter10, select=[\"name\", \"creditlimit\"])",
-        "condition": "using in get() calls",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "results = client.get(\"account\", filter=filter10, select=[\"name\", \"creditlimit\"])",
+        "condition_expression": "using in get() calls",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "filter=\"creditlimit gt 100000\",",
-        "condition": "expand parent account information",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "filter=\"creditlimit gt 100000\",",
+        "condition_expression": "expand parent account information",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "expand=[\"parentaccountid($select=name,creditlimit)\"],",
-        "condition": "expand parent account information",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "expand=[\"parentaccountid($select=name,creditlimit)\"],",
+        "condition_expression": "expand parent account information",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "select=[\"accountid\", \"name\", \"creditlimit\", \"parentaccountid\"]",
-        "condition": "expand parent account information",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "select=[\"accountid\", \"name\", \"creditlimit\", \"parentaccountid\"]",
+        "condition_expression": "expand parent account information",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "GROUP BY a.accountid, a.name, a.creditlimit",
-        "condition": "sql queries are read-only but powerful for analytics",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "GROUP BY a.accountid, a.name, a.creditlimit",
+        "condition_expression": "sql queries are read-only but powerful for analytics",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "sql = \"SELECT TOP 10000 name, creditlimit FROM account ORDER BY name\"",
-        "condition": "sql queries return paginated results by default",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "sql = \"SELECT TOP 10000 name,...",
+        "condition_expression": "sql queries return paginated results by default",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "client.update(\"account\", record_id, {\"creditlimit\": 100000})",
-        "condition": "update single",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "client.update(\"account\", record_id, {\"creditlimit\": 100000})",
+        "condition_expression": "update single",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "strategy",
         "description": "Comprehensive guide to advanced Dataverse SDK features including enums, complex filtering, SQL queries, metadata operations, and production patterns. ",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Comprehensive guide to advanced Dataverse SDK..."
       },
       {
         "directive_type": "knowledge",
         "description": "priority_int = record.get(\"new_priority\")  # Returns: 3",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "priority_int = record.get(\"new_priority\") # Returns: 3"
       },
       {
         "directive_type": "knowledge",
         "description": "filter8 = \"(industrycode eq 1) or (industrycode eq 2)\"",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "filter8 = \"(industrycode eq 1) or..."
       },
       {
         "directive_type": "knowledge",
         "description": "parent_name = account.get(\"_parentaccountid_value\")",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "parent_name = account.get(\"_parentaccountid_value\")"
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Account: {account['name']}, Parent: {parent_name}\")",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "print(f\"Account: {account['name']}, Parent: {parent_name}\")"
       },
       {
         "directive_type": "knowledge",
         "description": "LEFT JOIN contact c ON a.accountid = c.parentcustomerid",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "LEFT JOIN contact c ON a.accountid..."
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"{row['AccountName']}: {row['ContactCount']} contacts\")",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "print(f\"{row['AccountName']}: {row['ContactCount']} contacts\")"
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"  Primary Key: {table_info['primary_id_attribute']}\")",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "print(f\" Primary Key: {table_info['primary_id_attribute']}\")"
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Schema Name: {table_info.get('table_schema_name')}\")",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "print(f\"Schema Name: {table_info.get('table_schema_name')}\")"
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Logical Name: {table_info.get('table_logical_name')}\")",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "print(f\"Logical Name: {table_info.get('table_logical_name')}\")"
       }
     ]
   }

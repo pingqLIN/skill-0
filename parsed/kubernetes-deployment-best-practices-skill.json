@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__kubernetes-deployment-best-practices",
+    "skill_id": "claude__skill__kubernetes_deployment_best_practices",
     "name": "kubernetes-deployment-best-practices",
     "skill_layer": "claude_skill",
     "title": "Kubernetes Deployment Best Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "As GitHub Copilot, you are an expert in Kubernetes deployments, with deep knowledge of best practices for running applications reliably, securely, and",
-        "condition": "your mission",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "As GitHub Copilot, you are an...",
+        "condition_expression": "your mission",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Define `resources` (requests/limits) for CPU and memory to prevent resource exhaustion.",
-        "condition": "**1. pods**",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Define `resources` (requests/limits) for CPU and...",
+        "condition_expression": "**1. pods**",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Implement `livenessProbe` and `readinessProbe` for health checks.",
-        "condition": "**1. pods**",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Implement `livenessProbe` and `readinessProbe` for health...",
+        "condition_expression": "**1. pods**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Pro Tip: Avoid deploying Pods directly; use higher-level controllers like Deployments or StatefulSets.",
-        "condition": "**1. pods**",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Pro Tip: Avoid deploying Pods directly;...",
+        "condition_expression": "**1. pods**",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Principle: Manages a set of identical Pods and ensures they are running. Handles rolling updates and rollbacks.",
-        "condition": "**2. deployments**",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Principle: Manages a set of identical...",
+        "condition_expression": "**2. deployments**",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Ensure `selector` matches Pod labels for proper routing.",
-        "condition": "**3. services**",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Ensure `selector` matches Pod labels for...",
+        "condition_expression": "**3. services**",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Caution: ConfigMaps are not encrypted at rest. Do NOT store sensitive data here.",
-        "condition": "**1. configmaps**",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Caution: ConfigMaps are not encrypted at...",
+        "condition_expression": "**1. configmaps**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Guidance for Copilot: Implement an HTTP, TCP, or command-based liveness probe to ensure the application is active.",
-        "condition": "**1. liveness probe**",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Guidance for Copilot: Implement an HTTP,...",
+        "condition_expression": "**1. liveness probe**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Principle: Define CPU and memory requests/limits for every container.",
-        "condition": "**1. resource requests and limits**",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Principle: Define CPU and memory requests/limits...",
+        "condition_expression": "**1. resource requests and limits**",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Limits: Hard maximum resources (prevents noisy neighbors and resource exhaustion).",
-        "condition": "**1. resource requests and limits**",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Limits: Hard maximum resources (prevents noisy...",
+        "condition_expression": "**1. resource requests and limits**",
+        "condition_type": "range_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Specify `selector` and `template` for Pod matching.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Specify `selector` and `template` for Pod..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use Services to provide stable network identity to Pods.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use Services to provide stable network..."
       },
       {
         "directive_type": "principle",
         "description": "Principle: Manages external access to services in a cluster, typically HTTP/HTTPS routes from outside the cluster to services within.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Principle: Manages external access to services..."
       },
       {
         "directive_type": "principle",
         "description": "Use Ingress to consolidate routing rules and manage TLS termination.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use Ingress to consolidate routing rules..."
       },
       {
         "directive_type": "principle",
         "description": "Principle: Store non-sensitive configuration data as key-value pairs.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Principle: Store non-sensitive configuration data as..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use ConfigMaps for application configuration, environment variables, or command-line arguments.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use ConfigMaps for application configuration, environment..."
       },
       {
         "directive_type": "knowledge",
         "description": "Mount ConfigMaps as files in Pods or inject as environment variables.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Mount ConfigMaps as files in Pods..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use Kubernetes Secrets for API keys, passwords, database credentials, TLS certificates.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use Kubernetes Secrets for API keys,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Mount Secrets as volumes (files) or inject as environment variables (use caution with env vars).",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Mount Secrets as volumes (files) or..."
       },
       {
         "directive_type": "completion",
         "description": "Configuration: `initialDelaySeconds`, `periodSeconds`, `timeoutSeconds`, `failureThreshold`, `successThreshold`.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Configuration: `initialDelaySeconds`, `periodSeconds`, `timeoutSeconds`, `failur"
       }
     ]
   }

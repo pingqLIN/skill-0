@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python",
+    "skill_id": "claude__skill__dataverse_python",
     "name": "dataverse-python",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Skill",
@@ -70,9 +70,11 @@
     "rules": [
       {
         "description": "Reuse clients; avoid frequent re-auth.",
-        "condition": "tips",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Reuse clients; avoid frequent re-auth",
+        "condition_expression": "tips",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       }
     ],
     "directives": []

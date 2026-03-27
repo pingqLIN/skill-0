@@ -6,7 +6,7 @@
     "skill_layer": "claude_skill",
     "title": "Skill Share",
     "description": "A skill that creates new Claude skills and automatically shares them on Slack using Rube for seamless team collaboration and skill discovery.",
-    "schema_version": "2.1.0",
+    "schema_version": "2.4.0",
     "parse_timestamp": "2026-01-26T05:50:00Z",
     "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"
@@ -170,7 +170,7 @@
         "condition_type": "validation",
         "condition_expression": "Skill name follows hyphen-case convention",
         "returns": "boolean",
-        "fail_action": "transform",
+        "fail_action": "branch",
         "branching_targets": [
           "convert to hyphen-case"
         ]
@@ -192,7 +192,7 @@
         "condition_type": "existence_check",
         "condition_expression": "Rube Slack integration is configured",
         "returns": "boolean",
-        "fail_action": "skip",
+        "fail_action": "branch",
         "branching_targets": [
           "skip Slack notification"
         ]

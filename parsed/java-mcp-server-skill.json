@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__java-mcp-server",
+    "skill_id": "claude__skill__java_mcp_server",
     "name": "java-mcp-server",
     "skill_layer": "claude_skill",
     "title": "Java Mcp Server Skill",
@@ -142,51 +142,67 @@
     "rules": [
       {
         "description": ".property(\"limit\", JsonSchema.integer()",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "property(\"limit\", JsonSchema.integer()",
+        "condition_expression": "adding tools",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "int limit = arguments.has(\"limit\")",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "int limit = arguments.has(\"limit\")",
+        "condition_expression": "adding tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "? arguments.get(\"limit\").asInt()",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "? arguments.get(\"limit\").asInt()",
+        "condition_expression": "adding tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "List<String> results = performSearch(query, limit);",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "List<String> results = performSearch(query, limit);",
+        "condition_expression": "adding tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": ".property(\"query\", JsonSchema.string().required(true)))",
-        "condition": "spring boot integration",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "property(\"query\", JsonSchema.string().required(true)))",
+        "condition_expression": "spring boot integration",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "server.addToolHandler(\"validate\", (args) -> {",
-        "condition": "request validation",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "server.addToolHandler(\"validate\", (args) -> {",
+        "condition_expression": "request validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "if (!args.has(\"required_field\")) {",
-        "condition": "request validation",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "if (!args.has(\"required_field\")) {",
+        "condition_expression": "request validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": ".message(\"Missing required_field\")",
-        "condition": "request validation",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "message(\"Missing required_field\")",
+        "condition_expression": "request validation",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -194,61 +210,71 @@
         "directive_type": "strategy",
         "description": "When building MCP servers in Java, follow these best practices and patterns using the official Java SDK.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "When building MCP servers in Java,..."
       },
       {
         "directive_type": "knowledge",
         "description": "StdioServerTransport transport = new StdioServerTransport();",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "StdioServerTransport transport = new StdioServerTransport();"
       },
       {
         "directive_type": "completion",
         "description": ".addTextContent(\"Found \" + results.size() + \" results\")",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "addTextContent(\"Found \" + results.size() + \"..."
       },
       {
         "directive_type": "knowledge",
         "description": "return Mono.just(ResourceContent.text(content, uri));",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "return Mono.just(ResourceContent.text(content, uri));"
       },
       {
         "directive_type": "preference",
         "description": "String topic = arguments.getOrDefault(\"topic\", \"general\");",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "String topic = arguments.getOrDefault(\"topic\", \"general\");"
       },
       {
         "directive_type": "preference",
         "description": "String depth = arguments.getOrDefault(\"depth\", \"basic\");",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "String depth = arguments.getOrDefault(\"depth\", \"basic\");"
       },
       {
         "directive_type": "knowledge",
         "description": "PromptMessage.assistant(\"I'll provide a \" + depth + \" analysis of \" + topic)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "PromptMessage.assistant(\"I'll provide a \" + depth..."
       },
       {
         "directive_type": "knowledge",
         "description": ".description(\"Analysis of \" + topic + \" at \" + depth + \" level\")",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "description(\"Analysis of \" + topic +..."
       },
       {
         "directive_type": "strategy",
         "description": "The Java SDK uses Reactive Streams (Project Reactor) for asynchronous processing:",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "The Java SDK uses Reactive Streams..."
       },
       {
         "directive_type": "completion",
         "description": "// Return Mono for single results",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "// Return Mono for single results"
       }
     ]
   }

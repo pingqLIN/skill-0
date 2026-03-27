@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-agentic-workflows",
+    "skill_id": "claude__skill__dataverse_python_agentic_workflows",
     "name": "dataverse-python-agentic-workflows",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Agentic Workflows Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "7. Compliance Built-in - Data governance and retention policies enforced",
-        "condition": "key capabilities (planned)",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "7. Compliance Built-in - Data governance...",
+        "condition_expression": "key capabilities (planned)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "\"credit_limit\": \"Credit limit amount\"",
-        "condition": "define available tools",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "\"credit_limit\": \"Credit limit amount\"",
+        "condition_expression": "define available tools",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "\"filter\": \"creditlimit gt 100000\",",
-        "condition": "llms can now use dataverse tools",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "\"filter\": \"creditlimit gt 100000\",",
+        "condition_expression": "llms can now use dataverse tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "\"select\": [\"name\", \"creditlimit\"]",
-        "condition": "llms can now use dataverse tools",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "\"select\": [\"name\", \"creditlimit\"]",
+        "condition_expression": "llms can now use dataverse tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "def analyze_completeness(self, table_name, required_fields):",
-        "condition": "working example with current sdk features",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "def analyze_completeness(self, table_name, required_fields)",
+        "condition_expression": "working example with current sdk features",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "missing_by_field = {field: 0 for field in required_fields}",
-        "condition": "working example with current sdk features",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "missing_by_field = {field: 0 for field...",
+        "condition_expression": "working example with current sdk features",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "governance.enforce_all_policies()",
-        "condition": "enforce policies",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "governance.enforce_all_policies()",
+        "condition_expression": "enforce policies",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Governance policy enforcement",
-        "condition": "🔜 coming in ga",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Governance policy enforcement",
+        "condition_expression": "🔜 coming in ga",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "def check_health(self, table_name):",
-        "condition": "10. getting started: build your first agent today",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "def check_health(self, table_name)",
+        "condition_expression": "10. getting started: build your first agent today",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "\"\"\"Agent function: Check table health.\"\"\"",
-        "condition": "10. getting started: build your first agent today",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "\"\"\"Agent function: Check table health.\"\"\"",
+        "condition_expression": "10. getting started: build your first agent today",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Status: This feature is in Public Preview as of December 2025",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Status: This feature is in Public..."
       },
       {
         "directive_type": "knowledge",
         "description": "Agents make decisions and take actions based on data and rules",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Agents make decisions and take actions..."
       },
       {
         "directive_type": "strategy",
         "description": "Workflows orchestrate complex, multi-step operations",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Workflows orchestrate complex, multi-step operations"
       },
       {
         "directive_type": "knowledge",
         "description": "Dataverse serves as the central source of truth for enterprise data",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Dataverse serves as the central source..."
       },
       {
         "directive_type": "strategy",
         "description": "2. Form Prediction & Autofill - Pre-fill forms based on data patterns and context",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "2. Form Prediction & Autofill -..."
       },
       {
         "directive_type": "knowledge",
         "description": "3. Model Context Protocol (MCP) Support - Enable standardized agent-to-tool communication",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "3. Model Context Protocol (MCP) Support..."
       },
       {
         "directive_type": "knowledge",
         "description": "4. Agent-to-Agent (A2A) Collaboration - Multiple agents working together on complex tasks",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "4. Agent-to-Agent (A2A) Collaboration - Multiple..."
       },
       {
         "directive_type": "knowledge",
         "description": "5. Semantic Modeling - Natural language understanding of data relationships",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "5. Semantic Modeling - Natural language..."
       },
       {
         "directive_type": "knowledge",
         "description": "\"\"\"Autonomous agent that monitors and improves data quality.\"\"\"",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "\"\"\"Autonomous agent that monitors and improves..."
       },
       {
         "directive_type": "knowledge",
         "description": "async def evaluate_data_quality(self, table_name):",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "async def evaluate_data_quality(self, table_name)"
       }
     ]
   }

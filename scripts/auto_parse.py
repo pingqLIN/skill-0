@@ -21,6 +21,9 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent
 CONVERTED_DIR = PROJECT_ROOT / "converted-skills"
 PARSED_DIR = PROJECT_ROOT / "parsed"
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from tools.schema_contract import normalize_skill_document
 
 # --------------- Frontmatter 解析 ---------------
 
@@ -247,10 +250,10 @@ def parse_skill_md(skill_name: str, content: str) -> dict:
 
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
-    return {
+    skill = {
         "$schema": "../schema/skill-decomposition.schema.json",
         "meta": {
-            "skill_id": f"claude__{name}",
+            "skill_id": f"claude__skill__{name}",
             "name": name,
             "skill_layer": "claude_skill",
             "title": f"{name.replace('-', ' ').title()} Skill",
@@ -271,6 +274,8 @@ def parse_skill_md(skill_name: str, content: str) -> dict:
             "directives": directives,
         },
     }
+
+    return normalize_skill_document(skill)
 
 
 def _deduplicate(items: list[dict], key: str) -> list[dict]:

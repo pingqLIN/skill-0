@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__csharp-ko",
+    "skill_id": "claude__skill__csharp_ko",
     "name": "csharp-ko",
     "skill_layer": "claude_skill",
     "title": "Csharp Ko Skill",
@@ -41,61 +41,71 @@
         "directive_type": "knowledge",
         "description": "일관된 명명 규칙은 코드 가독성의 핵심입니다. Microsoft의 가이드라인을 따르는 것을 권장합니다.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "일관된 명명 규칙은 코드 가독성의 핵심입니다...."
       },
       {
         "directive_type": "knowledge",
         "description": "| 인터페이스 | 접두사 'I' + PascalCase | `IAsyncRepository`, `ILogger` |",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "| 인터페이스 | 접두사 'I' +..."
       },
       {
         "directive_type": "knowledge",
         "description": "| 공개(public) 멤버 | 파스칼 케이스 (PascalCase) | `public int MaxCount;`, `public void GetData()` |",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "| 공개(public) 멤버 | 파스칼 케이스..."
       },
       {
         "directive_type": "knowledge",
         "description": "| 매개변수, 지역 변수 | 카멜 케이스 (camelCase) | `int userCount`, `string customerName` |",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "| 매개변수, 지역 변수 | 카멜..."
       },
       {
         "directive_type": "knowledge",
         "description": "| 비공개/내부 필드 | 밑줄(_) + 카멜 케이스 | `private string _connectionString;` |",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "| 비공개/내부 필드 | 밑줄(_) +..."
       },
       {
         "directive_type": "preference",
         "description": "| 상수 (const) | 파스칼 케이스 (PascalCase) | `public const int DefaultTimeout = 5000;` |",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "| 상수 (const) | 파스칼 케이스..."
       },
       {
         "directive_type": "completion",
         "description": "| 제네릭 형식 매개변수 | 접두사 'T' + 설명적인 이름 | `TKey`, `TValue`, `TResult` |",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "| 제네릭 형식 매개변수 | 접두사..."
       },
       {
         "directive_type": "knowledge",
         "description": "| 비동기 메서드 | 'Async' 접미사 | `GetUserAsync`, `DownloadFileAsync` |",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "| 비동기 메서드 | 'Async' 접미사..."
       },
       {
         "directive_type": "knowledge",
         "description": "| 들여쓰기 | 4개의 공백 사용 | 탭 대신 4개의 공백을 사용합니다. cs 파일은 반드시 4개의 공백을 사용합니다. |",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "| 들여쓰기 | 4개의 공백 사용..."
       },
       {
         "directive_type": "knowledge",
         "description": "| 괄호 | 항상 중괄호 {} 사용 | 제어문(if, for, while 등)이 한 줄이더라도 항상 중괄호를 사용합니다. |",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "| 괄호 | 항상 중괄호 {}..."
       }
     ]
   }

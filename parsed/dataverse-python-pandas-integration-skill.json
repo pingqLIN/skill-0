@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-pandas-integration",
+    "skill_id": "claude__skill__dataverse_python_pandas_integration",
     "name": "dataverse-python-pandas-integration",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Pandas Integration Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "select=[\"accountid\", \"name\", \"creditlimit\", \"telephone1\"],",
-        "condition": "query data",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "select=[\"accountid\", \"name\", \"creditlimit\", \"telephone1\"],",
+        "condition_expression": "query data",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "for page in client.get(\"account\", select=[\"accountid\", \"name\", \"creditlimit\", \"industrycode\"]):",
-        "condition": "load account data",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "for page in client.get(\"account\", select=[\"accountid\", \"name\",...",
+        "condition_expression": "load account data",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "high_value = df[df['creditlimit'] > 100000]",
-        "condition": "filter rows by condition",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "high_value = df[df['creditlimit'] > 100000]",
+        "condition_expression": "filter rows by condition",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "names_limits = df[['name', 'creditlimit']]",
-        "condition": "select specific columns",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "names_limits = df[['name', 'creditlimit']]",
+        "condition_expression": "select specific columns",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "filtered = df[(df['creditlimit'] > 50000) & (df['industrycode'] == 1)]",
-        "condition": "multiple conditions",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "filtered = df[(df['creditlimit'] > 50000) &...",
+        "condition_expression": "multiple conditions",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "sorted_df = df.sort_values('creditlimit', ascending=False)",
-        "condition": "sort by column",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "sorted_df = df.sort_values('creditlimit', ascending=False)",
+        "condition_expression": "sort by column",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "'creditlimit': ['mean', 'sum', 'count'],",
-        "condition": "group by and aggregate",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "'creditlimit': ['mean', 'sum', 'count'],",
+        "condition_expression": "group by and aggregate",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "print(df.groupby('industrycode')['creditlimit'].describe())",
-        "condition": "group statistics",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "print(df.groupby('industrycode')['creditlimit'].describe())",
+        "condition_expression": "group statistics",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "df['creditlimit'] = pd.to_numeric(df['creditlimit'])",
-        "condition": "data type conversion",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "df['creditlimit'] = pd.to_numeric(df['creditlimit'])",
+        "condition_expression": "data type conversion",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "'creditlimit': ['mean', 'min', 'max', 'sum'],",
-        "condition": "create summary report",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "'creditlimit': ['mean', 'min', 'max', 'sum'],",
+        "condition_expression": "create summary report",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "strategy",
         "description": "Guide to integrating the Dataverse SDK for Python with pandas DataFrames for data science and analysis workflows. The SDK's JSON response format maps ",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Guide to integrating the Dataverse SDK..."
       },
       {
         "directive_type": "knowledge",
         "description": "client = DataverseClient(base_url=base_url, credential=credential)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "client = DataverseClient(base_url=base_url, credential=credential)"
       },
       {
         "directive_type": "knowledge",
         "description": "client = DataverseClient(\"https://<myorg>.crm.dynamics.com\", InteractiveBrowserCredential())",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "client = DataverseClient(\"https://<myorg>.crm.dynamics.com\", InteractiveBrowserC"
       },
       {
         "directive_type": "knowledge",
         "description": "print(df.info())          # Column info and null counts",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "print(df.info()) # Column info and null..."
       },
       {
         "directive_type": "principle",
         "description": "df_clean = df.dropna()                    # Remove rows with NaN",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "df_clean = df.dropna() # Remove rows..."
       },
       {
         "directive_type": "knowledge",
         "description": "df_filled = df.fillna(0)                  # Fill NaN with 0",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "df_filled = df.fillna(0) # Fill NaN..."
       },
       {
         "directive_type": "strategy",
         "description": "df_ffill = df.fillna(method='ffill')      # Forward fill",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "df_ffill = df.fillna(method='ffill') # Forward fill"
       },
       {
         "directive_type": "knowledge",
         "description": "'name': lambda x: ', '.join(x.head(3))  # Sample names",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "'name': lambda x: ', '.join(x.head(3)) #..."
       },
       {
         "directive_type": "knowledge",
         "description": "accounts = pd.DataFrame(client.get(\"account\", select=[\"accountid\", \"name\"]))",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "accounts = pd.DataFrame(client.get(\"account\", select=[\"accountid\", \"name\"]))"
       },
       {
         "directive_type": "knowledge",
         "description": "contacts = pd.DataFrame(client.get(\"contact\", select=[\"contactid\", \"parentcustomerid\", \"fullname\"]))",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "contacts = pd.DataFrame(client.get(\"contact\", select=[\"contactid\", \"parentcustom"
       }
     ]
   }

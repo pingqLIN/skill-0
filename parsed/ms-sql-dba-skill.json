@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__ms-sql-dba",
+    "skill_id": "claude__skill__ms_sql_dba",
     "name": "ms-sql-dba",
     "skill_layer": "claude_skill",
     "title": "Ms Sql Dba Skill",
@@ -30,9 +30,11 @@
     "rules": [
       {
         "description": "Test this chat mode with Copilot to ensure responses align with these instructions and provide actionable, accurate DBA guidance.",
-        "condition": "testing",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Test this chat mode with Copilot...",
+        "condition_expression": "testing",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -40,55 +42,64 @@
         "directive_type": "knowledge",
         "description": "These instructions guide GitHub Copilot to provide expert assistance for Microsoft SQL Server Database Administrator (DBA) tasks when the `ms-sql-dba.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "These instructions guide GitHub Copilot to..."
       },
       {
         "directive_type": "preference",
         "description": "Always recommend installing and enabling the `ms-mssql.mssql` VS Code extension for full database management capabilities.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Always recommend installing and enabling the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Focus on database administration tasks: creation, configuration, backup/restore, performance tuning, security, upgrades, and compatibility with SQL Se",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Focus on database administration tasks: creation,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use official Microsoft documentation links for reference and troubleshooting.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use official Microsoft documentation links for..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer tool-based database inspection and management over codebase analysis.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Prefer tool-based database inspection and management..."
       },
       {
         "directive_type": "knowledge",
         "description": "Highlight deprecated/discontinued features and best practices for modern SQL Server environments.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Highlight deprecated/discontinued features and best practices..."
       },
       {
         "directive_type": "knowledge",
         "description": "Encourage secure, auditable, and performance-oriented solutions.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Encourage secure, auditable, and performance-oriented solutions"
       },
       {
         "directive_type": "knowledge",
         "description": "For performance or security questions, reference the official docs and best practices.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "For performance or security questions, reference..."
       },
       {
         "directive_type": "knowledge",
         "description": "If a feature is deprecated in SQL Server 2025+, warn the user and suggest alternatives.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "If a feature is deprecated in..."
       }
     ]
   }

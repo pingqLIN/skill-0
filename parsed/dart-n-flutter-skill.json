@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dart-n-flutter",
+    "skill_id": "claude__skill__dart_n_flutter",
     "name": "dart-n-flutter",
     "skill_layer": "claude_skill",
     "title": "Dart N Flutter Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "If two pieces of code look different it should be because they *are* different in some meaningful way. When a bit of code stands out and catches your ",
-        "condition": "effective dart",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "If two pieces of code look...",
+        "condition_expression": "effective dart",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "If there are multiple ways to say something, you should generally pick the most concise one. This is not to say you should `code golf` yourself into c",
-        "condition": "effective dart",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "If there are multiple ways to...",
+        "condition_expression": "effective dart",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "DO guidelines describe practices that should always be followed. There will almost never be a valid reason to stray from them.",
-        "condition": "how to read the topics",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "DO guidelines describe practices that should...",
+        "condition_expression": "how to read the topics",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "DON'T guidelines are the converse: things that are almost never a good idea. Hopefully, we don't have as many of these as other languages do because w",
-        "condition": "how to read the topics",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "DON'T guidelines are the converse: things...",
+        "condition_expression": "how to read the topics",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "PREFER guidelines are practices that you *should* follow. However, there may be circumstances where it makes sense to do otherwise. Just make sure you",
-        "condition": "how to read the topics",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "PREFER guidelines are practices that you...",
+        "condition_expression": "how to read the topics",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "AVOID guidelines are the dual to \"prefer\": stuff you shouldn't do but where there may be good reasons to on rare occasions.",
-        "condition": "how to read the topics",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "AVOID guidelines are the dual to...",
+        "condition_expression": "how to read the topics",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "This sounds like the police are going to beat down your door if you don't have your laces tied correctly. Things aren't that bad. Most of the guidelin",
-        "condition": "how to read the topics",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "This sounds like the police are...",
+        "condition_expression": "how to read the topics",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "DON'T use a leading underscore for identifiers that aren't private.",
-        "condition": "style",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "DON'T use a leading underscore for...",
+        "condition_expression": "style",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "DON'T use prefix letters.",
-        "condition": "style",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "DON'T use prefix letters",
+        "condition_expression": "style",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "DON'T explicitly name libraries.",
-        "condition": "style",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "DON'T explicitly name libraries",
+        "condition_expression": "style",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "preference",
         "description": "Best practices recommended by the Dart and Flutter teams. These instructions were taken from [Effective Dart](https://dart.dev/effective-dart) and [Ar",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Best practices recommended by the Dart..."
       },
       {
         "directive_type": "knowledge",
         "description": "We split the guidelines into a few separate topics for easy digestion:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "We split the guidelines into a..."
       },
       {
         "directive_type": "knowledge",
         "description": "CONSIDER guidelines are practices that you might or might not want to follow, depending on circumstances, precedents, and your own preference.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "CONSIDER guidelines are practices that you..."
       },
       {
         "directive_type": "knowledge",
         "description": "Some guidelines describe an exception where the rule does *not* apply. When listed, the exceptions may not be exhaustive—you might still need to use y",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Some guidelines describe an exception where..."
       },
       {
         "directive_type": "knowledge",
         "description": "DO capitalize acronyms and abbreviations longer than two letters like words.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "DO capitalize acronyms and abbreviations longer..."
       },
       {
         "directive_type": "preference",
         "description": "PREFER using wildcards for unused callback parameters.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "PREFER using wildcards for unused callback..."
       },
       {
         "directive_type": "knowledge",
         "description": "DO use curly braces for all flow control statements.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "DO use curly braces for all..."
       },
       {
         "directive_type": "knowledge",
         "description": "DO use `///` doc comments to document members and types.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "DO use `///` doc comments to..."
       },
       {
         "directive_type": "knowledge",
         "description": "DO separate the first sentence of a doc comment into its own paragraph.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "DO separate the first sentence of..."
       },
       {
         "directive_type": "preference",
         "description": "PREFER a noun phrase or non-imperative verb phrase for a function or method if returning a value is its primary purpose.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "PREFER a noun phrase or non-imperative..."
       }
     ]
   }

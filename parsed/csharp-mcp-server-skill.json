@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__csharp-mcp-server",
+    "skill_id": "claude__skill__csharp_mcp_server",
     "name": "csharp-mcp-server",
     "skill_layer": "claude_skill",
     "title": "Csharp Mcp Server Skill",
@@ -134,15 +134,19 @@
     "rules": [
       {
         "description": "Always configure logging to stderr using `LogToStandardErrorThreshold = LogLevel.Trace` to avoid interfering with stdio transport",
-        "condition": "instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always configure logging to stderr using...",
+        "condition_expression": "instructions",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Always include comprehensive descriptions for tools and parameters to help LLMs understand their purpose",
-        "condition": "instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Always include comprehensive descriptions for tools...",
+        "condition_expression": "instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -150,61 +154,71 @@
         "directive_type": "knowledge",
         "description": "Use ModelContextProtocol.AspNetCore for HTTP-based MCP servers",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use ModelContextProtocol.AspNetCore for HTTP-based MCP servers"
       },
       {
         "directive_type": "knowledge",
         "description": "Use ModelContextProtocol.Core for minimal dependencies (client-only or low-level server APIs)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use ModelContextProtocol.Core for minimal dependencies (client-only..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use the `[McpServerToolType]` attribute on classes containing MCP tools",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use the `[McpServerToolType]` attribute on classes..."
       },
       {
         "directive_type": "strategy",
         "description": "Use the `[McpServerTool]` attribute on methods to expose them as tools",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use the `[McpServerTool]` attribute on methods..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use the `[Description]` attribute from `System.ComponentModel` to document tools and parameters",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use the `[Description]` attribute from `System.ComponentModel`..."
       },
       {
         "directive_type": "strategy",
         "description": "Support dependency injection in tool methods - inject `McpServer`, `HttpClient`, or other services as parameters",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Support dependency injection in tool methods..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `McpServer.AsSamplingChatClient()` to make sampling requests back to the client from within tools",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use `McpServer.AsSamplingChatClient()` to make sampling requests..."
       },
       {
         "directive_type": "strategy",
         "description": "Expose prompts using `[McpServerPromptType]` on classes and `[McpServerPrompt]` on methods",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Expose prompts using `[McpServerPromptType]` on classes..."
       },
       {
         "directive_type": "strategy",
         "description": "Tool methods can be synchronous or async (return `Task` or `Task<T>`)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Tool methods can be synchronous or..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `CancellationToken` parameters in async tools for proper cancellation support",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use `CancellationToken` parameters in async tools..."
       }
     ]
   }

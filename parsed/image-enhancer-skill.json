@@ -1,14 +1,14 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__image_enhancer",
+    "skill_id": "claude__skill__image_enhancer",
     "name": "image-enhancer",
     "skill_layer": "claude_skill",
     "title": "Image-Enhancer Skill",
     "description": "Improves image quality by enhancing resolution, sharpness, and clarity.",
-    "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-26T13:25:10.991657Z",
-    "parser_version": "skill-0 v2.1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-03-27T11:53:43.765420Z",
+    "parser_version": "skill-0 v2.4",
     "parsed_by": "skill-0-batch"
   },
   "original_definition": {
@@ -62,26 +62,32 @@
     "rules": [
       {
         "id": "r_001",
+        "name": "Always keep original files as backup",
         "description": "Always keep original files as backup",
-        "condition": "always",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "always",
+        "returns": "boolean"
       },
       {
         "id": "r_002",
+        "name": "Optimize for target platform if specified",
         "description": "Optimize for target platform if specified",
-        "condition": "when_platform_known",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "when_platform_known",
+        "returns": "boolean"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Enhanced image saved with -enhanced suffix",
         "directive_type": "completion",
         "description": "Enhanced image saved with -enhanced suffix",
         "decomposable": true
       },
       {
         "id": "d_002",
+        "name": "Batch process entire folders when requested",
         "directive_type": "principle",
         "description": "Batch process entire folders when requested",
         "decomposable": true

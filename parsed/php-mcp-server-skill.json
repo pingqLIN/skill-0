@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__php-mcp-server",
+    "skill_id": "claude__skill__php_mcp_server",
     "name": "php-mcp-server",
     "skill_layer": "claude_skill",
     "title": "Php Mcp Server Skill",
@@ -142,33 +142,43 @@
     "rules": [
       {
         "description": "require_once __DIR__ . '/vendor/autoload.php';",
-        "condition": "basic server with attribute discovery",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "require_once __DIR__ . '/vendor/autoload.php';",
+        "condition_expression": "basic server with attribute discovery",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "new TextContent('Summary: All checks passed.')",
-        "condition": "tool with complex return types",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "new TextContent('Summary: All checks passed.')",
+        "condition_expression": "tool with complex return types",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "// Variable order must match URI template order",
-        "condition": "resource template with variables",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "// Variable order must match URI...",
+        "condition_expression": "resource template with variables",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Always use caching in production:",
-        "condition": "use discovery caching",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Always use caching in production",
+        "condition_expression": "use discovery caching",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "composer require symfony/mcp-bundle",
-        "condition": "symfony integration",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "composer require symfony/mcp-bundle",
+        "condition_expression": "symfony integration",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -176,61 +186,71 @@
         "directive_type": "knowledge",
         "description": "This guide provides best practices for building Model Context Protocol (MCP) servers using the official PHP SDK maintained in collaboration with The P",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This guide provides best practices for..."
       },
       {
         "directive_type": "knowledge",
         "description": "use Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter;",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "use Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter;"
       },
       {
         "directive_type": "knowledge",
         "description": "$cache = new Psr16Cache(new FilesystemAdapter('mcp-discovery'));",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "$cache = new Psr16Cache(new FilesystemAdapter('mcp-discovery'));"
       },
       {
         "directive_type": "knowledge",
         "description": "->addTool([Calculator::class, 'multiply'], 'multiply')",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": ">addTool([Calculator::class, 'multiply'], 'multiply')"
       },
       {
         "directive_type": "knowledge",
         "description": "->addResource([Config::class, 'getSettings'], 'config://app/settings')",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": ">addResource([Config::class, 'getSettings'], 'config://app/settings')"
       },
       {
         "directive_type": "knowledge",
         "description": "throw new \\InvalidArgumentException(\"File not found: {$path}\");",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "throw new \\InvalidArgumentException(\"File not found: {$path}\");"
       },
       {
         "directive_type": "knowledge",
         "description": "use Mcp\\Schema\\Content\\{TextContent, ImageContent};",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "use Mcp\\Schema\\Content\\{TextContent, ImageContent};"
       },
       {
         "directive_type": "knowledge",
         "description": "public function getChart(string $chartType): ImageContent",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "public function getChart(string $chartType): ImageContent"
       },
       {
         "directive_type": "knowledge",
         "description": "public function performCalculation(float $a, float $b, string $operation): float",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "public function performCalculation(float $a, float $b,..."
       },
       {
         "directive_type": "knowledge",
         "description": "throw new \\InvalidArgumentException('Division by zero'),",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "throw new \\InvalidArgumentException('Division by zero'),"
       }
     ]
   }

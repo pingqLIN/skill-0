@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-api-reference",
+    "skill_id": "claude__skill__dataverse_python_api_reference",
     "name": "dataverse-python-api-reference",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Api Reference Skill",
@@ -142,9 +142,11 @@
     "rules": [
       {
         "description": "Catch `DataverseError` for SDK-specific exceptions. Check `is_transient` to decide retry.",
-        "condition": "error handling",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Catch `DataverseError` for SDK-specific exceptions. Check...",
+        "condition_expression": "error handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -152,43 +154,50 @@
         "directive_type": "knowledge",
         "description": "record = client.get(\"account\", record_id=\"guid-here\")",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "record = client.get(\"account\", record_id=\"guid-here\")"
       },
       {
         "directive_type": "knowledge",
         "description": "client = DataverseClient(base_url=url, credential=cred, config=cfg)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "client = DataverseClient(base_url=url, credential=cred, config=cfg)"
       },
       {
         "directive_type": "knowledge",
         "description": "Use exact logical names (lowercase) in filter expressions",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use exact logical names (lowercase) in..."
       },
       {
         "directive_type": "knowledge",
         "description": "Navigation property names in `expand` are case-sensitive",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Navigation property names in `expand` are..."
       },
       {
         "directive_type": "knowledge",
         "description": "API docs: https://learn.microsoft.com/en-us/python/api/powerplatform-dataverse-client/powerplatform.dataverse.client.dataverseclient",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "API docs: https://learn.microsoft.com/en-us/python/api/powerplatform-dataverse-c"
       },
       {
         "directive_type": "knowledge",
         "description": "Config docs: https://learn.microsoft.com/en-us/python/api/powerplatform-dataverse-client/powerplatform.dataverse.core.config.dataverseconfig",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Config docs: https://learn.microsoft.com/en-us/python/api/powerplatform-datavers"
       },
       {
         "directive_type": "knowledge",
         "description": "Errors: https://learn.microsoft.com/en-us/python/api/powerplatform-dataverse-client/powerplatform.dataverse.core.errors",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Errors: https://learn.microsoft.com/en-us/python/api/powerplatform-dataverse-cli"
       }
     ]
   }

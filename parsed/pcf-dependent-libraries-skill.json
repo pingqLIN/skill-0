@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-dependent-libraries",
+    "skill_id": "claude__skill__pcf_dependent_libraries",
     "name": "pcf-dependent-libraries",
     "skill_layer": "claude_skill",
     "title": "Pcf Dependent Libraries Skill",
@@ -126,21 +126,27 @@
     "rules": [
       {
         "description": "This way you can independently maintain the library in the Library Control and the dependent controls don't need to have a copy of the library bundled",
-        "condition": "implementation steps",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "This way you can independently maintain...",
+        "condition_expression": "implementation steps",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| `pcfAllowCustomWebpack` | Enables the component to use a custom web pack. This feature must be enabled for components that define a library resource",
-        "condition": "featureconfig.json",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "| `pcfAllowCustomWebpack` | Enables the component...",
+        "condition_expression": "featureconfig.json",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Rather than loading the dependent library when a component loads, you can load the dependent library on demand. Loading on demand provides the flexibi",
-        "condition": "dependency as on-demand load of a component",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Rather than loading the dependent library...",
+        "condition_expression": "dependency as on-demand load of a component",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -148,61 +154,71 @@
         "directive_type": "knowledge",
         "description": "[This topic is pre-release documentation and is subject to change.]",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "[This topic is pre-release documentation and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Before: Custom library files contained in each PCF component",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Before: Custom library files contained in..."
       },
       {
         "directive_type": "knowledge",
         "description": "![Diagram showing custom library files contained in each pcf component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/med",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "![Diagram showing custom library files contained..."
       },
       {
         "directive_type": "knowledge",
         "description": "After: Components calling a shared function from a Library Control",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "After: Components calling a shared function..."
       },
       {
         "directive_type": "knowledge",
         "description": "![Diagram showing components calling a shared function from a Library Control](https://learn.microsoft.com/en-us/power-apps/developer/component-framew",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "![Diagram showing components calling a shared..."
       },
       {
         "directive_type": "knowledge",
         "description": "| `pcfResourceDependency` | Enables the component to use a library resource. |",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "| `pcfResourceDependency` | Enables the component..."
       },
       {
         "directive_type": "preference",
         "description": "By default, these values are `off`. Set them to `on` to override the default.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "By default, these values are `off`...."
       },
       {
         "directive_type": "knowledge",
         "description": "This file might look like the following when the library alias is `myLib`:",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "This file might look like the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use the [dependency element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/dependency) within [",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use the [dependency element](https://learn.microsoft.com/en-us/power-apps/develo"
       },
       {
         "directive_type": "knowledge",
         "description": "Step 1: Add these [platform-action element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/platf",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Step 1: Add these [platform-action element](https://learn.microsoft.com/en-us/po"
       }
     ]
   }

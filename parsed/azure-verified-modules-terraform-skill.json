@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__azure-verified-modules-terraform",
+    "skill_id": "claude__skill__azure_verified_modules_terraform",
     "name": "azure-verified-modules-terraform",
     "skill_layer": "claude_skill",
     "title": "Azure Verified Modules Terraform Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "IMPORTANT: When GitHub Copilot Agent or GitHub Copilot Coding Agent is working on this repository, the following local unit tests MUST be executed to ",
-        "condition": "custom instructions for github copilot agents",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "IMPORTANT: When GitHub Copilot Agent or...",
+        "condition_expression": "custom instructions for github copilot agents",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "These commands must be run before any pull request is created or updated to ensure compliance with the Azure Verified Modules standards and prevent CI",
-        "condition": "custom instructions for github copilot agents",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "These commands must be run before...",
+        "condition_expression": "custom instructions for github copilot agents",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "> Note: The following links always point to the latest version of the CSV files on the main branch. As intended, this means the files may change over ",
-        "condition": "official avm index",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "> Note: The following links always...",
+        "condition_expression": "official avm index",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "2. Configure required and optional inputs",
-        "condition": "from scratch",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "2. Configure required and optional inputs",
+        "condition_expression": "from scratch",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always pin module and provider versions",
-        "condition": "module usage",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Always pin module and provider versions",
+        "condition_expression": "module usage",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Follow AzureRM provider requirements and constraints",
-        "condition": "module usage",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Follow AzureRM provider requirements and constraints",
+        "condition_expression": "module usage",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always run `terraform fmt` after making changes",
-        "condition": "code quality",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Always run `terraform fmt` after making...",
+        "condition_expression": "code quality",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always run `terraform validate` after making changes",
-        "condition": "code quality",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Always run `terraform validate` after making...",
+        "condition_expression": "code quality",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "1. Always check for existing modules before creating new resources",
-        "condition": "github copilot integration",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "1. Always check for existing modules...",
+        "condition_expression": "github copilot integration",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "1. Version Conflicts: Always check compatibility between module and provider versions",
-        "condition": "common issues",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "1. Version Conflicts: Always check compatibility...",
+        "condition_expression": "common issues",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Azure Verified Modules (AVM) are pre-built, tested, and validated Terraform and Bicep modules that follow Azure best practices. Use these modules to c",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Azure Verified Modules (AVM) are pre-built,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Filter by \"Partner\" tag to find official AVM modules",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Filter by \"Partner\" tag to find..."
       },
       {
         "directive_type": "knowledge",
         "description": "Example: Search \"avm storage account\" → filter by Partner",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Example: Search \"avm storage account\" →..."
       },
       {
         "directive_type": "knowledge",
         "description": "Terraform Resource Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/TerraformResour",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Terraform Resource Modules: `https://raw.githubusercontent.com/Azure/Azure-Verif"
       },
       {
         "directive_type": "strategy",
         "description": "Terraform Pattern Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/TerraformPattern",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Terraform Pattern Modules: `https://raw.githubusercontent.com/Azure/Azure-Verifi"
       },
       {
         "directive_type": "knowledge",
         "description": "Terraform Utility Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/TerraformUtility",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Terraform Utility Modules: `https://raw.githubusercontent.com/Azure/Azure-Verifi"
       },
       {
         "directive_type": "knowledge",
         "description": "1. Copy the example code from the module documentation",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "1. Copy the example code from..."
       },
       {
         "directive_type": "knowledge",
         "description": "2. Replace `source = \"../../\"` with `source = \"Azure/avm-res-{service}-{resource}/azurerm\"`",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "2. Replace `source = \"../../\"` with..."
       },
       {
         "directive_type": "knowledge",
         "description": "1. Copy the Provision Instructions from module documentation",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "1. Copy the Provision Instructions from..."
       },
       {
         "directive_type": "knowledge",
         "description": "source  = \"Azure/avm-res-storage-storageaccount/azurerm\"",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "source = \"Azure/avm-res-storage-storageaccount/azurerm\""
       }
     ]
   }

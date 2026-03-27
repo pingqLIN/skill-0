@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__azure-verified-modules-bicep",
+    "skill_id": "claude__skill__azure_verified_modules_bicep",
     "name": "azure-verified-modules-bicep",
     "skill_layer": "claude_skill",
     "title": "Azure Verified Modules Bicep Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "4. Configure required and optional parameters",
-        "condition": "from examples",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "4. Configure required and optional parameters",
+        "condition_expression": "from examples",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid 'name' suffix in symbolic names as they represent the resource, not the resource's name",
-        "condition": "symbolic names",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Avoid 'name' suffix in symbolic names...",
+        "condition_expression": "symbolic names",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid distinguishing variables and parameters by suffixes",
-        "condition": "symbolic names",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Avoid distinguishing variables and parameters by...",
+        "condition_expression": "symbolic names",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always check for existing AVM modules before creating raw resources",
-        "condition": "module discovery and usage",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Always check for existing AVM modules...",
+        "condition_expression": "module discovery and usage",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Use `@allowed()` decorator sparingly to avoid blocking valid deployments",
-        "condition": "code structure",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Use `@allowed()` decorator sparingly to avoid...",
+        "condition_expression": "code structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Add prefixes since some resources don't allow names starting with numbers",
-        "condition": "resource naming",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Add prefixes since some resources don't...",
+        "condition_expression": "resource naming",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid excessive nesting of child resources",
-        "condition": "child resources",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Avoid excessive nesting of child resources",
+        "condition_expression": "child resources",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never include secrets or keys in outputs",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Never include secrets or keys in...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "After any changes to Bicep files, run the following commands to ensure all files build successfully:",
-        "condition": "build validation (mandatory)",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "After any changes to Bicep files,...",
+        "condition_expression": "build validation (mandatory)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always update accompanying `*.bicepparam` files when modifying `*.bicep` files",
-        "condition": "bicep parameter files",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Always update accompanying `*.bicepparam` files when...",
+        "condition_expression": "bicep parameter files",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Azure Verified Modules (AVM) are pre-built, tested, and validated Bicep modules that follow Azure best practices. Use these modules to create, update,",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Azure Verified Modules (AVM) are pre-built,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Search for modules: `br/public:avm/res/{service}/{resource}:{version}`",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Search for modules: `br/public:avm/res/{service}/{resource}:{version}`"
       },
       {
         "directive_type": "knowledge",
         "description": "Browse available modules: `https://github.com/Azure/bicep-registry-modules/tree/main/avm/res`",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Browse available modules: `https://github.com/Azure/bicep-registry-modules/tree/"
       },
       {
         "directive_type": "knowledge",
         "description": "Example: `br/public:avm/res/storage/storage-account:0.30.0`",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Example: `br/public:avm/res/storage/storage-account:0.30.0`"
       },
       {
         "directive_type": "knowledge",
         "description": "Bicep Resource Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/BicepResourceModule",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Bicep Resource Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-"
       },
       {
         "directive_type": "strategy",
         "description": "Bicep Pattern Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-Modules/refs/heads/main/docs/static/module-indexes/BicepPatternModules.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Bicep Pattern Modules: `https://raw.githubusercontent.com/Azure/Azure-Verified-M"
       },
       {
         "directive_type": "knowledge",
         "description": "GitHub Repository: `https://github.com/Azure/bicep-registry-modules/tree/main/avm/res/{service}/{resource}`",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "GitHub Repository: `https://github.com/Azure/bicep-registry-modules/tree/main/av"
       },
       {
         "directive_type": "knowledge",
         "description": "3. Reference module using `br/public:avm/res/{service}/{resource}:{version}`",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "3. Reference module using `br/public:avm/res/{service}/{resource}:{version}`"
       },
       {
         "directive_type": "knowledge",
         "description": "module storageAccount 'br/public:avm/res/storage/storage-account:0.30.0' = {",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "module storageAccount 'br/public:avm/res/storage/storage-account:0.30.0' = {"
       },
       {
         "directive_type": "knowledge",
         "description": "Resource Modules: `br/public:avm/res/{service}/{resource}:{version}`",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Resource Modules: `br/public:avm/res/{service}/{resource}:{version}`"
       }
     ]
   }

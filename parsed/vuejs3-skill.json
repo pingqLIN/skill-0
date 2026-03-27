@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__vuejs3",
+    "skill_id": "claude__skill__vuejs",
     "name": "vuejs3",
     "skill_layer": "claude_skill",
     "title": "Vuejs3 Skill",
@@ -142,57 +142,75 @@
     "rules": [
       {
         "description": "Ensure styles are accessible (contrast, focus states)",
-        "condition": "styling",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Ensure styles are accessible (contrast, focus...",
+        "condition_expression": "styling",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid unnecessary watchers; prefer `computed` where possible",
-        "condition": "performance optimization",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Avoid unnecessary watchers; prefer `computed` where...",
+        "condition_expression": "performance optimization",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use libraries like VeeValidate or @vueuse/form for declarative validation",
-        "condition": "forms and validation",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Use libraries like VeeValidate or @vueuse/form...",
+        "condition_expression": "forms and validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Validate on blur or input with debouncing for performance",
-        "condition": "forms and validation",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Validate on blur or input with...",
+        "condition_expression": "forms and validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure accessible labeling, error announcements, and focus management",
-        "condition": "forms and validation",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Ensure accessible labeling, error announcements, and...",
+        "condition_expression": "forms and validation",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid using `v-html`; sanitize any HTML inputs rigorously",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Avoid using `v-html`; sanitize any HTML...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Validate and escape data in templates and directives",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Validate and escape data in templates...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure color contrast meets WCAG AA standards",
-        "condition": "accessibility",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Ensure color contrast meets WCAG AA...",
+        "condition_expression": "accessibility",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "11. Ensure accessibility compliance",
-        "condition": "implementation process",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "11. Ensure accessibility compliance",
+        "condition_expression": "implementation process",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -200,61 +218,71 @@
         "directive_type": "preference",
         "description": "Vue 3.x with Composition API as default",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Vue 3.x with Composition API as..."
       },
       {
         "directive_type": "knowledge",
         "description": "TypeScript for type safety",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "TypeScript for type safety"
       },
       {
         "directive_type": "knowledge",
         "description": "Single File Components (`.vue`) with `<script setup>` syntax",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Single File Components (`.vue`) with `<script..."
       },
       {
         "directive_type": "preference",
         "description": "Modern build tooling (Vite recommended)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Modern build tooling (Vite recommended)"
       },
       {
         "directive_type": "knowledge",
         "description": "Pinia for application state management",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Pinia for application state management"
       },
       {
         "directive_type": "preference",
         "description": "Official Vue style guide and best practices",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Official Vue style guide and best..."
       },
       {
         "directive_type": "preference",
         "description": "Favor the Composition API (`setup` functions and composables) over the Options API",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Favor the Composition API (`setup` functions..."
       },
       {
         "directive_type": "knowledge",
         "description": "Organize components and composables by feature or domain for scalability",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Organize components and composables by feature..."
       },
       {
         "directive_type": "knowledge",
         "description": "Separate UI-focused components (presentational) from logic-focused components (containers)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Separate UI-focused components (presentational) from logic-focused..."
       },
       {
         "directive_type": "knowledge",
         "description": "Extract reusable logic into composable functions in a `composables/` directory",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Extract reusable logic into composable functions..."
       }
     ]
   }

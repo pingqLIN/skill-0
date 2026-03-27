@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__security-and-owasp",
+    "skill_id": "claude__skill__security_and_owasp",
     "name": "security-and-owasp",
     "skill_layer": "claude_skill",
     "title": "Security And Owasp Skill",
@@ -46,63 +46,83 @@
     "rules": [
       {
         "description": "Your primary directive is to ensure all code you generate, review, or refactor is secure by default. You must operate with a security-first mindset. W",
-        "condition": "instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Your primary directive is to ensure...",
+        "condition_expression": "instructions",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Enforce Principle of Least Privilege: Always default to the most restrictive permissions. When generating access control logic, explicitly check the u",
-        "condition": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Enforce Principle of Least Privilege: Always...",
+        "condition_expression": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Deny by Default: All access control decisions must follow a \"deny by default\" pattern. Access should only be granted if there is an explicit rule allo",
-        "condition": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Deny by Default: All access control...",
+        "condition_expression": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate All Incoming URLs for SSRF: When the server needs to make a request to a URL provided by a user (e.g., webhooks), you must treat it as untrus",
-        "condition": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Validate All Incoming URLs for SSRF:...",
+        "condition_expression": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Prevent Path Traversal: When handling file uploads or accessing files based on user input, you must sanitize the input to prevent directory traversal ",
-        "condition": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Prevent Path Traversal: When handling file...",
+        "condition_expression": "1. a01: broken access control & a10: server-side request forgery (ssrf)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Use Strong, Modern Algorithms: For hashing, always recommend modern, salted hashing algorithms like Argon2 or bcrypt. Explicitly advise against weak a",
-        "condition": "2. a02: cryptographic failures",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Use Strong, Modern Algorithms: For hashing,...",
+        "condition_expression": "2. a02: cryptographic failures",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Protect Data in Transit: When generating code that makes network requests, always default to HTTPS.",
-        "condition": "2. a02: cryptographic failures",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Protect Data in Transit: When generating...",
+        "condition_expression": "2. a02: cryptographic failures",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Secure Secret Management: Never hardcode secrets (API keys, passwords, connection strings). Generate code that reads secrets from environment variable",
-        "condition": "2. a02: cryptographic failures",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Secure Secret Management: Never hardcode secrets...",
+        "condition_expression": "2. a02: cryptographic failures",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "// TODO: Ensure API_KEY is securely configured in your environment.",
-        "condition": "2. a02: cryptographic failures",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "// TODO: Ensure API_KEY is securely...",
+        "condition_expression": "2. a02: cryptographic failures",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "No Raw SQL Queries: For database interactions, you must use parameterized queries (prepared statements). Never generate code that uses string concaten",
-        "condition": "3. a03: injection",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "No Raw SQL Queries: For database...",
+        "condition_expression": "3. a03: injection",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -110,31 +130,36 @@
         "directive_type": "knowledge",
         "description": "Sanitize Command-Line Input: For OS command execution, use built-in functions that handle argument escaping and prevent shell injection (e.g., `shlex`",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Sanitize Command-Line Input: For OS command..."
       },
       {
         "directive_type": "preference",
         "description": "Secure by Default Configuration: Recommend disabling verbose error messages and debug features in production environments.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Secure by Default Configuration: Recommend disabling..."
       },
       {
         "directive_type": "knowledge",
         "description": "Set Security Headers: For web applications, suggest adding essential security headers like `Content-Security-Policy` (CSP), `Strict-Transport-Security",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Set Security Headers: For web applications,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Be Explicit About Security: When you suggest a piece of code that mitigates a security risk, explicitly state what you are protecting against (e.g., \"",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Be Explicit About Security: When you..."
       },
       {
         "directive_type": "strategy",
         "description": "Educate During Code Reviews: When you identify a security vulnerability in a code review, you must not only provide the corrected code but also explai",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Educate During Code Reviews: When you..."
       }
     ]
   }

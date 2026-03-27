@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__playwright-python",
+    "skill_id": "claude__skill__playwright_python",
     "name": "playwright-python",
     "skill_layer": "claude_skill",
     "title": "Playwright Python Skill",
@@ -134,15 +134,19 @@
     "rules": [
       {
         "description": "Imports: Every test file should begin with from playwright.sync_api import Page, expect.",
-        "condition": "test structure",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Imports: Every test file should begin...",
+        "condition_expression": "test structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Naming: Test files must follow the test_<feature-or-page>.py naming convention to be discovered by Pytest.",
-        "condition": "file organization",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Naming: Test files must follow the...",
+        "condition_expression": "file organization",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -150,61 +154,71 @@
         "directive_type": "knowledge",
         "description": "Locators: Prioritize user-facing, role-based locators (get_by_role, get_by_label, get_by_text) for resilience and accessibility.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Locators: Prioritize user-facing, role-based locators (get_by_role,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Assertions: Use auto-retrying web-first assertions via the expect API (e.g., expect(page).to_have_title(...)). Avoid expect(locator).to_be_visible() u",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Assertions: Use auto-retrying web-first assertions via..."
       },
       {
         "directive_type": "preference",
         "description": "Timeouts: Rely on Playwright's built-in auto-waiting mechanisms. Avoid hard-coded waits or increased default timeouts.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Timeouts: Rely on Playwright's built-in auto-waiting..."
       },
       {
         "directive_type": "knowledge",
         "description": "Clarity: Use descriptive test titles (e.g., def test_navigation_link_works():) that clearly state their intent. Add comments only to explain complex l",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Clarity: Use descriptive test titles (e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Element Counts: Use expect(locator).to_have_count() to assert the number of elements found by a locator.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Element Counts: Use expect(locator).to_have_count() to assert..."
       },
       {
         "directive_type": "knowledge",
         "description": "Text Content: Use expect(locator).to_have_text() for exact text matches and expect(locator).to_contain_text() for partial matches.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Text Content: Use expect(locator).to_have_text() for exact..."
       },
       {
         "directive_type": "knowledge",
         "description": "Navigation: Use expect(page).to_have_url() to verify the page URL.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Navigation: Use expect(page).to_have_url() to verify the..."
       },
       {
         "directive_type": "preference",
         "description": "Assertion Style: Prefer `expect` over `assert` for more reliable UI tests.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Assertion Style: Prefer `expect` over `assert`..."
       },
       {
         "directive_type": "knowledge",
         "description": "expect(page).to_have_url(\"https://playwright.dev/\")",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "expect(page).to_have_url(\"https://playwright.dev/\")"
       },
       {
         "directive_type": "knowledge",
         "description": "1. Execution: Tests are run from the terminal using the pytest command.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "1. Execution: Tests are run from..."
       }
     ]
   }

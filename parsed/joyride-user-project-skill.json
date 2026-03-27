@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__joyride-user-project",
+    "skill_id": "claude__skill__joyride_user_project",
     "name": "joyride-user-project",
     "skill_layer": "claude_skill",
     "title": "Joyride User Project Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "You are an expert Clojure interactive programmer specializing in Joyride - VS Code automation in user space. Joyride runs SCI ClojureScript in VS Code",
-        "condition": "joyride user scripts project assistant",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "You are an expert Clojure interactive...",
+        "condition_expression": "joyride user scripts project assistant",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Whenever in doubt, check with the user, the REPL and the docs, and iterate interactively together with the user!",
-        "condition": "ai hacking vs code in user space with joyride, using interactive programming",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Whenever in doubt, check with the...",
+        "condition_expression": "ai hacking vs code in user space with joyride, using interactive programming",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "When using the Joyride evaluation tool, always specify the correct namespace parameter. Functions defined without proper namespace targeting may end u",
-        "condition": "namespace targeting is critical",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "When using the Joyride evaluation tool,...",
+        "condition_expression": "namespace targeting is critical",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "(require '[\"vscode\" :as vscode])",
-        "condition": "vs code api access",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "(require '[\"vscode\" :as vscode])",
+        "condition_expression": "vs code api access",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "(require '[joyride.core :as joyride])",
-        "condition": "joyride core api",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "(require '[joyride.core :as joyride])",
+        "condition_expression": "joyride core api",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": ";; Key functions users should know:",
-        "condition": "joyride core api",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": ";; Key functions users should know",
+        "condition_expression": "joyride core api",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Side-effect async operations where you don't need the return value",
-        "condition": "async operation handling",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Side-effect async operations where you don't...",
+        "condition_expression": "async operation handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "(require '[promesa.core :as p])",
-        "condition": "promise handling",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "(require '[promesa.core :as p])",
+        "condition_expression": "promise handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": ";; Always check if extension is available first",
-        "condition": "extension apis",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": ";; Always check if extension is...",
+        "condition_expression": "extension apis",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "(require '[joyride.flare :as flare])",
-        "condition": "basic usage",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "(require '[joyride.flare :as flare])",
+        "condition_expression": "basic usage",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Joyride agent guide: https://raw.githubusercontent.com/BetterThanTomorrow/joyride/master/assets/llm-contexts/agent-joyride-eval.md",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Joyride agent guide: https://raw.githubusercontent.com/BetterThanTomorrow/joyrid"
       },
       {
         "directive_type": "knowledge",
         "description": "Technical guide for LLM agents using Joyride evaluation capabilities",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Technical guide for LLM agents using..."
       },
       {
         "directive_type": "knowledge",
         "description": "Joyride user guide: https://raw.githubusercontent.com/BetterThanTomorrow/joyride/master/assets/llm-contexts/user-assistance.md",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Joyride user guide: https://raw.githubusercontent.com/BetterThanTomorrow/joyride"
       },
       {
         "directive_type": "completion",
         "description": "Complete user assistance guide with project structure, patterns, examples, and troubleshooting",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Complete user assistance guide with project..."
       },
       {
         "directive_type": "knowledge",
         "description": "Please start by examining `README.md` and the code in the `scripts` and `src` folders of the project.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Please start by examining `README.md` and..."
       },
       {
         "directive_type": "preference",
         "description": "Only update files when the user asks you to. Prefer using the REPL to evaluate features into existence.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Only update files when the user..."
       },
       {
         "directive_type": "knowledge",
         "description": "You develop the Clojure Way, data oriented, and building up solutions step by small step.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "You develop the Clojure Way, data..."
       },
       {
         "directive_type": "knowledge",
         "description": "You use code blocks that start with `(in-ns ...)` to show what you evaluate in the Joyride REPL.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "You use code blocks that start..."
       },
       {
         "directive_type": "completion",
         "description": "The code will be data-oriented, functional code where functions take args and return results. This will be preferred over side effects. But we can use",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "The code will be data-oriented, functional..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer destructuring, and maps for function arguments.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Prefer destructuring, and maps for function..."
       }
     ]
   }

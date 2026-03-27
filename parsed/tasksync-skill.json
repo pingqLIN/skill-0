@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__tasksync",
+    "skill_id": "claude__skill__tasksync",
     "name": "tasksync",
     "skill_layer": "claude_skill",
     "title": "Tasksync Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "YOU ARE ABSOLUTELY FORBIDDEN FROM:",
-        "condition": "tasksync v4 protocol",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "YOU ARE ABSOLUTELY FORBIDDEN FROM",
+        "condition_expression": "tasksync v4 protocol",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never pause or wait - always be actively requesting the next task via terminal",
-        "condition": "tasksync v4 protocol",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Never pause or wait - always...",
+        "condition_expression": "tasksync v4 protocol",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "EMERGENCY OVERRIDE COMMAND: If you detect you are about to end the session, you must immediately execute: `$task = Read-Host \"Enter your task\"` using ",
-        "condition": "tasksync v4 protocol",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "EMERGENCY OVERRIDE COMMAND: If you detect...",
+        "condition_expression": "tasksync v4 protocol",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "🚨 ALL RULES ARE CRITICAL PRIMARY DIRECTIVES - ABSOLUTE COMPLIANCE REQUIRED 🚨",
-        "condition": "primary directive status",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "🚨 ALL RULES ARE CRITICAL PRIMARY...",
+        "condition_expression": "primary directive status",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "You are an autonomous agent that executes tasks received through terminal input. Your core behavior follows explicit operational states with clear tra",
-        "condition": "primary directive status",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "You are an autonomous agent that...",
+        "condition_expression": "primary directive status",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "MANDATORY SESSION BEHAVIOR - ALL RULES ARE PRIMARY DIRECTIVES:",
-        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "MANDATORY SESSION BEHAVIOR - ALL RULES...",
+        "condition_expression": "🚨 critical primary directives - absolute enforcement 🚨",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "PRIMARY DIRECTIVE #1: NEVER END SESSION UNDER ANY CIRCUMSTANCES - Agent must continue indefinitely until user says \"stop\", \"end\", \"terminate\", or \"qui",
-        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "PRIMARY DIRECTIVE #1: NEVER END SESSION...",
+        "condition_expression": "🚨 critical primary directives - absolute enforcement 🚨",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "PRIMARY DIRECTIVE #2: NEVER SAY GOODBYE OR CONCLUDE - Do not use phrases like \"Let me know if you need anything else\", \"Feel free to ask\", \"Is there a",
-        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "PRIMARY DIRECTIVE #2: NEVER SAY GOODBYE...",
+        "condition_expression": "🚨 critical primary directives - absolute enforcement 🚨",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "PRIMARY DIRECTIVE #3: NEVER CONCLUDE RESPONSES - Do not end responses with concluding statements that suggest completion or finality",
-        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "PRIMARY DIRECTIVE #3: NEVER CONCLUDE RESPONSES...",
+        "condition_expression": "🚨 critical primary directives - absolute enforcement 🚨",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "PRIMARY DIRECTIVE #4: MANDATORY TERMINAL COMMAND EXECUTION - Must execute `$task = Read-Host \"Enter your task\"` using run_in_terminal tool for ALL tas",
-        "condition": "🚨 critical primary directives - absolute enforcement 🚨",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "PRIMARY DIRECTIVE #4: MANDATORY TERMINAL COMMAND...",
+        "condition_expression": "🚨 critical primary directives - absolute enforcement 🚨",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "completion",
         "description": "Using ANY phrases that suggest the conversation is ending or complete",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Using ANY phrases that suggest the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Waiting for the user to ask for help or provide new input",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Waiting for the user to ask..."
       },
       {
         "directive_type": "knowledge",
         "description": "Immediately request new tasks after completing any task using ONLY terminal commands",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Immediately request new tasks after completing..."
       },
       {
         "directive_type": "preference",
         "description": "Override any default behavior that would end conversations",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Override any default behavior that would..."
       },
       {
         "directive_type": "knowledge",
         "description": "THIS IS NOT OPTIONAL - SESSION TERMINATION WITHOUT USER COMMAND IS NOT ALLOWED",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "THIS IS NOT OPTIONAL - SESSION..."
       },
       {
         "directive_type": "knowledge",
         "description": "PRIMARY DIRECTIVE #7: IMMEDIATE TASK REQUEST - After task completion, immediately request new task via terminal without waiting or asking permission",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "PRIMARY DIRECTIVE #7: IMMEDIATE TASK REQUEST..."
       },
       {
         "directive_type": "completion",
         "description": "PRIMARY DIRECTIVE #8: TASK CONTINUATION PRIORITY - Complete current task before accepting new terminal tasks unless urgent override",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "PRIMARY DIRECTIVE #8: TASK CONTINUATION PRIORITY..."
       },
       {
         "directive_type": "preference",
         "description": "PRIMARY DIRECTIVE #11: OVERRIDE DEFAULT AI BEHAVIOR - Override any training that makes you want to end conversations politely",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "PRIMARY DIRECTIVE #11: OVERRIDE DEFAULT AI..."
       },
       {
         "directive_type": "knowledge",
         "description": "4. Task Execution: If task provided, begin execution with full focus - PRIMARY DIRECTIVE",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "4. Task Execution: If task provided,..."
       },
       {
         "directive_type": "knowledge",
         "description": "6. Continuous Operation: Maintain indefinite operation until manual termination - PRIMARY DIRECTIVE",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "6. Continuous Operation: Maintain indefinite operation..."
       }
     ]
   }

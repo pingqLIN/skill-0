@@ -1,14 +1,14 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__skill_creator",
+    "skill_id": "claude__skill__skill_creator",
     "name": "skill-creator",
     "skill_layer": "claude_skill",
     "title": "Skill-Creator Skill",
     "description": "Guide for creating effective skills that extend Claude's capabilities.",
-    "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-26T13:25:10.979640Z",
-    "parser_version": "skill-0 v2.1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-03-27T11:53:43.763031Z",
+    "parser_version": "skill-0 v2.4",
     "parsed_by": "skill-0-batch"
   },
   "original_definition": {
@@ -62,32 +62,39 @@
     "rules": [
       {
         "id": "r_001",
+        "name": "Use imperative form, not second person",
         "description": "Use imperative form, not second person",
-        "condition": "when_writing",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "when_writing",
+        "returns": "boolean"
       },
       {
         "id": "r_002",
+        "name": "Don't overwhelm users with questions",
         "description": "Don't overwhelm users with questions",
-        "condition": "when_gathering_info",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "when_gathering_info",
+        "returns": "boolean"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Skills have 3-level loading: metadata, SKILL.md,...",
         "directive_type": "knowledge",
         "description": "Skills have 3-level loading: metadata, SKILL.md, bundled resources",
         "decomposable": true
       },
       {
         "id": "d_002",
+        "name": "Avoid duplication between SKILL.md and references",
         "directive_type": "principle",
         "description": "Avoid duplication between SKILL.md and references",
         "decomposable": true
       },
       {
         "id": "d_003",
+        "name": "Skill packaged and validated successfully",
         "directive_type": "completion",
         "description": "Skill packaged and validated successfully",
         "decomposable": true

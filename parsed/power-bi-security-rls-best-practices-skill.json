@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-bi-security-rls-best-practices",
+    "skill_id": "claude__skill__power_bi_security_rls_best_practices",
     "name": "power-bi-security-rls-best-practices",
     "skill_layer": "claude_skill",
     "title": "Power Bi Security Rls Best Practices Skill",
@@ -142,39 +142,51 @@
     "rules": [
       {
         "description": "// Restrict access to recent data based on role",
-        "condition": "3. time-based security",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "// Restrict access to recent data...",
+        "condition_expression": "3. time-based security",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "// Validate expected roles explicitly",
-        "condition": "2. explicit role validation",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "// Validate expected roles explicitly",
+        "condition_expression": "2. explicit role validation",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "//  AVOID: This grants full access to unexpected users",
-        "condition": "1. overly permissive defaults",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "// AVOID: This grants full access...",
+        "condition_expression": "1. overly permissive defaults",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "//  AVOID: Overly complex security that's hard to audit",
-        "condition": "2. complex security logic",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "// AVOID: Overly complex security that's...",
+        "condition_expression": "2. complex security logic",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "\"🚨 Multiple Access Denials - Review Required\",",
-        "condition": "2. data breach detection",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "\"🚨 Multiple Access Denials - Review...",
+        "condition_expression": "2. data breach detection",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Remember: Security is layered - implement defense in depth with proper authentication, authorization, data encryption, network security, and comprehen",
-        "condition": "2. data breach detection",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Remember: Security is layered - implement...",
+        "condition_expression": "2. data breach detection",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -182,61 +194,71 @@
         "directive_type": "strategy",
         "description": "This document provides comprehensive instructions for implementing robust security patterns in Power BI, focusing on Row-Level Security (RLS), dynamic",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This document provides comprehensive instructions for..."
       },
       {
         "directive_type": "knowledge",
         "description": "// Hierarchical security with territory lookups",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "// Hierarchical security with territory lookups"
       },
       {
         "directive_type": "knowledge",
         "description": "=DimSalesTerritory[SalesTerritoryKey]=LOOKUPVALUE(",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "=DimSalesTerritory[SalesTerritoryKey]=LOOKUPVALUE("
       },
       {
         "directive_type": "knowledge",
         "description": "DimUserSecurity[SalesTerritoryID],",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "DimUserSecurity[SalesTerritoryID],"
       },
       {
         "directive_type": "knowledge",
         "description": "DimUserSecurity[UserName], USERNAME(),",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "DimUserSecurity[UserName], USERNAME(),"
       },
       {
         "directive_type": "knowledge",
         "description": "DimUserSecurity[SalesTerritoryID], DimSalesTerritory[SalesTerritoryKey]",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "DimUserSecurity[SalesTerritoryID], DimSalesTerritory[SalesTerritoryKey]"
       },
       {
         "directive_type": "knowledge",
         "description": "UserSecurity[UserName] = USERNAME()",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "UserSecurity[UserName] = USERNAME()"
       },
       {
         "directive_type": "knowledge",
         "description": "VAR AllowedTerritories = SELECTCOLUMNS(UserTerritories, \"Territory\", UserSecurity[Territory])",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "VAR AllowedTerritories = SELECTCOLUMNS(UserTerritories, \"Territory\", UserSecurit"
       },
       {
         "directive_type": "knowledge",
         "description": "[Territory] IN AllowedTerritories",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "[Territory] IN AllowedTerritories"
       },
       {
         "directive_type": "knowledge",
         "description": "\"datasets\": [ \"fe0a1aeb-f6a4-4b27-a2d3-b5df3bb28bdc\" ]",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "\"datasets\": [ \"fe0a1aeb-f6a4-4b27-a2d3-b5df3bb28bdc\" ]"
       }
     ]
   }

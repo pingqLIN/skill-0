@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-performance-optimization",
+    "skill_id": "claude__skill__dataverse_python_performance_optimization",
     "name": "dataverse-python-performance-optimization",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Performance Optimization Skill",
@@ -142,57 +142,75 @@
     "rules": [
       {
         "description": "select=[\"accountid\", \"name\", \"telephone1\", \"creditlimit\"],",
-        "condition": "✅ fast - only retrieve needed columns",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "select=[\"accountid\", \"name\", \"telephone1\", \"creditlimit\"],",
+        "condition_expression": "✅ fast - only retrieve needed columns",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "top=5000,              # Total limit",
-        "condition": "✅ best - generator yields one page at a time",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "top=5000, # Total limit",
+        "condition_expression": "✅ best - generator yields one page at a time",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "\"\"\"Call function with exponential backoff for rate limits.\"\"\"",
-        "condition": "10. rate limiting handling",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "\"\"\"Call function with exponential backoff for...",
+        "condition_expression": "10. rate limiting handling",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "print(f\"Rate limited. Waiting {wait_time}s...\")",
-        "condition": "10. rate limiting handling",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "print(f\"Rate limited. Waiting {wait_time}s...\")",
+        "condition_expression": "10. rate limiting handling",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "def create_with_consistency_check(client, table_name, payloads):",
-        "condition": "⚠️ if bulk operation partially fails, some records may be created",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "def create_with_consistency_check(client, table_name, payloads)",
+        "condition_expression": "⚠️ if bulk operation partially fails, some records may be created",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "\"\"\"Create records and verify all succeeded.\"\"\"",
-        "condition": "⚠️ if bulk operation partially fails, some records may be created",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "\"\"\"Create records and verify all succeeded.\"\"\"",
+        "condition_expression": "⚠️ if bulk operation partially fails, some records may be created",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| Use select to limit columns | ☐ | Only retrieve needed data |",
-        "condition": "13. performance checklist",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "| Use select to limit columns...",
+        "condition_expression": "13. performance checklist",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "| Filter server-side with OData | ☐ | Don't fetch all and filter |",
-        "condition": "13. performance checklist",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "| Filter server-side with OData |...",
+        "condition_expression": "13. performance checklist",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| Handle rate limiting (429) | ☐ | Implement exponential backoff |",
-        "condition": "13. performance checklist",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "| Handle rate limiting (429) |...",
+        "condition_expression": "13. performance checklist",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -200,61 +218,71 @@
         "directive_type": "knowledge",
         "description": "Based on official Microsoft Dataverse and Azure SDK performance guidance.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Based on official Microsoft Dataverse and..."
       },
       {
         "directive_type": "constraint",
         "description": "The Dataverse SDK for Python is optimized for Python developers but has some limitations in preview:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "The Dataverse SDK for Python is..."
       },
       {
         "directive_type": "preference",
         "description": "Minimal retry policy: Only network errors are retried by default",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Minimal retry policy: Only network errors..."
       },
       {
         "directive_type": "knowledge",
         "description": "No DeleteMultiple: Use individual deletes or update status instead",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "No DeleteMultiple: Use individual deletes or..."
       },
       {
         "directive_type": "constraint",
         "description": "Limited OData batching: General-purpose OData batching not supported",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Limited OData batching: General-purpose OData batching..."
       },
       {
         "directive_type": "constraint",
         "description": "SQL limitations: No JOINs, limited WHERE/TOP/ORDER BY",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "SQL limitations: No JOINs, limited WHERE/TOP/ORDER..."
       },
       {
         "directive_type": "constraint",
         "description": "Workarounds and optimization strategies address these limitations.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Workarounds and optimization strategies address these..."
       },
       {
         "directive_type": "knowledge",
         "description": "active_accounts = [a for a in all_accounts if a.get(\"statecode\") == 0]",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "active_accounts = [a for a in..."
       },
       {
         "directive_type": "knowledge",
         "description": "all_records = list(client.get(\"account\", top=100000))",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "all_records = list(client.get(\"account\", top=100000))"
       },
       {
         "directive_type": "knowledge",
         "description": "for page in client.get(\"account\", top=100000, page_size=5000):",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "for page in client.get(\"account\", top=100000, page_size=5000)"
       }
     ]
   }

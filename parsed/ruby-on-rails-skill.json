@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__ruby-on-rails",
+    "skill_id": "claude__skill__ruby_on_rails",
     "name": "ruby-on-rails",
     "skill_layer": "claude_skill",
     "title": "Ruby On Rails Skill",
@@ -110,9 +110,11 @@
     "rules": [
       {
         "description": "Create custom validators in `app/validators` to enforce specialized validation logic.",
-        "condition": "app directory structure",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Create custom validators in `app/validators` to...",
+        "condition_expression": "app directory structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -120,61 +122,71 @@
         "directive_type": "knowledge",
         "description": "Follow the RuboCop Style Guide and use tools like `rubocop`, `standardrb`, or `rufo` for consistent formatting.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Follow the RuboCop Style Guide and..."
       },
       {
         "directive_type": "strategy",
         "description": "Use snake_case for variables/methods and CamelCase for classes/modules.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use snake_case for variables/methods and CamelCase..."
       },
       {
         "directive_type": "strategy",
         "description": "Keep methods short and focused; use early returns, guard clauses, and private methods to reduce complexity.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Keep methods short and focused; use..."
       },
       {
         "directive_type": "preference",
         "description": "Favor meaningful names over short or generic ones.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Favor meaningful names over short or..."
       },
       {
         "directive_type": "knowledge",
         "description": "Comment only when necessary — avoid explaining the obvious.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Comment only when necessary — avoid..."
       },
       {
         "directive_type": "principle",
         "description": "Apply the Single Responsibility Principle to classes, methods, and modules.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Apply the Single Responsibility Principle to..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer composition over inheritance; extract reusable logic into modules or services.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Prefer composition over inheritance; extract reusable..."
       },
       {
         "directive_type": "knowledge",
         "description": "Keep controllers thin — move business logic into models, services, or command/query objects.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Keep controllers thin — move business..."
       },
       {
         "directive_type": "principle",
         "description": "Apply the “fat model, skinny controller” pattern thoughtfully and with clean abstractions.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Apply the “fat model, skinny controller”..."
       },
       {
         "directive_type": "knowledge",
         "description": "Extract business logic into service objects for reusability and testability.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Extract business logic into service objects..."
       }
     ]
   }

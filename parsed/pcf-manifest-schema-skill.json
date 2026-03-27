@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-manifest-schema",
+    "skill_id": "claude__skill__pcf_manifest_schema",
     "name": "pcf-manifest-schema",
     "skill_layer": "claude_skill",
     "title": "Pcf Manifest Schema Skill",
@@ -110,63 +110,83 @@
     "rules": [
       {
         "description": "`required`: Whether property is required (true/false)",
-        "condition": "property",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "`required`: Whether property is required (true/false)",
+        "condition_expression": "property",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Availability: Model-driven apps (canvas apps with limitations)",
-        "condition": "data-set",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Availability: Model-driven apps (canvas apps with...",
+        "condition_expression": "data-set",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "`required`: Whether feature is required (true/false)",
-        "condition": "uses-feature",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "`required`: Whether feature is required (true/false)",
+        "condition_expression": "uses-feature",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Declares external dependencies required by the component.",
-        "condition": "dependency",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Declares external dependencies required by the...",
+        "condition_expression": "dependency",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "<uses-feature name=\"WebAPI\" required=\"true\" />",
-        "condition": "example manifest structure",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "<uses-feature name=\"WebAPI\" required=\"true\" />",
+        "condition_expression": "example manifest structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "<uses-feature name=\"Device.captureImage\" required=\"false\" />",
-        "condition": "example manifest structure",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "<uses-feature name=\"Device.captureImage\" required=\"false\" />",
+        "condition_expression": "example manifest structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The manifest schema is validated during the build process:",
-        "condition": "manifest validation",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "The manifest schema is validated during...",
+        "condition_expression": "manifest validation",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Missing required elements will cause build errors",
-        "condition": "manifest validation",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Missing required elements will cause build...",
+        "condition_expression": "manifest validation",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Use `pac pcf` commands to validate manifest structure",
-        "condition": "manifest validation",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Use `pac pcf` commands to validate...",
+        "condition_expression": "manifest validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Canvas apps: Supported (may have limitations)",
-        "condition": "platform availability legend",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Canvas apps: Supported (may have limitations)",
+        "condition_expression": "platform availability legend",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -174,61 +194,71 @@
         "directive_type": "knowledge",
         "description": "The root element that contains the entire component definition.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "The root element that contains the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Availability: Model-driven apps, canvas apps, portals",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Availability: Model-driven apps, canvas apps, portals"
       },
       {
         "directive_type": "knowledge",
         "description": "`control-type`: Type of control (\"standard\" or \"virtual\")",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "`control-type`: Type of control (\"standard\" or..."
       },
       {
         "directive_type": "knowledge",
         "description": "`of-type`: Data type (e.g., \"SingleLine.Text\", \"Whole.None\", \"TwoOptions\", \"DateAndTime.DateOnly\")",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "`of-type`: Data type (e.g., \"SingleLine.Text\", \"Whole.None\",..."
       },
       {
         "directive_type": "knowledge",
         "description": "Usage: Allows a property to accept multiple data types",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Usage: Allows a property to accept..."
       },
       {
         "directive_type": "knowledge",
         "description": "Container for all resource definitions (code, CSS, images, localization).",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Container for all resource definitions (code,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Declares that the component uses a specific platform feature.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Declares that the component uses a..."
       },
       {
         "directive_type": "knowledge",
         "description": "`name`: Feature name (e.g., \"Device.captureImage\", \"Device.getCurrentPosition\", \"Utility.lookupObjects\", \"WebAPI\")",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "`name`: Feature name (e.g., \"Device.captureImage\", \"Device.getCurrentPosition\",."
       },
       {
         "directive_type": "knowledge",
         "description": "Declares external services that the component uses.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Declares external services that the component..."
       },
       {
         "directive_type": "knowledge",
         "description": "`enabled`: Whether external service usage is enabled (true/false)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "`enabled`: Whether external service usage is..."
       }
     ]
   }

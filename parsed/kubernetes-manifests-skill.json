@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__kubernetes-manifests",
+    "skill_id": "claude__skill__kubernetes_manifests",
     "name": "kubernetes-manifests",
     "skill_layer": "claude_skill",
     "title": "Kubernetes Manifests Skill",
@@ -142,45 +142,59 @@
     "rules": [
       {
         "description": "Create production-ready Kubernetes manifests that prioritize security, reliability, and operational excellence with consistent labeling, proper resour",
-        "condition": "your mission",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Create production-ready Kubernetes manifests that prioritize...",
+        "condition_expression": "your mission",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Limits: Maximum allowed (prevents exhaustion)",
-        "condition": "resource requests and limits",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Limits: Maximum allowed (prevents exhaustion)",
+        "condition_expression": "resource requests and limits",
+        "condition_type": "range_check",
+        "returns": "boolean"
       },
       {
         "description": "Guaranteed: requests == limits (best for critical apps)",
-        "condition": "resource requests and limits",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Guaranteed: requests == limits (best for...",
+        "condition_expression": "resource requests and limits",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Burstable: requests < limits (flexible resource use)",
-        "condition": "resource requests and limits",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Burstable: requests < limits (flexible resource...",
+        "condition_expression": "resource requests and limits",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "BestEffort: No resources defined (avoid in production)",
-        "condition": "resource requests and limits",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "BestEffort: No resources defined (avoid in...",
+        "condition_expression": "resource requests and limits",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "[ ] Resources: Requests and limits defined",
-        "condition": "manifest checklist",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "[ ] Resources: Requests and limits...",
+        "condition_expression": "manifest checklist",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "[ ] Images: Specific tags (never :latest)",
-        "condition": "manifest checklist",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "[ ] Images: Specific tags (never...",
+        "condition_expression": "manifest checklist",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -188,61 +202,71 @@
         "directive_type": "preference",
         "description": "Required Labels (Kubernetes recommended):",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Required Labels (Kubernetes recommended)"
       },
       {
         "directive_type": "knowledge",
         "description": "`app.kubernetes.io/name`: Application name",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "`app.kubernetes.io/name`: Application name"
       },
       {
         "directive_type": "knowledge",
         "description": "`app.kubernetes.io/instance`: Instance identifier",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "`app.kubernetes.io/instance`: Instance identifier"
       },
       {
         "directive_type": "knowledge",
         "description": "`app.kubernetes.io/version`: Version",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "`app.kubernetes.io/version`: Version"
       },
       {
         "directive_type": "knowledge",
         "description": "`app.kubernetes.io/component`: Component role",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "`app.kubernetes.io/component`: Component role"
       },
       {
         "directive_type": "knowledge",
         "description": "`app.kubernetes.io/part-of`: Application group",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "`app.kubernetes.io/part-of`: Application group"
       },
       {
         "directive_type": "knowledge",
         "description": "`app.kubernetes.io/managed-by`: Management tool",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "`app.kubernetes.io/managed-by`: Management tool"
       },
       {
         "directive_type": "knowledge",
         "description": "`environment`: Environment name",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "`environment`: Environment name"
       },
       {
         "directive_type": "knowledge",
         "description": "`team`: Owning team",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "`team`: Owning team"
       },
       {
         "directive_type": "knowledge",
         "description": "`cost-center`: For billing",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "`cost-center`: For billing"
       }
     ]
   }

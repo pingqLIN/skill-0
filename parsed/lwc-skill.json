@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__lwc",
+    "skill_id": "claude__skill__lwc",
     "name": "lwc",
     "skill_layer": "claude_skill",
     "title": "Lwc Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Each LWC should reside in its own folder under `force-app/main/default/lwc/`.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Each LWC should reside in its...",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The folder name should match the component name (e.g., `myComponent` folder for the `myComponent` component).",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "The folder name should match the...",
+        "condition_expression": "general instructions",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Each component folder should contain the following files:",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Each component folder should contain the...",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always prefer Lightning Web Component library components over plain HTML elements for consistency, accessibility, and future-proofing.",
-        "condition": "1. use lightning components over html tags",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Always prefer Lightning Web Component library...",
+        "condition_expression": "1. use lightning components over html tags",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "| `<input type=\"checkbox\">` | `<lightning-input type=\"checkbox\">` | `checked`, `label` |",
-        "condition": "2. lightning component mapping guide",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "| `<input type=\"checkbox\">` | `<lightning-input type=\"checkbox\">`...",
+        "condition_expression": "2. lightning component mapping guide",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "| `<input type=\"toggle\">` | `<lightning-input type=\"toggle\">` | `checked`, `variant` |",
-        "condition": "2. lightning component mapping guide",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "| `<input type=\"toggle\">` | `<lightning-input type=\"toggle\">`...",
+        "condition_expression": "2. lightning component mapping guide",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Always use Salesforce Lightning Design System utility classes with the `slds-var-` prefix for modern implementations:",
-        "condition": "use slds utility classes",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Always use Salesforce Lightning Design System...",
+        "condition_expression": "use slds utility classes",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "If you must use custom CSS, follow these guidelines:",
-        "condition": "when custom css is necessary",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "If you must use custom CSS,...",
+        "condition_expression": "when custom css is necessary",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Prefix custom classes to avoid conflicts",
-        "condition": "when custom css is necessary",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Prefix custom classes to avoid conflicts",
+        "condition_expression": "when custom css is necessary",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never override SLDS base classes",
-        "condition": "when custom css is necessary",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Never override SLDS base classes",
+        "condition_expression": "when custom css is necessary",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "`myComponent.js-meta.xml`: The metadata configuration file.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "`myComponent.js-meta.xml`: The metadata configuration file"
       },
       {
         "directive_type": "preference",
         "description": "Optional: `myComponent.css` for component-specific styles.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Optional: `myComponent.css` for component-specific styles"
       },
       {
         "directive_type": "knowledge",
         "description": "<!-- Use Lightning components -->",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "<!-- Use Lightning components -->"
       },
       {
         "directive_type": "knowledge",
         "description": "<lightning-button label=\"Save\" variant=\"brand\" onclick={handleSave}></lightning-button>",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "<lightning-button label=\"Save\" variant=\"brand\" onclick={handleSave}></lightning-"
       },
       {
         "directive_type": "knowledge",
         "description": "<lightning-input type=\"text\" label=\"Name\" value={name} onchange={handleNameChange}></lightning-input>",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "<lightning-input type=\"text\" label=\"Name\" value={name} onchange={handleNameChang"
       },
       {
         "directive_type": "knowledge",
         "description": "<lightning-combobox label=\"Type\" options={typeOptions} value={selectedType}></lightning-combobox>",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "<lightning-combobox label=\"Type\" options={typeOptions} value={selectedType}></li"
       },
       {
         "directive_type": "knowledge",
         "description": "<lightning-radio-group name=\"duration\" label=\"Duration\" options={durationOptions} value={duration} type=\"radio\"></lightning-radio-group>",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "<lightning-radio-group name=\"duration\" label=\"Duration\" options={durationOptions"
       },
       {
         "directive_type": "knowledge",
         "description": "| HTML Element | Lightning Component | Key Attributes |",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "| HTML Element | Lightning Component..."
       },
       {
         "directive_type": "knowledge",
         "description": "|--------------|-------------------|----------------|",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "|--------------|-------------------|----------------|"
       },
       {
         "directive_type": "knowledge",
         "description": "| `<button>` | `<lightning-button>` | `variant`, `label`, `icon-name` |",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "| `<button>` | `<lightning-button>` | `variant`,..."
       }
     ]
   }
