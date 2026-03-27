@@ -4,7 +4,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 
-from ..schemas.skill import SkillSummary, SkillDetail, SkillListResponse
+from ..schemas.skill import RevisionSummary, SkillSummary, SkillDetail, SkillListResponse
 from ..schemas.action import ActionReadiness, ActionResult
 from ..services.governance import GovernanceService
 from ..dependencies import get_governance_service
@@ -65,6 +65,18 @@ def get_skill(
     return SkillDetail(**data)
 
 
+@router.get("/skills/{skill_id}/revisions", response_model=list[RevisionSummary])
+def get_skill_revisions(
+    skill_id: str,
+    service: GovernanceService = Depends(get_governance_service),
+) -> list[RevisionSummary]:
+    """Get explicit revision history for a skill."""
+    data = service.get_skill_revisions(skill_id)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Skill not found")
+    return [RevisionSummary(**item) for item in data]
+
+
 @router.post("/skills/scan", response_model=ActionResult)
 def trigger_scan(
     skill_id: Optional[str] = Query(
@@ -87,7 +99,7 @@ def trigger_test(
     ),
     service: GovernanceService = Depends(get_governance_service),
 ) -> ActionResult:
-    """Trigger an equivalence test for one or all pending skills"""
+    """Trigger a fidelity test for one or all pending skills"""
     if skill_id:
         result = service.run_test(skill_id)
     else:

@@ -12,10 +12,19 @@ from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any, Optional
 
-TOOLS_DIR = Path(os.getenv(
-    "SKILL0_TOOLS_PATH",
-    str(Path(__file__).parent.parent.parent.parent.parent / "tools"),
-))
+def _default_tools_dir() -> Path:
+    current = Path(__file__).resolve()
+    candidates = [
+        current.parents[4] / "tools",
+        current.parents[2] / "tools",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return candidates[0]
+
+
+TOOLS_DIR = Path(os.getenv("SKILL0_TOOLS_PATH") or _default_tools_dir())
 sys.path.insert(0, str(TOOLS_DIR))
 
 from governance_db import GovernanceDB, SkillRecord
@@ -31,6 +40,36 @@ class GovernanceService:
         ))
         self.db = GovernanceDB(db_path=db_path)
 
+    def _allowed_path_roots(self) -> List[Path]:
+        raw_roots = os.getenv("SKILL0_ALLOWED_PATH_ROOTS", str(TOOLS_DIR.parent))
+        separators_normalized = raw_roots.replace(",", os.pathsep)
+        roots: List[Path] = []
+        for entry in separators_normalized.split(os.pathsep):
+            candidate = entry.strip()
+            if not candidate:
+                continue
+            roots.append(Path(candidate).expanduser().resolve(strict=False))
+        return roots or [TOOLS_DIR.parent.resolve(strict=False)]
+
+    def _resolve_managed_path(self, raw_path: str) -> tuple[Optional[Path], Optional[str]]:
+        if not raw_path:
+            return None, None
+
+        resolved = Path(raw_path).expanduser().resolve(strict=False)
+        for root in self._allowed_path_roots():
+            try:
+                resolved.relative_to(root)
+                return resolved, None
+            except ValueError:
+                continue
+
+        return None, f"path is outside allowed roots: {raw_path}"
+
+    def _path_exists(self, raw_path: str) -> bool:
+        if not raw_path:
+            return False
+        return Path(raw_path).expanduser().resolve(strict=False).exists()
+
     # ============ Statistics ============
 
     def get_stats_overview(self) -> Dict[str, Any]:
@@ -39,12 +78,12 @@ class GovernanceService:
         by_status = stats.get("by_status", {})
         by_risk = stats.get("by_risk", {})
 
-        # Calculate avg equivalence from all skills
+        # Calculate avg fidelity from all skills
         skills = self.db.list_skills(limit=1000)
-        equiv_scores = [
+        fidelity_scores = [
             s.equivalence_score for s in skills if s.equivalence_score is not None
         ]
-        avg_equiv = sum(equiv_scores) / len(equiv_scores) if equiv_scores else 0.0
+        avg_fidelity = sum(fidelity_scores) / len(fidelity_scores) if fidelity_scores else 0.0
 
         return {
             "total_skills": stats.get("total_skills", 0),
@@ -53,7 +92,8 @@ class GovernanceService:
             "rejected_count": by_status.get("rejected", 0),
             "blocked_count": by_status.get("blocked", 0),
             "high_risk_count": by_risk.get("high", 0) + by_risk.get("critical", 0),
-            "avg_equivalence_score": round(avg_equiv, 2),
+            "avg_fidelity_score": round(avg_fidelity, 2),
+            "avg_equivalence_score": round(avg_fidelity, 2),
         }
 
     def get_risk_distribution(self) -> Dict[str, int]:
@@ -172,6 +212,7 @@ class GovernanceService:
         scan_history = self.db.get_scan_history(skill_id)
         test_history = self.db.get_test_history(skill_id)
         audit_events = self.db.get_audit_log(skill_id=skill_id, limit=50)
+        revisions = self.db.list_revisions(skill_id, limit=20)
 
         # Parse security findings from latest scan
         security_findings = []
@@ -185,11 +226,15 @@ class GovernanceService:
 
         return {
             "skill_id": skill.skill_id,
+            "current_revision_id": skill.current_revision_id,
+            "revision_id": skill.revision_id,
+            "revision_number": skill.revision_number,
             "name": skill.name,
             "version": skill.version,
             "status": skill.status,
             "risk_level": skill.risk_level or "unknown",
             "risk_score": skill.risk_score,
+            "fidelity_score": skill.equivalence_score,
             "equivalence_score": skill.equivalence_score,
             "author_name": skill.author_name,
             "author_email": skill.author_email,
@@ -204,6 +249,7 @@ class GovernanceService:
             "source_path": skill.source_path or "",
             "source_url": skill.source_url or "",
             "source_commit": skill.source_commit,
+            "source_checksum": skill.source_checksum,
             "original_format": skill.original_format,
             "fetched_at": skill.fetched_at,
             "converted_at": skill.converted_at,
@@ -213,7 +259,9 @@ class GovernanceService:
             "scanner_version": skill.scanner_version,
             "approved_by": skill.approved_by,
             "approved_at": skill.approved_at,
+            "fidelity_tested_at": skill.equivalence_tested_at,
             "equivalence_tested_at": skill.equivalence_tested_at,
+            "fidelity_passed": skill.equivalence_passed,
             "equivalence_passed": skill.equivalence_passed,
             "installed_path": skill.installed_path,
             "installed_at": skill.installed_at,
@@ -246,6 +294,7 @@ class GovernanceService:
             "scan_history": [
                 {
                     "scan_id": s.get("scan_id"),
+                    "revision_id": s.get("revision_id"),
                     "scanned_at": s.get("scanned_at"),
                     "risk_level": s.get("risk_level", "unknown"),
                     "risk_score": s.get("risk_score", 0),
@@ -256,7 +305,9 @@ class GovernanceService:
             "test_history": [
                 {
                     "test_id": t.get("test_id"),
+                    "revision_id": t.get("revision_id"),
                     "tested_at": t.get("tested_at"),
+                    "fidelity_score": t.get("overall_score", 0),
                     "overall_score": t.get("overall_score", 0),
                     "passed": bool(t.get("passed", False)),
                     "semantic_similarity": t.get("semantic_similarity"),
@@ -271,26 +322,82 @@ class GovernanceService:
                     "timestamp": e.get("timestamp"),
                     "event_type": e.get("event_type"),
                     "skill_id": e.get("skill_id"),
+                    "revision_id": e.get("revision_id"),
                     "skill_name": e.get("skill_name"),
                     "actor": e.get("actor", "system"),
                     "details": e.get("details"),
                 }
                 for e in audit_events
             ],
+            "revision_history": [
+                {
+                    "revision_id": r.revision_id,
+                    "revision_number": r.revision_number,
+                    "status": r.status,
+                    "version": r.version,
+                    "source_commit": r.source_commit,
+                    "source_path": r.source_path or "",
+                    "source_checksum": r.source_checksum,
+                    "risk_level": r.risk_level or "unknown",
+                    "risk_score": r.risk_score,
+                    "fidelity_score": r.equivalence_score,
+                    "equivalence_score": r.equivalence_score,
+                    "approved_by": r.approved_by,
+                    "approved_at": r.approved_at,
+                    "created_at": r.created_at,
+                    "updated_at": r.updated_at,
+                    "is_current": r.is_current,
+                }
+                for r in revisions
+            ],
         }
+
+    def get_skill_revisions(self, skill_id: str) -> Optional[List[Dict[str, Any]]]:
+        """Get explicit revision history for a skill."""
+        skill = self.db.get_skill(skill_id=skill_id)
+        if not skill:
+            return None
+
+        revisions = self.db.list_revisions(skill_id, limit=50)
+        return [
+            {
+                "revision_id": r.revision_id,
+                "revision_number": r.revision_number,
+                "status": r.status,
+                "version": r.version,
+                "source_commit": r.source_commit,
+                "source_path": r.source_path or "",
+                "source_checksum": r.source_checksum,
+                "risk_level": r.risk_level or "unknown",
+                "risk_score": r.risk_score,
+                "fidelity_score": r.equivalence_score,
+                "equivalence_score": r.equivalence_score,
+                "approved_by": r.approved_by,
+                "approved_at": r.approved_at,
+                "created_at": r.created_at,
+                "updated_at": r.updated_at,
+                "is_current": r.is_current,
+            }
+            for r in revisions
+        ]
 
     def _skill_to_summary(self, skill: SkillRecord) -> Dict[str, Any]:
         """Convert a SkillRecord to a summary dict"""
         return {
             "skill_id": skill.skill_id,
+            "current_revision_id": skill.current_revision_id,
+            "revision_id": skill.revision_id,
+            "revision_number": skill.revision_number,
             "name": skill.name,
             "status": skill.status,
             "risk_level": skill.risk_level or "unknown",
             "risk_score": skill.risk_score,
+            "fidelity_score": skill.equivalence_score,
             "equivalence_score": skill.equivalence_score,
             "author_name": skill.author_name,
             "license_spdx": skill.license_spdx,
             "source_url": skill.source_url or "",
+            "source_checksum": skill.source_checksum,
             "source_type": skill.source_type or "local",
             "version": skill.version or "1.0.0",
             "created_at": skill.created_at,
@@ -326,6 +433,7 @@ class GovernanceService:
                     {
                         "scan_id": scan.get("scan_id"),
                         "skill_id": skill.skill_id,
+                        "revision_id": scan.get("revision_id"),
                         "skill_name": skill.name,
                         "scanned_at": scan.get("scanned_at"),
                         "risk_level": scan.get("risk_level", "unknown"),
@@ -391,6 +499,7 @@ class GovernanceService:
             results.append(
                 {
                     "scan_id": scan.get("scan_id"),
+                    "revision_id": scan.get("revision_id"),
                     "scanned_at": scan.get("scanned_at"),
                     "risk_level": scan.get("risk_level", "unknown"),
                     "risk_score": scan.get("risk_score", 0),
@@ -420,27 +529,33 @@ class GovernanceService:
 
         source_path = skill.source_path or ""
         installed_path = skill.installed_path or ""
-
-        source_path_exists = bool(source_path) and Path(source_path).exists()
-        installed_path_exists = bool(installed_path) and Path(installed_path).exists()
+        source_path_exists = self._path_exists(source_path)
+        installed_path_exists = self._path_exists(installed_path)
+        resolved_source_path, source_path_issue = self._resolve_managed_path(source_path) if source_path_exists else (None, None)
+        resolved_installed_path, installed_path_issue = self._resolve_managed_path(installed_path) if installed_path_exists else (None, None)
 
         reasons = []
-        if not source_path_exists:
+        if source_path_issue:
+            reasons.append(f"source_path {source_path_issue}")
+        elif not source_path_exists:
             if not source_path:
                 reasons.append("source_path is not set")
             else:
                 reasons.append(f"source_path does not exist: {source_path}")
-        if not installed_path_exists:
+        if installed_path_issue:
+            reasons.append(f"installed_path {installed_path_issue}")
+        elif not installed_path_exists:
             if not installed_path:
                 reasons.append("installed_path is not set")
             else:
                 reasons.append(f"installed_path does not exist: {installed_path}")
 
-        can_scan = source_path_exists
-        can_test = source_path_exists and installed_path_exists
+        can_scan = source_path_exists and not source_path_issue
+        can_test = source_path_exists and installed_path_exists and not source_path_issue and not installed_path_issue
 
         return {
             "skill_id": skill_id,
+            "revision_id": skill.current_revision_id,
             "can_scan": can_scan,
             "can_test": can_test,
             "source_path_exists": source_path_exists,
@@ -463,7 +578,7 @@ class GovernanceService:
             }
 
         source_path = skill.source_path or ""
-        if not source_path or not Path(source_path).exists():
+        if not self._path_exists(source_path):
             return {
                 "status": "failed",
                 "skill_id": skill_id,
@@ -474,17 +589,29 @@ class GovernanceService:
                 "hint": "Ensure the skill's source_path is set and the file is accessible.",
             }
 
+        resolved_source_path, source_path_issue = self._resolve_managed_path(source_path)
+        if source_path_issue:
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "SOURCE_PATH_NOT_ALLOWED",
+                "error_message": f"Source path is outside allowed roots: {source_path}",
+                "hint": "Store managed skills under the configured allowed roots before scanning.",
+            }
+
         try:
             from advanced_skill_analyzer import AdvancedSkillAnalyzer
             from datetime import datetime as _dt
 
             analyzer = AdvancedSkillAnalyzer()
-            scan_result = analyzer.analyze(Path(source_path))
+            scan_result = analyzer.analyze(resolved_source_path)
 
             scan_data = {
                 "scanned_at": _dt.now().isoformat(),
                 "scanner_version": getattr(analyzer, "VERSION", "1.0.0"),
-                "file_path": source_path,
+                "file_path": str(resolved_source_path),
                 "risk_level": scan_result.risk_level,
                 "risk_score": scan_result.risk_score,
                 "findings": [
@@ -493,9 +620,11 @@ class GovernanceService:
                 ],
             }
             self.db.record_security_scan(skill_id, scan_data)
+            current_revision = self.db.get_current_revision(skill_id)
 
             item = {
                 "skill_id": skill_id,
+                "revision_id": current_revision.revision_id if current_revision else None,
                 "status": "success",
                 "risk_level": scan_result.risk_level,
                 "risk_score": scan_result.risk_score,
@@ -504,6 +633,7 @@ class GovernanceService:
             return {
                 "status": "success",
                 "skill_id": skill_id,
+                "revision_id": current_revision.revision_id if current_revision else None,
                 "processed": 1,
                 "results": [item],
             }
@@ -547,7 +677,7 @@ class GovernanceService:
         }
 
     def run_test(self, skill_id: str) -> Dict[str, Any]:
-        """Run equivalence test for a single skill"""
+        """Run fidelity test for a single skill"""
         skill = self.db.get_skill(skill_id=skill_id)
         if not skill:
             return {
@@ -562,19 +692,7 @@ class GovernanceService:
 
         source_path = skill.source_path or ""
         installed_path = skill.installed_path or ""
-
-        if not installed_path or not Path(installed_path).exists():
-            return {
-                "status": "failed",
-                "skill_id": skill_id,
-                "processed": 0,
-                "results": [],
-                "error_code": "INSTALLED_PATH_MISSING",
-                "error_message": f"Installed path does not exist: {installed_path or '(not set)'}",
-                "hint": "Ensure the skill has been installed and installed_path is set.",
-            }
-
-        if not source_path or not Path(source_path).exists():
+        if not self._path_exists(source_path):
             return {
                 "status": "failed",
                 "skill_id": skill_id,
@@ -585,18 +703,53 @@ class GovernanceService:
                 "hint": "Ensure the skill's source_path is set and the file is accessible.",
             }
 
+        if not self._path_exists(installed_path):
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "INSTALLED_PATH_MISSING",
+                "error_message": f"Installed path does not exist: {installed_path or '(not set)'}",
+                "hint": "Ensure the skill has been installed and installed_path is set.",
+            }
+
+        resolved_installed_path, installed_path_issue = self._resolve_managed_path(installed_path)
+        if installed_path_issue:
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "INSTALLED_PATH_NOT_ALLOWED",
+                "error_message": f"Installed path is outside allowed roots: {installed_path}",
+                "hint": "Store installed skills under the configured allowed roots before testing.",
+            }
+
+        resolved_source_path, source_path_issue = self._resolve_managed_path(source_path)
+        if source_path_issue:
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "SOURCE_PATH_NOT_ALLOWED",
+                "error_message": f"Source path is outside allowed roots: {source_path}",
+                "hint": "Store managed skills under the configured allowed roots before testing.",
+            }
+
         try:
             from skill_tester import SkillEquivalenceTester
             from datetime import datetime as _dt
 
             tester = SkillEquivalenceTester()
-            test_result = tester.test_equivalence(Path(source_path), Path(installed_path))
+            test_result = tester.test_fidelity(resolved_source_path, resolved_installed_path)
 
             test_data = {
                 "tested_at": _dt.now().isoformat(),
                 "tester_version": getattr(tester, "VERSION", "1.0.0"),
-                "original_path": source_path,
-                "converted_path": installed_path,
+                "original_path": str(resolved_source_path),
+                "converted_path": str(resolved_installed_path),
                 "scores": {
                     "semantic_similarity": test_result.semantic_similarity,
                     "structure_similarity": test_result.structure_similarity,
@@ -607,16 +760,20 @@ class GovernanceService:
                 "passed": test_result.passed,
             }
             self.db.record_equivalence_test(skill_id, test_data)
+            current_revision = self.db.get_current_revision(skill_id)
 
             item = {
                 "skill_id": skill_id,
+                "revision_id": current_revision.revision_id if current_revision else None,
                 "status": "success",
+                "fidelity_score": test_result.overall_score,
                 "overall_score": test_result.overall_score,
                 "passed": test_result.passed,
             }
             return {
                 "status": "success",
                 "skill_id": skill_id,
+                "revision_id": current_revision.revision_id if current_revision else None,
                 "processed": 1,
                 "results": [item],
             }
@@ -632,7 +789,7 @@ class GovernanceService:
             }
 
     def run_test_batch(self, skill_ids: Optional[List[str]] = None) -> Dict[str, Any]:
-        """Run equivalence test for multiple skills (pending by default)"""
+        """Run fidelity test for multiple skills (pending by default)"""
         if skill_ids is not None and len(skill_ids) == 0:
             return {"status": "noop", "processed": 0, "results": []}
 
@@ -697,6 +854,7 @@ class GovernanceService:
                 "timestamp": e.get("timestamp"),
                 "event_type": e.get("event_type"),
                 "skill_id": e.get("skill_id"),
+                "revision_id": e.get("revision_id"),
                 "skill_name": e.get("skill_name"),
                 "actor": e.get("actor", "system"),
                 "details": e.get("details"),

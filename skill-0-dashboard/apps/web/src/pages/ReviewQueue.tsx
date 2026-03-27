@@ -16,18 +16,22 @@ interface Feedback {
 export function ReviewQueue() {
   const [filter, setFilter] = useState<FilterType>('all');
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [isBulkApproving, setIsBulkApproving] = useState(false);
   const { data: skills, isLoading } = usePendingReviews();
   const approveMutation = useApproveSkill();
   const rejectMutation = useRejectSkill();
 
-  const filteredSkills = skills?.filter(skill => {
-    if (filter === 'safe') return ['safe', 'low'].includes(skill.risk_level);
-    if (filter === 'risky') return ['medium', 'high', 'critical'].includes(skill.risk_level);
-    return true;
-  }) || [];
+  const safeSkills = skills?.filter(s => ['safe', 'low'].includes(s.risk_level)) || [];
+  const riskySkills = skills?.filter(s => ['medium', 'high', 'critical'].includes(s.risk_level)) || [];
+  const filteredSkills =
+    filter === 'safe'
+      ? safeSkills
+      : filter === 'risky'
+        ? riskySkills
+        : skills || [];
 
-  const safeCount = skills?.filter(s => ['safe', 'low'].includes(s.risk_level)).length || 0;
-  const riskyCount = skills?.filter(s => ['medium', 'high', 'critical'].includes(s.risk_level)).length || 0;
+  const safeCount = safeSkills.length;
+  const riskyCount = riskySkills.length;
 
   const handleApprove = (skillId: string, reason: string) => {
     approveMutation.mutate({ skillId, reason }, {
@@ -49,6 +53,46 @@ export function ReviewQueue() {
     });
   };
 
+  const handleBulkApproveSafe = async () => {
+    if (safeSkills.length === 0 || isBulkApproving) {
+      return;
+    }
+
+    setIsBulkApproving(true);
+    const targets = [...safeSkills];
+    let approvedCount = 0;
+    const failures: string[] = [];
+
+    try {
+      for (const skill of targets) {
+        try {
+          await approveMutation.mutateAsync({
+            skillId: skill.skill_id,
+            reason: 'Bulk approved safe skill',
+          });
+          approvedCount += 1;
+        } catch (err: unknown) {
+          const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+          failures.push(`${skill.name}: ${detail || 'Approve failed'}`);
+        }
+      }
+
+      if (failures.length === 0) {
+        setFeedback({
+          message: `Bulk approved ${approvedCount} safe skill(s)`,
+          type: 'success',
+        });
+      } else {
+        setFeedback({
+          message: `Bulk approved ${approvedCount}/${targets.length} safe skill(s). ${failures.length} failed.`,
+          type: 'error',
+        });
+      }
+    } finally {
+      setIsBulkApproving(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <PageLayout>
@@ -64,9 +108,13 @@ export function ReviewQueue() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Review Queue</h1>
         {safeCount > 0 && (
-          <Button variant="outline" disabled>
+          <Button
+            variant="outline"
+            onClick={handleBulkApproveSafe}
+            disabled={isBulkApproving || approveMutation.isPending}
+          >
             <CheckCircle className="h-4 w-4 mr-2" />
-            Bulk Approve Safe ({safeCount})
+            {isBulkApproving ? `Approving ${safeCount}...` : `Bulk Approve Safe (${safeCount})`}
           </Button>
         )}
       </div>
@@ -122,8 +170,8 @@ export function ReviewQueue() {
               skill={skill}
               onApprove={handleApprove}
               onReject={handleReject}
-              isApproving={approveMutation.isPending}
-              isRejecting={rejectMutation.isPending}
+              isApproving={approveMutation.isPending || isBulkApproving}
+              isRejecting={rejectMutation.isPending || isBulkApproving}
             />
           ))}
         </div>

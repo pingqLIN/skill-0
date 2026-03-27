@@ -13,7 +13,11 @@ COPY tools/ ./tools/
 COPY governance/ ./governance/
 
 # Non-root user
-RUN adduser --disabled-password --no-create-home appuser
+RUN adduser --disabled-password --gecos "" --no-create-home appuser && \
+    mkdir -p /app/governance/db && \
+    chown -R appuser:appuser /app
+
+ENV SKILL0_TOOLS_PATH=/app/tools
 USER appuser
 
 EXPOSE 8001
