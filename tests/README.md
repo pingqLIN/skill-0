@@ -2,7 +2,7 @@
 
 ## Overview
 
-This test suite provides comprehensive automated testing for the skill-0 project, specifically focusing on **tool equivalence** and **code equivalence** verification.
+This test suite provides comprehensive automated testing for the skill-0 project, specifically focusing on **validator consistency** and **converter determinism** verification.
 
 ## Test Coverage
 
@@ -15,7 +15,7 @@ This test suite provides comprehensive automated testing for the skill-0 project
 ### Test Categories
 
 #### 1. SkillValidator Tests (8 tests)
-Tests for schema validation logic - verifying **tool equivalence**:
+Tests for schema validation logic - verifying **validator consistency**:
 - ✅ Validator initialization
 - ✅ Valid skill validation
 - ✅ Nonexistent file handling
@@ -26,7 +26,7 @@ Tests for schema validation logic - verifying **tool equivalence**:
 - ✅ Invalid action_type enum validation
 
 #### 2. SkillConverter Tests (7 tests)
-Tests for format conversion correctness - verifying **code equivalence**:
+Tests for format conversion correctness - verifying **converter determinism**:
 - ✅ Converter initialization
 - ✅ Title extraction from markdown
 - ✅ Title extraction without header
@@ -45,7 +45,7 @@ Tests for execution path testing functionality:
 - ✅ Complexity level classification
 
 #### 4. Template Generation Tests (4 tests)
-Tests for template generation - **tool equivalence**:
+Tests for template generation - **validator consistency**:
 - ✅ File creation
 - ✅ Valid JSON output
 - ✅ Required structure presence
@@ -55,8 +55,8 @@ Tests for template generation - **tool equivalence**:
 End-to-end workflow validation:
 - ✅ Markdown→JSON→Validation workflow
 - ✅ Generate→Validate→Test workflow
-- ✅ Validator consistency (tool equivalence)
-- ✅ Converter determinism (code equivalence)
+- ✅ Validator consistency
+- ✅ Converter determinism
 
 #### 6. Error Handling Tests (3 tests)
 Edge case and error handling:
@@ -68,28 +68,28 @@ Edge case and error handling:
 
 ### Running All Tests
 ```bash
-python3 -m pytest tests/ -v
+.venv/bin/python -m pytest tests/ -v
 ```
 
 ### Running Specific Test Classes
 ```bash
 # Test only validator
-python3 -m pytest tests/test_helper.py::TestSkillValidator -v
+.venv/bin/python -m pytest tests/test_helper.py::TestSkillValidator -v
 
 # Test only converter
-python3 -m pytest tests/test_helper.py::TestSkillConverter -v
+.venv/bin/python -m pytest tests/test_helper.py::TestSkillConverter -v
 
 # Test only integration workflows
-python3 -m pytest tests/test_helper.py::TestIntegrationWorkflows -v
+.venv/bin/python -m pytest tests/test_helper.py::TestIntegrationWorkflows -v
 ```
 
 ### Running Specific Tests
 ```bash
-# Test validator tool equivalence
-python3 -m pytest tests/test_helper.py::TestIntegrationWorkflows::test_tool_equivalence_validator_consistency -v
+# Test validator consistency
+.venv/bin/python -m pytest tests/test_helper.py::TestIntegrationWorkflows::test_tool_equivalence_validator_consistency -v
 
-# Test converter code equivalence
-python3 -m pytest tests/test_helper.py::TestIntegrationWorkflows::test_code_equivalence_converter_deterministic -v
+# Test converter determinism
+.venv/bin/python -m pytest tests/test_helper.py::TestIntegrationWorkflows::test_code_equivalence_converter_deterministic -v
 ```
 
 ## Test Results
@@ -141,9 +141,9 @@ tests/test_helper.py::TestErrorHandling::test_tester_handles_skill_without_execu
 
 ## Key Test Achievements
 
-### 1. Tool Equivalence Verification ✅
+### 1. Validator Consistency Verification ✅
 
-Tests verify that tools produce consistent, equivalent results:
+Tests verify that validators produce consistent results:
 
 - **Validator Consistency**: Multiple validator instances produce identical results for the same input
   ```python
@@ -154,7 +154,7 @@ Tests verify that tools produce consistent, equivalent results:
       result1 = validator1.validate(valid_skill_path)
       result2 = validator2.validate(valid_skill_path)
       
-      assert result1 == result2  # ✅ Tool equivalence verified
+      assert result1 == result2  # ✅ Validator consistency verified
   ```
 
 - **Template Generation**: Generated templates are always valid and follow schema
@@ -168,9 +168,9 @@ Tests verify that tools produce consistent, equivalent results:
       assert result is True  # ✅ Generated output is valid
   ```
 
-### 2. Code Equivalence Verification ✅
+### 2. Converter Determinism Verification ✅
 
-Tests verify that code behaves deterministically and produces equivalent outputs:
+Tests verify that code behaves deterministically and produces repeatable outputs:
 
 - **Converter Determinism**: Same input always produces same output (excluding timestamps)
   ```python
@@ -182,7 +182,7 @@ Tests verify that code behaves deterministically and produces equivalent outputs
       del data1["meta"]["parse_timestamp"]
       del data2["meta"]["parse_timestamp"]
       
-      assert data1 == data2  # ✅ Code equivalence verified
+      assert data1 == data2  # ✅ Converter determinism verified
   ```
 
 - **Workflow Integration**: Complete workflows produce valid, consistent results
@@ -250,8 +250,8 @@ pip install pytest
 ## Summary
 
 The test suite provides comprehensive verification of:
-- ✅ **Tool Equivalence**: Tools produce consistent results
-- ✅ **Code Equivalence**: Code behaves deterministically
+- ✅ **Validator Consistency**: Tools produce consistent results
+- ✅ **Converter Determinism**: Code behaves deterministically
 - ✅ **Error Handling**: Robust error detection and handling
 - ✅ **Integration**: End-to-end workflows function correctly
 

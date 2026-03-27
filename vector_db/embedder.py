@@ -8,7 +8,6 @@ import logging
 import os
 from pathlib import Path
 from typing import Dict, List, Optional, Union
-from sentence_transformers import SentenceTransformer
 import numpy as np
 
 logger = logging.getLogger(__name__)
@@ -67,6 +66,8 @@ class SkillEmbedder:
             model_name: sentence-transformers 模型名稱
                        預設使用 all-MiniLM-L6-v2 (384 維, 快速且高效)
         """
+        from sentence_transformers import SentenceTransformer
+
         device = _resolve_device()
         self.device = device
         self.model = SentenceTransformer(model_name, device=device)
@@ -101,9 +102,10 @@ class SkillEmbedder:
         if actions:
             action_texts = []
             for action in actions:
-                action_type = action.get('type', 'unknown')
-                action_desc = action.get('description', action.get('id', ''))
-                action_texts.append(f"{action_type}: {action_desc}")
+                action_type = action.get('action_type', 'unknown')
+                action_name = action.get('name', action.get('description', action.get('id', '')))
+                action_desc = action.get('description', action_name)
+                action_texts.append(f"{action_type}: {action_name} - {action_desc}")
             if action_texts:
                 parts.append(f"Actions: {'; '.join(action_texts)}")
                 
@@ -112,9 +114,10 @@ class SkillEmbedder:
         if rules:
             rule_texts = []
             for rule in rules:
-                rule_mode = rule.get('mode', 'unknown')
-                rule_cond = rule.get('condition', rule.get('id', ''))
-                rule_texts.append(f"{rule_mode}: {rule_cond}")
+                rule_type = rule.get('condition_type', 'unknown')
+                rule_name = rule.get('name', rule.get('description', rule.get('id', '')))
+                rule_cond = rule.get('condition_expression', rule_name)
+                rule_texts.append(f"{rule_type}: {rule_name} - {rule_cond}")
             if rule_texts:
                 parts.append(f"Rules: {'; '.join(rule_texts)}")
                 
@@ -123,12 +126,13 @@ class SkillEmbedder:
         if directives:
             directive_texts = []
             for directive in directives:
-                dir_type = directive.get('type', 'unknown')
-                dir_content = directive.get('content', directive.get('id', ''))
+                dir_type = directive.get('directive_type', 'unknown')
+                dir_name = directive.get('name', directive.get('description', directive.get('id', '')))
+                dir_content = directive.get('description', dir_name)
                 # 截斷過長的內容
                 if len(dir_content) > 200:
                     dir_content = dir_content[:200] + '...'
-                directive_texts.append(f"{dir_type}: {dir_content}")
+                directive_texts.append(f"{dir_type}: {dir_name} - {dir_content}")
             if directive_texts:
                 parts.append(f"Directives: {'; '.join(directive_texts)}")
                 
