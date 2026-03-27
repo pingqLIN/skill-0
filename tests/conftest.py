@@ -12,7 +12,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 # api/main.py calls enforce_production_security_configuration() at module level,
 # so these must be set before any import of api.main.
 os.environ["SKILL0_ENV"] = "development"
-os.environ["JWT_SECRET_KEY"] = "test-secret-key"
+os.environ["SKILL0_DEVICE"] = "cpu"
+os.environ["JWT_SECRET_KEY"] = "skill0-test-jwt-secret-key-0123456789"
 os.environ["JWT_ALGORITHM"] = "HS256"
 os.environ["API_USERNAME"] = "testadmin"
 os.environ["API_PASSWORD"] = "testpass123"

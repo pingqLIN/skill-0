@@ -6,6 +6,7 @@ numpy>=1.21.0
 
 # Analysis
 scikit-learn>=1.0.0
+jsonschema>=4.0.0
 
 # API (optional)
 fastapi>=0.100.0

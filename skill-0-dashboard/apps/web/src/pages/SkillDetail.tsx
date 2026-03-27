@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { useSkill, useActionReadiness, useTriggerScan, useTriggerTest } from '@/api/skills';
+import { useSkill, useSkillRevisions, useActionReadiness, useTriggerScan, useTriggerTest } from '@/api/skills';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,7 @@ export function SkillDetail() {
   const { skillId } = useParams<{ skillId: string }>();
   const navigate = useNavigate();
   const { data: skill, isLoading, error } = useSkill(skillId || '');
+  const { data: revisions } = useSkillRevisions(skillId || '');
   const { data: readiness } = useActionReadiness(skillId || '');
   const scanMutation = useTriggerScan();
   const testMutation = useTriggerTest();
@@ -111,6 +112,8 @@ export function SkillDetail() {
     );
   }
 
+  const revisionHistory = revisions ?? skill.revision_history ?? [];
+
   return (
     <PageLayout>
       {/* Header */}
@@ -162,6 +165,7 @@ export function SkillDetail() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Skill ID</TableHead>
+                    <TableHead>Revision</TableHead>
                     <TableHead>Status</TableHead>
                     {actionKind === 'scan' && <>
                       <TableHead>Risk Level</TableHead>
@@ -178,6 +182,7 @@ export function SkillDetail() {
                   {actionResult.results.map((row, idx) => (
                     <TableRow key={row.skill_id !== undefined ? String(row.skill_id) : idx}>
                       <TableCell className="font-mono text-xs">{String(row.skill_id ?? '-')}</TableCell>
+                      <TableCell className="font-mono text-xs">{String(row.revision_id ?? actionResult.revision_id ?? '-') }</TableCell>
                       <TableCell>
                         <Badge className={actionStatusColors[String(row.status)] ?? 'bg-gray-100 text-gray-800'}>
                           {String(row.status ?? '-')}
@@ -247,7 +252,7 @@ export function SkillDetail() {
               size="sm"
               onClick={handleTest}
               disabled={!readiness?.can_test || testMutation.isPending}
-              title={readiness?.can_test ? 'Run equivalence test' : (readiness?.reasons.join('; ') ?? 'Checking readiness…')}
+              title={readiness?.can_test ? 'Run fidelity test' : (readiness?.reasons.join('; ') ?? 'Checking readiness…')}
             >
               {testMutation.isPending ? 'Testing…' : 'Re-test'}
               {readiness && !readiness.can_test && <AlertCircle className="h-3 w-3 ml-1 text-amber-500" />}
@@ -330,6 +335,18 @@ export function SkillDetail() {
                 <span className="text-sm font-mono">{skill.source_commit.slice(0, 8)}</span>
               </div>
             )}
+            {skill.current_revision_id && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Current Revision</span>
+                <span className="text-sm font-mono">{skill.current_revision_id.slice(0, 8)}</span>
+              </div>
+            )}
+            {skill.source_checksum && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Checksum</span>
+                <span className="text-sm font-mono">{skill.source_checksum.slice(0, 12)}</span>
+              </div>
+            )}
             <div className="flex justify-between">
               <span className="text-muted-foreground">Version</span>
               <span>{skill.version || '1.0.0'}</span>
@@ -345,27 +362,27 @@ export function SkillDetail() {
           </CardContent>
         </Card>
 
-        {/* Equivalence */}
+        {/* Fidelity */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TestTube className="h-5 w-5" />
-              Equivalence Testing
+              Fidelity Testing
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {skill.equivalence_score !== null && skill.equivalence_score !== undefined && (
+            {skill.fidelity_score !== null && skill.fidelity_score !== undefined && (
               <div className="flex justify-between items-center mb-3">
-                <span className="text-muted-foreground">Equivalence Score</span>
+                <span className="text-muted-foreground">Fidelity Score</span>
                 <span className="text-2xl font-bold">
-                  {Math.round(skill.equivalence_score * 100)}%
+                  {Math.round(skill.fidelity_score * 100)}%
                 </span>
               </div>
             )}
-            {skill.equivalence_passed !== null && skill.equivalence_passed !== undefined && (
+            {skill.fidelity_passed !== null && skill.fidelity_passed !== undefined && (
               <div className="flex justify-between items-center mb-3">
                 <span className="text-muted-foreground">Result</span>
-                {skill.equivalence_passed ? (
+                {skill.fidelity_passed ? (
                   <span className="flex items-center gap-1 text-green-600">
                     <CheckCircle className="h-4 w-4" /> Passed
                   </span>
@@ -410,7 +427,7 @@ export function SkillDetail() {
                 </div>
               </div>
             ) : (
-              <p className="text-muted-foreground">No equivalence tests yet</p>
+              <p className="text-muted-foreground">No fidelity tests yet</p>
             )}
           </CardContent>
         </Card>
@@ -510,12 +527,79 @@ export function SkillDetail() {
                 <span>{new Date(skill.installed_at).toLocaleString()}</span>
               </div>
             )}
+            {readiness?.revision_id && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Ready On Revision</span>
+                <span className="text-sm font-mono">{readiness.revision_id.slice(0, 8)}</span>
+              </div>
+            )}
             {!skill.approved_by && !skill.security_scanned_at && !skill.installed_path && (
               <p className="text-muted-foreground">No governance data recorded</p>
             )}
           </CardContent>
         </Card>
       </div>
+
+      {/* Revision History */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Revision History</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {revisionHistory.length > 0 ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Revision</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Commit</TableHead>
+                  <TableHead>Checksum</TableHead>
+                  <TableHead>Risk</TableHead>
+                  <TableHead>Updated</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {revisionHistory.map((revision) => (
+                  <TableRow key={revision.revision_id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">r{revision.revision_number}</span>
+                        {revision.is_current && (
+                          <Badge variant="outline" className="text-xs">
+                            current
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="text-xs font-mono text-muted-foreground">
+                        {revision.revision_id.slice(0, 8)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={statusColors[revision.status] ?? 'bg-slate-100 text-slate-700'}>
+                        {revision.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {revision.source_commit ? revision.source_commit.slice(0, 8) : '-'}
+                    </TableCell>
+                    <TableCell className="font-mono text-xs">
+                      {revision.source_checksum ? revision.source_checksum.slice(0, 12) : '-'}
+                    </TableCell>
+                    <TableCell>
+                      <Badge className={riskColors[revision.risk_level] ?? 'bg-slate-100 text-slate-700'}>
+                        {revision.risk_level} ({revision.risk_score})
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{new Date(revision.updated_at).toLocaleString()}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <p className="text-muted-foreground">No revision history recorded</p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Security Findings */}
       <Card className="mb-6">

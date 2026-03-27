@@ -35,6 +35,7 @@ class ScanSummary(BaseModel):
     """Summary of a security scan"""
 
     scan_id: str
+    revision_id: Optional[str] = None
     scanned_at: datetime
     risk_level: str
     risk_score: int
