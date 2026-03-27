@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__scala2",
+    "skill_id": "claude__skill__scala",
     "name": "scala2",
     "skill_layer": "claude_skill",
     "title": "Scala2 Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Always prefer `val` over `var`",
-        "condition": "immutability by default",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always prefer `val` over `var`",
+        "condition_expression": "immutability by default",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Case class constructor parameters should NOT be mutable",
-        "condition": "immutability by default",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Case class constructor parameters should NOT...",
+        "condition_expression": "immutability by default",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Functions should be deterministic and side-effect free",
-        "condition": "pure functions",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Functions should be deterministic and side-effect...",
+        "condition_expression": "pure functions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "// Do NOT use \"l\" (Larry) - looks like \"1\", \"|\", \"I\"",
-        "condition": "variables and parameters",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "// Do NOT use \"l\" (Larry)...",
+        "condition_expression": "variables and parameters",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "// Limit lines to 100 characters",
-        "condition": "line length and spacing",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "// Limit lines to 100 characters",
+        "condition_expression": "line length and spacing",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "A method should contain less than 30 lines of code",
-        "condition": "rule of 30",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "A method should contain less than...",
+        "condition_expression": "rule of 30",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "A class should contain less than 30 methods",
-        "condition": "rule of 30",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "A class should contain less than...",
+        "condition_expression": "rule of 30",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "// Always use curly braces for multi-line blocks",
-        "condition": "curly braces",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "// Always use curly braces for...",
+        "condition_expression": "curly braces",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "// Always use braces for try-catch",
-        "condition": "curly braces",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "// Always use braces for try-catch",
+        "condition_expression": "curly braces",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "val badValue = 5432l   // Don't do this - hard to see",
-        "condition": "long literals",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "val badValue = 5432l // Don't...",
+        "condition_expression": "long literals",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "preference",
         "description": "Based on the [Databricks Scala Style Guide](https://github.com/databricks/scala-style-guide)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Based on the [Databricks Scala Style..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use immutable collections from `scala.collection.immutable`",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use immutable collections from `scala.collection.immutable`"
       },
       {
         "directive_type": "knowledge",
         "description": "val users = List(User(\"Alice\", 30), User(\"Bob\", 25))",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "val users = List(User(\"Alice\", 30), User(\"Bob\",..."
       },
       {
         "directive_type": "knowledge",
         "description": "def calculateTotal(items: List[Item]): BigDecimal =",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "def calculateTotal(items: List[Item]): BigDecimal ="
       },
       {
         "directive_type": "knowledge",
         "description": "println(s\"Calculating total for ${items.size} items\")  // Side effect",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "println(s\"Calculating total for ${items.size} items\") //..."
       },
       {
         "directive_type": "knowledge",
         "description": "// One-character names OK in small, localized scope",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "// One-character names OK in small,..."
       },
       {
         "directive_type": "preference",
         "description": "def getConf(key: String, defaultValue: String): String = {",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "def getConf(key: String, defaultValue: String): String..."
       },
       {
         "directive_type": "knowledge",
         "description": "conf: Configuration = hadoopConfiguration): RDD[(K, V)] = {",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "conf: Configuration = hadoopConfiguration): RDD[(K, V)]..."
       },
       {
         "directive_type": "strategy",
         "description": "def firstMethod(): Unit = { ... }  // blank line above",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "def firstMethod(): Unit = { ......"
       },
       {
         "directive_type": "knowledge",
         "description": "def killJob(): Unit = { ... }  // Correct - changes state",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "def killJob(): Unit = { ......"
       }
     ]
   }

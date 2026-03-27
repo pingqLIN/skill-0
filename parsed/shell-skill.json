@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__shell",
+    "skill_id": "claude__skill__shell",
     "name": "shell",
     "skill_layer": "claude_skill",
     "title": "Shell Skill",
@@ -102,51 +102,67 @@
     "rules": [
       {
         "description": "Always enable `set -euo pipefail` to fail fast on errors, catch unset variables, and surface pipeline failures",
-        "condition": "error handling & safety",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always enable `set -euo pipefail` to...",
+        "condition_expression": "error handling & safety",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Validate all required parameters before execution",
-        "condition": "error handling & safety",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Validate all required parameters before execution",
+        "condition_expression": "error handling & safety",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use `mktemp` to create temporary files or directories safely and ensure they are removed in your cleanup handler",
-        "condition": "error handling & safety",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Use `mktemp` to create temporary files...",
+        "condition_expression": "error handling & safety",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When `jq`/`yq` are unavailable or not appropriate, choose the next most reliable parser available in your environment, and be explicit about how it sh",
-        "condition": "working with json and yaml",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "When `jq`/`yq` are unavailable or not...",
+        "condition_expression": "working with json and yaml",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate that required fields exist and handle missing/invalid data paths explicitly (e.g., by checking `jq` exit status or using `// empty`)",
-        "condition": "working with json and yaml",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Validate that required fields exist and...",
+        "condition_expression": "working with json and yaml",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Document parser dependencies at the top of the script and fail fast with a helpful message if `jq`/`yq` (or alternative tools) are required but not in",
-        "condition": "working with json and yaml",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Document parser dependencies at the top...",
+        "condition_expression": "working with json and yaml",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "echo \"  -g, --resource-group   Resource group (required)\"",
-        "condition": "functions",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "echo \" -g, --resource-group Resource group...",
+        "condition_expression": "functions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "echo \"Error: Resource group is required\"",
-        "condition": "functions",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "echo \"Error: Resource group is required\"",
+        "condition_expression": "functions",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -154,61 +170,71 @@
         "directive_type": "principle",
         "description": "Instructions for writing clean, safe, and maintainable shell scripts for bash, sh, zsh, and other shells.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Instructions for writing clean, safe, and..."
       },
       {
         "directive_type": "principle",
         "description": "Generate code that is clean, simple, and concise",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Generate code that is clean, simple,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Ensure scripts are easily readable and understandable",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Ensure scripts are easily readable and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Add comments where helpful for understanding how the script works",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Add comments where helpful for understanding..."
       },
       {
         "directive_type": "completion",
         "description": "Generate concise and simple echo outputs to provide execution status",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Generate concise and simple echo outputs..."
       },
       {
         "directive_type": "completion",
         "description": "Avoid unnecessary echo output and excessive logging",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Avoid unnecessary echo output and excessive..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use shellcheck for static analysis when available",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use shellcheck for static analysis when..."
       },
       {
         "directive_type": "knowledge",
         "description": "Assume scripts are for automation and testing rather than production systems unless specified otherwise",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Assume scripts are for automation and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Prefer safe expansions: double-quote variable references (`\"$var\"`), use `${var}` for clarity, and avoid `eval`",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Prefer safe expansions: double-quote variable references..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use modern Bash features (`[[ ]]`, `local`, arrays) when portability requirements allow; fall back to POSIX constructs only when needed",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use modern Bash features (`[[ ]]`,..."
       }
     ]
   }

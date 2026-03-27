@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__cmake-vcpkg",
+    "skill_id": "claude__skill__cmake_vcpkg",
     "name": "cmake-vcpkg",
     "skill_layer": "claude_skill",
     "title": "Cmake Vcpkg Skill",
@@ -46,15 +46,19 @@
     "rules": [
       {
         "description": "This project uses vcpkg in manifest mode. Please keep this in mind when giving vcpkg suggestions. Do not provide suggestions like vcpkg install librar",
-        "condition": "general",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "This project uses vcpkg in manifest...",
+        "condition_expression": "general",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When providing OpenCV samples that use the file system to read files, please always use absolute file paths rather than file names, or relative file p",
-        "condition": "general",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "When providing OpenCV samples that use...",
+        "condition_expression": "general",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -62,19 +66,22 @@
         "directive_type": "preference",
         "description": "Prefer setting cache variables and other types of things through CMakePresets.json if possible.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Prefer setting cache variables and other..."
       },
       {
         "directive_type": "knowledge",
         "description": "triggers: \"/*.cmake, /CMakeLists.txt, /*.cpp, /*.h, **/*.hpp\"",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "triggers: \"/*.cmake, /CMakeLists.txt, /*.cpp, /*.h, **/*.hpp\""
       },
       {
         "directive_type": "knowledge",
         "description": "globs: \"/*.cmake, /CMakeLists.txt, /*.cpp, /*.h, **/*.hpp\"",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "globs: \"/*.cmake, /CMakeLists.txt, /*.cpp, /*.h, **/*.hpp\""
       }
     ]
   }

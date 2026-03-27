@@ -1,14 +1,14 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__mcp_builder",
+    "skill_id": "claude__skill__mcp_builder",
     "name": "mcp-builder",
     "skill_layer": "claude_skill",
     "title": "Mcp-Builder Skill",
     "description": "Guide for creating high-quality MCP servers that enable LLMs to interact with external services.",
-    "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-26T13:25:10.975437Z",
-    "parser_version": "skill-0 v2.1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-03-27T11:53:43.761905Z",
+    "parser_version": "skill-0 v2.4",
     "parsed_by": "skill-0-batch"
   },
   "original_definition": {
@@ -70,38 +70,47 @@
     "rules": [
       {
         "id": "r_001",
+        "name": "Build for workflows, not just API...",
         "description": "Build for workflows, not just API endpoints",
-        "condition": "always",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "always",
+        "returns": "boolean"
       },
       {
         "id": "r_002",
+        "name": "Return high-signal information, not data dumps",
         "description": "Return high-signal information, not data dumps",
-        "condition": "when_designing_tools",
-        "output": "proceed_or_halt"
+        "condition_type": "type_check",
+        "condition_expression": "when_designing_tools",
+        "returns": "boolean"
       },
       {
         "id": "r_003",
+        "name": "Error messages should guide agents toward...",
         "description": "Error messages should guide agents toward correct usage",
-        "condition": "when_handling_errors",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "when_handling_errors",
+        "returns": "boolean"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Optimize for limited context - agents...",
         "directive_type": "principle",
         "description": "Optimize for limited context - agents have constrained windows",
         "decomposable": true
       },
       {
         "id": "d_002",
+        "name": "Follow 4-phase workflow: Research, Implement, Review,...",
         "directive_type": "strategy",
         "description": "Follow 4-phase workflow: Research, Implement, Review, Evaluate",
         "decomposable": true
       },
       {
         "id": "d_003",
+        "name": "10 evaluation questions created and verified",
         "directive_type": "completion",
         "description": "10 evaluation questions created and verified",
         "decomposable": true

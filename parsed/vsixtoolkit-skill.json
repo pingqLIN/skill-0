@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__vsixtoolkit",
+    "skill_id": "claude__skill__vsixtoolkit",
     "name": "vsixtoolkit",
     "skill_layer": "claude_skill",
     "title": "Vsixtoolkit Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Verify the project uses the toolkit by checking for:",
-        "condition": "scope",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Verify the project uses the toolkit...",
+        "condition_expression": "scope",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "If the project uses raw VSSDK (`AsyncPackage` directly) or the new `VisualStudio.Extensibility` model, do not apply these instructions.",
-        "condition": "scope",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "If the project uses raw VSSDK...",
+        "condition_expression": "scope",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure all UI respects Visual Studio themes",
-        "condition": "goals",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Ensure all UI respects Visual Studio...",
+        "condition_expression": "goals",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "If an `.editorconfig` file exists in the repository, all generated and modified code MUST follow its rules.",
-        "condition": "code style (.editorconfig)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "If an `.editorconfig` file exists in...",
+        "condition_expression": "code style (.editorconfig)",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "This includes but is not limited to:",
-        "condition": "code style (.editorconfig)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "This includes but is not limited...",
+        "condition_expression": "code style (.editorconfig)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Line endings and final newline requirements",
-        "condition": "code style (.editorconfig)",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Line endings and final newline requirements",
+        "condition_expression": "code style (.editorconfig)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Before generating code, check for `.editorconfig` in the repository root and apply its settings. When in doubt, match the style of surrounding code in",
-        "condition": "code style (.editorconfig)",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Before generating code, check for `.editorconfig`...",
+        "condition_expression": "code style (.editorconfig)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Records (with limitations)",
-        "condition": "✅ supported modern c# features",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Records (with limitations)",
+        "condition_expression": "✅ supported modern c# features",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "`init`-only setters on structs (runtime limitation)",
-        "condition": "❌ not supported (.net framework limitations)",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "`init`-only setters on structs (runtime limitation)",
+        "condition_expression": "❌ not supported (.net framework limitations)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Extensions using the toolkit should have these global usings in the Package file:",
-        "condition": "global usings",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Extensions using the toolkit should have...",
+        "condition_expression": "global usings",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "These instructions apply ONLY to Visual Studio extensions using `Community.VisualStudio.Toolkit`.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "These instructions apply ONLY to Visual..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use toolkit abstractions (`VS.*` helpers, `BaseCommand<T>`, `BaseOptionModel<T>`)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use toolkit abstractions (`VS.*` helpers, `BaseCommand<T>`,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Adhere to `.editorconfig` settings when present in the repository",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Adhere to `.editorconfig` settings when present..."
       },
       {
         "directive_type": "preference",
         "description": "Naming conventions (fields, properties, methods, etc.)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Naming conventions (fields, properties, methods, etc.)"
       },
       {
         "directive_type": "knowledge",
         "description": "Code style preferences (`var` usage, expression bodies, braces, etc.)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Code style preferences (`var` usage, expression..."
       },
       {
         "directive_type": "preference",
         "description": "When writing code, prefer APIs available in .NET Framework 4.8. If a modern API is needed, check if a polyfill NuGet package exists (e.g., `Microsoft.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "When writing code, prefer APIs available..."
       },
       {
         "directive_type": "knowledge",
         "description": "\"Add an options page with a boolean setting using `BaseOptionModel<T>`\"",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "\"Add an options page with a..."
       },
       {
         "directive_type": "knowledge",
         "description": "Using `OleMenuCommandService` directly instead of `BaseCommand<T>`",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Using `OleMenuCommandService` directly instead of `BaseCommand<T>`"
       },
       {
         "directive_type": "knowledge",
         "description": "├── Commands/           # Command handlers (menu items, toolbar buttons)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "├── Commands/ # Command handlers (menu..."
       },
       {
         "directive_type": "knowledge",
         "description": "├── Services/           # Business logic and services",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "├── Services/ # Business logic and..."
       }
     ]
   }

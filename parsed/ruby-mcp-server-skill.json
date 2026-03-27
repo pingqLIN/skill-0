@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__ruby-mcp-server",
+    "skill_id": "claude__skill__ruby_mcp_server",
     "name": "ruby-mcp-server",
     "skill_layer": "claude_skill",
     "title": "Ruby Mcp Server Skill",
@@ -142,33 +142,43 @@
     "rules": [
       {
         "description": "required: ['operation', 'a', 'b']",
-        "condition": "tool with block",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "required: ['operation', 'a', 'b']",
+        "condition_expression": "tool with block",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "MCP::Prompt::Argument.new(name: 'topic', description: 'Topic to analyze', required: true),",
-        "condition": "prompt with block",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "MCP::Prompt::Argument.new(name: 'topic', description: 'Topic to analyze',...",
+        "condition_expression": "prompt with block",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "MCP::Prompt::Argument.new(name: 'depth', description: 'Analysis depth', required: false)",
-        "condition": "prompt with block",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "MCP::Prompt::Argument.new(name: 'depth', description: 'Analysis depth', required",
+        "condition_expression": "prompt with block",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "required: ['temperature', 'condition']",
-        "condition": "tool output schemas",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "required: ['temperature', 'condition']",
+        "condition_expression": "tool output schemas",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "output_schema.validate_result(weather_data)",
-        "condition": "tool output schemas",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "output_schema.validate_result(weather_data)",
+        "condition_expression": "tool output schemas",
+        "condition_type": "type_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -176,61 +186,71 @@
         "directive_type": "strategy",
         "description": "When building MCP servers in Ruby, follow these best practices and patterns using the official Ruby SDK.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "When building MCP servers in Ruby,..."
       },
       {
         "directive_type": "knowledge",
         "description": "name: { type: 'string', description: 'Name to greet' }",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "name: { type: 'string', description: 'Name..."
       },
       {
         "directive_type": "knowledge",
         "description": "operation: { type: 'string', enum: ['add', 'subtract', 'multiply', 'divide'] },",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "operation: { type: 'string', enum: ['add',..."
       },
       {
         "directive_type": "knowledge",
         "description": "return MCP::Tool::Response.new([{ type: 'text', text: 'Division by zero' }], is_error: true) if b == 0",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "return MCP::Tool::Response.new([{ type: 'text', text: 'Division..."
       },
       {
         "directive_type": "completion",
         "description": "MCP::Tool::Response.new([{ type: 'text', text: \"Result: #{result}\" }])",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "MCP::Tool::Response.new([{ type: 'text', text: \"Result: #{result}\"..."
       },
       {
         "directive_type": "knowledge",
         "description": "text: { message: 'Example data', timestamp: Time.now }.to_json",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "text: { message: 'Example data', timestamp:..."
       },
       {
         "directive_type": "knowledge",
         "description": "description: \"Code review for #{language} with focus on #{focus}\",",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "description: \"Code review for #{language} with..."
       },
       {
         "directive_type": "knowledge",
         "description": "content: MCP::Content::Text.new(\"Please review this #{language} code with focus on #{focus}.\")",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "content: MCP::Content::Text.new(\"Please review this #{language} code..."
       },
       {
         "directive_type": "knowledge",
         "description": "content: MCP::Content::Text.new(\"I'll review the code focusing on #{focus}. Please share the code.\")",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "content: MCP::Content::Text.new(\"I'll review the code focusing..."
       },
       {
         "directive_type": "knowledge",
         "description": "description: \"Analysis of #{topic} at #{depth} level\",",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "description: \"Analysis of #{topic} at #{depth}..."
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__codexer",
+    "skill_id": "claude__skill__codexer",
     "name": "codexer",
     "skill_layer": "claude_skill",
     "title": "Codexer Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Requires installation: `@workspace /new #websearch` command",
-        "condition": "web search tools",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Requires installation: `@workspace /new #websearch` command",
+        "condition_expression": "web search tools",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "ALWAYS use `venv` or `conda` environments - no exceptions, no excuses",
-        "condition": "environment management",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "ALWAYS use `venv` or `conda` environments...",
+        "condition_expression": "environment management",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Dependencies go into `requirements.txt` or `pyproject.toml` - pin versions",
-        "condition": "environment management",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Dependencies go into `requirements.txt` or `pyproject.toml`...",
+        "condition_expression": "environment management",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Type hints are mandatory - use `typing` module",
-        "condition": "performance & reliability - speed over everything",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Type hints are mandatory - use...",
+        "condition_expression": "performance & reliability - speed over everything",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "2. Use `#think` to analyze requirements and plan approach",
-        "condition": "phase 1: planning & web search",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "2. Use `#think` to analyze requirements...",
+        "condition_expression": "phase 1: planning & web search",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "4. Use Copilot Web Search Extension for enhanced search (requires Tavily API)",
-        "condition": "phase 1: planning & web search",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "4. Use Copilot Web Search Extension...",
+        "condition_expression": "phase 1: planning & web search",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "raise ValueError(\"Text must be non-empty string\")",
-        "condition": "brutal code examples",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "raise ValueError(\"Text must be non-empty string\")",
+        "condition_expression": "brutal code examples",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "BAD - Never Write Like This:",
-        "condition": "brutal code examples",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "BAD - Never Write Like This",
+        "condition_expression": "brutal code examples",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "5. Testing: Verify reliability and performance",
-        "condition": "🔄 research process",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "5. Testing: Verify reliability and performance",
+        "condition_expression": "🔄 research process",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "6. Final Steps: Ask about test scripts, export requirements.txt",
-        "condition": "🔄 research process",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "6. Final Steps: Ask about test...",
+        "condition_expression": "🔄 research process",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "principle",
         "description": "You are Codexer, an expert Python researcher with 10+ years of software development experience. Your goal is to conduct thorough research using Contex",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "You are Codexer, an expert Python..."
       },
       {
         "directive_type": "knowledge",
         "description": "`resolve-library-id`: Resolves library names into Context7-compatible IDs",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "`resolve-library-id`: Resolves library names into Context7-compatible..."
       },
       {
         "directive_type": "knowledge",
         "description": "`get-library-docs`: Fetches documentation for specific library IDs",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "`get-library-docs`: Fetches documentation for specific library..."
       },
       {
         "directive_type": "knowledge",
         "description": "#websearch: Built-in VS Code tool for web searching (part of standard Copilot Chat)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "#websearch: Built-in VS Code tool for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Copilot Web Search Extension: Enhanced web search requiring Tavily API keys (free tier with monthly resets)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Copilot Web Search Extension: Enhanced web..."
       },
       {
         "directive_type": "knowledge",
         "description": "If you're not using environments, you're not a Python developer, you're a liability",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "If you're not using environments, you're..."
       },
       {
         "directive_type": "knowledge",
         "description": "Readability Is Non-Negotiable:",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Readability Is Non-Negotiable"
       },
       {
         "directive_type": "knowledge",
         "description": "Follow PEP 8 religiously: 79 char max lines, 4-space indentation",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Follow PEP 8 religiously: 79 char..."
       },
       {
         "directive_type": "knowledge",
         "description": "`snake_case` for variables/functions, `CamelCase` for classes",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "`snake_case` for variables/functions, `CamelCase` for classes"
       },
       {
         "directive_type": "knowledge",
         "description": "Single-letter variables only for loop indices (`i`, `j`, `k`)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Single-letter variables only for loop indices..."
       }
     ]
   }

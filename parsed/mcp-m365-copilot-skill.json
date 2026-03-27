@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__mcp-m365-copilot",
+    "skill_id": "claude__skill__mcp_m_copilot",
     "name": "mcp-m365-copilot",
     "skill_layer": "claude_skill",
     "title": "Mcp M365 Copilot Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Always use OAuth 2.0 or SSO for authentication",
-        "condition": "security and governance",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always use OAuth 2.0 or SSO...",
+        "condition_expression": "security and governance",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate MCP server endpoints are secure",
-        "condition": "security and governance",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Validate MCP server endpoints are secure",
+        "condition_expression": "security and governance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Review compliance requirements before deployment",
-        "condition": "security and governance",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Review compliance requirements before deployment",
+        "condition_expression": "security and governance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "├── .env.local                  # Credentials (NEVER commit)",
-        "condition": "project structure",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "├── .env.local # Credentials (NEVER commit)",
+        "condition_expression": "project structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Requires approval in Microsoft 365 admin center",
-        "condition": "deployment options",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Requires approval in Microsoft 365 admin...",
+        "condition_expression": "deployment options",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Requires rigorous security review",
-        "condition": "deployment options",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Requires rigorous security review",
+        "condition_expression": "deployment options",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Check OAuth credentials in .env.local",
-        "condition": "authentication failures",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Check OAuth credentials in .env.local",
+        "condition_expression": "authentication failures",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Verify scopes match required permissions",
-        "condition": "authentication failures",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Verify scopes match required permissions",
+        "condition_expression": "authentication failures",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Ensure token refresh logic works",
-        "condition": "authentication failures",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Ensure token refresh logic works",
+        "condition_expression": "authentication failures",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate JSONPath expressions in response semantics",
-        "condition": "response parsing failures",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Validate JSONPath expressions in response semantics",
+        "condition_expression": "response parsing failures",
+        "condition_type": "type_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Leverage MCP servers for external system integration",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Leverage MCP servers for external system..."
       },
       {
         "directive_type": "knowledge",
         "description": "Import tools from server endpoints, not manual definitions",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Import tools from server endpoints, not..."
       },
       {
         "directive_type": "knowledge",
         "description": "Let MCP handle schema discovery and function generation",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Let MCP handle schema discovery and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use point-and-click tool selection in Agents Toolkit",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use point-and-click tool selection in Agents..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use declarativeAgent.json for instructions and capabilities",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use declarativeAgent.json for instructions and capabilities"
       },
       {
         "directive_type": "principle",
         "description": "Follow principle of least privilege for tool selection",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Follow principle of least privilege for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Create adaptive cards for rich visual responses",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Create adaptive cards for rich visual..."
       },
       {
         "directive_type": "knowledge",
         "description": "Provide clear conversation starters",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Provide clear conversation starters"
       },
       {
         "directive_type": "knowledge",
         "description": "Design for responsive experience across hubs",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Design for responsive experience across hubs"
       },
       {
         "directive_type": "knowledge",
         "description": "Test thoroughly before organizational deployment",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Test thoroughly before organizational deployment"
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__java",
+    "skill_id": "claude__skill__java",
     "name": "java",
     "skill_layer": "claude_skill",
     "title": "Java Skill",
@@ -142,57 +142,75 @@
     "rules": [
       {
         "description": "First, prompt the user if they want to integrate static analysis tools (SonarQube, PMD, Checkstyle) into their project setup.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "First, prompt the user if they...",
+        "condition_expression": "general instructions",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Perform up to 3 troubleshooting checks:",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Perform up to 3 troubleshooting checks",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "1. Verify project binding and token.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "1. Verify project binding and token",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "2. Ensure SonarScanner runs in CI.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "2. Ensure SonarScanner runs in CI",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Enable SpotBugs, PMD, or Checkstyle as CI fallbacks.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Enable SpotBugs, PMD, or Checkstyle as...",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "These patterns are phrased for humans; they map cleanly to checks in Sonar, SpotBugs, PMD, or Checkstyle but do not require those tools to be useful.",
-        "condition": "common code smells",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "These patterns are phrased for humans;...",
+        "condition_expression": "common code smells",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "If you run a static analyzer like Sonar or SonarLint — direct Sonar connections are preferred and should override this ruleset. Sonar rule keys are us",
-        "condition": "common code smells",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "If you run a static analyzer...",
+        "condition_expression": "common code smells",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "After adding or modifying code, verify the project continues to build successfully.",
-        "condition": "build and verification",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "After adding or modifying code, verify...",
+        "condition_expression": "build and verification",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure all tests pass as part of the build.",
-        "condition": "build and verification",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Ensure all tests pass as part...",
+        "condition_expression": "build and verification",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -200,61 +218,71 @@
         "directive_type": "knowledge",
         "description": "Use Sonar as the primary source of actionable issues.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use Sonar as the primary source..."
       },
       {
         "directive_type": "knowledge",
         "description": "Open a short tracker issue documenting the blocker and next steps.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Open a short tracker issue documenting..."
       },
       {
         "directive_type": "knowledge",
         "description": "Address code smells proactively during development rather than accumulating technical debt.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Address code smells proactively during development..."
       },
       {
         "directive_type": "strategy",
         "description": "Use IDE / Code editor reported warnings and suggestions to catch common patterns early in development.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use IDE / Code editor reported..."
       },
       {
         "directive_type": "knowledge",
         "description": "Records: For classes primarily intended to store data (e.g., DTOs, immutable data structures), Java Records should be used instead of traditional clas",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Records: For classes primarily intended to..."
       },
       {
         "directive_type": "strategy",
         "description": "Pattern Matching: Utilize pattern matching for `instanceof` and `switch` expression to simplify conditional logic and type casting.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Pattern Matching: Utilize pattern matching for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Type Inference: Use `var` for local variable declarations to improve readability, but only when the type is explicitly clear from the right-hand side ",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Type Inference: Use `var` for local..."
       },
       {
         "directive_type": "preference",
         "description": "Immutability: Favor immutable objects. Make classes and fields `final` where possible. Use collections from `List.of()`/`Map.of()` for fixed data. Use",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Immutability: Favor immutable objects. Make classes..."
       },
       {
         "directive_type": "knowledge",
         "description": "Streams and Lambdas: Use the Streams API and lambda expressions for collection processing. Employ method references (e.g., `stream.map(Foo::toBar)`).",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Streams and Lambdas: Use the Streams..."
       },
       {
         "directive_type": "strategy",
         "description": "Null Handling: Avoid returning or accepting `null`. Use `Optional<T>` for possibly-absent values and `Objects` utility methods like `equals()` and `re",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Null Handling: Avoid returning or accepting..."
       }
     ]
   }

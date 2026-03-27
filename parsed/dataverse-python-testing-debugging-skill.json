@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-testing-debugging",
+    "skill_id": "claude__skill__dataverse_python_testing_debugging",
     "name": "dataverse-python-testing-debugging",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Testing Debugging Skill",
@@ -142,45 +142,59 @@
     "rules": [
       {
         "description": "def test_rate_limiting_retry(mock_client):",
-        "condition": "mock errors",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "def test_rate_limiting_retry(mock_client)",
+        "condition_expression": "mock errors",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "\"\"\"Test retry logic on rate limiting.\"\"\"",
-        "condition": "mock errors",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "\"\"\"Test retry logic on rate limiting.\"\"\"",
+        "condition_expression": "mock errors",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "assert duration < 10  # Should complete in under 10 seconds",
-        "condition": "measure operation duration",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "assert duration < 10 # Should...",
+        "condition_expression": "measure operation duration",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "| Mock not called | Check method name/parameters match exactly |",
-        "condition": "10. debugging checklist",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "| Mock not called | Check...",
+        "condition_expression": "10. debugging checklist",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "| Real API failing | Check credentials, URL, permissions |",
-        "condition": "10. debugging checklist",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "| Real API failing | Check...",
+        "condition_expression": "10. debugging checklist",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "| Rate limiting in tests | Add delays or use smaller batches |",
-        "condition": "10. debugging checklist",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "| Rate limiting in tests |...",
+        "condition_expression": "10. debugging checklist",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "| Data not found | Verify record created and not cleaned up |",
-        "condition": "10. debugging checklist",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "| Data not found | Verify...",
+        "condition_expression": "10. debugging checklist",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -188,61 +202,71 @@
         "directive_type": "knowledge",
         "description": "{**sample_account, \"accountid\": \"id-124\", \"name\": \"Fabrikam\"},",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "{**sample_account, \"accountid\": \"id-124\", \"name\": \"Fabrikam\"},"
       },
       {
         "directive_type": "knowledge",
         "description": "{**sample_account, \"accountid\": \"id-125\", \"name\": \"Contoso\"},",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "{**sample_account, \"accountid\": \"id-125\", \"name\": \"Contoso\"},"
       },
       {
         "directive_type": "knowledge",
         "description": "mock_client.get.return_value = iter([sample_accounts])",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "mock_client.get.return_value = iter([sample_accounts])"
       },
       {
         "directive_type": "knowledge",
         "description": "account = dataverse_client.get(\"account\", account_id)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "account = dataverse_client.get(\"account\", account_id)"
       },
       {
         "directive_type": "knowledge",
         "description": "logging.getLogger('PowerPlatform').setLevel(logging.DEBUG)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "logging.getLogger('PowerPlatform').setLevel(logging.DEBUG)"
       },
       {
         "directive_type": "knowledge",
         "description": "return list(dataverse_client.get(\"account\", top=100))",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "return list(dataverse_client.get(\"account\", top=100))"
       },
       {
         "directive_type": "completion",
         "description": "result = get_account_safe(mock_client, \"invalid-id\")",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "result = get_account_safe(mock_client, \"invalid-id\")"
       },
       {
         "directive_type": "completion",
         "description": "assert result is None  # Returns None instead of raising",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "assert result is None # Returns..."
       },
       {
         "directive_type": "knowledge",
         "description": "| Assertion errors | Print actual vs expected values |",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "| Assertion errors | Print actual..."
       },
       {
         "directive_type": "knowledge",
         "description": "[Dataverse SDK Examples](https://github.com/microsoft/PowerPlatform-DataverseClient-Python/tree/main/examples)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "[Dataverse SDK Examples](https://github.com/microsoft/PowerPlatform-DataverseCli"
       }
     ]
   }

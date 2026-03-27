@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-react-platform-libraries",
+    "skill_id": "claude__skill__pcf_react_platform_libraries",
     "name": "pcf-react-platform-libraries",
     "skill_layer": "claude_skill",
     "title": "Pcf React Platform Libraries Skill",
@@ -142,39 +142,51 @@
     "rules": [
       {
         "description": "> Note: With GA release, all existing virtual controls will continue to function. However, they should be rebuilt and deployed using the latest CLI ve",
-        "condition": "benefits",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "> Note: With GA release, all...",
+        "condition_expression": "benefits",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "As with any component, you must install [Visual Studio Code](https://code.visualstudio.com/Download) and the [Microsoft Power Platform CLI](https://le",
-        "condition": "prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "As with any component, you must...",
+        "condition_expression": "prerequisites",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "> Note: If you have already installed Power Platform CLI for Windows, make sure you are running the latest version by using the `pac install latest` c",
-        "condition": "prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "> Note: If you have already...",
+        "condition_expression": "prerequisites",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Recommendation: We recommend using platform libraries for Fluent 8 and 9. If you don't use Fluent, you should remove the `platform-library` element wh",
-        "condition": "controlmanifest.input.xml",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Recommendation: We recommend using platform libraries...",
+        "condition_expression": "controlmanifest.input.xml",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The [ReactControl.init](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/react-control/init) method for control in",
-        "condition": "index.ts",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "The [ReactControl.init](https://learn.microsoft.com/en-us/power-apps/developer/c",
+        "condition_expression": "index.ts",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "A: No. React controls & platform libraries are currently only supported for canvas and model-driven apps. In Power Pages, React controls don't update ",
-        "condition": "q: can i use react controls & platform libraries with power pages?",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "A: No. React controls & platform...",
+        "condition_expression": "q: can i use react controls & platform libraries with power pages?",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -182,61 +194,71 @@
         "directive_type": "knowledge",
         "description": "By reusing the existing platform React and Fluent libraries, you can expect:",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "By reusing the existing platform React..."
       },
       {
         "directive_type": "knowledge",
         "description": "There's a new `--framework` (`-fw`) parameter for the `pac pcf init` command. Set the value of this parameter to `react`.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "There's a new `--framework` (`-fw`) parameter..."
       },
       {
         "directive_type": "knowledge",
         "description": "pac pcf init -n ReactSample -ns SampleNamespace -t field -fw react -npm",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "pac pcf init -n ReactSample -ns..."
       },
       {
         "directive_type": "knowledge",
         "description": "The [control element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/control) `control-type` att",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "The [control element](https://learn.microsoft.com/en-us/power-apps/developer/com"
       },
       {
         "directive_type": "knowledge",
         "description": "Within the [resources element](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/resources), find t",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Within the [resources element](https://learn.microsoft.com/en-us/power-apps/deve"
       },
       {
         "directive_type": "knowledge",
         "description": "<platform-library name=\"React\" version=\"16.14.0\" />",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "<platform-library name=\"React\" version=\"16.14.0\" />"
       },
       {
         "directive_type": "knowledge",
         "description": "<platform-library name=\"Fluent\" version=\"9.46.2\" />",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "<platform-library name=\"Fluent\" version=\"9.46.2\" />"
       },
       {
         "directive_type": "knowledge",
         "description": "The following controls are included in the samples. They function the same as their standard versions but offer better performance since they are virt",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "The following controls are included in..."
       },
       {
         "directive_type": "knowledge",
         "description": "|---------|---------|---------------|-----------------|",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "|---------|---------|---------------|-----------------|"
       },
       {
         "directive_type": "knowledge",
         "description": "| React | react | 16.14.0 | 17.0.2 (Model), 16.14.0 (Canvas) |",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "| React | react | 16.14.0..."
       }
     ]
   }

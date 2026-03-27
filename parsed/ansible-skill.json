@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__ansible",
+    "skill_id": "claude__skill__ansible",
     "name": "ansible",
     "skill_layer": "claude_skill",
     "title": "Ansible Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Don't include redundant comments",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Don't include redundant comments",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use idempotent Ansible modules whenever possible; avoid `shell`, `command`, and `raw`, as they break idempotency",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Use idempotent Ansible modules whenever possible;...",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use [fully qualified collection names (FQCN)](https://docs.ansible.com/ansible/latest/reference_appendices/glossary.html#term-Fully-Qualified-Collecti",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Use [fully qualified collection names (FQCN)](https://docs.ansible.com/ansible/l",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Only set `become: true` at the play level or on an `include:` statement, if all included tasks require super user privileges; otherwise, specify `beco",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Only set `become: true` at the...",
+        "condition_expression": "general instructions",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Only set `become: true` on a task if it requires super user privileges",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Only set `become: true` on a...",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use 2-space indentation and always indent lists",
-        "condition": "style",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Use 2-space indentation and always indent...",
+        "condition_expression": "style",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always use multi-line map syntax, regardless of how many pairs exist in the map",
-        "condition": "style",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Always use multi-line map syntax, regardless...",
+        "condition_expression": "style",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "The only time you should use double quotes is when they are nested within single quotes (e.g. Jinja map reference), or when your string requires escap",
-        "condition": "style",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "The only time you should use...",
+        "condition_expression": "style",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "If you must write a long string, use folded block scalar syntax (i.e., `>`) to replace newlines with spaces or literal block scalar syntax (i.e., `|`)",
-        "condition": "style",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "If you must write a long...",
+        "condition_expression": "style",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The `host` section of a play should follow this general order:",
-        "condition": "style",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "The `host` section of a play...",
+        "condition_expression": "style",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Use version control for your Ansible configurations.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use version control for your Ansible..."
       },
       {
         "directive_type": "knowledge",
         "description": "Keep things simple; only use advanced features when necessary",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Keep things simple; only use advanced..."
       },
       {
         "directive_type": "knowledge",
         "description": "Give every play, block, and task a concise but descriptive `name`",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Give every play, block, and task..."
       },
       {
         "directive_type": "knowledge",
         "description": "Omit periods from the end of task names for brevity",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Omit periods from the end of..."
       },
       {
         "directive_type": "knowledge",
         "description": "When including tasks from a separate file, you may include the filename in each task name to make tasks easier to locate (e.g., `<TASK_FILENAME> : <TA",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "When including tasks from a separate..."
       },
       {
         "directive_type": "completion",
         "description": "Use comments to provide additional context about what, how, and/or why something is being done",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use comments to provide additional context..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `group_vars` to set variables based on these attributes",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use `group_vars` to set variables based..."
       },
       {
         "directive_type": "knowledge",
         "description": "For modules where `state` is optional, explicitly set `state: present` or `state: absent` to improve clarity and consistency",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "For modules where `state` is optional,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use the lowest privileges necessary to perform a task",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use the lowest privileges necessary to..."
       },
       {
         "directive_type": "knowledge",
         "description": "When using Ansible alone, store secrets using Ansible Vault",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "When using Ansible alone, store secrets..."
       }
     ]
   }

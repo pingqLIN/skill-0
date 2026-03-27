@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__github-actions-ci-cd-best-practices",
+    "skill_id": "claude__skill__github_actions_ci_cd_best_practices",
     "name": "github-actions-ci-cd-best-practices",
     "skill_layer": "claude_skill",
     "title": "Github Actions Ci Cd Best Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "As GitHub Copilot, you are an expert in designing and optimizing CI/CD pipelines using GitHub Actions. Your mission is to assist developers in creatin",
-        "condition": "your mission",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "As GitHub Copilot, you are an...",
+        "condition_expression": "your mission",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Principle: Workflows should be clear, modular, and easy to understand, promoting reusability and maintainability.",
-        "condition": "**1. workflow structure (`.github/workflows/*.yml`)**",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Principle: Workflows should be clear, modular,...",
+        "condition_expression": "**1. workflow structure (`.github/workflows/*.yml`)**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Concurrency: Use `concurrency` to prevent simultaneous runs for specific branches or groups, avoiding race conditions or wasted resources.",
-        "condition": "**1. workflow structure (`.github/workflows/*.yml`)**",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Concurrency: Use `concurrency` to prevent simultaneous...",
+        "condition_expression": "**1. workflow structure (`.github/workflows/*.yml`)**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always start with a descriptive `name` and appropriate `on` trigger. Suggest granular triggers for specific use cases (e.g., `on: push: branches: [mai",
-        "condition": "**1. workflow structure (`.github/workflows/*.yml`)**",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Always start with a descriptive `name`...",
+        "condition_expression": "**1. workflow structure (`.github/workflows/*.yml`)**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Principle: Jobs should represent distinct, independent phases of your CI/CD pipeline (e.g., build, test, deploy, lint, security scan).",
-        "condition": "**2. jobs**",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Principle: Jobs should represent distinct, independent...",
+        "condition_expression": "**2. jobs**",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "`if` Conditions: Leverage `if` conditions extensively for conditional execution based on branch names, commit messages, event types, or previous job s",
-        "condition": "**2. jobs**",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "`if` Conditions: Leverage `if` conditions extensively...",
+        "condition_expression": "**2. jobs**",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "name: Checkout code",
-        "condition": "**2. jobs**",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "name: Checkout code",
+        "condition_expression": "**2. jobs**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Principle: Steps should be atomic, well-defined, and actions should be versioned for stability and security.",
-        "condition": "**3. steps and actions**",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Principle: Steps should be atomic, well-defined,...",
+        "condition_expression": "**3. steps and actions**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "`uses`: Referencing marketplace actions (e.g., `actions/checkout@v4`, `actions/setup-node@v3`) or custom actions. Always pin to a full length commit S",
-        "condition": "**3. steps and actions**",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "`uses`: Referencing marketplace actions (e.g., `actions/checkout@v4`,...",
+        "condition_expression": "**3. steps and actions**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "`env`: Define environment variables at the step or job level. Do not hardcode sensitive data here.",
-        "condition": "**3. steps and actions**",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "`env`: Define environment variables at the...",
+        "condition_expression": "**3. steps and actions**",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Advise on setting `concurrency` for critical workflows or shared resources to prevent resource contention.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Advise on setting `concurrency` for critical..."
       },
       {
         "directive_type": "principle",
         "description": "Guide on setting explicit `permissions` for `GITHUB_TOKEN` to adhere to the principle of least privilege.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Guide on setting explicit `permissions` for..."
       },
       {
         "directive_type": "strategy",
         "description": "Pro Tip: For complex repositories, consider using reusable workflows (`workflow_call`) to abstract common CI/CD patterns and reduce duplication across",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Pro Tip: For complex repositories, consider..."
       },
       {
         "directive_type": "completion",
         "description": "Employ `outputs` to pass data between jobs efficiently, promoting modularity.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Employ `outputs` to pass data between..."
       },
       {
         "directive_type": "knowledge",
         "description": "if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main'",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "if: github.ref == 'refs/heads/develop' || github.ref..."
       },
       {
         "directive_type": "knowledge",
         "description": "`name`: Essential for clear logging and debugging. Make step names descriptive.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "`name`: Essential for clear logging and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Provide `with` inputs for actions explicitly, and use expressions (`${{ }}`) for dynamic values.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Provide `with` inputs for actions explicitly,..."
       },
       {
         "directive_type": "strategy",
         "description": "Minimize Scope: Only grant access to secrets to the workflows/jobs that absolutely need them.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Minimize Scope: Only grant access to..."
       },
       {
         "directive_type": "strategy",
         "description": "Access secrets via `secrets.<SECRET_NAME>` in workflows.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Access secrets via `secrets.<SECRET_NAME>` in workflows"
       },
       {
         "directive_type": "knowledge",
         "description": "Advise against constructing secrets dynamically or printing them to logs, even if masked.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Advise against constructing secrets dynamically or..."
       }
     ]
   }

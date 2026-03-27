@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__springboot",
+    "skill_id": "claude__skill__springboot",
     "name": "springboot",
     "skill_layer": "claude_skill",
     "title": "Springboot Skill",
@@ -110,51 +110,67 @@
     "rules": [
       {
         "description": "Use constructor injection for all required dependencies.",
-        "condition": "dependency injection",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Use constructor injection for all required...",
+        "condition_expression": "dependency injection",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Services should be stateless and testable.",
-        "condition": "service layer",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Services should be stateless and testable",
+        "condition_expression": "service layer",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Service method signatures should use domain IDs or DTOs, not expose repository entities directly unless necessary.",
-        "condition": "service layer",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Service method signatures should use domain...",
+        "condition_expression": "service layer",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do not use concrete implementations (Logback, Log4j2) or `System.out.println()` directly.",
-        "condition": "logging",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Do not use concrete implementations (Logback,...",
+        "condition_expression": "logging",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use parameterized queries | Always use Spring Data JPA or `NamedParameterJdbcTemplate` to prevent SQL injection.",
-        "condition": "security & input handling",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Use parameterized queries | Always use...",
+        "condition_expression": "security & input handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Validate request bodies and parameters using JSR-380 (`@NotNull`, `@Size`, etc.) annotations and `BindingResult`",
-        "condition": "security & input handling",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Validate request bodies and parameters using...",
+        "condition_expression": "security & input handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "After adding or modifying code, verify the project continues to build successfully.",
-        "condition": "build and verification",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "After adding or modifying code, verify...",
+        "condition_expression": "build and verification",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure all tests pass as part of the build.",
-        "condition": "build and verification",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Ensure all tests pass as part...",
+        "condition_expression": "build and verification",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -162,61 +178,71 @@
         "directive_type": "knowledge",
         "description": "Make only high confidence suggestions when reviewing code changes.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Make only high confidence suggestions when..."
       },
       {
         "directive_type": "knowledge",
         "description": "For libraries or external dependencies, mention their usage and purpose in comments.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "For libraries or external dependencies, mention..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use YAML files (`application.yml`) for externalized configuration.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use YAML files (`application.yml`) for externalized..."
       },
       {
         "directive_type": "knowledge",
         "description": "Configuration Properties: Use @ConfigurationProperties for type-safe configuration binding",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Configuration Properties: Use @ConfigurationProperties for type-safe..."
       },
       {
         "directive_type": "knowledge",
         "description": "Secrets Management: Externalize secrets using environment variables or secret management systems",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Secrets Management: Externalize secrets using environment..."
       },
       {
         "directive_type": "knowledge",
         "description": "Separation of Concerns: Keep controllers thin, services focused, and repositories simple",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Separation of Concerns: Keep controllers thin,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Utility Classes: Make utility classes final with private constructors",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Utility Classes: Make utility classes final..."
       },
       {
         "directive_type": "knowledge",
         "description": "Place business logic in `@Service`-annotated classes.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Place business logic in `@Service`-annotated classes"
       },
       {
         "directive_type": "knowledge",
         "description": "Use SLF4J for all logging (`private static final Logger logger = LoggerFactory.getLogger(MyClass.class);`).",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use SLF4J for all logging (`private..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use parameterized logging: `logger.info(\"User {} logged in\", userId);`.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use parameterized logging: `logger.info(\"User {} logged..."
       }
     ]
   }

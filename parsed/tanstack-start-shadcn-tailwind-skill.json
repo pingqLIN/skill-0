@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__tanstack-start-shadcn-tailwind",
+    "skill_id": "claude__skill__tanstack_start_shadcn_tailwind",
     "name": "tanstack-start-shadcn-tailwind",
     "skill_layer": "claude_skill",
     "title": "Tanstack Start Shadcn Tailwind Skill",
@@ -142,45 +142,59 @@
     "rules": [
       {
         "description": "NEVER use `any` type - always use proper TypeScript types",
-        "condition": "code style rules",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "NEVER use `any` type - always...",
+        "condition_expression": "code style rules",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Always validate external data with Zod schemas",
-        "condition": "code style rules",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Always validate external data with Zod...",
+        "condition_expression": "code style rules",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Initial page data required for rendering",
-        "condition": "data fetching",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Initial page data required for rendering",
+        "condition_expression": "data fetching",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "SSR requirements",
-        "condition": "data fetching",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "SSR requirements",
+        "condition_expression": "data fetching",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always validate external data. Define schemas in `src/lib/schemas.ts`:",
-        "condition": "zod validation",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Always validate external data. Define schemas...",
+        "condition_expression": "zod validation",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Structure routes in `src/routes/` with file-based routing. Always include error and pending boundaries:",
-        "condition": "routes",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Structure routes in `src/routes/` with file-based...",
+        "condition_expression": "routes",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always prefer Shadcn/ui components over custom ones:",
-        "condition": "ui components",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Always prefer Shadcn/ui components over custom...",
+        "condition_expression": "ui components",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -188,61 +202,71 @@
         "directive_type": "knowledge",
         "description": "Include error and pending boundaries for all routes",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Include error and pending boundaries for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Follow accessibility best practices with ARIA attributes",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Follow accessibility best practices with ARIA..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use function components with proper TypeScript interfaces:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use function components with proper TypeScript..."
       },
       {
         "directive_type": "knowledge",
         "description": "variant?: 'primary' | 'secondary';",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "variant?: 'primary' | 'secondary';"
       },
       {
         "directive_type": "preference",
         "description": "export default function Button({ children, onClick, variant = 'primary' }: ButtonProps) {",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "export default function Button({ children, onClick,..."
       },
       {
         "directive_type": "knowledge",
         "description": "<button onClick={onClick} className={cn(buttonVariants({ variant }))}>",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "<button onClick={onClick} className={cn(buttonVariants({ variant }))}>"
       },
       {
         "directive_type": "knowledge",
         "description": "<div className=\"text-red-600 p-4\">Error: {error.message}</div>",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "<div className=\"text-red-600 p-4\">Error: {error.message}</div>"
       },
       {
         "directive_type": "knowledge",
         "description": "<div className=\"flex items-center justify-center p-4\">",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "<div className=\"flex items-center justify-center p-4\">"
       },
       {
         "directive_type": "knowledge",
         "description": "<div className=\"animate-spin rounded-full h-8 w-8 border-b-2 border-primary\" />",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "<div className=\"animate-spin rounded-full h-8 w-8 border-b-2..."
       },
       {
         "directive_type": "knowledge",
         "description": "<div className=\"flex flex-col gap-4 p-6 md:flex-row md:gap-6\">",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "<div className=\"flex flex-col gap-4 p-6 md:flex-row..."
       }
     ]
   }

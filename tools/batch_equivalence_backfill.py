@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Batch equivalence testing and DB backfill.
+Batch fidelity testing and DB backfill.
 
-Runs skill_tester on all skills missing equivalence results and records them
-into the governance database.
+Runs skill_tester on all skills missing fidelity results and records them
+into the governance database. Legacy storage/API aliases still use
+`equivalence_*` names for compatibility.
 """
 
 from __future__ import annotations
@@ -12,7 +13,7 @@ import argparse
 from pathlib import Path
 
 from governance_db import GovernanceDB
-from skill_tester import SkillEquivalenceTester
+from skill_tester import SkillFidelityTester
 
 
 DEFAULT_DB = Path(__file__).parent.parent / "governance" / "db" / "governance.db"
@@ -30,7 +31,7 @@ def main() -> int:
         "--skip-existing",
         action="store_true",
         default=False,
-        help="Skip skills that already have equivalence scores.",
+        help="Skip skills that already have fidelity scores.",
     )
     args = ap.parse_args()
 
@@ -42,7 +43,7 @@ def main() -> int:
         raise SystemExit(f"Governance DB not found: {args.db}")
 
     db = GovernanceDB(db_path=args.db)
-    tester = SkillEquivalenceTester(verbose=args.verbose)
+    tester = SkillFidelityTester(verbose=args.verbose)
 
     skills = db.list_skills(limit=10000)
     processed = 0
@@ -67,7 +68,7 @@ def main() -> int:
             continue
 
         try:
-            result = tester.test_equivalence(original_path, converted_path)
+            result = tester.test_fidelity(original_path, converted_path)
             if not args.dry_run:
                 db.record_equivalence_test(skill.skill_id, result.to_dict())
             processed += 1
@@ -78,7 +79,7 @@ def main() -> int:
             errors += 1
 
     print(
-        f"\n📊 Equivalence backfill: processed={processed}, skipped={skipped}, errors={errors}"
+        f"\n📊 Fidelity backfill: processed={processed}, skipped={skipped}, errors={errors}"
     )
     return 0 if errors == 0 else 1
 

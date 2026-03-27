@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__collections",
+    "skill_id": "claude__skill__collections",
     "name": "collections",
     "skill_layer": "claude_skill",
     "title": "Collections Skill",
@@ -62,57 +62,75 @@
     "rules": [
       {
         "description": "Always validate collections using `node validate-collections.js` before committing",
-        "condition": "collection instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always validate collections using `node validate-collections.js`...",
+        "condition_expression": "collection instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Required fields: id, name, description, items",
-        "condition": "collection structure",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Required fields: id, name, description, items",
+        "condition_expression": "collection structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Item requirements: path must exist, kind must match file extension",
-        "condition": "collection structure",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Item requirements: path must exist, kind...",
+        "condition_expression": "collection structure",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Collection IDs must be unique across all collections",
-        "condition": "validation rules",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Collection IDs must be unique across...",
+        "condition_expression": "validation rules",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "File paths must exist and match the item kind",
-        "condition": "validation rules",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "File paths must exist and match...",
+        "condition_expression": "validation rules",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Tags must use lowercase letters, numbers, and hyphens only",
-        "condition": "validation rules",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Tags must use lowercase letters, numbers,...",
+        "condition_expression": "validation rules",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Collections must contain 1-50 items",
-        "condition": "validation rules",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Collections must contain 1-50 items",
+        "condition_expression": "validation rules",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Descriptions must be 1-500 characters",
-        "condition": "validation rules",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Descriptions must be 1-500 characters",
+        "condition_expression": "validation rules",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Collections don't require file reorganization",
-        "condition": "file organization",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Collections don't require file reorganization",
+        "condition_expression": "file organization",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -120,61 +138,71 @@
         "directive_type": "knowledge",
         "description": "When working with collections in the awesome-copilot repository:",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "When working with collections in the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Follow the established YAML schema for collection manifests",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Follow the established YAML schema for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use descriptive collection IDs with lowercase letters, numbers, and hyphens",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use descriptive collection IDs with lowercase..."
       },
       {
         "directive_type": "strategy",
         "description": "Keep collections focused on specific workflows or themes",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Keep collections focused on specific workflows..."
       },
       {
         "directive_type": "knowledge",
         "description": "Display options: ordering (alpha/manual), show_badge (true/false)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Display options: ordering (alpha/manual), show_badge (true/false)"
       },
       {
         "directive_type": "knowledge",
         "description": "Group 3-10 related items for optimal usability",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Group 3-10 related items for optimal..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use clear, descriptive names and descriptions",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use clear, descriptive names and descriptions"
       },
       {
         "directive_type": "knowledge",
         "description": "Add relevant tags for discoverability",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Add relevant tags for discoverability"
       },
       {
         "directive_type": "completion",
         "description": "Test the complete workflow the collection enables",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Test the complete workflow the collection..."
       },
       {
         "directive_type": "knowledge",
         "description": "Ensure items complement each other effectively",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Ensure items complement each other effectively"
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-community-resources",
+    "skill_id": "claude__skill__pcf_community_resources",
     "name": "pcf-community-resources",
     "skill_layer": "claude_skill",
     "title": "Pcf Community Resources Skill",
@@ -142,9 +142,11 @@
     "rules": [
       {
         "description": "The PCF community is welcoming and eager to help. Don't hesitate to reach out, ask questions, and share your own experiences!",
-        "condition": "finding the right resource",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "The PCF community is welcoming and...",
+        "condition_expression": "finding the right resource",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -152,61 +154,71 @@
         "directive_type": "knowledge",
         "description": "The PCF Gallery is the central hub for discovering, sharing, and learning about PCF components.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "The PCF Gallery is the central..."
       },
       {
         "directive_type": "knowledge",
         "description": "Submit your own components to share with the community",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Submit your own components to share..."
       },
       {
         "directive_type": "knowledge",
         "description": "Learn from expert developers through these comprehensive video tutorials:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Learn from expert developers through these..."
       },
       {
         "directive_type": "knowledge",
         "description": "Power Apps Component Framework Manifest File Explained by April Dunnam - Detailed explanation of the manifest structure",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Power Apps Component Framework Manifest File..."
       },
       {
         "directive_type": "knowledge",
         "description": "Easier Development with React Controls and Platform Libraries by Scott Durow - Using React and platform-provided libraries",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Easier Development with React Controls and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Understanding the Power Apps Component Framework by PowerfulDevs - Comprehensive overview of the framework",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Understanding the Power Apps Component Framework..."
       },
       {
         "directive_type": "strategy",
         "description": "How to Debug Power Apps Component Framework Components by April Dunnam - Debugging techniques and tools",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "How to Debug Power Apps Component..."
       },
       {
         "directive_type": "knowledge",
         "description": "Using React and the Fluent UI in Power Apps Component Framework by Microsoft - Official guidance on React/Fluent UI integration",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Using React and the Fluent UI..."
       },
       {
         "directive_type": "knowledge",
         "description": "Power Apps Component Framework: Datasets with React and Azure Maps by Nishant Rana - Working with datasets and external APIs",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Power Apps Component Framework: Datasets with..."
       },
       {
         "directive_type": "knowledge",
         "description": "Deep Dive: Power Apps Component Framework API by PowerfulDevs - Comprehensive API exploration",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Deep Dive: Power Apps Component Framework..."
       }
     ]
   }

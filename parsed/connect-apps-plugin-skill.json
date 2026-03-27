@@ -1,12 +1,12 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__connect_apps_plugin",
+    "skill_id": "claude__skill__connect_apps_plugin",
     "name": "connect-apps-plugin",
     "skill_layer": "claude_skill",
     "title": "Connect Apps Plugin Skill",
     "description": "Claude Skill",
-    "schema_version": "2.1.0",
+    "schema_version": "2.4.0",
     "parse_timestamp": "2026-01-26T16:21:07.268933Z",
     "parser_version": "skill-0 v2.1-advanced",
     "parsed_by": "parse-v2-advanced"

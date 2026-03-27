@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__playwright-typescript",
+    "skill_id": "claude__skill__playwright_typescript",
     "name": "playwright-typescript",
     "skill_layer": "claude_skill",
     "title": "Playwright Typescript Skill",
@@ -134,27 +134,35 @@
     "rules": [
       {
         "description": "await test.step('Verify search results', async () => {",
-        "condition": "example test structure",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "await test.step('Verify search results', async ()...",
+        "condition_expression": "example test structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "// Verify the accessibility tree of the search results",
-        "condition": "example test structure",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "// Verify the accessibility tree of...",
+        "condition_expression": "example test structure",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Before finalizing tests, ensure:",
-        "condition": "quality checklist",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Before finalizing tests, ensure",
+        "condition_expression": "quality checklist",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "[ ] All locators are accessible and specific and avoid strict mode violations",
-        "condition": "quality checklist",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "[ ] All locators are accessible...",
+        "condition_expression": "quality checklist",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -162,61 +170,71 @@
         "directive_type": "knowledge",
         "description": "Locators: Prioritize user-facing, role-based locators (`getByRole`, `getByLabel`, `getByText`, etc.) for resilience and accessibility. Use `test.step(",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Locators: Prioritize user-facing, role-based locators (`getByRole`,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Assertions: Use auto-retrying web-first assertions. These assertions start with the `await` keyword (e.g., `await expect(locator).toHaveText()`). Avoi",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Assertions: Use auto-retrying web-first assertions. These..."
       },
       {
         "directive_type": "preference",
         "description": "Timeouts: Rely on Playwright's built-in auto-waiting mechanisms. Avoid hard-coded waits or increased default timeouts.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Timeouts: Rely on Playwright's built-in auto-waiting..."
       },
       {
         "directive_type": "knowledge",
         "description": "Clarity: Use descriptive test and step titles that clearly state the intent. Add comments only to explain complex logic or non-obvious interactions.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Clarity: Use descriptive test and step..."
       },
       {
         "directive_type": "preference",
         "description": "Titles: Follow a clear naming convention, such as `Feature - Specific action or scenario`.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Titles: Follow a clear naming convention,..."
       },
       {
         "directive_type": "preference",
         "description": "Naming: Use the convention `<feature-or-page>.spec.ts` (e.g., `login.spec.ts`, `search.spec.ts`).",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Naming: Use the convention `<feature-or-page>.spec.ts` (e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "UI Structure: Use `toMatchAriaSnapshot` to verify the accessibility tree structure of a component. This provides a comprehensive and accessible snapsh",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "UI Structure: Use `toMatchAriaSnapshot` to verify..."
       },
       {
         "directive_type": "knowledge",
         "description": "Element Counts: Use `toHaveCount` to assert the number of elements found by a locator.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Element Counts: Use `toHaveCount` to assert..."
       },
       {
         "directive_type": "knowledge",
         "description": "Text Content: Use `toHaveText` for exact text matches and `toContainText` for partial matches.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Text Content: Use `toHaveText` for exact..."
       },
       {
         "directive_type": "knowledge",
         "description": "Navigation: Use `toHaveURL` to verify the page URL after an action.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Navigation: Use `toHaveURL` to verify the..."
       }
     ]
   }

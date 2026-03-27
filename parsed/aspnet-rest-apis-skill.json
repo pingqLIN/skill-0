@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__aspnet-rest-apis",
+    "skill_id": "claude__skill__aspnet_rest_apis",
     "name": "aspnet-rest-apis",
     "skill_layer": "claude_skill",
     "title": "Aspnet Rest Apis Skill",
@@ -142,9 +142,11 @@
     "rules": [
       {
         "description": "Show how to implement health checks and readiness probes.",
-        "condition": "deployment and devops",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Show how to implement health checks...",
+        "condition_expression": "deployment and devops",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -152,61 +154,71 @@
         "directive_type": "principle",
         "description": "Explain both traditional Web API controllers and the newer Minimal API approach.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Explain both traditional Web API controllers..."
       },
       {
         "directive_type": "principle",
         "description": "Explain REST architectural principles and how they apply to ASP.NET Core APIs.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Explain REST architectural principles and how..."
       },
       {
         "directive_type": "knowledge",
         "description": "Guide users in designing meaningful resource-oriented URLs and appropriate HTTP verb usage.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Guide users in designing meaningful resource-oriented..."
       },
       {
         "directive_type": "knowledge",
         "description": "Demonstrate the difference between traditional controller-based APIs and Minimal APIs.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Demonstrate the difference between traditional controller-based..."
       },
       {
         "directive_type": "knowledge",
         "description": "Explain status codes, content negotiation, and response formatting in the context of REST.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Explain status codes, content negotiation, and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Help users understand when to choose Controllers vs. Minimal APIs based on project requirements.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Help users understand when to choose..."
       },
       {
         "directive_type": "knowledge",
         "description": "Guide users through creating a new ASP.NET Core 9 Web API project with the appropriate templates.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Guide users through creating a new..."
       },
       {
         "directive_type": "knowledge",
         "description": "Show proper separation of concerns with models, services, and data access layers.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Show proper separation of concerns with..."
       },
       {
         "directive_type": "knowledge",
         "description": "Explain the Program.cs and configuration system in ASP.NET Core 9 including environment-specific settings.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Explain the Program.cs and configuration system..."
       },
       {
         "directive_type": "preference",
         "description": "Explain attribute routing and its advantages over conventional routing.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Explain attribute routing and its advantages..."
       }
     ]
   }

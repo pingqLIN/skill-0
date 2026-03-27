@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-apps-canvas-yaml",
+    "skill_id": "claude__skill__power_apps_canvas_yaml",
     "name": "power-apps-canvas-yaml",
     "skill_layer": "claude_skill",
     "title": "Power Apps Canvas Yaml Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Control: ControlType      # Required: Control type identifier",
-        "condition": "control definition format:",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Control: ControlType # Required: Control type...",
+        "condition_expression": "control definition format:",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "All formulas must start with `=`",
-        "condition": "formula syntax:",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "All formulas must start with `=`",
+        "condition_expression": "formula syntax:",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid overly complex nested expressions",
-        "condition": "2. formula writing:",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Avoid overly complex nested expressions",
+        "condition_expression": "2. formula writing:",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Document connection requirements",
-        "condition": "4. data source management:",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Document connection requirements",
+        "condition_expression": "4. data source management:",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "All controls must have a `Control` property",
-        "condition": "required properties:",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "All controls must have a `Control`...",
+        "condition_expression": "required properties:",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Component definitions must have `DefinitionType`",
-        "condition": "required properties:",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Component definitions must have `DefinitionType`",
+        "condition_expression": "required properties:",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Data sources must have `Type`",
-        "condition": "required properties:",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Data sources must have `Type`",
+        "condition_expression": "required properties:",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Ensure control types are spelled correctly",
-        "condition": "1. invalid control types:",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Ensure control types are spelled correctly",
+        "condition_expression": "1. invalid control types:",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Check for proper casing",
-        "condition": "1. invalid control types:",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Check for proper casing",
+        "condition_expression": "1. invalid control types:",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Verify control type is supported in schema",
-        "condition": "1. invalid control types:",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Verify control type is supported in...",
+        "condition_expression": "1. invalid control types:",
+        "condition_type": "type_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "This document provides comprehensive instructions for working with YAML code for Power Apps canvas apps based on the official Microsoft Power Apps YAM",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This document provides comprehensive instructions for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Official Schema Source: https://raw.githubusercontent.com/microsoft/PowerApps-Tooling/refs/heads/master/schemas/pa-yaml/v3.0/pa.schema.yaml",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Official Schema Source: https://raw.githubusercontent.com/microsoft/PowerApps-To"
       },
       {
         "directive_type": "principle",
         "description": "Power Fx is the formula language used throughout Power Apps canvas apps. It follows these core principles:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Power Fx is the formula language..."
       },
       {
         "directive_type": "knowledge",
         "description": "Simple: Uses familiar concepts from Excel formulas",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Simple: Uses familiar concepts from Excel..."
       },
       {
         "directive_type": "knowledge",
         "description": "Excel Consistency: Aligns with Excel formula syntax and behavior",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Excel Consistency: Aligns with Excel formula..."
       },
       {
         "directive_type": "knowledge",
         "description": "Declarative: Describes what you want, not how to achieve it",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Declarative: Describes what you want, not..."
       },
       {
         "directive_type": "knowledge",
         "description": "Functional: Avoids side effects; most functions are pure",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Functional: Avoids side effects; most functions..."
       },
       {
         "directive_type": "knowledge",
         "description": "Composition: Complex logic built by combining simpler functions",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Composition: Complex logic built by combining..."
       },
       {
         "directive_type": "knowledge",
         "description": "Strongly Typed: Type system ensures data integrity",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Strongly Typed: Type system ensures data..."
       },
       {
         "directive_type": "knowledge",
         "description": "Integrated: Works seamlessly across the Power Platform",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Integrated: Works seamlessly across the Power..."
       }
     ]
   }

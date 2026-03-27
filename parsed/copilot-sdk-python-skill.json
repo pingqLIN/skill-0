@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__copilot-sdk-python",
+    "skill_id": "claude__skill__copilot_sdk_python",
     "name": "copilot-sdk-python",
     "skill_layer": "claude_skill",
     "title": "Copilot Sdk Python Skill",
@@ -142,33 +142,43 @@
     "rules": [
       {
         "description": "Use attribute access for event type checking:",
-        "condition": "event types",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Use attribute access for event type...",
+        "condition_expression": "event types",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Note: Final events (`assistant.message`, `assistant.reasoning`) are ALWAYS sent regardless of streaming setting.",
-        "condition": "handling streaming events",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Note: Final events (`assistant.message`, `assistant.reasoning`) are...",
+        "condition_expression": "handling streaming events",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always check for security vulnerabilities",
-        "condition": "append mode (default - preserves guardrails)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Always check for security vulnerabilities",
+        "condition_expression": "append mode (default - preserves guardrails)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use ping to verify server connectivity:",
-        "condition": "connectivity testing",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Use ping to verify server connectivity",
+        "condition_expression": "connectivity testing",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "response = await client.ping(\"health check\")",
-        "condition": "connectivity testing",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "response = await client.ping(\"health check\")",
+        "condition_expression": "connectivity testing",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -176,61 +186,71 @@
         "directive_type": "knowledge",
         "description": "The SDK is in technical preview and may have breaking changes",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "The SDK is in technical preview..."
       },
       {
         "directive_type": "knowledge",
         "description": "Requires Python 3.9 or later",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Requires Python 3.9 or later"
       },
       {
         "directive_type": "knowledge",
         "description": "Requires GitHub Copilot CLI installed and in PATH",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Requires GitHub Copilot CLI installed and..."
       },
       {
         "directive_type": "strategy",
         "description": "Uses async/await patterns throughout (asyncio)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Uses async/await patterns throughout (asyncio)"
       },
       {
         "directive_type": "knowledge",
         "description": "Supports both async context managers and manual lifecycle management",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Supports both async context managers and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Type hints provided for better IDE support",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Type hints provided for better IDE..."
       },
       {
         "directive_type": "knowledge",
         "description": "When creating a CopilotClient, use a dict with these keys:",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "When creating a CopilotClient, use a..."
       },
       {
         "directive_type": "preference",
         "description": "`cli_path` - Path to CLI executable (default: \"copilot\" from PATH or COPILOT_CLI_PATH env var)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "`cli_path` - Path to CLI executable..."
       },
       {
         "directive_type": "preference",
         "description": "`use_stdio` - Use stdio transport instead of TCP (default: True)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "`use_stdio` - Use stdio transport instead..."
       },
       {
         "directive_type": "knowledge",
         "description": "`model` - Model name (\"gpt-5\", \"claude-sonnet-4.5\", etc.)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "`model` - Model name (\"gpt-5\", \"claude-sonnet-4.5\",..."
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-file-operations",
+    "skill_id": "claude__skill__dataverse_python_file_operations",
     "name": "dataverse-python-file-operations",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python File Operations Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "def validate_file_for_upload(file_path, max_size_mb=500):",
-        "condition": "file size validation",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "def validate_file_for_upload(file_path, max_size_mb=500)",
+        "condition_expression": "file size validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "\"\"\"Validate file before upload.\"\"\"",
-        "condition": "file size validation",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "\"\"\"Validate file before upload.\"\"\"",
+        "condition_expression": "file size validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "size = validate_file_for_upload(\"document.pdf\", max_size_mb=128)",
-        "condition": "usage",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "size = validate_file_for_upload(\"document.pdf\", max_size_mb=128)",
+        "condition_expression": "usage",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "def validate_file_type(file_path):",
-        "condition": "supported file types validation",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "def validate_file_type(file_path)",
+        "condition_expression": "supported file types validation",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "validate_file_type(\"document.pdf\")",
-        "condition": "usage",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "validate_file_type(\"document.pdf\")",
+        "condition_expression": "usage",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "def check_upload_space(file_path):",
-        "condition": "issue: insufficient disk space",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "def check_upload_space(file_path)",
+        "condition_expression": "issue: insufficient disk space",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "\"\"\"Check if system has space for file + temp buffer.\"\"\"",
-        "condition": "issue: insufficient disk space",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "\"\"\"Check if system has space for...",
+        "condition_expression": "issue: insufficient disk space",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "required_space = file_size * 1.1",
-        "condition": "issue: insufficient disk space",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "required_space = file_size * 1.1",
+        "condition_expression": "issue: insufficient disk space",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "raise OSError(f\"Insufficient disk space: {free / 1024 / 1024:.0f} MB free, {required_space / 1024 / 1024:.0f} MB needed\")",
-        "condition": "issue: insufficient disk space",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "raise OSError(f\"Insufficient disk space: {free /...",
+        "condition_expression": "issue: insufficient disk space",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "def verify_uploaded_file(local_path, remote_data):",
-        "condition": "issue: file corruption during upload",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "def verify_uploaded_file(local_path, remote_data)",
+        "condition_expression": "issue: file corruption during upload",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "completion",
         "description": "Complete guide to file upload operations, chunking strategies, and practical real-world examples using the PowerPlatform-DataverseClient-Python SDK.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Complete guide to file upload operations,..."
       },
       {
         "directive_type": "knowledge",
         "description": "When to use: Large videos, databases, archives > 128 MB",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "When to use: Large videos, databases,..."
       },
       {
         "directive_type": "completion",
         "description": "print(f\"Success: {len(results['success'])}, Failed: {len(results['failed'])}\")",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "print(f\"Success: {len(results['success'])}, Failed: {len(results['failed'])}\")"
       },
       {
         "directive_type": "knowledge",
         "description": "client = DataverseClient(\"https://yourorg.crm.dynamics.com\", credential)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "client = DataverseClient(\"https://yourorg.crm.dynamics.com\", credential)"
       },
       {
         "directive_type": "knowledge",
         "description": "media_files: [{\"file\": path, \"type\": MediaType, \"description\": text}, ...]",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "media_files: [{\"file\": path, \"type\": MediaType, \"description\":..."
       },
       {
         "directive_type": "knowledge",
         "description": "\"new_description\": media_info.get(\"description\", \"\"),",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "\"new_description\": media_info.get(\"description\", \"\"),"
       },
       {
         "directive_type": "knowledge",
         "description": "{\"file\": \"photo1.jpg\", \"type\": MediaType.PHOTO, \"description\": \"Product shot 1\"},",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "{\"file\": \"photo1.jpg\", \"type\": MediaType.PHOTO, \"description\": \"Product..."
       },
       {
         "directive_type": "knowledge",
         "description": "{\"file\": \"photo2.jpg\", \"type\": MediaType.PHOTO, \"description\": \"Product shot 2\"},",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "{\"file\": \"photo2.jpg\", \"type\": MediaType.PHOTO, \"description\": \"Product..."
       },
       {
         "directive_type": "knowledge",
         "description": "{\"file\": \"demo.mp4\", \"type\": MediaType.VIDEO, \"description\": \"Product demo video\"},",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "{\"file\": \"demo.mp4\", \"type\": MediaType.VIDEO, \"description\": \"Product..."
       },
       {
         "directive_type": "knowledge",
         "description": "{\"file\": \"manual.pdf\", \"type\": MediaType.DOCUMENT, \"description\": \"User manual\"}",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "{\"file\": \"manual.pdf\", \"type\": MediaType.DOCUMENT, \"description\": \"User..."
       }
     ]
   }

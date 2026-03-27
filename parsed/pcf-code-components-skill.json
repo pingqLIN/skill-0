@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-code-components",
+    "skill_id": "claude__skill__pcf_code_components",
     "name": "pcf-code-components",
     "skill_layer": "claude_skill",
     "title": "Pcf Code Components Skill",
@@ -142,45 +142,59 @@
     "rules": [
       {
         "description": "Code components are implemented using TypeScript. Each code component must include an object that implements the methods described in the code compone",
-        "condition": "component implementation",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Code components are implemented using TypeScript....",
+        "condition_expression": "component implementation",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "init (Required) - Called when the page loads",
-        "condition": "required methods",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "init (Required) - Called when the...",
+        "condition_expression": "required methods",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "updateView (Required) - Called when app data changes",
-        "condition": "required methods",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "updateView (Required) - Called when app...",
+        "condition_expression": "required methods",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "destroy (Required) - Called when the page closes",
-        "condition": "required methods",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "destroy (Required) - Called when the...",
+        "condition_expression": "required methods",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| `notifyOutputChanged` | Alerts the framework whenever the component has new outputs ready to be retrieved asynchronously. |",
-        "condition": "page load",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "| `notifyOutputChanged` | Alerts the framework...",
+        "condition_expression": "page load",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "If the platform changes the data, it calls the `updateView` method of the component and passes the new context object as a parameter. This method shou",
-        "condition": "app changes data",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "If the platform changes the data,...",
+        "condition_expression": "app changes data",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The resource node in the manifest file refers to the resources that the component requires to implement its visualization. Each code component must ha",
-        "condition": "resources",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "The resource node in the manifest...",
+        "condition_expression": "resources",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -188,37 +202,43 @@
         "directive_type": "completion",
         "description": "getOutputs (Optional) - Returns values when user changes data",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "getOutputs (Optional) - Returns values when..."
       },
       {
         "directive_type": "knowledge",
         "description": "var obj = new <\"namespace on manifest\">.<\"constructor on manifest\">();",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "var obj = new <\"namespace on..."
       },
       {
         "directive_type": "knowledge",
         "description": "var controlObj = new SampleNameSpace.LinearInputComponent();",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "var controlObj = new SampleNameSpace.LinearInputComponent();"
       },
       {
         "directive_type": "completion",
         "description": "controlObj.init(context, notifyOutputChanged, state, container);",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "controlObj.init(context, notifyOutputChanged, state, container);"
       },
       {
         "directive_type": "knowledge",
         "description": "| `container` | An HTML div element to which developers can append HTML elements for the UI. |",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "| `container` | An HTML div..."
       },
       {
         "directive_type": "completion",
         "description": "When a user interacts with your component to change data, call the `notifyOutputChanged` method passed in the `init` method. The platform responds by ",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "When a user interacts with your..."
       }
     ]
   }
