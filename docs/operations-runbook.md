@@ -86,7 +86,7 @@ grep "a1b2c3d4e5f6" /var/log/skill0/*.log
 Switch to human-readable console output for development:
 
 ```bash
-SKILL0_LOG_FORMAT=console python -m api.main
+SKILL0_LOG_FORMAT=console .venv/bin/python -m api.main
 ```
 
 ## Database Maintenance
@@ -190,7 +190,7 @@ When parsed skill JSONs are updated, re-index the vector database:
 
 ```bash
 # CLI
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+.venv/bin/python -m vector_db.search --db skills.db --parsed-dir parsed index
 
 # Via API (requires JWT token)
 API_USERNAME="${API_USERNAME:-admin}"
@@ -209,7 +209,7 @@ curl -X POST http://localhost:8000/api/index \
 Verify after indexing:
 
 ```bash
-python -m vector_db.search --db skills.db stats
+.venv/bin/python -m vector_db.search --db skills.db stats
 ```
 
 ## Security Scanning
@@ -217,7 +217,7 @@ python -m vector_db.search --db skills.db stats
 Run the batch security scanner:
 
 ```bash
-python tools/batch_security_scan.py
+.venv/bin/python tools/batch_security_scan.py
 ```
 
 Output is written to `SECURITY_SCAN_REPORT_*.md` in the project root.
@@ -231,7 +231,7 @@ Output is written to `SECURITY_SCAN_REPORT_*.md` in the project root.
 curl -s http://localhost:8000/health | python -m json.tool
 
 # Database statistics
-python -m vector_db.search --db skills.db stats
+.venv/bin/python -m vector_db.search --db skills.db stats
 
 # Check total skills indexed
 curl -s http://localhost:8000/api/stats | python -m json.tool
@@ -242,10 +242,10 @@ curl -s http://localhost:8000/api/stats | python -m json.tool
 ```bash
 # Add skill markdown files to converted-skills/ or the appropriate directory
 # Then run the batch parser
-python tools/batch_parse.py
+.venv/bin/python tools/batch_parse.py
 
 # Re-index after parsing
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+.venv/bin/python -m vector_db.search --db skills.db --parsed-dir parsed index
 ```
 
 ### View API Documentation
@@ -274,14 +274,14 @@ python -m vector_db.search --db skills.db --parsed-dir parsed index
 
 1. Stop the application
 2. Restore from the latest backup in `backups/`
-3. Re-index if restoring `skills.db`: `python -m vector_db.search index`
+3. Re-index if restoring `skills.db`: `.venv/bin/python -m vector_db.search index`
 4. Restart the application
 5. Verify with health check
 
 ### Service Won't Start
 
 1. Check Python version: `python3 --version` (requires 3.12+)
-2. Verify dependencies: `pip install -r requirements.txt`
+2. Verify dependencies: `.venv/bin/python -m pip install -r requirements-dev.txt`
 3. Check if port is in use: `lsof -i :8000` or `lsof -i :8001`
 4. Check database file permissions
 5. Review startup logs for import errors
