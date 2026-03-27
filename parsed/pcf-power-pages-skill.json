@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-power-pages",
+    "skill_id": "claude__skill__pcf_power_pages",
     "name": "pcf-power-pages",
     "skill_layer": "claude_skill",
     "title": "Pcf Power Pages Skill",
@@ -142,15 +142,19 @@
     "rules": [
       {
         "description": "Power Pages supports restricted field types and formats for using code components. The following table lists all supported field data types and format",
-        "condition": "supported field types and formats",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Power Pages supports restricted field types...",
+        "condition_expression": "supported field types and formats",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "The [uses-feature](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/manifest-schema-reference/uses-feature) element must not",
-        "condition": "unsupported code components in power pages",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "The [uses-feature](https://learn.microsoft.com/en-us/power-apps/developer/compon",
+        "condition_expression": "unsupported code components in power pages",
+        "condition_type": "type_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -158,61 +162,71 @@
         "directive_type": "knowledge",
         "description": "You need system administrator privileges to enable the code component feature in the environment",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "You need system administrator privileges to..."
       },
       {
         "directive_type": "knowledge",
         "description": "Your Power Pages site version needs to be [9.3.3.x](https://learn.microsoft.com/en-us/power-apps/maker/portals/versions/version-9.3.3.x) or higher",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Your Power Pages site version needs..."
       },
       {
         "directive_type": "knowledge",
         "description": "The following code component APIs aren't supported:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "The following code component APIs aren't..."
       },
       {
         "directive_type": "knowledge",
         "description": "[Device.captureAudio](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/captureaudio)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "[Device.captureAudio](https://learn.microsoft.com/en-us/power-apps/developer/com"
       },
       {
         "directive_type": "knowledge",
         "description": "[Device.captureImage](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/captureimage)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "[Device.captureImage](https://learn.microsoft.com/en-us/power-apps/developer/com"
       },
       {
         "directive_type": "knowledge",
         "description": "[Device.captureVideo](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/capturevideo)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "[Device.captureVideo](https://learn.microsoft.com/en-us/power-apps/developer/com"
       },
       {
         "directive_type": "knowledge",
         "description": "[Device.getBarcodeValue](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/getbarcodevalue)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "[Device.getBarcodeValue](https://learn.microsoft.com/en-us/power-apps/developer/"
       },
       {
         "directive_type": "knowledge",
         "description": "[Device.getCurrentPosition](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/getcurrentposition)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "[Device.getCurrentPosition](https://learn.microsoft.com/en-us/power-apps/develop"
       },
       {
         "directive_type": "knowledge",
         "description": "[Device.pickFile](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/device/pickfile)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "[Device.pickFile](https://learn.microsoft.com/en-us/power-apps/developer/compone"
       },
       {
         "directive_type": "knowledge",
         "description": "[Utility](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/reference/utility)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "[Utility](https://learn.microsoft.com/en-us/power-apps/developer/component-frame"
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__copilot-sdk-nodejs",
+    "skill_id": "claude__skill__copilot_sdk_nodejs",
     "name": "copilot-sdk-nodejs",
     "skill_layer": "claude_skill",
     "title": "Copilot Sdk Nodejs Skill",
@@ -142,39 +142,51 @@
     "rules": [
       {
         "description": "Always install via npm/pnpm/yarn:",
-        "condition": "installation",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always install via npm/pnpm/yarn",
+        "condition_expression": "installation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Note: Final events (`assistant.message`, `assistant.reasoning`) are ALWAYS sent regardless of streaming setting.",
-        "condition": "handling streaming events",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Note: Final events (`assistant.message`, `assistant.reasoning`) are...",
+        "condition_expression": "handling streaming events",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always check for security vulnerabilities",
-        "condition": "append mode (default - preserves guardrails)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Always check for security vulnerabilities",
+        "condition_expression": "append mode (default - preserves guardrails)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use ping to verify server connectivity:",
-        "condition": "connectivity testing",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Use ping to verify server connectivity",
+        "condition_expression": "connectivity testing",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "const response = await client.ping(\"health check\");",
-        "condition": "connectivity testing",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "const response = await client.ping(\"health check\");",
+        "condition_expression": "connectivity testing",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "ALWAYS use try-finally or cleanup in a finally block:",
-        "condition": "automatic cleanup with try-finally",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "ALWAYS use try-finally or cleanup in...",
+        "condition_expression": "automatic cleanup with try-finally",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -182,61 +194,71 @@
         "directive_type": "knowledge",
         "description": "The SDK is in technical preview and may have breaking changes",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "The SDK is in technical preview..."
       },
       {
         "directive_type": "knowledge",
         "description": "Requires Node.js 18.0 or later",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Requires Node.js 18.0 or later"
       },
       {
         "directive_type": "knowledge",
         "description": "Requires GitHub Copilot CLI installed and in PATH",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Requires GitHub Copilot CLI installed and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Built with TypeScript for type safety",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Built with TypeScript for type safety"
       },
       {
         "directive_type": "strategy",
         "description": "Uses async/await patterns throughout",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Uses async/await patterns throughout"
       },
       {
         "directive_type": "knowledge",
         "description": "Provides full TypeScript type definitions",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Provides full TypeScript type definitions"
       },
       {
         "directive_type": "knowledge",
         "description": "When creating a CopilotClient, use `CopilotClientOptions`:",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "When creating a CopilotClient, use `CopilotClientOptions`"
       },
       {
         "directive_type": "preference",
         "description": "`cliPath` - Path to CLI executable (default: \"copilot\" from PATH)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "`cliPath` - Path to CLI executable..."
       },
       {
         "directive_type": "knowledge",
         "description": "`cliArgs` - Extra arguments prepended before SDK-managed flags (string[])",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "`cliArgs` - Extra arguments prepended before..."
       },
       {
         "directive_type": "preference",
         "description": "`useStdio` - Use stdio transport instead of TCP (default: true)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "`useStdio` - Use stdio transport instead..."
       }
     ]
   }

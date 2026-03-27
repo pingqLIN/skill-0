@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__azure-logic-apps-power-automate",
+    "skill_id": "claude__skill__azure_logic_apps_power_automate",
     "name": "azure-logic-apps-power-automate",
     "skill_layer": "claude_skill",
     "title": "Azure Logic Apps Power Automate Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "When working with Logic Apps or Power Automate flow JSON files, ensure your workflow follows this standard structure:",
-        "condition": "workflow definition language structure",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "When working with Logic Apps or...",
+        "condition_expression": "workflow definition language structure",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Power Automate supports advanced expressions in conditions to check multiple values. When working with complex logical conditions, use the following p",
-        "condition": "using expressions in power automate conditions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Power Automate supports advanced expressions in...",
+        "condition_expression": "using expressions in power automate conditions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| `equals` | Checks if values are equal | `@equals(item()?['Status'], 'blocked')` |",
-        "condition": "using expressions in power automate conditions",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "| `equals` | Checks if values...",
+        "condition_expression": "using expressions in power automate conditions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| `greater` | Checks if first value is greater than second | `@greater(item()?['Due'], item()?['Paid'])` |",
-        "condition": "using expressions in power automate conditions",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "| `greater` | Checks if first...",
+        "condition_expression": "using expressions in power automate conditions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| `less` | Checks if first value is less than second | `@less(item()?['dueDate'], addDays(utcNow(),1))` |",
-        "condition": "using expressions in power automate conditions",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "| `less` | Checks if first...",
+        "condition_expression": "using expressions in power automate conditions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| `empty` | Checks if object, array or string is empty | `@empty(item()?['Status'])` |",
-        "condition": "using expressions in power automate conditions",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "| `empty` | Checks if object,...",
+        "condition_expression": "using expressions in power automate conditions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Example: Check if a status is \"completed\" OR \"unnecessary\":",
-        "condition": "using expressions in power automate conditions",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Example: Check if a status is...",
+        "condition_expression": "using expressions in power automate conditions",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Example: Check if status is \"blocked\" AND assigned to specific person:",
-        "condition": "using expressions in power automate conditions",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Example: Check if status is \"blocked\"...",
+        "condition_expression": "using expressions in power automate conditions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Example: Check if a payment is overdue AND incomplete:",
-        "condition": "using expressions in power automate conditions",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Example: Check if a payment is...",
+        "condition_expression": "using expressions in power automate conditions",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate message schemas to ensure data integrity",
-        "condition": "7. content and message handling",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Validate message schemas to ensure data...",
+        "condition_expression": "7. content and message handling",
+        "condition_type": "type_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "strategy",
         "description": "These instructions will guide you in writing high-quality Azure Logic Apps and Microsoft Power Automate workflow definitions using the JSON-based Work",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "These instructions will guide you in..."
       },
       {
         "directive_type": "strategy",
         "description": "\"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#\",",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "\"$schema\": \"https://schema.management.azure.com/providers/Microsoft.Logic/schema"
       },
       {
         "directive_type": "knowledge",
         "description": "Use appropriate trigger types based on your scenario:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use appropriate trigger types based on..."
       },
       {
         "directive_type": "strategy",
         "description": "Request trigger: For synchronous API-like workflows",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Request trigger: For synchronous API-like workflows"
       },
       {
         "directive_type": "strategy",
         "description": "Event-based triggers: For reactive patterns (Service Bus, Event Grid, etc.)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Event-based triggers: For reactive patterns (Service..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use pagination settings for high-volume data sources",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use pagination settings for high-volume data..."
       },
       {
         "directive_type": "knowledge",
         "description": "Name actions descriptively to indicate their purpose",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Name actions descriptively to indicate their..."
       },
       {
         "directive_type": "strategy",
         "description": "Organize complex workflows using scopes for logical grouping",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Organize complex workflows using scopes for..."
       },
       {
         "directive_type": "knowledge",
         "description": "\"uri\": \"https://api.example.com/customers/@{triggerBody()?['customerId']}\",",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "\"uri\": \"https://api.example.com/customers/@{triggerBody()?['customerId']}\","
       },
       {
         "directive_type": "completion",
         "description": "\"ErrorDetails\": \"@{actions('HTTP_Action').outputs.body}\",",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "\"ErrorDetails\": \"@{actions('HTTP_Action').outputs.body}\","
       }
     ]
   }

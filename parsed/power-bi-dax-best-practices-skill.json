@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-bi-dax-best-practices",
+    "skill_id": "claude__skill__power_bi_dax_best_practices",
     "name": "power-bi-dax-best-practices",
     "skill_layer": "claude_skill",
     "title": "Power Bi Dax Best Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Always use variables to improve performance, readability, and debugging:",
-        "condition": "1. formula structure and variables",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always use variables to improve performance,...",
+        "condition_expression": "1. formula structure and variables",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "//  AVOID: Repeated calculations without variables",
-        "condition": "1. formula structure and variables",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "// AVOID: Repeated calculations without variables",
+        "condition_expression": "1. formula structure and variables",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "//  ALWAYS fully qualify column references",
-        "condition": "2. proper reference syntax",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "// ALWAYS fully qualify column references",
+        "condition_expression": "2. proper reference syntax",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "//  NEVER fully qualify measure references",
-        "condition": "2. proper reference syntax",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "// NEVER fully qualify measure references",
+        "condition_expression": "2. proper reference syntax",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "//  AVOID: Unqualified column references",
-        "condition": "2. proper reference syntax",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "// AVOID: Unqualified column references",
+        "condition_expression": "2. proper reference syntax",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "//  AVOID: Fully qualified measure references",
-        "condition": "2. proper reference syntax",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "// AVOID: Fully qualified measure references",
+        "condition_expression": "2. proper reference syntax",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "//  AVOID: ISERROR and IFERROR functions (performance impact)",
-        "condition": "3. error handling strategies",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "// AVOID: ISERROR and IFERROR functions...",
+        "condition_expression": "3. error handling strategies",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "//  AVOID: Complex error handling that could be prevented",
-        "condition": "3. error handling strategies",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "// AVOID: Complex error handling that...",
+        "condition_expression": "3. error handling strategies",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "// Avoid COUNT when COUNTROWS is more appropriate",
-        "condition": "aggregation functions",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "// Avoid COUNT when COUNTROWS is...",
+        "condition_expression": "aggregation functions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "// When direct relationships don't exist",
-        "condition": "2. handle missing relationships",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "// When direct relationships don't exist",
+        "condition_expression": "2. handle missing relationships",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "This document provides comprehensive instructions for writing efficient, maintainable, and performant DAX (Data Analysis Expressions) formulas in Powe",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This document provides comprehensive instructions for..."
       },
       {
         "directive_type": "preference",
         "description": "//  PREFERRED: Using variables for clarity and performance",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "// PREFERRED: Using variables for clarity..."
       },
       {
         "directive_type": "knowledge",
         "description": "DIVIDE(CurrentSales - PreviousYearSales, PreviousYearSales)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "DIVIDE(CurrentSales - PreviousYearSales, PreviousYearSales)"
       },
       {
         "directive_type": "knowledge",
         "description": "[Total Sales] - CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date])),",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "[Total Sales] - CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date])),"
       },
       {
         "directive_type": "knowledge",
         "description": "CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "CALCULATE([Total Sales], SAMEPERIODLASTYEAR('Date'[Date]))"
       },
       {
         "directive_type": "knowledge",
         "description": "Performance: Calculations are evaluated once and cached",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Performance: Calculations are evaluated once and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Maintainability: Changes need to be made in only one place",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Maintainability: Changes need to be made..."
       },
       {
         "directive_type": "knowledge",
         "description": "Follow Microsoft's recommended patterns for column and measure references:",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Follow Microsoft's recommended patterns for column..."
       },
       {
         "directive_type": "knowledge",
         "description": "DIVIDE([YTD Sales] - [YTD Sales PY], [YTD Sales PY])",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "DIVIDE([YTD Sales] - [YTD Sales PY],..."
       },
       {
         "directive_type": "knowledge",
         "description": "Customer Count = DISTINCTCOUNT([CustomerID])  // Ambiguous",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Customer Count = DISTINCTCOUNT([CustomerID]) // Ambiguous"
       }
     ]
   }

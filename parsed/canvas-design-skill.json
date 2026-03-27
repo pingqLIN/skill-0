@@ -1,14 +1,14 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__canvas_design",
+    "skill_id": "claude__skill__canvas_design",
     "name": "canvas-design",
     "skill_layer": "claude_skill",
     "title": "Canvas-Design Skill",
     "description": "Create beautiful visual art in PNG and PDF documents using design philosophy.",
-    "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-26T13:25:10.981650Z",
-    "parser_version": "skill-0 v2.1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-03-27T11:53:43.763742Z",
+    "parser_version": "skill-0 v2.4",
     "parsed_by": "skill-0-batch"
   },
   "original_definition": {
@@ -62,38 +62,47 @@
     "rules": [
       {
         "id": "r_001",
+        "name": "Text as visual accent only (10%...",
         "description": "Text as visual accent only (10% text, 90% visual)",
-        "condition": "always",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "always",
+        "returns": "boolean"
       },
       {
         "id": "r_002",
+        "name": "Nothing overlaps, nothing falls off page",
         "description": "Nothing overlaps, nothing falls off page",
-        "condition": "always",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "always",
+        "returns": "boolean"
       },
       {
         "id": "r_003",
+        "name": "Work must appear meticulously crafted",
         "description": "Work must appear meticulously crafted",
-        "condition": "always",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "always",
+        "returns": "boolean"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Create art movements, not layouts -...",
         "directive_type": "principle",
         "description": "Create art movements, not layouts - emphasize craftsmanship repeatedly",
         "decomposable": true
       },
       {
         "id": "d_002",
+        "name": "Subtle reference embedded within art, not...",
         "directive_type": "principle",
         "description": "Subtle reference embedded within art, not literal",
         "decomposable": true
       },
       {
         "id": "d_003",
+        "name": "Output as single PDF or PNG...",
         "directive_type": "completion",
         "description": "Output as single PDF or PNG alongside philosophy .md file",
         "decomposable": true

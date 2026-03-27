@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-error-handling",
+    "skill_id": "claude__skill__dataverse_python_error_handling",
     "name": "dataverse-python-error-handling",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Error Handling Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "print(\"Authentication failed. Check credentials and token expiration.\")",
-        "condition": "authentication errors (401)",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "print(\"Authentication failed. Check credentials and token...",
+        "condition_expression": "authentication errors (401)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "# Don't retry - fix credentials first",
-        "condition": "authentication errors (401)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "# Don't retry - fix credentials...",
+        "condition_expression": "authentication errors (401)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "print(\"Access denied. User lacks required permissions.\")",
-        "condition": "authorization errors (403)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "print(\"Access denied. User lacks required permissions.\")",
+        "condition_expression": "authorization errors (403)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Cause: Too many requests exceeding service protection limits.",
-        "condition": "rate limiting (429)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Cause: Too many requests exceeding service...",
+        "condition_expression": "rate limiting (429)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "\"\"\"Create record with retry logic for rate limiting.\"\"\"",
-        "condition": "rate limiting (429)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "\"\"\"Create record with retry logic for...",
+        "condition_expression": "rate limiting (429)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "print(f\"Rate limited. Retrying in {wait_time}s...\")",
-        "condition": "rate limiting (429)",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "print(f\"Rate limited. Retrying in {wait_time}s...\")",
+        "condition_expression": "rate limiting (429)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Cause: Invalid request format, missing required fields, or business rule violations.",
-        "condition": "validation errors (400)",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Cause: Invalid request format, missing required...",
+        "condition_expression": "validation errors (400)",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "# Missing required field or invalid data",
-        "condition": "validation errors (400)",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "# Missing required field or invalid...",
+        "condition_expression": "validation errors (400)",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Always catch specific exceptions before general ones:",
-        "condition": "use specific exception handling",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Always catch specific exceptions before general...",
+        "condition_expression": "use specific exception handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "print(\"Re-authenticate required\")",
-        "condition": "use specific exception handling",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "print(\"Re-authenticate required\")",
+        "condition_expression": "use specific exception handling",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Based on official Microsoft documentation for Azure SDK error handling patterns and Dataverse SDK specifics.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Based on official Microsoft documentation for..."
       },
       {
         "directive_type": "knowledge",
         "description": "The Dataverse SDK for Python provides a structured exception hierarchy for robust error handling.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "The Dataverse SDK for Python provides..."
       },
       {
         "directive_type": "knowledge",
         "description": "code: str,                             # Error category (e.g., \"validation_error\", \"http_error\")",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "code: str, # Error category (e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "subcode: str | None = None,            # Optional specific error identifier",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "subcode: str | None = None,..."
       },
       {
         "directive_type": "knowledge",
         "description": "status_code: int | None = None,        # HTTP status code (if applicable)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "status_code: int | None = None,..."
       },
       {
         "directive_type": "knowledge",
         "description": "source: str | None = None,             # Error source: \"client\" or \"server\"",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "source: str | None = None,..."
       },
       {
         "directive_type": "knowledge",
         "description": "is_transient: bool = False             # Whether error may succeed on retry",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "is_transient: bool = False # Whether..."
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Code: {e.code}\")                 # Error category",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "print(f\"Code: {e.code}\") # Error category"
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Subcode: {e.subcode}\")           # Specific error type",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "print(f\"Subcode: {e.subcode}\") # Specific error type"
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Status Code: {e.status_code}\")   # HTTP status (401, 403, 429, etc.)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "print(f\"Status Code: {e.status_code}\") # HTTP status..."
       }
     ]
   }

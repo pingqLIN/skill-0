@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__object-calisthenics",
+    "skill_id": "claude__skill__object_calisthenics",
     "name": "object-calisthenics",
     "skill_layer": "claude_skill",
     "title": "Object Calisthenics Skill",
@@ -21,15 +21,19 @@
     "rules": [
       {
         "description": ">  Warning: This file contains the 9 original Object Calisthenics rules. No additional rules must be added, and none of these rules should be replaced",
-        "condition": "object calisthenics rules",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "> Warning: This file contains the...",
+        "condition_expression": "object calisthenics rules",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "This rule enforces the principles of Object Calisthenics to ensure clean, maintainable, and robust code in the backend, primarily for business domain ",
-        "condition": "objective",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "This rule enforces the principles of...",
+        "condition_expression": "objective",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -37,61 +41,71 @@
         "directive_type": "knowledge",
         "description": "Primary focus: Business domain classes (aggregates, entities, value objects, domain services)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Primary focus: Business domain classes (aggregates,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Secondary focus: Application layer services and use case handlers",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Secondary focus: Application layer services and..."
       },
       {
         "directive_type": "strategy",
         "description": "1. One Level of Indentation per Method:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "1. One Level of Indentation per..."
       },
       {
         "directive_type": "strategy",
         "description": "Ensure methods are simple and do not exceed one level of indentation.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Ensure methods are simple and do..."
       },
       {
         "directive_type": "strategy",
         "description": "// Bad Example - this method has multiple levels of indentation",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "// Bad Example - this method..."
       },
       {
         "directive_type": "strategy",
         "description": "// Good Example - Extracted method to reduce indentation",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "// Good Example - Extracted method..."
       },
       {
         "directive_type": "knowledge",
         "description": "private void SendEmail(User user) {",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "private void SendEmail(User user) {"
       },
       {
         "directive_type": "knowledge",
         "description": "// Good Example - Filtering users before sending emails",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "// Good Example - Filtering users..."
       },
       {
         "directive_type": "knowledge",
         "description": "var activeUsers = users.Where(user => user.IsActive);",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "var activeUsers = users.Where(user => user.IsActive);"
       },
       {
         "directive_type": "knowledge",
         "description": "foreach (var user in activeUsers) {",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "foreach (var user in activeUsers) {"
       }
     ]
   }

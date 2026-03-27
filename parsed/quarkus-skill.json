@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__quarkus",
+    "skill_id": "claude__skill__quarkus",
     "name": "quarkus",
     "skill_layer": "claude_skill",
     "title": "Quarkus Skill",
@@ -142,33 +142,43 @@
     "rules": [
       {
         "description": "Always use JAX-RS annotations (`@Path`, `@GET`, `@POST`, etc.)",
-        "condition": "rest resources",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always use JAX-RS annotations (`@Path`, `@GET`,...",
+        "condition_expression": "rest resources",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Validate input parameters using Bean Validation annotations",
-        "condition": "rest resources",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Validate input parameters using Bean Validation...",
+        "condition_expression": "rest resources",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Implement rate limiting for public endpoints",
-        "condition": "rest resources",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Implement rate limiting for public endpoints",
+        "condition_expression": "rest resources",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Always use `@Transactional` for data modifications",
-        "condition": "data access",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Always use `@Transactional` for data modifications",
+        "condition_expression": "data access",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate all input parameters",
-        "condition": "when implementing security:",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Validate all input parameters",
+        "condition_expression": "when implementing security:",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -176,61 +186,71 @@
         "directive_type": "knowledge",
         "description": "Instructions for high-quality Quarkus applications with Java 17 or later.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Instructions for high-quality Quarkus applications with..."
       },
       {
         "directive_type": "knowledge",
         "description": "Latest Quarkus version: 3.x",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Latest Quarkus version: 3.x"
       },
       {
         "directive_type": "knowledge",
         "description": "Java version: 17 or later",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Java version: 17 or later"
       },
       {
         "directive_type": "knowledge",
         "description": "Use Maven or Gradle for build management.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use Maven or Gradle for build..."
       },
       {
         "directive_type": "principle",
         "description": "Focus on clean architecture, maintainability, and performance.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Focus on clean architecture, maintainability, and..."
       },
       {
         "directive_type": "strategy",
         "description": "Write clear and concise comments for each class, method, and complex logic.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Write clear and concise comments for..."
       },
       {
         "directive_type": "strategy",
         "description": "Use Javadoc for public APIs and methods to ensure clarity for consumers.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use Javadoc for public APIs and..."
       },
       {
         "directive_type": "preference",
         "description": "Maintain a consistent coding style across the project, adhering to Java conventions.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Maintain a consistent coding style across..."
       },
       {
         "directive_type": "knowledge",
         "description": "Adhere to the Quarkus coding standards and best practices for optimal performance and maintainability.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Adhere to the Quarkus coding standards..."
       },
       {
         "directive_type": "preference",
         "description": "Follow Jarkarta EE and MicroProfile conventions, ensuring clarity in package organization.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Follow Jarkarta EE and MicroProfile conventions,..."
       }
     ]
   }

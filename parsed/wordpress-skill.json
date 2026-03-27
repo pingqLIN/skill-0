@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__wordpress",
+    "skill_id": "claude__skill__wordpress",
     "name": "wordpress",
     "skill_layer": "claude_skill",
     "title": "Wordpress Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Add nonces with `wp_nonce_field()` and verify via `check_admin_referer()` / `wp_verify_nonce()`.",
-        "condition": "3) security & data handling",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Add nonces with `wp_nonce_field()` and verify...",
+        "condition_expression": "3) security & data handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Restrict mutations with `current_user_can( 'manage_options' /* or specific cap */ )`.",
-        "condition": "3) security & data handling",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Restrict mutations with `current_user_can( 'manage_options' /*...",
+        "condition_expression": "3) security & data handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Database: always use `$wpdb->prepare()` with placeholders; never concatenate untrusted input.",
-        "condition": "3) security & data handling",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Database: always use `$wpdb->prepare()` with placeholders;...",
+        "condition_expression": "3) security & data handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Uploads: validate MIME/type and use `wp_handle_upload()`/`media_handle_upload()`.",
-        "condition": "3) security & data handling",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Uploads: validate MIME/type and use `wp_handle_upload()`/`media_handle_upload()`",
+        "condition_expression": "3) security & data handling",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Keep a `.pot` in `/languages` and ensure consistent domain usage.",
-        "condition": "4) internationalization (i18n)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Keep a `.pot` in `/languages` and...",
+        "condition_expression": "4) internationalization (i18n)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Defer heavy logic to specific hooks; avoid expensive work on `init`/`wp_loaded` unless necessary.",
-        "condition": "5) performance",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Defer heavy logic to specific hooks;...",
+        "condition_expression": "5) performance",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid direct HTML echoing for complex UIs; prefer templates or small view helpers with escaping.",
-        "condition": "6) admin ui & settings",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Avoid direct HTML echoing for complex...",
+        "condition_expression": "6) admin ui & settings",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Register with `register_rest_route()`; always set a `permission_callback`.",
-        "condition": "7) rest api",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Register with `register_rest_route()`; always set a...",
+        "condition_expression": "7) rest api",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate/sanitize request args via the `args` schema.",
-        "condition": "7) rest api",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Validate/sanitize request args via the `args`...",
+        "condition_expression": "7) rest api",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "E2E tests should cover: insert block → edit → save → front‑end render.",
-        "condition": "8) blocks & editor (gutenberg)",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "E2E tests should cover: insert block...",
+        "condition_expression": "8) blocks & editor (gutenberg)",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Never modify WordPress core. Extend via actions and filters.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Never modify WordPress core. Extend via..."
       },
       {
         "directive_type": "knowledge",
         "description": "For plugins, always include a header and guard direct execution in entry PHP files.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "For plugins, always include a header..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use unique prefixes or PHP namespaces to avoid global collisions.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use unique prefixes or PHP namespaces..."
       },
       {
         "directive_type": "preference",
         "description": "Enqueue assets; never inline raw `<script>`/`<style>` in PHP templates.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Enqueue assets; never inline raw `<script>`/`<style>`..."
       },
       {
         "directive_type": "knowledge",
         "description": "Make user‑facing strings translatable and load the correct text domain.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Make user‑facing strings translatable and load..."
       },
       {
         "directive_type": "knowledge",
         "description": "Follow WordPress Coding Standards (WPCS) and write DocBlocks for public APIs.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Follow WordPress Coding Standards (WPCS) and..."
       },
       {
         "directive_type": "preference",
         "description": "PHP: Prefer strict comparisons (`===`, `!==`) where appropriate. Be consistent with array syntax and spacing as per WPCS.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "PHP: Prefer strict comparisons (`===`, `!==`)..."
       },
       {
         "directive_type": "preference",
         "description": "JS: Match WordPress JS style; prefer `@wordpress/*` packages for block/editor code.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "JS: Match WordPress JS style; prefer..."
       },
       {
         "directive_type": "knowledge",
         "description": "CSS: Use BEM‑like class naming when helpful; avoid over‑specific selectors.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "CSS: Use BEM‑like class naming when..."
       },
       {
         "directive_type": "strategy",
         "description": "PHP 7.4+ compatible patterns unless the project specifies higher. Avoid using features not supported by target WP/PHP versions.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "PHP 7.4+ compatible patterns unless the..."
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__typescript-5-es2022",
+    "skill_id": "claude__skill__typescript_es",
     "name": "typescript-5-es2022",
     "skill_layer": "claude_skill",
     "title": "Typescript 5 Es2022 Skill",
@@ -142,57 +142,75 @@
     "rules": [
       {
         "description": "> These instructions assume projects are built with TypeScript 5.x (or newer) compiling to an ES2022 JavaScript baseline. Adjust guidance if your runt",
-        "condition": "typescript development",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "> These instructions assume projects are...",
+        "condition_expression": "typescript development",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Use pure ES modules; never emit `require`, `module.exports`, or CommonJS helpers.",
-        "condition": "general guardrails",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Use pure ES modules; never emit...",
+        "condition_expression": "general guardrails",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid `any` (implicit or explicit); prefer `unknown` plus narrowing.",
-        "condition": "type system expectations",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Avoid `any` (implicit or explicit); prefer...",
+        "condition_expression": "type system expectations",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Guard edge cases early to avoid deep nesting.",
-        "condition": "async, events & error handling",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Guard edge cases early to avoid...",
+        "condition_expression": "async, events & error handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never hardcode secrets; load them from secure sources.",
-        "condition": "external integrations",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Never hardcode secrets; load them from...",
+        "condition_expression": "external integrations",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Validate and sanitize external input with schema validators or type guards.",
-        "condition": "security practices",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Validate and sanitize external input with...",
+        "condition_expression": "security practices",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid dynamic code execution and untrusted template rendering.",
-        "condition": "security practices",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Avoid dynamic code execution and untrusted...",
+        "condition_expression": "security practices",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Reach configuration through shared helpers and validate with schemas or dedicated validators.",
-        "condition": "configuration & secrets",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Reach configuration through shared helpers and...",
+        "condition_expression": "configuration & secrets",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid brittle timing assertions; prefer fake timers or injected clocks.",
-        "condition": "testing expectations",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Avoid brittle timing assertions; prefer fake...",
+        "condition_expression": "testing expectations",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -200,61 +218,71 @@
         "directive_type": "knowledge",
         "description": "Respect the existing architecture and coding standards.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Respect the existing architecture and coding..."
       },
       {
         "directive_type": "knowledge",
         "description": "Extend current abstractions before inventing new ones.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Extend current abstractions before inventing new..."
       },
       {
         "directive_type": "principle",
         "description": "Prioritize maintainability and clarity, short methods and classes, clean code.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Prioritize maintainability and clarity, short methods..."
       },
       {
         "directive_type": "preference",
         "description": "Target TypeScript 5.x / ES2022 and prefer native features over polyfills.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Target TypeScript 5.x / ES2022 and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Follow the repository's folder and responsibility layout for new code.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Follow the repository's folder and responsibility..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use kebab-case filenames (e.g., `user-session.ts`, `data-service.ts`) unless told otherwise.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use kebab-case filenames (e.g., `user-session.ts`, `data-service.ts`)..."
       },
       {
         "directive_type": "knowledge",
         "description": "Reuse or extend shared utilities before adding new ones.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Reuse or extend shared utilities before..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use PascalCase for classes, interfaces, enums, and type aliases; camelCase for everything else.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use PascalCase for classes, interfaces, enums,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Skip interface prefixes like `I`; rely on descriptive names.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Skip interface prefixes like `I`; rely..."
       },
       {
         "directive_type": "preference",
         "description": "Match the project's indentation, quote style, and trailing comma rules.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Match the project's indentation, quote style,..."
       }
     ]
   }

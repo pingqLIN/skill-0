@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-events",
+    "skill_id": "claude__skill__pcf_events",
     "name": "pcf-events",
     "skill_layer": "claude_skill",
     "title": "Pcf Events Skill",
@@ -102,15 +102,19 @@
     "rules": [
       {
         "description": "A common requirement when building custom components with the Power Apps Component Framework is the ability to react to events generated within the co",
-        "condition": "define events (preview)",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "A common requirement when building custom...",
+        "condition_expression": "define events (preview)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "The data update from the code component to the bound field triggers the `OnChange` event. For most component scenarios, this is enough and makers just",
-        "condition": "component data flow",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "The data update from the code...",
+        "condition_expression": "component data flow",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -118,61 +122,71 @@
         "directive_type": "knowledge",
         "description": "[This topic is pre-release documentation and is subject to change.]",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "[This topic is pre-release documentation and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Canvas apps react to the event using Power Fx expressions:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Canvas apps react to the event..."
       },
       {
         "directive_type": "knowledge",
         "description": "Model Driven Apps use the [addEventHandler method](https://learn.microsoft.com/en-us/power-apps/developer/model-driven-apps/clientapi/reference/contro",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Model Driven Apps use the [addEventHandler..."
       },
       {
         "directive_type": "knowledge",
         "description": "const formContext = executionContext.getFormContext();",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "const formContext = executionContext.getFormContext();"
       },
       {
         "directive_type": "knowledge",
         "description": "const sampleControl1 = formContext.getControl(controlName1);",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "const sampleControl1 = formContext.getControl(controlName1);"
       },
       {
         "directive_type": "knowledge",
         "description": "sampleControl1.addEventHandler(\"customEvent1\", this.onSampleControl1CustomEvent1);",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "sampleControl1.addEventHandler(\"customEvent1\", this.onSampleControl1CustomEvent1"
       },
       {
         "directive_type": "knowledge",
         "description": "sampleControl1.addEventHandler(\"customEvent2\", this.onSampleControl1CustomEvent2);",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "sampleControl1.addEventHandler(\"customEvent2\", this.onSampleControl1CustomEvent2"
       },
       {
         "directive_type": "knowledge",
         "description": "> Note: These events occur separately for each instance of the code component in the app.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "> Note: These events occur separately..."
       },
       {
         "directive_type": "knowledge",
         "description": "this.onSampleControl1CustomEvent1 = function (params) {",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "this.onSampleControl1CustomEvent1 = function (params) {"
       },
       {
         "directive_type": "knowledge",
         "description": "//alert(`SampleControl1 Custom Event 1: ${params}`);",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "//alert(`SampleControl1 Custom Event 1: ${params}`);"
       }
     ]
   }

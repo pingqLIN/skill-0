@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__update-docs-on-code-change",
+    "skill_id": "claude__skill__update_docs_on_code_change",
     "name": "update-docs-on-code-change",
     "skill_layer": "claude_skill",
     "title": "Update Docs On Code Change Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "sections are configurable. Some are not configurable and will always be used.",
-        "condition": "instruction sections and configurable instruction sections",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "sections are configurable. Some are not...",
+        "condition_expression": "instruction sections and configurable instruction sections",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Instruction sections that ARE configurable are not required, and are subject to additional context",
-        "condition": "instruction sections and configurable instruction sections",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Instruction sections that ARE configurable are...",
+        "condition_expression": "instruction sections and configurable instruction sections",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "section. This allows for custom cases and/or conditions to be checked that will determine the final",
-        "condition": "instruction sections and configurable instruction sections",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "section. This allows for custom cases...",
+        "condition_expression": "instruction sections and configurable instruction sections",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Before resolving on how to apply a configurable instruction section, check the",
-        "condition": "instruction sections and configurable instruction sections",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Before resolving on how to apply...",
+        "condition_expression": "instruction sections and configurable instruction sections",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| apply-doc-file-structure      | true    | Ensures documentation follows a consistent file structure.                  | Disable if you want to allow",
-        "condition": "instruction configuration",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "| apply-doc-file-structure | true | Ensures...",
+        "condition_expression": "instruction configuration",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "| apply-doc-quality-standard    | true    | Enforces documentation quality standards.                                   | Disable if quality standards",
-        "condition": "instruction configuration",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "| apply-doc-quality-standard | true | Enforces...",
+        "condition_expression": "instruction configuration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| apply-best-practices          | true    | Enforces best practices in documentation.                                   | Disable if best practices ar",
-        "condition": "instruction configuration",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "| apply-best-practices | true | Enforces...",
+        "condition_expression": "instruction configuration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| apply-validation-commands     | true    | Runs validation commands to check documentation correctness.                 | Disable if validation is no",
-        "condition": "instruction configuration",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "| apply-validation-commands | true | Runs...",
+        "condition_expression": "instruction configuration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Automatically check if documentation updates are needed when:",
-        "condition": "trigger conditions",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Automatically check if documentation updates are...",
+        "condition_expression": "trigger conditions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Dependencies or requirements change",
-        "condition": "trigger conditions",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Dependencies or requirements change",
+        "condition_expression": "trigger conditions",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Ensure documentation stays synchronized with code changes by automatically detecting when README.md,",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Ensure documentation stays synchronized with code..."
       },
       {
         "directive_type": "knowledge",
         "description": "API documentation, configuration guides, and other documentation files need updates based on code",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "API documentation, configuration guides, and other..."
       },
       {
         "directive_type": "knowledge",
         "description": "The following parts of this section, `Instruction Sections and Configurable Instruction Sections`",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "The following parts of this section,..."
       },
       {
         "directive_type": "knowledge",
         "description": "and `Instruction Configuration` are only relevant to THIS instruction file, and are meant to be a",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "and `Instruction Configuration` are only relevant..."
       },
       {
         "directive_type": "knowledge",
         "description": "are meant to turn portions or sections of the actual Copilot instructions on or off, and allow for",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "are meant to turn portions or..."
       },
       {
         "directive_type": "knowledge",
         "description": "indicated by a level two header. Call this an INSTRUCTION SECTION.  Some instruction",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "indicated by a level two header...."
       },
       {
         "directive_type": "knowledge",
         "description": "and/or conditions. Call these CONFIGURABLE INSTRUCTION SECTIONS.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "and/or conditions. Call these CONFIGURABLE INSTRUCTION..."
       },
       {
         "directive_type": "knowledge",
         "description": "Configurable instruction sections will have the section's configuration property appended to",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Configurable instruction sections will have the..."
       },
       {
         "directive_type": "knowledge",
         "description": "the level two header, wrapped in backticks (e.g., `apply-this`). Call this the",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "the level two header, wrapped in..."
       },
       {
         "directive_type": "knowledge",
         "description": "portion of this section. They are booleans. If `true`, then apply, utilize, and/or follow the",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "portion of this section. They are..."
       }
     ]
   }

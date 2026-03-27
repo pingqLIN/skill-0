@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__generate-modern-terraform-code-for-azure",
+    "skill_id": "claude__skill__generate_modern_terraform_code_for_azure",
     "name": "generate-modern-terraform-code-for-azure",
     "skill_layer": "claude_skill",
     "title": "Generate Modern Terraform Code For Azure Skill",
@@ -78,63 +78,83 @@
     "rules": [
       {
         "description": "Always target the latest stable Terraform version and Azure providers. In code, specify the required Terraform and provider versions to enforce this. ",
-        "condition": "1. use latest terraform and providers",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always target the latest stable Terraform...",
+        "condition_expression": "1. use latest terraform and providers",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do not introduce additional providers or modules beyond the project's scope without confirmation",
-        "condition": "6. minimal dependencies",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Do not introduce additional providers or...",
+        "condition_expression": "6. minimal dependencies",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure the user approves it",
-        "condition": "6. minimal dependencies",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Ensure the user approves it",
+        "condition_expression": "6. minimal dependencies",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Keep the infrastructure stack lean and avoid unnecessary complexity",
-        "condition": "6. minimal dependencies",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Keep the infrastructure stack lean and...",
+        "condition_expression": "6. minimal dependencies",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid non-idempotent actions:",
-        "condition": "7. ensure idempotency",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Avoid non-idempotent actions",
+        "condition_expression": "7. ensure idempotency",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Test by doing multiple `terraform apply` runs and ensure the second run results in zero changes",
-        "condition": "7. ensure idempotency",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Test by doing multiple `terraform apply`...",
+        "condition_expression": "7. ensure idempotency",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never commit state files to source control",
-        "condition": "8. state management",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Never commit state files to source...",
+        "condition_expression": "8. state management",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Update README.md with any new variables, outputs, or usage instructions whenever the code changes",
-        "condition": "9. document and diagram",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Update README.md with any new variables,...",
+        "condition_expression": "9. document and diagram",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Well-documented code and diagrams ensure the whole team understands the infrastructure",
-        "condition": "9. document and diagram",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Well-documented code and diagrams ensure the...",
+        "condition_expression": "9. document and diagram",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Run `terraform validate` and review the `terraform plan` output before applying changes",
-        "condition": "10. validate and test changes",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Run `terraform validate` and review the...",
+        "condition_expression": "10. validate and test changes",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -142,61 +162,71 @@
         "directive_type": "knowledge",
         "description": "Structure Terraform configurations with logical file separation:",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Structure Terraform configurations with logical file..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use Terraform modules to group reusable infrastructure components. For any resource set that will be used in multiple contexts:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use Terraform modules to group reusable..."
       },
       {
         "directive_type": "knowledge",
         "description": "Parameterize all configurable values using variables with types and descriptions",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Parameterize all configurable values using variables..."
       },
       {
         "directive_type": "preference",
         "description": "Provide default values where appropriate for optional variables",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Provide default values where appropriate for..."
       },
       {
         "directive_type": "completion",
         "description": "Use outputs to expose key resource attributes for other modules or user reference",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use outputs to expose key resource..."
       },
       {
         "directive_type": "knowledge",
         "description": "Mark sensitive values accordingly to protect secrets",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Mark sensitive values accordingly to protect..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `azurerm` provider for most scenarios – it offers high stability and covers the majority of Azure services",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use `azurerm` provider for most scenarios..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `azapi` provider only for cases where you need:",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use `azapi` provider only for cases..."
       },
       {
         "directive_type": "preference",
         "description": "Both providers can be used together if needed, but prefer `azurerm` when in doubt",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Both providers can be used together..."
       },
       {
         "directive_type": "knowledge",
         "description": "If a special provider (e.g., `random`, `tls`) or external module is needed:",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "If a special provider (e.g., `random`,..."
       }
     ]
   }

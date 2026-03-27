@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__nextjs",
+    "skill_id": "claude__skill__nextjs",
     "name": "nextjs",
     "skill_layer": "claude_skill",
     "title": "Nextjs Skill",
@@ -126,63 +126,83 @@
     "rules": [
       {
         "description": "Colocation: Place files (components, styles, tests) near where they are used, but avoid deeply nested structures.",
-        "condition": "1. project structure & organization",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Colocation: Place files (components, styles, tests)...",
+        "condition_expression": "1. project structure & organization",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never use `next/dynamic` with `{ ssr: false }` inside a Server Component. This is not supported and will cause a build/runtime error.",
-        "condition": "2.1. server and client component integration (app router)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Never use `next/dynamic` with `{ ssr:...",
+        "condition_expression": "2.1. server and client component integration (app router)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "If you need to use a Client Component (e.g., a component that uses hooks, browser APIs, or client-only libraries) inside a Server Component, you must:",
-        "condition": "2.1. server and client component integration (app router)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "If you need to use a...",
+        "condition_expression": "2.1. server and client component integration (app router)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always move client-only UI into a Client Component and import it directly in your Server Component. Never use `next/dynamic` with `{ ssr: false }` in ",
-        "condition": "2.1. server and client component integration (app router)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Always move client-only UI into a...",
+        "condition_expression": "2.1. server and client component integration (app router)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid dynamic rendering by accident: Accessing request data (cookies/headers/searchParams) opts the route into dynamic behavior. Read them intentional",
-        "condition": "2.2. next.js 16+ async request apis (app router)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Avoid dynamic rendering by accident: Accessing...",
+        "condition_expression": "2.2. next.js 16+ async request apis (app router)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Validation: Always validate and sanitize input. Use libraries like `zod` or `yup`.",
-        "condition": "4. api routes (route handlers)",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Validation: Always validate and sanitize input....",
+        "condition_expression": "4. api routes (route handlers)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Authentication: Protect sensitive routes using middleware or server-side session checks.",
-        "condition": "4. api routes (route handlers)",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Authentication: Protect sensitive routes using middleware...",
+        "condition_expression": "4. api routes (route handlers)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Do not call your own Route Handlers from Server Components (e.g., `fetch('/api/...')`) just to reuse logic. Prefer extracting shared logic into module",
-        "condition": "route handler usage note (performance)",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Do not call your own Route...",
+        "condition_expression": "route handler usage note (performance)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Prefer `revalidateTag(tag, 'max')` (stale-while-revalidate) for most cases.",
-        "condition": "6. caching & revalidation (next.js 16 cache components)",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Prefer `revalidateTag(tag, 'max')` (stale-while-revalidate) for most...",
+        "condition_expression": "6. caching & revalidation (next.js 16 cache components)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The single-argument form `revalidateTag(tag)` is legacy/deprecated.",
-        "condition": "6. caching & revalidation (next.js 16 cache components)",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "The single-argument form `revalidateTag(tag)` is legacy/deprecated",
+        "condition_expression": "6. caching & revalidation (next.js 16 cache components)",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -190,61 +210,71 @@
         "directive_type": "knowledge",
         "description": "_Last updated: January 2026 (aligned to Next.js 16.1.1)_",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "_Last updated: January 2026 (aligned to..."
       },
       {
         "directive_type": "knowledge",
         "description": "This document summarizes the latest, authoritative best practices for building, structuring, and maintaining Next.js applications. It is intended for ",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "This document summarizes the latest, authoritative..."
       },
       {
         "directive_type": "preference",
         "description": "Use the `app/` directory (App Router) for all new projects. Prefer it over the legacy `pages/` directory.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use the `app/` directory (App Router)..."
       },
       {
         "directive_type": "knowledge",
         "description": "`app/` — Routing, layouts, pages, and route handlers",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "`app/` — Routing, layouts, pages, and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Route Groups: Use parentheses (e.g., `(admin)`) to group routes without affecting the URL path.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Route Groups: Use parentheses (e.g., `(admin)`)..."
       },
       {
         "directive_type": "knowledge",
         "description": "Feature Folders: For large apps, group by feature (e.g., `app/dashboard/`, `app/auth/`).",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Feature Folders: For large apps, group..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `src/` (optional): Place all source code in `src/` to separate from config files.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use `src/` (optional): Place all source..."
       },
       {
         "directive_type": "knowledge",
         "description": "1. Move all client-only logic/UI into a dedicated Client Component (with `'use client'` at the top).",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "1. Move all client-only logic/UI into..."
       },
       {
         "directive_type": "knowledge",
         "description": "<DashboardNavbar /> {/* This is a Client Component */}",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "<DashboardNavbar /> {/* This is a..."
       },
       {
         "directive_type": "knowledge",
         "description": "Assume request-bound data is async in Server Components and Route Handlers. In Next.js 16, APIs like `cookies()`, `headers()`, and `draftMode()` are a",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Assume request-bound data is async in..."
       }
     ]
   }

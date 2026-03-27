@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-bi-custom-visuals-development",
+    "skill_id": "claude__skill__power_bi_custom_visuals_development",
     "name": "power-bi-custom-visuals-development",
     "skill_layer": "claude_skill",
     "title": "Power Bi Custom Visuals Development Skill",
@@ -142,9 +142,11 @@
     "rules": [
       {
         "description": "const webpack = require(\"webpack\");",
-        "condition": "1. unit testing setup",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "const webpack = require(\"webpack\");",
+        "condition_expression": "1. unit testing setup",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -152,61 +154,71 @@
         "directive_type": "knowledge",
         "description": "This document provides comprehensive instructions for developing custom Power BI visuals using modern web technologies including React, D3.js, TypeScr",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This document provides comprehensive instructions for..."
       },
       {
         "directive_type": "knowledge",
         "description": "const singleDataView: DataViewSingle = dataView.single;",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "const singleDataView: DataViewSingle = dataView.single;"
       },
       {
         "directive_type": "knowledge",
         "description": "this.valueText.innerText = singleDataView.value.toString();",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "this.valueText.innerText = singleDataView.value.toString();"
       },
       {
         "directive_type": "knowledge",
         "description": "private reactRoot: React.ComponentElement<any, any>;",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "private reactRoot: React.ComponentElement<any, any>;"
       },
       {
         "directive_type": "knowledge",
         "description": "data: dataView.categorical?.values?.[0]?.values || [],",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "data: dataView.categorical?.values?.[0]?.values || [],"
       },
       {
         "directive_type": "knowledge",
         "description": "categories: dataView.categorical?.categories?.[0]?.values || []",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "categories: dataView.categorical?.categories?.[0]?.values || []"
       },
       {
         "directive_type": "knowledge",
         "description": "const { data, categories, size = 200, color = \"#3498db\" } = props;",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "const { data, categories, size =..."
       },
       {
         "directive_type": "knowledge",
         "description": "const radius = ((value - minValue) / (maxValue - minValue)) * size / 2;",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "const radius = ((value - minValue)..."
       },
       {
         "directive_type": "knowledge",
         "description": "<span className=\"label\">{categories[index]}: {value}</span>",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "<span className=\"label\">{categories[index]}: {value}</span>"
       },
       {
         "directive_type": "knowledge",
         "description": "type Selection<T extends d3.BaseType> = d3.Selection<T, any, any, any>;",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "type Selection<T extends d3.BaseType> = d3.Selection<T,..."
       }
     ]
   }

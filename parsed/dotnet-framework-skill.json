@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dotnet-framework",
+    "skill_id": "claude__skill__dotnet_framework",
     "name": "dotnet-framework",
     "skill_layer": "claude_skill",
     "title": "Dotnet Framework Skill",
@@ -102,63 +102,83 @@
     "rules": [
       {
         "description": "Always use `msbuild /t:rebuild` to build the solution or projects instead of `dotnet build`",
-        "condition": "build and compilation requirements",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always use `msbuild /t:rebuild` to build...",
+        "condition_expression": "build and compilation requirements",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Explicit File Inclusion: All new source files MUST be explicitly added to the project file (`.csproj`) using a `<Compile>` element",
-        "condition": "non-sdk style project structure",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Explicit File Inclusion: All new source...",
+        "condition_expression": "non-sdk style project structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": ".NET Framework projects do not automatically include files in the directory like SDK-style projects",
-        "condition": "non-sdk style project structure",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "NET Framework projects do not automatically...",
+        "condition_expression": "non-sdk style project structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "No Implicit Imports: Unlike SDK-style projects, .NET Framework projects do not automatically import common namespaces or assemblies",
-        "condition": "non-sdk style project structure",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "No Implicit Imports: Unlike SDK-style projects,...",
+        "condition_expression": "non-sdk style project structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Installing and updating NuGet packages in .NET Framework projects is a complex task requiring coordinated changes to multiple files. Therefore, do not",
-        "condition": "nuget package management",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Installing and updating NuGet packages in...",
+        "condition_expression": "nuget package management",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Instead, if changes to NuGet references are required, ask the user to install or update NuGet packages using the Visual Studio NuGet Package Manager o",
-        "condition": "nuget package management",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Instead, if changes to NuGet references...",
+        "condition_expression": "nuget package management",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When recommending NuGet packages, ensure they are compatible with .NET Framework or .NET Standard 2.0 (not only .NET Core or .NET 5+).",
-        "condition": "nuget package management",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "When recommending NuGet packages, ensure they...",
+        "condition_expression": "nuget package management",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "This project is limited to C# 7.3 features only. Please avoid using:",
-        "condition": "c# language version is 7.3",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "This project is limited to C#...",
+        "condition_expression": "c# language version is 7.3",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Required members",
-        "condition": "c# 10+ features (not supported):",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Required members",
+        "condition_expression": "c# 10+ features (not supported):",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Explicit null checks instead of null-coalescing assignment",
-        "condition": "use instead (c# 7.3 compatible):",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Explicit null checks instead of null-coalescing...",
+        "condition_expression": "use instead (c# 7.3 compatible):",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -166,61 +186,71 @@
         "directive_type": "completion",
         "description": "Output Paths: Explicit `<OutputPath>` and `<IntermediateOutputPath>` definitions",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Output Paths: Explicit `<OutputPath>` and `<IntermediateOutputPath>`..."
       },
       {
         "directive_type": "knowledge",
         "description": "Target Framework: Uses `<TargetFrameworkVersion>` instead of `<TargetFramework>`",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Target Framework: Uses `<TargetFrameworkVersion>` instead of..."
       },
       {
         "directive_type": "knowledge",
         "description": "Example: `<TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>`",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Example: `<TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>`"
       },
       {
         "directive_type": "knowledge",
         "description": "Await using statements (`await using var resource = ...`)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Await using statements (`await using var..."
       },
       {
         "directive_type": "knowledge",
         "description": "Range and index operators (`array[1..^1]`, `array[^1]`)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Range and index operators (`array[1..^1]`, `array[^1]`)"
       },
       {
         "directive_type": "knowledge",
         "description": "Nullable reference types (`string?`, `#nullable enable`)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Nullable reference types (`string?`, `#nullable enable`)"
       },
       {
         "directive_type": "knowledge",
         "description": "Target-typed new expressions (`List<string> list = new()`)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Target-typed new expressions (`List<string> list =..."
       },
       {
         "directive_type": "preference",
         "description": "Abstract classes or interfaces instead of default interface methods",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Abstract classes or interfaces instead of..."
       },
       {
         "directive_type": "preference",
         "description": "Use Windows-style paths with backslashes (e.g., `C:\\path\\to\\file.cs`)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use Windows-style paths with backslashes (e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use Windows-appropriate commands when suggesting terminal operations",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use Windows-appropriate commands when suggesting terminal..."
       }
     ]
   }

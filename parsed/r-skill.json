@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__r",
+    "skill_id": "claude__skill__r",
     "name": "r",
     "skill_layer": "claude_skill",
     "title": "R Skill",
@@ -142,33 +142,43 @@
     "rules": [
       {
         "description": "Be consistent: Don't mix `|>` and `%>%` within the same script unless there's a clear technical reason.",
-        "condition": "pipe operators",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Be consistent: Don't mix `|>` and...",
+        "condition_expression": "pipe operators",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Prefer consistent return structures—typed outputs for normal flows, structured lists only when error details are required.",
-        "condition": "error handling",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Prefer consistent return structures—typed outputs for...",
+        "condition_expression": "error handling",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate inputs with `req()` and clear, user-friendly messages.",
-        "condition": "shiny",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Validate inputs with `req()` and clear,...",
+        "condition_expression": "shiny",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use connection pooling (`pool`) for databases; avoid long-lived global objects.",
-        "condition": "shiny",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Use connection pooling (`pool`) for databases;...",
+        "condition_expression": "shiny",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid global state; prefer local helpers. Use `withr::with_seed()` for deterministic chunks.",
-        "condition": "r markdown / quarto",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Avoid global state; prefer local helpers....",
+        "condition_expression": "r markdown / quarto",
+        "condition_type": "state_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -176,61 +186,71 @@
         "directive_type": "knowledge",
         "description": "Match the project’s style. If the file shows a preference (tidyverse vs. base R, `%>%` vs. `|>`), follow it.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Match the project’s style. If the..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer clear, vectorized code. Keep functions small and avoid hidden side effects.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Prefer clear, vectorized code. Keep functions..."
       },
       {
         "directive_type": "knowledge",
         "description": "Qualify non-base functions in examples/snippets, e.g., `dplyr::mutate()`, `stringr::str_detect()`. In project code, using `library()` is acceptable wh",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Qualify non-base functions in examples/snippets, e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Naming: `lower_snake_case` for objects/files; avoid dots in names.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Naming: `lower_snake_case` for objects/files; avoid dots..."
       },
       {
         "directive_type": "preference",
         "description": "Side effects: Never call `setwd()`; prefer project-relative paths (e.g., `here::here()`).",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Side effects: Never call `setwd()`; prefer..."
       },
       {
         "directive_type": "knowledge",
         "description": "Reproducibility: Set seeds locally around stochastic operations using `withr::with_seed()`.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Reproducibility: Set seeds locally around stochastic..."
       },
       {
         "directive_type": "knowledge",
         "description": "Validation: Validate and constrain user inputs; use typed checks and allowlists where possible.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Validation: Validate and constrain user inputs;..."
       },
       {
         "directive_type": "knowledge",
         "description": "Safety: Avoid `eval(parse())`, unvalidated shell calls, and unparameterized SQL.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Safety: Avoid `eval(parse())`, unvalidated shell calls,..."
       },
       {
         "directive_type": "preference",
         "description": "Native pipe `|>` (R ≥ 4.1.0): Prefer in R ≥ 4.1 (no extra dependency).",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Native pipe `|>` (R ≥ 4.1.0):..."
       },
       {
         "directive_type": "knowledge",
         "description": "Profiling: Use `profvis::profvis()` to identify performance bottlenecks in your code. Profile before optimizing.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Profiling: Use `profvis::profvis()` to identify performance..."
       }
     ]
   }

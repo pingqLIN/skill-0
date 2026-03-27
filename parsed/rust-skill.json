@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__rust",
+    "skill_id": "claude__skill__rust",
     "name": "rust",
     "skill_layer": "claude_skill",
     "title": "Rust Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Always prioritize readability, safety, and maintainability.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always prioritize readability, safety, and maintainability",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Write idiomatic, safe, and efficient Rust code that follows the borrow checker's rules.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Write idiomatic, safe, and efficient Rust...",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure code compiles without warnings.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Ensure code compiles without warnings",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use `cargo clippy` to catch common mistakes and enforce best practices.",
-        "condition": "code style and formatting",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Use `cargo clippy` to catch common...",
+        "condition_expression": "code style and formatting",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Error types should be meaningful and well-behaved (implement standard traits).",
-        "condition": "error handling",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Error types should be meaningful and...",
+        "condition_expression": "error handling",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate function arguments and return appropriate errors for invalid input.",
-        "condition": "error handling",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Validate function arguments and return appropriate...",
+        "condition_expression": "error handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Collections should implement `FromIterator` and `Extend`",
-        "condition": "common traits implementation",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Collections should implement `FromIterator` and `Extend`",
+        "condition_expression": "common traits implementation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Note: `Send` and `Sync` are auto-implemented by the compiler when safe; avoid manual implementation unless using `unsafe` code",
-        "condition": "common traits implementation",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Note: `Send` and `Sync` are auto-implemented...",
+        "condition_expression": "common traits implementation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Arguments should convey meaning through types; prefer specific types over generic `bool` parameters",
-        "condition": "type safety and predictability",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Arguments should convey meaning through types;...",
+        "condition_expression": "type safety and predictability",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Functions with a clear receiver should be methods",
-        "condition": "type safety and predictability",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Functions with a clear receiver should...",
+        "condition_expression": "type safety and predictability",
+        "condition_type": "type_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Follow idiomatic Rust practices and community standards when writing Rust code.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Follow idiomatic Rust practices and community..."
       },
       {
         "directive_type": "preference",
         "description": "These instructions are based on [The Rust Book](https://doc.rust-lang.org/book/), [Rust API Guidelines](https://rust-lang.github.io/api-guidelines/), ",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "These instructions are based on [The..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use strong typing and leverage Rust's ownership system for memory safety.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use strong typing and leverage Rust's..."
       },
       {
         "directive_type": "knowledge",
         "description": "Break down complex functions into smaller, more manageable functions.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Break down complex functions into smaller,..."
       },
       {
         "directive_type": "principle",
         "description": "For algorithm-related code, include explanations of the approach used.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "For algorithm-related code, include explanations of..."
       },
       {
         "directive_type": "completion",
         "description": "Handle errors gracefully using `Result<T, E>` and provide meaningful error messages.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Handle errors gracefully using `Result<T, E>`..."
       },
       {
         "directive_type": "knowledge",
         "description": "For external dependencies, mention their usage and purpose in documentation.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "For external dependencies, mention their usage..."
       },
       {
         "directive_type": "preference",
         "description": "Use consistent naming conventions following [RFC 430](https://github.com/rust-lang/rfcs/blob/master/text/0430-finalizing-naming-conventions.md).",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use consistent naming conventions following [RFC..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use modules (`mod`) and public interfaces (`pub`) to encapsulate logic.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use modules (`mod`) and public interfaces..."
       },
       {
         "directive_type": "knowledge",
         "description": "Handle errors properly using `?`, `match`, or `if let`.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Handle errors properly using `?`, `match`,..."
       }
     ]
   }

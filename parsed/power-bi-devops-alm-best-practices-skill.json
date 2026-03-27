@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-bi-devops-alm-best-practices",
+    "skill_id": "claude__skill__power_bi_devops_alm_best_practices",
     "name": "power-bi-devops-alm-best-practices",
     "skill_layer": "claude_skill",
     "title": "Power Bi Devops Alm Best Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "git checkout -b feature/new-dashboard",
-        "condition": "create feature branch for development",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "git checkout -b feature/new-dashboard",
+        "condition_expression": "create feature branch for development",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "[ValidateSet(\"dev\", \"test\", \"prod\")]",
-        "condition": "environment-specific parameter management",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "[ValidateSet(\"dev\", \"test\", \"prod\")]",
+        "condition_expression": "environment-specific parameter management",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "displayName: 'Validate Power BI Project'",
-        "condition": "multi-stage release pipeline",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "displayName: 'Validate Power BI Project'",
+        "condition_expression": "multi-stage release pipeline",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "$requiredFiles = @(\"Report\\report.json\", \"Model\\tables\")",
-        "condition": "multi-stage release pipeline",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "$requiredFiles = @(\"Report\\report.json\", \"Model\\tables\")",
+        "condition_expression": "multi-stage release pipeline",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "foreach ($file in $requiredFiles) {",
-        "condition": "multi-stage release pipeline",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "foreach ($file in $requiredFiles) {",
+        "condition_expression": "multi-stage release pipeline",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "throw \"Missing required file: $file\"",
-        "condition": "multi-stage release pipeline",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "throw \"Missing required file: $file\"",
+        "condition_expression": "multi-stage release pipeline",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "$healthCheck.Issues += \"Missing report: $expectedReport\"",
-        "condition": "post-deployment validation",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "$healthCheck.Issues += \"Missing report: $expectedReport\"",
+        "condition_expression": "post-deployment validation",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "$healthCheck.Status = \"Unhealthy\"",
-        "condition": "post-deployment validation",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "$healthCheck.Status = \"Unhealthy\"",
+        "condition_expression": "post-deployment validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "$healthCheck.Issues += \"Missing dataset: $expectedDataset\"",
-        "condition": "post-deployment validation",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "$healthCheck.Issues += \"Missing dataset: $expectedDataset\"",
+        "condition_expression": "post-deployment validation",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "$healthCheck.Issues += \"Dataset refresh failed: $expectedDataset\"",
-        "condition": "post-deployment validation",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "$healthCheck.Issues += \"Dataset refresh failed: $expectedDataset\"",
+        "condition_expression": "post-deployment validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "preference",
         "description": "This document provides comprehensive instructions for implementing DevOps practices, CI/CD pipelines, and Application Lifecycle Management (ALM) for P",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This document provides comprehensive instructions for..."
       },
       {
         "directive_type": "knowledge",
         "description": "New-Item -ItemType Directory -Path \".\\modules\" -ErrorAction SilentlyContinue | Out-Null",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "New-Item -ItemType Directory -Path \".\\modules\" -ErrorAction..."
       },
       {
         "directive_type": "knowledge",
         "description": "@(\"https://raw.githubusercontent.com/microsoft/Analysis-Services/master/pbidevmode/fabricps-pbip/FabricPS-PBIP.psm1\",",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "@(\"https://raw.githubusercontent.com/microsoft/Analysis-Services/master/pbidevmo"
       },
       {
         "directive_type": "knowledge",
         "description": "\"https://raw.githubusercontent.com/microsoft/Analysis-Services/master/pbidevmode/fabricps-pbip/FabricPS-PBIP.psd1\") |% {",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "\"https://raw.githubusercontent.com/microsoft/Analysis-Services/master/pbidevmode"
       },
       {
         "directive_type": "knowledge",
         "description": "Invoke-WebRequest -Uri $_ -OutFile \".\\modules\\$(Split-Path $_ -Leaf)\"",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Invoke-WebRequest -Uri $_ -OutFile \".\\modules\\$(Split-Path $_..."
       },
       {
         "directive_type": "knowledge",
         "description": "$workspaceId = New-FabricWorkspace -name $workspaceName -skipErrorIfExists",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "$workspaceId = New-FabricWorkspace -name $workspaceName -skipErrorIfExists"
       },
       {
         "directive_type": "knowledge",
         "description": "$pbipSemanticModelPath = \"[PBIP Path]\\[Item Name].SemanticModel\"",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "$pbipSemanticModelPath = \"[PBIP Path]\\[Item Name].SemanticModel\""
       },
       {
         "directive_type": "knowledge",
         "description": "$currentPath = (Split-Path $MyInvocation.MyCommand.Definition -Parent)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "$currentPath = (Split-Path $MyInvocation.MyCommand.Definition -Parent)"
       },
       {
         "directive_type": "knowledge",
         "description": "\"workspaceId\": \"dev-workspace-id\",",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "\"workspaceId\": \"dev-workspace-id\","
       },
       {
         "directive_type": "knowledge",
         "description": "\"dataSourceUrl\": \"dev-database.database.windows.net\",",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "\"dataSourceUrl\": \"dev-database.database.windows.net\","
       }
     ]
   }

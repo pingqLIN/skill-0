@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-best-practices",
+    "skill_id": "claude__skill__pcf_best_practices",
     "name": "pcf-best-practices",
     "skill_layer": "claude_skill",
     "title": "Pcf Best Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Code components can be built in [production or development mode](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/code-compo",
-        "condition": "avoid deploying development builds to dataverse",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Code components can be built in...",
+        "condition_expression": "avoid deploying development builds to dataverse",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When the hosting context loads a code component, the `init` method is first called. Use this method to request any network resources such as metadata ",
-        "condition": "use `init` method to request network required resources",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "When the hosting context loads a...",
+        "condition_expression": "use `init` method to request network required resources",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When developing code components for different hosts (model-driven apps, canvas apps, portals), always check the availability of the APIs you're using ",
-        "condition": "check api availability",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "When developing code components for different...",
+        "condition_expression": "check api availability",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Null values are passed to the `updateView` method when data isn't ready. Your components should account for this situation and expect that the data co",
-        "condition": "manage temporarily null property values passed to `updateview`",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Null values are passed to the...",
+        "condition_expression": "manage temporarily null property values passed to `updateview`",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "When using the `context.WebApi` methods, limit both the number of calls and the amount of data. Each time you call the `WebApi`, it counts towards the",
-        "condition": "limit size and frequency of calls to the `webapi`",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "When using the `context.WebApi` methods, limit...",
+        "condition_expression": "limit size and frequency of calls to the `webapi`",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "By default, code components target ES5 to support older browsers. If you don't want to support these older browsers, you can change the target to ES6 ",
-        "condition": "es5 vs es6",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "By default, code components target ES5...",
+        "condition_expression": "es5 vs es6",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always bundle the modules that are required as part of your code component instead of using scripts that are required to be loading using the `SCRIPT`",
-        "condition": "module imports",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Always bundle the modules that are...",
+        "condition_expression": "module imports",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "How would you like to use ESLint? Answer: To check syntax, find problems, and enforce code style",
-        "condition": "linting",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "How would you like to use...",
+        "condition_expression": "linting",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do you require semicolons? Answer: Yes",
-        "condition": "linting",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Do you require semicolons? Answer: Yes",
+        "condition_expression": "linting",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "To avoid importing and bundling the entire library, you can use path-based imports where the specific library component is imported using the explicit",
-        "condition": "use path-based imports from fluent to reduce bundle size",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "To avoid importing and bundling the...",
+        "condition_expression": "use path-based imports from fluent to reduce bundle size",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Developing, deploying, and maintaining code components needs a combination of knowledge across multiple areas. This article outlines established best ",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Developing, deploying, and maintaining code components..."
       },
       {
         "directive_type": "strategy",
         "description": "If you have experience working with client API, you might be used to interacting with `formContext` to access attributes, controls, and call API metho",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "If you have experience working with..."
       },
       {
         "directive_type": "knowledge",
         "description": "A workaround is to make the code component bound to a column and add an `OnChange` event handler to that column. The code component can update the col",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "A workaround is to make the..."
       },
       {
         "directive_type": "preference",
         "description": "Canvas apps provide a wide set of best practices from inside the app and solution checker. Ensure your apps follow these recommendations before you ad",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Canvas apps provide a wide set..."
       },
       {
         "directive_type": "knowledge",
         "description": "[Tips to improve canvas app performance](https://learn.microsoft.com/en-us/powerapps/maker/canvas-apps/performance-tips)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "[Tips to improve canvas app performance](https://learn.microsoft.com/en-us/power"
       },
       {
         "directive_type": "knowledge",
         "description": "[Considerations for optimized performance in Power Apps](https://powerapps.microsoft.com/blog/considerations-for-optimized-performance-in-power-apps/)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "[Considerations for optimized performance in Power..."
       },
       {
         "directive_type": "knowledge",
         "description": "> Note: Support for shared libraries across components using library nodes in the component manifest is not yet supported.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "> Note: Support for shared libraries..."
       },
       {
         "directive_type": "knowledge",
         "description": "Which framework does your project use? Answer: React",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Which framework does your project use?..."
       },
       {
         "directive_type": "preference",
         "description": "What style of indentation do you use? Answer: Spaces",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "What style of indentation do you..."
       },
       {
         "directive_type": "knowledge",
         "description": "Additionally, you can add files to ignore by adding to the `.eslintrc.json`:",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Additionally, you can add files to..."
       }
     ]
   }

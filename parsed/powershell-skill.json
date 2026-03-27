@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__powershell",
+    "skill_id": "claude__skill__powershell",
     "name": "powershell",
     "skill_layer": "claude_skill",
     "title": "Powershell Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "[ValidateSet('Basic', 'Detailed')]",
-        "condition": "example",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "[ValidateSet('Basic', 'Detailed')]",
+        "condition_expression": "example",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "[ValidateSet('Dev', 'Test', 'Prod')]",
-        "condition": "example",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "[ValidateSet('Dev', 'Test', 'Prod')]",
+        "condition_expression": "example",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Document pipeline input requirements",
-        "condition": "pipeline and output",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Document pipeline input requirements",
+        "condition_expression": "pipeline and output",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid Write-Host for data output",
-        "condition": "pipeline and output",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Avoid Write-Host for data output",
+        "condition_expression": "pipeline and output",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid collecting large arrays",
-        "condition": "pipeline and output",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Avoid collecting large arrays",
+        "condition_expression": "pipeline and output",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]",
-        "condition": "example",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "[Parameter(Mandatory, ValueFromPipeline, ValueFromPipelineByPropertyName)]",
+        "condition_expression": "example",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "[ValidateSet('Active', 'Inactive', 'Maintenance')]",
-        "condition": "example",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "[ValidateSet('Active', 'Inactive', 'Maintenance')]",
+        "condition_expression": "example",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "ShouldProcess Implementation:",
-        "condition": "error handling and safety",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "ShouldProcess Implementation",
+        "condition_expression": "error handling and safety",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use `[CmdletBinding(SupportsShouldProcess = $true)]`",
-        "condition": "error handling and safety",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Use `[CmdletBinding(SupportsShouldProcess = $true)]`",
+        "condition_expression": "error handling and safety",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Call `$PSCmdlet.ShouldProcess()` for system changes",
-        "condition": "error handling and safety",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Call `$PSCmdlet.ShouldProcess()` for system changes",
+        "condition_expression": "error handling and safety",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "This guide provides PowerShell-specific instructions to help GitHub Copilot generate idiomatic,",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This guide provides PowerShell-specific instructions to..."
       },
       {
         "directive_type": "knowledge",
         "description": "safe, and maintainable scripts. It aligns with Microsoft’s PowerShell cmdlet development guidelines.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "safe, and maintainable scripts. It aligns..."
       },
       {
         "directive_type": "knowledge",
         "description": "Verb-Noun Format:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Verb-Noun Format"
       },
       {
         "directive_type": "knowledge",
         "description": "Use approved PowerShell verbs (Get-Verb)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use approved PowerShell verbs (Get-Verb)"
       },
       {
         "directive_type": "knowledge",
         "description": "Use singular nouns",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use singular nouns"
       },
       {
         "directive_type": "knowledge",
         "description": "PascalCase for both verb and noun",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "PascalCase for both verb and noun"
       },
       {
         "directive_type": "knowledge",
         "description": "Avoid special characters and spaces",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Avoid special characters and spaces"
       },
       {
         "directive_type": "knowledge",
         "description": "Parameter Names:",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Parameter Names"
       },
       {
         "directive_type": "knowledge",
         "description": "Choose clear, descriptive names",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Choose clear, descriptive names"
       },
       {
         "directive_type": "knowledge",
         "description": "Use singular form unless always multiple",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use singular form unless always multiple"
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__playwright-dotnet",
+    "skill_id": "claude__skill__playwright_dotnet",
     "name": "playwright-dotnet",
     "skill_layer": "claude_skill",
     "title": "Playwright Dotnet Skill",
@@ -134,27 +134,35 @@
     "rules": [
       {
         "description": "await Test.StepAsync(\"Verify search results\", async () =>",
-        "condition": "example test structure",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "await Test.StepAsync(\"Verify search results\", async ()...",
+        "condition_expression": "example test structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "// Verify the accessibility tree of the search results",
-        "condition": "example test structure",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "// Verify the accessibility tree of...",
+        "condition_expression": "example test structure",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Before finalizing tests, ensure:",
-        "condition": "quality checklist",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Before finalizing tests, ensure",
+        "condition_expression": "quality checklist",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "[ ] All locators are accessible and specific and avoid strict mode violations",
-        "condition": "quality checklist",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "[ ] All locators are accessible...",
+        "condition_expression": "quality checklist",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -162,61 +170,71 @@
         "directive_type": "knowledge",
         "description": "Locators: Prioritize user-facing, role-based locators (`GetByRole`, `GetByLabel`, `GetByText`, etc.) for resilience and accessibility. Use `await Test",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Locators: Prioritize user-facing, role-based locators (`GetByRole`,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Assertions: Use auto-retrying web-first assertions. These assertions use `Expect()` from Playwright assertions (e.g., `await Expect(locator).ToHaveTex",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Assertions: Use auto-retrying web-first assertions. These..."
       },
       {
         "directive_type": "preference",
         "description": "Timeouts: Rely on Playwright's built-in auto-waiting mechanisms. Avoid hard-coded waits or increased default timeouts.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Timeouts: Rely on Playwright's built-in auto-waiting..."
       },
       {
         "directive_type": "knowledge",
         "description": "Clarity: Use descriptive test and step titles that clearly state the intent. Add comments only to explain complex logic or non-obvious interactions.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Clarity: Use descriptive test and step..."
       },
       {
         "directive_type": "knowledge",
         "description": "UI Structure: Use `ToMatchAriaSnapshotAsync` to verify the accessibility tree structure of a component. This provides a comprehensive and accessible s",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "UI Structure: Use `ToMatchAriaSnapshotAsync` to verify..."
       },
       {
         "directive_type": "knowledge",
         "description": "Element Counts: Use `ToHaveCountAsync` to assert the number of elements found by a locator.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Element Counts: Use `ToHaveCountAsync` to assert..."
       },
       {
         "directive_type": "knowledge",
         "description": "Text Content: Use `ToHaveTextAsync` for exact text matches and `ToContainTextAsync` for partial matches.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Text Content: Use `ToHaveTextAsync` for exact..."
       },
       {
         "directive_type": "knowledge",
         "description": "Navigation: Use `ToHaveURLAsync` to verify the page URL after an action.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Navigation: Use `ToHaveURLAsync` to verify the..."
       },
       {
         "directive_type": "knowledge",
         "description": "await Page.GotoAsync(\"https://debs-obrien.github.io/playwright-movies-app\");",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "await Page.GotoAsync(\"https://debs-obrien.github.io/playwright-movies-app\");"
       },
       {
         "directive_type": "knowledge",
         "description": "await Page.GetByRole(AriaRole.Search).ClickAsync();",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "await Page.GetByRole(AriaRole.Search).ClickAsync();"
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-platform-mcp-development",
+    "skill_id": "claude__skill__power_platform_mcp_development",
     "name": "power-platform-mcp-development",
     "skill_layer": "claude_skill",
     "title": "Power Platform Mcp Development Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Always implement JSON-RPC 2.0 standard for MCP communication",
-        "condition": "mcp protocol integration",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always implement JSON-RPC 2.0 standard for...",
+        "condition_expression": "mcp protocol integration",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate token audience to prevent passthrough attacks",
-        "condition": "authentication and security",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Validate token audience to prevent passthrough...",
+        "condition_expression": "authentication and security",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Add token validation and audience checking in authentication flow",
-        "condition": "custom script implementation",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Add token validation and audience checking...",
+        "condition_expression": "custom script implementation",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Ensure proper MIME type declarations for resource content",
-        "condition": "resource and tool management",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Ensure proper MIME type declarations for...",
+        "condition_expression": "resource and tool management",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Implement resource transformation to meet Copilot Studio requirements",
-        "condition": "resource and tool management",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Implement resource transformation to meet Copilot...",
+        "condition_expression": "resource and tool management",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate schema transformations work correctly with Copilot Studio",
-        "condition": "testing and validation",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Validate schema transformations work correctly with...",
+        "condition_expression": "testing and validation",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Verify authentication flows for all supported parameter sets",
-        "condition": "testing and validation",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Verify authentication flows for all supported...",
+        "condition_expression": "testing and validation",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Ensure proper error handling for various failure scenarios",
-        "condition": "testing and validation",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Ensure proper error handling for various...",
+        "condition_expression": "testing and validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure compliance with Power Platform connector certification standards",
-        "condition": "power platform certification requirements",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Ensure compliance with Power Platform connector...",
+        "condition_expression": "power platform certification requirements",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure tool definitions work correctly within Copilot Studio's constraints",
-        "condition": "copilot studio integration",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Ensure tool definitions work correctly within...",
+        "condition_expression": "copilot studio integration",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Use `x-ms-agentic-protocol: mcp-streamable-1.0` header for Copilot Studio compatibility",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use `x-ms-agentic-protocol: mcp-streamable-1.0` header for Copilot..."
       },
       {
         "directive_type": "knowledge",
         "description": "Structure endpoints to support both standard REST operations and MCP tool invocation",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Structure endpoints to support both standard..."
       },
       {
         "directive_type": "knowledge",
         "description": "Remove `$ref` and other reference types from JSON schemas as Copilot Studio cannot handle them",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Remove `$ref` and other reference types..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use single types instead of arrays of types in schema definitions",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use single types instead of arrays..."
       },
       {
         "directive_type": "knowledge",
         "description": "Flatten `anyOf`/`oneOf` constructs to single schemas for Copilot Studio compatibility",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Flatten `anyOf`/`oneOf` constructs to single schemas..."
       },
       {
         "directive_type": "knowledge",
         "description": "Ensure all tool input schemas are self-contained without external references",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Ensure all tool input schemas are..."
       },
       {
         "directive_type": "knowledge",
         "description": "Add MCP-specific security headers for enhanced validation",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Add MCP-specific security headers for enhanced..."
       },
       {
         "directive_type": "knowledge",
         "description": "Support multiple authentication methods (OAuth standard, OAuth enhanced, API key fallback)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Support multiple authentication methods (OAuth standard,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use Swagger 2.0 specification for Power Platform compatibility",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use Swagger 2.0 specification for Power..."
       },
       {
         "directive_type": "knowledge",
         "description": "Implement proper `operationId` values for each endpoint",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Implement proper `operationId` values for each..."
       }
     ]
   }

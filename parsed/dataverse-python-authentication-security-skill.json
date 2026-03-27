@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-authentication-security",
+    "skill_id": "claude__skill__dataverse_python_authentication_security",
     "name": "dataverse-python-authentication-security",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Authentication Security Skill",
@@ -142,33 +142,43 @@
     "rules": [
       {
         "description": "Never hardcode credentials in source code",
-        "condition": "client secret credential (service principal)",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Never hardcode credentials in source code",
+        "condition_expression": "client secret credential (service principal)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use minimal required permissions",
-        "condition": "client secret credential (service principal)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Use minimal required permissions",
+        "condition_expression": "client secret credential (service principal)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "print(\"Ensure Dataverse security role is assigned\")",
-        "condition": "error: \"access denied\" (403)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "print(\"Ensure Dataverse security role is assigned\")",
+        "condition_expression": "error: \"access denied\" (403)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "# User must already be authenticated",
-        "condition": "each user gets client with their credentials",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "# User must already be authenticated",
+        "condition_expression": "each user gets client with their credentials",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "System Administrator: Full access (avoid for apps)",
-        "condition": "security roles",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "System Administrator: Full access (avoid for...",
+        "condition_expression": "security roles",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -176,61 +186,71 @@
         "directive_type": "knowledge",
         "description": "Based on official Microsoft Azure SDK authentication documentation and Dataverse SDK best practices.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Based on official Microsoft Azure SDK..."
       },
       {
         "directive_type": "principle",
         "description": "The Dataverse SDK for Python uses Azure Identity credentials for token-based authentication. This approach follows the principle of least privilege an",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "The Dataverse SDK for Python uses..."
       },
       {
         "directive_type": "principle",
         "description": "Establishes specific permissions needed by your app (principle of least privilege)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Establishes specific permissions needed by your..."
       },
       {
         "directive_type": "knowledge",
         "description": "With managed identity, no secrets to store or compromise",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "With managed identity, no secrets to..."
       },
       {
         "directive_type": "knowledge",
         "description": "Works seamlessly across environments without code changes",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Works seamlessly across environments without code..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use for: Developer workstations during local development.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use for: Developer workstations during local..."
       },
       {
         "directive_type": "knowledge",
         "description": "1. Environment variables (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SECRET`)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "1. Environment variables (`AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_CLIENT_SE"
       },
       {
         "directive_type": "knowledge",
         "description": "5. Managed identity (on Azure VMs, App Service, AKS, etc.)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "5. Managed identity (on Azure VMs,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use for: Unattended authentication (scheduled jobs, scripts, on-premises services).",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use for: Unattended authentication (scheduled jobs,..."
       },
       {
         "directive_type": "knowledge",
         "description": "4. Store credentials in environment variables or secure vault",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "4. Store credentials in environment variables..."
       }
     ]
   }
