@@ -248,7 +248,7 @@ def _generate_html_report(data: dict) -> str:
     
     <div class="export-footer">
         <p>Exported: {data["export_date"]}</p>
-        <p>Scanner: Advanced Skill Analyzer v{scan.get("scanner_version", "2.1.0")}</p>
+        <p>Scanner: Advanced Skill Analyzer v{scan.get("scanner_version", "2.4.0")}</p>
     </div>
 </body>
 </html>

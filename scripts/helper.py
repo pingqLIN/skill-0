@@ -21,8 +21,12 @@ import sys
 import argparse
 from pathlib import Path
 from typing import Dict, List, Any, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 import re
+
+
+CURRENT_SCHEMA_VERSION = "2.4.0"
+CURRENT_PARSER_VERSION = "skill-0 v2.4"
 
 
 class SkillValidator:
@@ -66,7 +70,7 @@ class SkillValidator:
             self.errors.append(f"Invalid skill_layer: {meta.get('skill_layer')}")
         
         # Validate schema version
-        if meta.get('schema_version') != '2.0.0':
+        if meta.get('schema_version') != CURRENT_SCHEMA_VERSION:
             self.warnings.append(f"Schema version {meta.get('schema_version')} may be outdated")
     
     def _validate_decomposition(self, decomposition: Dict) -> None:
@@ -106,6 +110,11 @@ class SkillValidator:
         # Check ID pattern
         if not re.match(r'^r_\d{3}$', rule.get('id', '')):
             self.errors.append(f"Invalid rule ID: {rule.get('id')}")
+
+        required = ['id', 'name', 'condition_type', 'condition_expression', 'returns']
+        for field in required:
+            if field not in rule:
+                self.errors.append(f"Rule {rule.get('id')} missing field: {field}")
         
         # Check condition_type
         valid_types = ['validation', 'existence_check', 'type_check', 'range_check',
@@ -118,6 +127,11 @@ class SkillValidator:
         # Check ID pattern
         if not re.match(r'^d_\d{3}$', directive.get('id', '')):
             self.errors.append(f"Invalid directive ID: {directive.get('id')}")
+
+        required = ['id', 'name', 'directive_type', 'description']
+        for field in required:
+            if field not in directive:
+                self.errors.append(f"Directive {directive.get('id')} missing field: {field}")
         
         # Check directive_type
         valid_types = ['completion', 'knowledge', 'principle', 'constraint', 'preference', 'strategy']
@@ -176,19 +190,23 @@ class SkillConverter:
                     if lines[j].strip() and not lines[j].startswith('#'):
                         return lines[j].strip()
         return "No description available"
+
+    def _utc_timestamp(self) -> str:
+        """Return an ISO8601 UTC timestamp with a trailing Z."""
+        return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     
     def _create_template(self, title: str, description: str) -> Dict:
         """Create JSON template"""
         return {
             "meta": {
-                "skill_id": f"claude__{title.lower().replace(' ', '-')}",
+                "skill_id": f"claude__skill__{title.lower().replace(' ', '_')}",
                 "name": title.lower().replace(' ', '-'),
                 "skill_layer": "claude_skill",
                 "title": title,
                 "description": description,
-                "schema_version": "2.0.0",
-                "parse_timestamp": datetime.utcnow().isoformat() + "Z",
-                "parser_version": "skill-0 v2.0",
+                "schema_version": CURRENT_SCHEMA_VERSION,
+                "parse_timestamp": self._utc_timestamp(),
+                "parser_version": CURRENT_PARSER_VERSION,
                 "parsed_by": "helper.py"
             },
             "original_definition": {
@@ -304,14 +322,14 @@ def generate_template(output_path: str) -> None:
     """Generate empty skill template"""
     template = {
         "meta": {
-            "skill_id": "claude__template",
+            "skill_id": "claude__skill__template",
             "name": "template",
             "skill_layer": "claude_skill",
             "title": "Skill Template",
             "description": "Template for creating new skills",
-            "schema_version": "2.0.0",
-            "parse_timestamp": datetime.utcnow().isoformat() + "Z",
-            "parser_version": "skill-0 v2.0",
+            "schema_version": CURRENT_SCHEMA_VERSION,
+            "parse_timestamp": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+            "parser_version": CURRENT_PARSER_VERSION,
             "parsed_by": "helper.py"
         },
         "original_definition": {
@@ -337,14 +355,15 @@ def generate_template(output_path: str) -> None:
                     "id": "r_001",
                     "name": "Example Rule",
                     "condition_type": "validation",
-                    "condition": "Condition to evaluate",
-                    "output": "boolean",
+                    "condition_expression": "Condition to evaluate",
+                    "returns": "boolean",
                     "description": "Describe what this rule checks"
                 }
             ],
             "directives": [
                 {
                     "id": "d_001",
+                    "name": "Example Directive",
                     "directive_type": "completion",
                     "description": "Describe the completion state",
                     "decomposable": False
