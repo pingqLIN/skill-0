@@ -1,8 +1,24 @@
-# Skill-0 Schema Reference
+# Skill-0 Historical Schema Reference
 
-> Complete reference for skill decomposition schema v2.0.0
+> Archived reference for an older skill decomposition baseline.
 
-## Schema Overview
+Status note:
+- This document is historical and is **not** the live schema authority.
+- The live schema source of truth is [schema/skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json), currently `v2.4.0`.
+- The active remediation baseline for contract/governance cleanup is [project-improvement-plan-2026-03-27.zh-TW.md](<repo-root>/docs/project-improvement-plan-2026-03-27.zh-TW.md).
+- Complex-skill schema extension work is being designed in [schema-extension-design-complex-skills-2026-03-24.md](<repo-root>/docs/schema-extension-design-complex-skills-2026-03-24.md).
+
+Archived-body warning:
+- The examples below intentionally preserve older `v2.0.0` field shapes for historical traceability.
+- Do **not** reuse body examples here for new artifacts.
+- In the canonical `v2.4.0` contract, rules use `condition_expression` and `returns`, and directives require `name`.
+
+Current canonical replacements:
+- archived `skill_id` examples here do not reflect the current `(claude|mcp)__[scope]__[name]` pattern
+- archived execution-path examples omit newer canonical fields such as `path_id` and `condition`
+- archived parser examples here do not represent the current `skill-0 v2.4` emission contract
+
+## Archived v2.0.0 Schema Overview
 
 ### Meta Information
 Every skill decomposition must include complete metadata:
@@ -10,12 +26,12 @@ Every skill decomposition must include complete metadata:
 ```json
 {
   "meta": {
-    "skill_id": "string",           // Format: "claude__<name>" or "mcp__<name>"
+    "skill_id": "string",           // Archived example format, not the current canonical pattern
     "name": "string",                // Skill identifier
     "skill_layer": "enum",           // claude_skill | mcp_tool | mcp_server_internal
     "title": "string",               // Human-readable title
     "description": "string",         // Brief description
-    "schema_version": "2.0.0",       // Current schema version
+    "schema_version": "2.0.0",       // Archived version shown for reference only
     "parse_timestamp": "ISO-8601",   // When parsed
     "parser_version": "string",      // Parser tool version
     "parsed_by": "string"            // Parser identifier
@@ -32,7 +48,7 @@ Every skill decomposition must include complete metadata:
 | `skill_layer` | enum | ✅ | One of: claude_skill, mcp_tool, mcp_server_internal |
 | `title` | string | ✅ | Clear, concise title |
 | `description` | string | ✅ | 1-3 sentences |
-| `schema_version` | string | ✅ | "2.0.0" (current) |
+| `schema_version` | string | ✅ | "2.0.0" (archived example, not current) |
 | `parse_timestamp` | string | ✅ | ISO 8601 format |
 | `parser_version` | string | ✅ | Version of parser used |
 | `parsed_by` | string | ✅ | Tool or person identifier |
@@ -112,13 +128,16 @@ External effects that persist after action completes:
 
 Atomic judgments that evaluate conditions without performing actions.
 
+Historical note:
+- The archived rule example below predates the canonical rename to `condition_expression` and `returns`.
+
 ```json
 {
   "id": "r_XXX",                     // Pattern: r_001, r_002, ...
   "name": "string",                  // Clear, condition-based name
   "condition_type": "enum",          // See Condition Types below
-  "condition": "string",             // What is being evaluated
-  "output": "enum",                  // Result type
+  "condition": "string",             // Archived field name; canonical field is condition_expression
+  "output": "enum",                  // Archived field name; canonical field is returns
   "description": "string"            // Purpose and context
 }
 ```
@@ -148,6 +167,9 @@ Atomic judgments that evaluate conditions without performing actions.
 ### Directives
 
 Descriptive statements providing context, goals, or constraints.
+
+Historical note:
+- The archived directive example below predates the canonical required `name` field.
 
 ```json
 {
@@ -237,7 +259,11 @@ Document common execution sequences:
 ❌ Invalid: a001, A_001, action_001
 ```
 
-## Complete Example
+## Archived Complete Example
+
+Archived example warning:
+- The JSON below is preserved as a `v2.0.0` reference specimen.
+- It is not a copy-paste-safe example for current artifact generation.
 
 ```json
 {
