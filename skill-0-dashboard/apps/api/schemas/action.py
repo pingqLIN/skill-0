@@ -9,6 +9,7 @@ class ActionReadiness(BaseModel):
     """Readiness status for governance actions on a skill"""
 
     skill_id: str
+    revision_id: Optional[str] = None
     can_scan: bool
     can_test: bool
     source_path_exists: bool
@@ -21,6 +22,7 @@ class ActionResult(BaseModel):
 
     status: Literal["success", "failed", "noop", "partial"]
     skill_id: Optional[str] = None
+    revision_id: Optional[str] = None
     processed: int = 0
     results: List[dict] = []
     error_code: Optional[str] = None

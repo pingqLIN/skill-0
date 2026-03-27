@@ -8,9 +8,11 @@ from unittest.mock import MagicMock
 import pytest
 
 # 設定環境變數必須在 import app 之前
-os.environ.setdefault("JWT_SECRET_KEY", "test-secret")
+os.environ.setdefault("JWT_SECRET_KEY", "skill0-test-jwt-secret-key-0123456789")
 os.environ.setdefault("JWT_ALGORITHM", "HS256")
 os.environ.setdefault("SKILL0_GOVERNANCE_DB_PATH", ":memory:")
+os.environ.setdefault("SKILL0_ENV", "development")
+os.environ.setdefault("SKILL0_ENABLE_DOCS", "true")
 
 # 確保 skill-0-dashboard 目錄在 sys.path 中，使得 from apps.api.xxx import 可用
 _DASHBOARD_ROOT = os.path.join(os.path.dirname(__file__), "..", "..", "..")
@@ -20,13 +22,21 @@ import jwt as pyjwt
 from fastapi.testclient import TestClient
 
 
-def _make_token(sub: str = "testuser", secret: str = "test-secret") -> str:
+def _jwt_secret() -> str:
+    return os.environ["JWT_SECRET_KEY"]
+
+
+def _jwt_algorithm() -> str:
+    return os.environ["JWT_ALGORITHM"]
+
+
+def _make_token(sub: str = "testuser", secret: str | None = None) -> str:
     """有效 JWT 產生器（測試用）"""
     payload = {
         "sub": sub,
         "exp": datetime.now(timezone.utc) + timedelta(hours=1),
     }
-    return pyjwt.encode(payload, secret, algorithm="HS256")
+    return pyjwt.encode(payload, secret or _jwt_secret(), algorithm=_jwt_algorithm())
 
 
 @pytest.fixture()
@@ -43,7 +53,7 @@ def expired_token_header():
         "sub": "testuser",
         "exp": datetime.now(timezone.utc) - timedelta(hours=1),
     }
-    token = pyjwt.encode(payload, "test-secret", algorithm="HS256")
+    token = pyjwt.encode(payload, _jwt_secret(), algorithm=_jwt_algorithm())
     return {"Authorization": f"Bearer {token}"}
 
 
@@ -60,6 +70,7 @@ def mock_service():
         "rejected_count": 1,
         "blocked_count": 1,
         "high_risk_count": 2,
+        "avg_fidelity_score": 0.85,
         "avg_equivalence_score": 0.85,
     }
     service.get_risk_distribution.return_value = {
@@ -94,6 +105,7 @@ def mock_service():
                 "status": "approved",
                 "risk_level": "low",
                 "risk_score": 15,
+                "fidelity_score": 0.92,
                 "equivalence_score": 0.92,
                 "author_name": "test",
                 "license_spdx": "MIT",
@@ -109,6 +121,86 @@ def mock_service():
         "page_size": 20,
     }
     service.get_skill.return_value = None  # 各測試自行 override
+    service.get_skill_revisions.return_value = [
+        {
+            "revision_id": "rev_001",
+            "revision_number": 1,
+            "status": "approved",
+            "version": "1.0.0",
+            "source_commit": "abc12345",
+            "source_path": "/path/to/skill",
+            "source_checksum": "checksum-001",
+            "risk_level": "low",
+            "risk_score": 15,
+            "equivalence_score": 0.92,
+            "approved_by": "admin",
+            "approved_at": "2026-01-01T00:00:00",
+            "created_at": "2026-01-01T00:00:00",
+            "updated_at": "2026-01-01T00:00:00",
+            "is_current": True,
+        }
+    ]
+    service.get_action_readiness.return_value = {
+        "skill_id": "sk_001",
+        "revision_id": "rev_001",
+        "can_scan": True,
+        "can_test": True,
+        "source_path_exists": True,
+        "installed_path_exists": True,
+        "reasons": [],
+    }
+    service.run_scan.return_value = {
+        "status": "success",
+        "skill_id": "sk_001",
+        "revision_id": "rev_001",
+        "processed": 1,
+        "results": [
+            {
+                "skill_id": "sk_001",
+                "revision_id": "rev_001",
+                "status": "success",
+                "fidelity_score": 0.92,
+                "risk_score": 15,
+            }
+        ],
+        "error_code": None,
+        "error_message": None,
+        "hint": None,
+    }
+    service.run_scan_batch.return_value = {
+        "status": "noop",
+        "processed": 0,
+        "results": [],
+        "error_code": None,
+        "error_message": None,
+        "hint": None,
+    }
+    service.run_test.return_value = {
+        "status": "success",
+        "skill_id": "sk_001",
+        "revision_id": "rev_001",
+        "processed": 1,
+        "results": [
+            {
+                "skill_id": "sk_001",
+                "revision_id": "rev_001",
+                "status": "success",
+                "fidelity_score": 0.92,
+                "overall_score": 0.92,
+            }
+        ],
+        "error_code": None,
+        "error_message": None,
+        "hint": None,
+    }
+    service.run_test_batch.return_value = {
+        "status": "noop",
+        "processed": 0,
+        "results": [],
+        "error_code": None,
+        "error_message": None,
+        "hint": None,
+    }
 
     # --- reviews ---
     service.get_pending_reviews.return_value = []

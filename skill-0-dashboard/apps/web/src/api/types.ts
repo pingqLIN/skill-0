@@ -5,6 +5,7 @@ export interface StatsOverview {
   rejected_count: number;
   blocked_count: number;
   high_risk_count: number;
+  avg_fidelity_score: number;
   avg_equivalence_score: number;
 }
 
@@ -33,14 +34,19 @@ export interface FindingsByRule {
 
 export interface SkillSummary {
   skill_id: string;
+  current_revision_id: string | null;
+  revision_id: string | null;
+  revision_number: number | null;
   name: string;
   status: 'pending' | 'approved' | 'rejected' | 'blocked';
   risk_level: 'safe' | 'low' | 'medium' | 'high' | 'critical' | 'blocked';
   risk_score: number;
+  fidelity_score: number | null;
   equivalence_score: number | null;
   author_name: string;
   license_spdx: string;
   source_url: string;
+  source_checksum: string | null;
   source_type: string | null;
   version: string;
   created_at: string | null;
@@ -69,6 +75,7 @@ export interface SecurityFinding {
 
 export interface ScanSummary {
   scan_id: string;
+  revision_id: string | null;
   scanned_at: string;
   risk_level: string;
   risk_score: number;
@@ -97,7 +104,9 @@ export interface ScanDetail extends ScanSummary {
 
 export interface TestSummary {
   test_id: string;
+  revision_id: string | null;
   tested_at: string;
+  fidelity_score: number | null;
   overall_score: number;
   passed: boolean;
   semantic_similarity: number | null;
@@ -111,8 +120,28 @@ export interface AuditEvent {
   actor: string;
   timestamp: string;
   skill_id: string | null;
+  revision_id: string | null;
   skill_name: string | null;
   details: Record<string, unknown> | null;
+}
+
+export interface RevisionSummary {
+  revision_id: string;
+  revision_number: number;
+  status: 'pending' | 'approved' | 'rejected' | 'blocked';
+  version: string;
+  source_commit: string | null;
+  source_path: string;
+  source_checksum: string | null;
+  risk_level: string;
+  risk_score: number;
+  fidelity_score: number | null;
+  equivalence_score: number | null;
+  approved_by: string | null;
+  approved_at: string | null;
+  created_at: string;
+  updated_at: string;
+  is_current: boolean;
 }
 
 export interface SkillDetail extends SkillSummary {
@@ -130,10 +159,12 @@ export interface SkillDetail extends SkillSummary {
   converted_at: string | null;
   converter_version: string | null;
   target_format: string | null;
+  fidelity_tested_at: string | null;
   security_scanned_at: string | null;
   scanner_version: string | null;
   approved_by: string | null;
   approved_at: string | null;
+  fidelity_passed: boolean | null;
   equivalence_tested_at: string | null;
   equivalence_passed: boolean | null;
   installed_path: string | null;
@@ -142,6 +173,7 @@ export interface SkillDetail extends SkillSummary {
   scan_history: ScanSummary[];
   test_history: TestSummary[];
   audit_events: AuditEvent[];
+  revision_history: RevisionSummary[];
 }
 
 export interface AuditListResponse {
@@ -153,6 +185,7 @@ export interface AuditListResponse {
 
 export interface ActionReadiness {
   skill_id: string;
+  revision_id: string | null;
   can_scan: boolean;
   can_test: boolean;
   source_path_exists: boolean;
@@ -163,6 +196,7 @@ export interface ActionReadiness {
 export interface ActionResult {
   status: 'success' | 'failed' | 'noop' | 'partial';
   skill_id: string | null;
+  revision_id: string | null;
   processed: number;
   results: Array<Record<string, unknown>>;
   error_code: string | null;

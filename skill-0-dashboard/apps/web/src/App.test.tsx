@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import App from './App';
@@ -64,14 +64,20 @@ function renderWithProviders(
 // 測試 1：App 整體渲染（包含 BrowserRouter，但 App 本身內建 BrowserRouter）
 // -----------------------------------------------------------------------
 describe('App', () => {
-  it('renders without crashing', () => {
+  it('renders without crashing', async () => {
     const queryClient = createTestQueryClient();
     const { container } = render(
       <QueryClientProvider client={queryClient}>
         <App />
       </QueryClientProvider>
     );
-    // App 有 BrowserRouter，至少要渲染出某個 DOM
+
+    await screen.findByText('Dashboard');
+    await waitFor(() => {
+      expect(screen.queryByLabelText('Loading page')).not.toBeInTheDocument();
+      expect(screen.queryByText('Loading chart...')).not.toBeInTheDocument();
+    });
+
     expect(container).toBeTruthy();
     expect(container.firstChild).not.toBeNull();
   });

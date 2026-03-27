@@ -13,6 +13,7 @@ class AuditEvent(BaseModel):
     timestamp: datetime
     event_type: str
     skill_id: Optional[str] = None
+    revision_id: Optional[str] = None
     skill_name: Optional[str] = None
     actor: str
     details: Optional[dict[str, Any]] = None
