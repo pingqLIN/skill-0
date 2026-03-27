@@ -547,7 +547,7 @@ class ContextAwareSecurityRule:
 class AdvancedSkillAnalyzer:
     """Context-aware skill security analyzer"""
 
-    VERSION = "2.1.0"
+    VERSION = "2.4.0"
 
     # Score weights by severity
     SEVERITY_SCORES = {

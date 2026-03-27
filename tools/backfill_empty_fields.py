@@ -103,13 +103,14 @@ def main():
     }
 
     for skill in skills:
-        updates = {}
+        skill_updates = {}
+        revision_updates = {}
 
         # 1. author_email
         if not skill.author_email:
             email = derive_author_email(skill)
             if email:
-                updates["author_email"] = email
+                skill_updates["author_email"] = email
                 stats["author_email"]["updated"] += 1
             else:
                 stats["author_email"]["skipped"] += 1
@@ -120,7 +121,7 @@ def main():
         if not skill.author_url:
             url = derive_author_url(skill)
             if url:
-                updates["author_url"] = url
+                skill_updates["author_url"] = url
                 stats["author_url"]["updated"] += 1
             else:
                 stats["author_url"]["skipped"] += 1
@@ -131,7 +132,7 @@ def main():
         if not skill.installed_path:
             path = derive_installed_path(skill)
             if path:
-                updates["installed_path"] = path
+                revision_updates["installed_path"] = path
                 stats["installed_path"]["updated"] += 1
             else:
                 stats["installed_path"]["skipped"] += 1
@@ -142,26 +143,32 @@ def main():
         if not skill.installed_at:
             at = derive_installed_at(skill)
             if at:
-                updates["installed_at"] = at
+                revision_updates["installed_at"] = at
                 stats["installed_at"]["updated"] += 1
             else:
                 stats["installed_at"]["skipped"] += 1
         else:
             stats["installed_at"]["skipped"] += 1
 
-        if not updates:
+        combined_updates = {**skill_updates, **revision_updates}
+        if not combined_updates:
             continue
 
         if args.dry_run:
             if args.verbose:
                 print(f"  [dry-run] {skill.name}:")
-                for k, v in updates.items():
+                for k, v in combined_updates.items():
                     val = v if len(str(v)) < 60 else str(v)[:57] + "..."
                     print(f"    {k} = {val}")
         else:
-            success = db.update_skill(skill.skill_id, **updates)
+            success = True
+            if skill_updates:
+                success = db.update_skill(skill.skill_id, **skill_updates)
+            if success and revision_updates:
+                success = db.register_revision(skill.skill_id, **revision_updates) is not None
+
             if args.verbose and success:
-                print(f"  [updated] {skill.name}: {list(updates.keys())}")
+                print(f"  [updated] {skill.name}: {list(combined_updates.keys())}")
             elif not success:
                 print(f"  [error] {skill.name}: update failed")
 

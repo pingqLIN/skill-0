@@ -1,25 +1,36 @@
 #!/usr/bin/env python3
 """
-批次解析 Claude Skills 為 Skill-0 v2.1 格式
+批次解析 Claude Skills 為 Skill-0 canonical schema 格式。
 """
 
 import json
 from datetime import datetime
 from pathlib import Path
+import sys
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
+
+from tools.schema_contract import (
+    derive_short_name,
+    infer_condition_type,
+    infer_returns,
+    normalize_skill_document,
+)
 
 # 基本模板
 def create_skill_template(skill_id, name, description, source):
     return {
         "$schema": "../schema/skill-decomposition.schema.json",
         "meta": {
-            "skill_id": f"claude__{skill_id}",
+            "skill_id": f"claude__skill__{skill_id}",
             "name": name,
             "skill_layer": "claude_skill",
             "title": f"{name.title()} Skill",
             "description": description[:200] if len(description) > 200 else description,
-            "schema_version": "2.1.0",
+            "schema_version": "2.4.0",
             "parse_timestamp": datetime.now().isoformat() + "Z",
-            "parser_version": "skill-0 v2.1",
+            "parser_version": "skill-0 v2.4",
             "parsed_by": "skill-0-batch"
         },
         "original_definition": {
@@ -32,6 +43,41 @@ def create_skill_template(skill_id, name, description, source):
             "rules": [],
             "directives": []
         }
+    }
+
+
+def build_rule_record(rule):
+    """Map raw skill rule hints onto canonical rule fields."""
+    description = rule["description"]
+    name = rule.get("name") or derive_short_name(
+        description or rule.get("condition"),
+        fallback=f"Rule {rule['id'].upper()}",
+    )
+
+    return {
+        "id": rule["id"],
+        "name": name,
+        "condition_type": rule.get("condition_type")
+        or infer_condition_type(description, rule.get("condition"), name),
+        "condition_expression": rule.get("condition_expression")
+        or rule.get("condition")
+        or description
+        or name,
+        "returns": infer_returns(rule),
+        "description": description,
+    }
+
+
+def build_directive_record(directive):
+    """Map raw skill directive hints onto canonical directive fields."""
+    description = directive["description"]
+    return {
+        "id": directive["id"],
+        "name": directive.get("name")
+        or derive_short_name(description, fallback=f"Directive {directive['id'].upper()}"),
+        "directive_type": directive["directive_type"],
+        "description": description,
+        "decomposable": directive.get("decomposable", True),
     }
 
 # Skills 定義
@@ -263,7 +309,7 @@ SKILLS = {
 
 
 def parse_skill(skill_key, skill_data):
-    """解析單一 skill 為 v2.0 格式"""
+    """解析單一 skill 為 canonical schema 格式"""
     template = create_skill_template(
         skill_id=skill_key.replace("-", "_"),
         name=skill_data["name"],
@@ -284,23 +330,13 @@ def parse_skill(skill_key, skill_data):
     
     # 添加 rules
     for rule in skill_data.get("rules", []):
-        template["decomposition"]["rules"].append({
-            "id": rule["id"],
-            "description": rule["description"],
-            "condition": rule.get("condition", "always"),
-            "output": rule.get("output", "proceed_or_halt")
-        })
+        template["decomposition"]["rules"].append(build_rule_record(rule))
     
     # 添加 directives
     for directive in skill_data.get("directives", []):
-        template["decomposition"]["directives"].append({
-            "id": directive["id"],
-            "directive_type": directive["directive_type"],
-            "description": directive["description"],
-            "decomposable": directive.get("decomposable", True)
-        })
+        template["decomposition"]["directives"].append(build_directive_record(directive))
     
-    return template
+    return normalize_skill_document(template)
 
 
 def main():

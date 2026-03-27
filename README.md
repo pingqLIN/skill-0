@@ -111,10 +111,10 @@ skill-0/
 ├── governance/                        # Governance system
 │   └── db/governance.db              # Skill approval workflow DB
 ├── schema/                            # JSON Schema v2.4
-├── parsed/                            # Parsed skill examples (32 skills)
+├── parsed/                            # Parsed skill examples (195 checked-in JSON files)
 ├── tools/                             # Analysis & governance tools
 ├── scripts/                           # Maintenance scripts
-├── tests/                             # Test suite (111+ tests)
+├── tests/                             # Test suites and fixtures
 ├── docker-compose.yml                 # Development Docker setup
 ├── docker-compose.prod.yml            # Production Docker setup
 ├── Dockerfile.{api,dashboard,web}     # Container images
@@ -128,26 +128,60 @@ skill-0/
 git clone https://github.com/pingqLIN/skill-0.git
 cd skill-0
 
-# Install dependencies
-pip install -r requirements.txt
+# Initialize environment variables for local development
+cp .env.example .env
+
+# Create a repo-local virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
+
+# Install Python dependencies for core API + dashboard API + tests
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements-dev.txt
+
+# Match the frontend runtime used in CI and supported by Vite 7
+nvm use || nvm install 20.19.0
+
+# Install dashboard web dependencies
+cd skill-0-dashboard/apps/web && npm ci
+cd ../../..
 
 # Index skills (first time)
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+.venv/bin/python -m vector_db.search --db skills.db --parsed-dir parsed index
 ```
+
+Default local login credentials after copying `.env.example`:
+
+- Core API / dashboard login username: `admin`
+- Core API / dashboard login password: `change-me`
+
+These values are for local development only. Production must replace them and the JWT secret before startup.
 
 ## Testing
 
-The project includes a comprehensive test suite with 111+ tests:
+The project includes a comprehensive test suite with 157 automated tests:
 
 ```bash
-# Run all Python tests
-python -m pytest tests/ -v
+# Run the full Python regression suite (core API + dashboard API)
+.venv/bin/python -m pytest tests skill-0-dashboard/apps/api/tests -q
 
-# Run Dashboard API tests
-python -m pytest skill-0-dashboard/apps/api/tests/ -v
+# Run only core API tests
+.venv/bin/python -m pytest tests/ -v
 
-# Run frontend tests
+# Run only Dashboard API tests
+.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests/ -v
+
+# Run frontend tests (Node 20.19+)
+nvm use
 cd skill-0-dashboard/apps/web && npm test
+
+# Build frontend production bundle
+nvm use
+cd skill-0-dashboard/apps/web && npm run build
+
+# Build frontend and enforce the bundle-size guardrail used in CI
+nvm use
+cd skill-0-dashboard/apps/web && npm run build:ci
 ```
 
 **Test Coverage**:
@@ -190,10 +224,18 @@ Skill-0 provides two FastAPI servers:
 ```bash
 # Start both servers
 uvicorn api.main:app --port 8000
-uvicorn apps.api.main:app --port 8001
+cd skill-0-dashboard/apps/api && ../../.venv/bin/python -m uvicorn main:app --port 8001
 
-# Or use Docker
+# Development Docker compose
 docker compose up
+
+# Production Docker compose
+cp .env.production.example .env
+docker compose -f docker-compose.prod.yml up -d --build
+
+# Production entrypoints after startup
+# Web: http://127.0.0.1:3080
+# Core API health: http://127.0.0.1:8080/health
 ```
 
 ## Semantic Search
@@ -204,25 +246,25 @@ Skill-0 includes a powerful semantic search engine powered by `all-MiniLM-L6-v2`
 
 ```bash
 # Index all skills
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+.venv/bin/python -m vector_db.search --db skills.db --parsed-dir parsed index
 
 # Search by natural language
-python -m vector_db.search --db skills.db search "PDF document processing"
+.venv/bin/python -m vector_db.search --db skills.db search "PDF document processing"
 
 # Find similar skills
-python -m vector_db.search --db skills.db similar "Docx Skill"
+.venv/bin/python -m vector_db.search --db skills.db similar "Docx Skill"
 
 # Cluster analysis (auto-grouping)
-python -m vector_db.search --db skills.db cluster -n 5
+.venv/bin/python -m vector_db.search --db skills.db cluster -n 5
 
 # Show statistics
-python -m vector_db.search --db skills.db stats
+.venv/bin/python -m vector_db.search --db skills.db stats
 ```
 
 ### Search Examples
 
 ```bash
-$ python -m vector_db.search search "creative design visual art"
+$ .venv/bin/python -m vector_db.search search "creative design visual art"
 
 🔍 Searching for: creative design visual art
 --------------------------------------------------
@@ -289,33 +331,25 @@ clusters = search.cluster_skills(n_clusters=5)
 }
 ```
 
-## Statistics (32 Skills)
+## Dataset Snapshot
 
 | Metric | Count |
 |--------|-------|
-| **Skills** | 32 |
-| **Actions** | 266 |
-| **Rules** | 84 |
-| **Directives** | 120 |
+| **Skills** | 195 |
+| **Actions** | 2220 |
+| **Rules** | 1206 |
+| **Directives** | 1642 |
 | **Action Type Coverage** | 100% |
 | **Directive Type Coverage** | 100% |
 
-### Cluster Distribution
-
-| Cluster | Skills | Description |
-|---------|--------|-------------|
-| 1 | 10 | Development Tools (MCP, Testing) |
-| 2 | 5 | Document Processing (PDF, DOCX) |
-| 3 | 7 | Creative Design (Canvas, Theme) |
-| 4 | 2 | Data Analysis (Excel, Raffle) |
-| 5 | 8 | Research Assistant (Leads, Resume) |
-
 ## Performance
+
+Current indexing and search performance depends on hardware, model cache state, and whether the embedding model has already been downloaded. Re-run `.venv/bin/python -m vector_db.search --db skills.db --parsed-dir parsed index` locally for a current benchmark on your machine.
+
+Stable characteristics:
 
 | Metric | Value |
 |--------|-------|
-| Index Time | 0.88s (32 skills) |
-| Search Latency | ~75ms |
 | Embedding Dimension | 384 |
 | Database | SQLite-vec |
 
@@ -331,6 +365,7 @@ Comprehensive documentation is available:
 - **[scripts/helper.py](scripts/helper.py)** - Helper utilities for validation, conversion, and testing
 - **[docs/skill-0-vs-claude-code-simplifier.md](docs/skill-0-vs-claude-code-simplifier.md)** - Comparison with Claude Code Simplifier (EN)
 - **[docs/skill-0-vs-claude-code-simplifier.zh-TW.md](docs/skill-0-vs-claude-code-simplifier.zh-TW.md)** - 與 Claude Code Simplifier 比較 (zh-TW)
+- **[docs/shared-documentation-model.md](docs/shared-documentation-model.md)** - How shared contract docs are sourced from `skill-0` and mirrored into `skill-0-GUI`
 
 ### Quick Start Guide
 
@@ -375,8 +410,8 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
 ### v2.3.0 (2026-01-28) - Testing & Quality Assurance
 - **New Feature**: Comprehensive automated test suite
   - 32 tests covering all helper utilities
-  - Tool equivalence verification (validator consistency)
-  - Code equivalence verification (converter determinism)
+  - Validator consistency verification
+  - Converter determinism verification
   - Integration workflow testing
   - Error handling and edge case coverage
 - Test fixtures and documentation in `tests/`
@@ -404,7 +439,7 @@ See [docs/helper-test-results.md](docs/helper-test-results.md) for detailed test
   - `vector_db` module with SQLite-vec integration
   - `all-MiniLM-L6-v2` embedding model (384 dimensions)
   - K-Means clustering for skill grouping
-  - CLI tool: `python -m vector_db.search`
+  - CLI tool: `.venv/bin/python -m vector_db.search`
 - Expanded to 32 skills (+21 from awesome-claude-skills)
 - Performance: 0.88s indexing, ~75ms search
 

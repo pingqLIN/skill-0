@@ -47,19 +47,20 @@ cp .env.production.example .env
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -r requirements-dev.txt
 ```
 
 ### 2. Index Skills (first time)
 
 ```bash
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+.venv/bin/python -m vector_db.search --db skills.db --parsed-dir parsed index
 ```
 
 ### 3. Start Core API (port 8000)
 
 ```bash
-python -m api.main
+.venv/bin/python -m api.main
 ```
 
 Endpoints:
@@ -72,8 +73,7 @@ Endpoints:
 
 ```bash
 cd skill-0-dashboard/apps/api
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8001
+../../.venv/bin/python -m uvicorn main:app --reload --port 8001
 ```
 
 Endpoints:
@@ -178,7 +178,7 @@ All containers run as non-root users with healthcheck intervals of 30 seconds.
 ### "sqlite-vec not installed"
 
 ```bash
-pip install sqlite-vec
+.venv/bin/python -m pip install sqlite-vec
 ```
 
 ### "Database not found"
@@ -186,7 +186,7 @@ pip install sqlite-vec
 The core API auto-indexes on first startup if `skills.db` is missing. To manually re-index:
 
 ```bash
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+.venv/bin/python -m vector_db.search --db skills.db --parsed-dir parsed index
 ```
 
 ### CUDA not available
