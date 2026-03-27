@@ -3,9 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:ci": "npm run build && npm run check:bundle",
+    "check:bundle": "node ./scripts/check-bundle-size.mjs",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest run",

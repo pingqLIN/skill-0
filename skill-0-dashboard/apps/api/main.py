@@ -9,6 +9,7 @@ import os
 import sys
 import time
 import uuid
+from urllib.parse import urlparse
 
 import structlog
 from fastapi import Depends, FastAPI, Request
@@ -21,13 +22,75 @@ from .routers import stats, skills, reviews, scans, audit
 CORS_ORIGINS = os.getenv(
     "CORS_ORIGINS", "http://localhost:5173,http://localhost:3000"
 ).split(",")
+SKILL0_ENV = os.getenv("SKILL0_ENV", "development").lower()
+DEFAULT_JWT_SECRET_KEY = "dev-secret-change-in-production"
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", DEFAULT_JWT_SECRET_KEY)
+
+
+def is_production_env(env_value: str) -> bool:
+    """Return True when environment value represents production."""
+    return env_value.strip().lower() in {"production", "prod"}
+
+
+def _env_flag(name: str, default: bool) -> bool:
+    """Parse a boolean environment flag."""
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _is_local_origin(origin: str) -> bool:
+    """Detect localhost/loopback or wildcard CORS entries."""
+    if origin.strip() == "*":
+        return True
+
+    parsed = urlparse(origin)
+    host = (parsed.hostname or "").lower()
+    return host in {"localhost", "127.0.0.1", "::1"}
+
+
+def find_production_security_issues() -> list[str]:
+    """Enumerate production security misconfigurations."""
+    if not is_production_env(SKILL0_ENV):
+        return []
+
+    issues: list[str] = []
+
+    if JWT_SECRET_KEY == DEFAULT_JWT_SECRET_KEY:
+        issues.append("JWT_SECRET_KEY must not use the development default in production")
+
+    insecure_origins = [
+        origin for origin in CORS_ORIGINS if origin.strip() and _is_local_origin(origin)
+    ]
+    if insecure_origins:
+        issues.append(
+            "CORS_ORIGINS must not include localhost/wildcard in production: "
+            + ", ".join(insecure_origins)
+        )
+
+    return issues
+
+
+def enforce_production_security_configuration() -> None:
+    """Fail fast when production security settings are unsafe."""
+    issues = find_production_security_issues()
+    if issues:
+        raise RuntimeError(
+            "Invalid dashboard production security configuration: " + "; ".join(issues)
+        )
+
+
+enforce_production_security_configuration()
+ENABLE_DOCS = _env_flag("SKILL0_ENABLE_DOCS", default=not is_production_env(SKILL0_ENV))
 
 app = FastAPI(
     title="Skill-0 Governance Dashboard API",
-    description="REST API for the Skill-0 governance dashboard providing security scanning, equivalence testing, and approval workflow management.",
+    description="REST API for the Skill-0 governance dashboard providing security scanning, fidelity testing, and approval workflow management.",
     version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url="/docs" if ENABLE_DOCS else None,
+    redoc_url="/redoc" if ENABLE_DOCS else None,
+    openapi_url="/openapi.json" if ENABLE_DOCS else None,
 )
 
 # Configure CORS — controlled by CORS_ORIGINS env var
@@ -109,12 +172,14 @@ app.include_router(audit.router, prefix="/api", tags=["Audit"], dependencies=_au
 @app.get("/")
 async def root():
     """API root - returns basic API information"""
-    return {
+    payload = {
         "name": "Skill-0 Governance API",
         "version": "1.0.0",
-        "docs": "/docs",
-        "redoc": "/redoc",
     }
+    if ENABLE_DOCS:
+        payload["docs"] = "/docs"
+        payload["redoc"] = "/redoc"
+    return payload
 
 
 @app.get("/health")

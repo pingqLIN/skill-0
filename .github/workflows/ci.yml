@@ -21,7 +21,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8
+          pip install -r requirements-dev.txt
 
       - name: Lint with flake8
         run: |
@@ -36,15 +36,26 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install jsonschema
+
       - name: Validate JSON files
         run: |
-          for file in parsed/*.json schema/*.json analysis/*.json; do
+          for file in schema/*.json analysis/*.json; do
             if [ -f "$file" ]; then
               echo "Validating $file..."
               python -m json.tool "$file" > /dev/null
             fi
           done
-          echo "All JSON files are valid!"
+          python tools/validate_skill_schema.py parsed
+          echo "All JSON files are valid and schema-compliant!"
 
   compile-check:
     runs-on: ubuntu-latest
@@ -60,9 +71,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -r skill-0-dashboard/apps/api/requirements.txt
-          pip install PyJWT
+          pip install -r requirements-dev.txt
 
       - name: Compile check all Python
         run: |
@@ -80,19 +89,37 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Cache embedding models
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/huggingface
+            ~/.cache/torch/sentence_transformers
+          key: ${{ runner.os }}-skill0-embeddings-${{ hashFiles('requirements.txt', 'requirements-dev.txt') }}-all-MiniLM-L6-v2
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest-cov pytest-timeout
+          pip install -r requirements-dev.txt
+
+      - name: Warm embedding model cache
+        env:
+          SKILL0_DEVICE: "cpu"
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          python - <<'PY'
+          from sentence_transformers import SentenceTransformer
+
+          SentenceTransformer("all-MiniLM-L6-v2", device="cpu")
+          print("Embedding model cache ready")
+          PY
 
       - name: Run tests
         env:
-          # Prevent hanging on SentenceTransformer model downloads in CI
-          HF_HUB_OFFLINE: "1"
-          TRANSFORMERS_OFFLINE: "1"
+          SKILL0_DEVICE: "cpu"
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          python -m pytest tests/ -v --timeout=120 --cov=api --cov=vector_db --cov=tools --cov-report=term-missing --cov-report=xml:coverage.xml
+          python -m pytest tests skill-0-dashboard/apps/api/tests -v --timeout=120 --cov=api --cov=vector_db --cov=tools --cov=skill-0-dashboard/apps/api --cov-report=term-missing --cov-report=xml:coverage.xml --cov-fail-under=75
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v7
@@ -109,7 +136,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "20.19.0"
           cache: "npm"
           cache-dependency-path: skill-0-dashboard/apps/web/package-lock.json
 
@@ -121,9 +148,13 @@ jobs:
         working-directory: skill-0-dashboard/apps/web
         run: npm run lint
 
+      - name: Test
+        working-directory: skill-0-dashboard/apps/web
+        run: npm test
+
       - name: Build
         working-directory: skill-0-dashboard/apps/web
-        run: npm run build
+        run: npm run build:ci
 
   docker-build:
     runs-on: ubuntu-latest

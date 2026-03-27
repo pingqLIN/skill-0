@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from './client';
-import type { SkillSummary, SkillDetail, ActionReadiness, ActionResult } from './types';
+import type { SkillSummary, SkillDetail, ActionReadiness, ActionResult, RevisionSummary } from './types';
 
 interface SkillListResponse {
   items: SkillSummary[];
@@ -51,6 +51,17 @@ export function useActionReadiness(skillId: string) {
   });
 }
 
+export function useSkillRevisions(skillId: string) {
+  return useQuery<RevisionSummary[]>({
+    queryKey: ['skill-revisions', skillId],
+    queryFn: async () => {
+      const { data } = await api.get(`/api/skills/${skillId}/revisions`);
+      return data;
+    },
+    enabled: !!skillId,
+  });
+}
+
 export function useTriggerScan() {
   const queryClient = useQueryClient();
   return useMutation<ActionResult, Error, string>({
@@ -60,6 +71,7 @@ export function useTriggerScan() {
     },
     onSuccess: (_data, skillId) => {
       queryClient.invalidateQueries({ queryKey: ['skill', skillId] });
+      queryClient.invalidateQueries({ queryKey: ['skill-revisions', skillId] });
       queryClient.invalidateQueries({ queryKey: ['action-readiness', skillId] });
     },
   });
@@ -74,6 +86,7 @@ export function useTriggerTest() {
     },
     onSuccess: (_data, skillId) => {
       queryClient.invalidateQueries({ queryKey: ['skill', skillId] });
+      queryClient.invalidateQueries({ queryKey: ['skill-revisions', skillId] });
       queryClient.invalidateQueries({ queryKey: ['action-readiness', skillId] });
     },
   });
