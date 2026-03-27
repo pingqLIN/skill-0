@@ -1,11 +1,11 @@
 {
   "meta": {
-    "skill_id": "test__sample-skill",
+    "skill_id": "claude__skill__sample_skill",
     "name": "sample-skill",
     "skill_layer": "claude_skill",
     "title": "Sample Test Skill",
     "description": "A sample skill for testing purposes",
-    "schema_version": "2.0.0",
+    "schema_version": "2.4.0",
     "parse_timestamp": "2026-01-28T00:00:00Z",
     "parser_version": "test-v1.0",
     "parsed_by": "test-fixture"
@@ -43,14 +43,15 @@
         "id": "r_001",
         "name": "Validate Input",
         "condition_type": "validation",
-        "condition": "Input is not empty",
-        "output": "boolean",
+        "condition_expression": "Input is not empty",
+        "returns": "boolean",
         "description": "Checks if input is valid"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Processing completed successfully",
         "directive_type": "completion",
         "description": "Processing completed successfully",
         "decomposable": false
@@ -59,8 +60,10 @@
   },
   "execution_paths": [
     {
+      "path_id": 1,
       "path_name": "Happy Path",
       "sequence": ["a_001", "r_001", "a_002", "d_001"],
+      "condition": "default",
       "description": "Normal execution flow"
     }
   ]
