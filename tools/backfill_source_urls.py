@@ -123,11 +123,11 @@ def main():
             print(f"  [dry-run] {skill.name} -> {url}")
             updated += 1
         else:
-            success = db.update_skill(
+            success = db.register_revision(
                 skill.skill_id,
                 source_url=url,
                 source_type="github",
-            )
+            ) is not None
             if success:
                 if args.verbose:
                     print(f"  [updated] {skill.name} -> {url}")

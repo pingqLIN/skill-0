@@ -314,7 +314,7 @@ def main():
 
             # If skill was blocked but now isn't, update status
             if skill.risk_level == "blocked" and new_level != "blocked":
-                db.update_skill(skill.skill_id, status="pending")
+                db.update_current_revision_state(skill.skill_id, status="pending")
                 print(f"  Status:  blocked -> pending (needs review)")
 
     # Summary
