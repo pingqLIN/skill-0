@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Skill-0 System Architecture</title>
+  <desc id="desc">High-level architecture showing browser, web UI, core API, dashboard API, and the two SQLite databases used by the system.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2b4c7e"/>
+    </marker>
+    <style>
+      .bg { fill: #f7f8fb; }
+      .title { font: 700 28px Arial, sans-serif; fill: #17324d; }
+      .subtitle { font: 400 15px Arial, sans-serif; fill: #4f6478; }
+      .box-title { font: 700 20px Arial, sans-serif; fill: #17324d; }
+      .box-text { font: 400 14px Arial, sans-serif; fill: #29455f; }
+      .tag { font: 700 12px Arial, sans-serif; fill: #ffffff; }
+      .label { font: 700 14px Arial, sans-serif; fill: #2b4c7e; }
+      .small { font: 400 12px Arial, sans-serif; fill: #496179; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="760"/>
+  <text class="title" x="60" y="60">Skill-0 System Architecture</text>
+  <text class="subtitle" x="60" y="88">Production-style deployment topology validated on 2026-03-23</text>
+
+  <rect x="460" y="120" width="280" height="80" rx="18" fill="#e7f0ff" stroke="#2b4c7e" stroke-width="2"/>
+  <text class="box-title" x="560" y="155" text-anchor="middle">Browser</text>
+  <text class="box-text" x="600" y="178" text-anchor="middle">Human reviewer / operator</text>
+
+  <rect x="420" y="250" width="360" height="130" rx="18" fill="#fff3d9" stroke="#b87a1b" stroke-width="2"/>
+  <text class="box-title" x="600" y="288" text-anchor="middle">Web UI</text>
+  <text class="box-text" x="600" y="314" text-anchor="middle">React 19 + Vite build served by nginx</text>
+  <text class="box-text" x="600" y="338" text-anchor="middle">External port: 3080</text>
+  <rect x="452" y="348" width="110" height="22" rx="11" fill="#b87a1b"/>
+  <text class="tag" x="507" y="363" text-anchor="middle">/</text>
+  <rect x="575" y="348" width="110" height="22" rx="11" fill="#b87a1b"/>
+  <text class="tag" x="630" y="363" text-anchor="middle">/api/*</text>
+  <rect x="698" y="348" width="110" height="22" rx="11" fill="#b87a1b"/>
+  <text class="tag" x="753" y="363" text-anchor="middle">/dashboard-api/*</text>
+
+  <rect x="120" y="460" width="360" height="150" rx="18" fill="#dff4e8" stroke="#2f7d53" stroke-width="2"/>
+  <text class="box-title" x="300" y="500" text-anchor="middle">Core API</text>
+  <text class="box-text" x="300" y="526" text-anchor="middle">FastAPI search service</text>
+  <text class="box-text" x="300" y="550" text-anchor="middle">Semantic search, similar, cluster, stats, index</text>
+  <text class="box-text" x="300" y="574" text-anchor="middle">JWT issue / auth me / health / metrics</text>
+  <text class="box-text" x="300" y="598" text-anchor="middle">External port: 8080</text>
+
+  <rect x="720" y="460" width="360" height="150" rx="18" fill="#f8e3ea" stroke="#9d3d63" stroke-width="2"/>
+  <text class="box-title" x="900" y="500" text-anchor="middle">Dashboard API</text>
+  <text class="box-text" x="900" y="526" text-anchor="middle">FastAPI governance service</text>
+  <text class="box-text" x="900" y="550" text-anchor="middle">Stats, skills, reviews, scans, audit</text>
+  <text class="box-text" x="900" y="574" text-anchor="middle">JWT-protected, internal behind web proxy</text>
+  <text class="box-text" x="900" y="598" text-anchor="middle">Service port: 8001 (internal)</text>
+
+  <rect x="120" y="650" width="360" height="70" rx="16" fill="#eef7f2" stroke="#2f7d53" stroke-width="2"/>
+  <text class="box-title" x="300" y="686" text-anchor="middle">skills.db</text>
+  <text class="box-text" x="300" y="708" text-anchor="middle">SQLite + sqlite-vec semantic index</text>
+
+  <rect x="720" y="650" width="360" height="70" rx="16" fill="#fdf0f4" stroke="#9d3d63" stroke-width="2"/>
+  <text class="box-title" x="900" y="686" text-anchor="middle">governance.db</text>
+  <text class="box-text" x="900" y="708" text-anchor="middle">Skill metadata, scan/test history, audit log</text>
+
+  <line x1="600" y1="200" x2="600" y2="250" stroke="#2b4c7e" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="540" y1="380" x2="360" y2="460" stroke="#2b4c7e" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="660" y1="380" x2="840" y2="460" stroke="#2b4c7e" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="300" y1="610" x2="300" y2="650" stroke="#2b4c7e" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="900" y1="610" x2="900" y2="650" stroke="#2b4c7e" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="480" y1="535" x2="720" y2="535" stroke="#2b4c7e" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text class="label" x="600" y="524" text-anchor="middle">JWT trust boundary</text>
+
+  <rect x="60" y="120" width="280" height="112" rx="14" fill="#ffffff" stroke="#d1d8e0" stroke-width="1.5"/>
+  <text class="label" x="85" y="150">Key properties</text>
+  <text class="small" x="85" y="176">1. Web is the single external entrypoint for UI + dashboard API.</text>
+  <text class="small" x="85" y="196">2. Core API remains externally reachable for search and auth.</text>
+  <text class="small" x="85" y="216">3. Search and governance use separate SQLite databases.</text>
+
+  <rect x="840" y="120" width="300" height="112" rx="14" fill="#ffffff" stroke="#d1d8e0" stroke-width="1.5"/>
+  <text class="label" x="865" y="150">Runtime guards</text>
+  <text class="small" x="865" y="176">1. Production docs are disabled by default.</text>
+  <text class="small" x="865" y="196">2. JWT secret / creds / CORS fail fast in production.</text>
+  <text class="small" x="865" y="216">3. Named volumes persist skills.db and governance.db.</text>
+</svg>
