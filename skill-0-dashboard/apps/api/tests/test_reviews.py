@@ -1,7 +1,5 @@
 """Reviews router 測試（/api/reviews/*）"""
 
-import pytest
-
 
 def test_list_pending_reviews(client, auth_header, mock_service):
     """GET /api/reviews 回傳待審技能清單（空清單為預設）。"""
@@ -18,16 +16,16 @@ def test_approve_skill_success(client, auth_header, mock_service):
     response = client.post(
         "/api/reviews/sk_001/approve",
         headers=auth_header,
-        json={"reviewer": "admin", "reason": "LGTM"},
+        json={"reason": "LGTM"},
     )
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "approved"
     assert data["skill_id"] == "sk_001"
-    assert data["reviewer"] == "admin"
+    assert data["reviewer"] == "testuser"
     assert data["reason"] == "LGTM"
     mock_service.approve_skill.assert_called_once_with(
-        "sk_001", reviewer="admin", reason="LGTM"
+        "sk_001", reviewer="testuser", reason="LGTM"
     )
 
 
@@ -37,10 +35,21 @@ def test_approve_skill_fail(client, auth_header, mock_service):
     response = client.post(
         "/api/reviews/sk_blocked/approve",
         headers=auth_header,
-        json={"reviewer": "admin", "reason": "Try anyway"},
+        json={"reason": "Try anyway"},
     )
     assert response.status_code == 400
     assert "detail" in response.json()
+
+
+def test_approve_skill_rejects_client_reviewer_field(client, auth_header, mock_service):
+    """POST /api/reviews/{skill_id}/approve 不接受 client 提供 reviewer。"""
+    response = client.post(
+        "/api/reviews/sk_001/approve",
+        headers=auth_header,
+        json={"reviewer": "admin", "reason": "LGTM"},
+    )
+    assert response.status_code == 422
+    mock_service.approve_skill.assert_not_called()
 
 
 def test_reject_skill_success(client, auth_header, mock_service):
@@ -49,16 +58,16 @@ def test_reject_skill_success(client, auth_header, mock_service):
     response = client.post(
         "/api/reviews/sk_001/reject",
         headers=auth_header,
-        json={"reviewer": "admin", "reason": "Security issue"},
+        json={"reason": "Security issue"},
     )
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "rejected"
     assert data["skill_id"] == "sk_001"
-    assert data["reviewer"] == "admin"
+    assert data["reviewer"] == "testuser"
     assert data["reason"] == "Security issue"
     mock_service.reject_skill.assert_called_once_with(
-        "sk_001", reviewer="admin", reason="Security issue"
+        "sk_001", reviewer="testuser", reason="Security issue"
     )
 
 
@@ -68,7 +77,7 @@ def test_reject_skill_fail(client, auth_header, mock_service):
     response = client.post(
         "/api/reviews/nonexistent/reject",
         headers=auth_header,
-        json={"reviewer": "admin", "reason": "Reason"},
+        json={"reason": "Reason"},
     )
     assert response.status_code == 400
     assert "detail" in response.json()

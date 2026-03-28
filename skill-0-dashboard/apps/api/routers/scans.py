@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import List
 
 from fastapi import APIRouter, Depends, Query, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse
 
 from ..schemas.scan import ScanSummary, ScanDetail, ScanExport
 from ..services.governance import GovernanceService
@@ -32,7 +32,7 @@ DETECTION_STANDARDS = [
     },
     {
         "name": "skill-0 Governance Spec",
-        "url": "https://github.com/user/skill-0/blob/main/governance/GOVERNANCE.md",
+        "url": "https://github.com/<owner>/skill-0/blob/main/governance/GOVERNANCE.md",
         "description": "Project-specific security rules (SEC001-SEC009)",
     },
 ]
@@ -98,9 +98,7 @@ def export_skill_scan(
     if format == "html":
         # Generate HTML report
         html_content = _generate_html_report(export_data)
-        return JSONResponse(
-            content={"html": html_content}, headers={"Content-Type": "application/json"}
-        )
+        return HTMLResponse(content=html_content)
 
     return export_data
 
