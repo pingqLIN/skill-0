@@ -2,6 +2,9 @@
 -r skill-0-dashboard/apps/api/requirements.txt
 
 # Test and CI tooling
+pytest>=7.0.0
+httpx>=0.24.0
+rich>=13.0.0
 pytest-cov>=6.0.0
 pytest-timeout>=2.4.0
 flake8>=7.0.0
