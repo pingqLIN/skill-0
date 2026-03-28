@@ -139,7 +139,7 @@ source .venv/bin/activate
 .venv/bin/python -m pip install --upgrade pip
 .venv/bin/python -m pip install -r requirements-dev.txt
 
-# Match the frontend runtime used in CI and supported by Vite 7
+# Match the frontend runtime used in CI
 nvm use || nvm install 20.19.0
 
 # Install dashboard web dependencies
@@ -159,7 +159,7 @@ These values are for local development only. Production must replace them and th
 
 ## Testing
 
-The project includes a comprehensive test suite with 157 automated tests:
+The project includes a comprehensive regression suite with 178 Python tests plus 18 frontend smoke tests:
 
 ```bash
 # Run the full Python regression suite (core API + dashboard API)
@@ -171,7 +171,7 @@ The project includes a comprehensive test suite with 157 automated tests:
 # Run only Dashboard API tests
 .venv/bin/python -m pytest skill-0-dashboard/apps/api/tests/ -v
 
-# Run frontend tests (Node 20.19+)
+# Run frontend tests (Node 20.19.x)
 nvm use
 cd skill-0-dashboard/apps/web && npm test
 
@@ -223,8 +223,8 @@ Skill-0 provides two FastAPI servers:
 
 ```bash
 # Start both servers
-uvicorn api.main:app --port 8000
-cd skill-0-dashboard/apps/api && ../../.venv/bin/python -m uvicorn main:app --port 8001
+.venv/bin/python -m uvicorn api.main:app --port 8000
+cd skill-0-dashboard/apps/api && ../../../.venv/bin/python -m uvicorn main:app --port 8001
 
 # Development Docker compose
 docker compose up
