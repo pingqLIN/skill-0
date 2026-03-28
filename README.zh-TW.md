@@ -141,6 +141,13 @@ source .venv/bin/activate
 .venv/bin/python -m pip install --upgrade pip
 .venv/bin/python -m pip install -r requirements-dev.txt
 
+# 切換到 CI 使用的前端 Node 版本
+nvm use || nvm install 20.19.0
+
+# 安裝 dashboard web 依賴
+cd skill-0-dashboard/apps/web && npm ci
+cd ../../..
+
 # 索引 skills（首次使用）
 .venv/bin/python -m vector_db.search --db skills.db --parsed-dir parsed index
 ```

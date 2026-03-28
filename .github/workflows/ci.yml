@@ -55,6 +55,7 @@ jobs:
             fi
           done
           echo "Schema and analysis JSON files are structurally valid."
+          python tools/validate_skill_schema.py parsed
 
   compile-check:
     runs-on: ubuntu-latest

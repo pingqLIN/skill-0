@@ -21,10 +21,10 @@
 
 - Activate the repo-local environment first: `source .venv/bin/activate`
 - Core API: `.venv/bin/python -m api.main`
-- Dashboard API: `cd skill-0-dashboard/apps/api && ../../.venv/bin/python -m uvicorn main:app --reload --port 8001`
-- Dashboard web: `cd skill-0-dashboard/apps/web && npm run dev`
+- Dashboard API: `cd skill-0-dashboard/apps/api && ../../../.venv/bin/python -m uvicorn main:app --reload --port 8001`
+- Dashboard web: `nvm use || nvm install 20.19.0` then `cd skill-0-dashboard/apps/web && npm run dev`
 - Python regression: `.venv/bin/python -m pytest tests skill-0-dashboard/apps/api/tests -q`
-- Frontend tests/build: `cd skill-0-dashboard/apps/web && npm test && npm run build`
+- Frontend tests/build: `nvm use || nvm install 20.19.0` then `cd skill-0-dashboard/apps/web && npm test && npm run build`
 
 ### Project Conventions
 
