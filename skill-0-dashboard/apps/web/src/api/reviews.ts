@@ -17,10 +17,7 @@ export function useApproveSkill() {
   
   return useMutation({
     mutationFn: async ({ skillId, reason }: { skillId: string; reason: string }) => {
-      const { data } = await api.post(`/api/reviews/${skillId}/approve`, {
-        reason,
-        reviewer: 'admin',
-      });
+      const { data } = await api.post(`/api/reviews/${skillId}/approve`, { reason });
       return data;
     },
     onSuccess: () => {
@@ -36,10 +33,7 @@ export function useRejectSkill() {
   
   return useMutation({
     mutationFn: async ({ skillId, reason }: { skillId: string; reason: string }) => {
-      const { data } = await api.post(`/api/reviews/${skillId}/reject`, {
-        reason,
-        reviewer: 'admin',
-      });
+      const { data } = await api.post(`/api/reviews/${skillId}/reject`, { reason });
       return data;
     },
     onSuccess: () => {
