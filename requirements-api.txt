@@ -1,6 +1,8 @@
 # Skill-0 API runtime dependencies
 sqlite-vec>=0.1.0
 sentence-transformers>=2.2.0
+# Keep runtime on Transformers 4.x until 5.x stops pulling typer -> rich -> Pygments.
+transformers<5
 numpy>=1.21.0
 scikit-learn>=1.0.0
 fastapi>=0.100.0
