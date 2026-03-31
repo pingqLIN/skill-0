@@ -1,5 +1,10 @@
 # Skill-0 分析器測試計畫
 
+Status note:
+- This is a historical planning document from the early `v2.0` analyzer expansion phase.
+- It is not the authoritative execution plan for the current `v2.4.0` canonical baseline.
+- For the live execution baseline, use [executable-dev-plan-2026-03-31.zh-TW.md](/home/miles/dev2/skill-0/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md) and [project-improvement-plan-2026-03-27.zh-TW.md](/home/miles/dev2/skill-0/docs/project-improvement-plan-2026-03-27.zh-TW.md).
+
 ## 目標
 新增 10 個 skills 解析，測試分析器覆蓋率與效率
 

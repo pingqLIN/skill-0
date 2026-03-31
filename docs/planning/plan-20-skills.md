@@ -1,5 +1,10 @@
 # 規劃：新增 20 個 Skills 測試分析
 
+Status note:
+- This is a historical expansion-plan document written for the earlier `11 -> 31 skills` validation phase.
+- It should be treated as gated backlog, not as the current execution baseline for the `v2.4.0` contract/governance work.
+- Current sequencing and gates are maintained in [executable-dev-plan-2026-03-31.zh-TW.md](/home/miles/dev2/skill-0/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md).
+
 ## 📋 目標
 - 從 GitHub awesome-claude-skills 倉庫選取 20 個不同類型的 skills
 - 擴大測試集合（當前 11 個 → 31 個）
