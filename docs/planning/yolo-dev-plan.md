@@ -1,5 +1,10 @@
 # Skill-0 YOLO 開發計畫（可執行版）
 
+Status note:
+- This document captures an earlier YOLO execution pass focused on the `2026-02-13` security and production-readiness slice.
+- It remains useful as historical context, but it is not the current top-level execution plan for the repo's `2026-03-31` state.
+- Use [executable-dev-plan-2026-03-31.zh-TW.md](<repo-root>/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md) for the live checkpoint plan.
+
 > 更新日期：2026-02-13  
 > 範圍：依既有文件中「未完成/待強化」事項彙整為可執行計畫
 

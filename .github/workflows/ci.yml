@@ -142,3 +142,16 @@ jobs:
 
       - name: Build Web image
         run: docker build -f Dockerfile.web -t skill-0-web:test .
+  docs-status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Validate document status markers
+        run: python tools/check_doc_status_markers.py
