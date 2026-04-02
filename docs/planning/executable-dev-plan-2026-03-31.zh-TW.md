@@ -141,6 +141,7 @@ cd skill-0-dashboard/apps/web && npm run build
    - 目前為 cached `GovernanceService` 內的單 instance memory-backed job runner
    - 保留既有同步 `scan/test` 入口，未破壞現有 UI 路徑
    - 最小驗證：`.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests -q`
+   - `2026-04-02` 補上第一個 UI 接線：`SkillDetail` 單技能頁已改為顯示 async job queued/running/completed 狀態與 item 細節
 
 ---
 
