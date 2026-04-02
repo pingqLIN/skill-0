@@ -1,8 +1,10 @@
 # Governance P1 Async Job And Retry Spec
 
 Updated: `2026-03-31`
-Implementation status: `🟡 Designed`
+Implementation status: `🟢 Partially implemented on 2026-04-02 (single-instance in-memory MVP)`
 Scope: `skill-0-dashboard/apps/api governance scan/test actions`
+
+Status note: The dashboard API now exposes async batch scan/test job endpoints, in-memory job/item tracking, and manual retry flows for single-instance operation. The DB-backed job tables proposed below remain future work; treat this document as the design record plus the gap list beyond the MVP.
 
 ## 1. Purpose
 
@@ -258,6 +260,38 @@ P1 建議採用 repo 內可先落地的 worker 模型：
 1. worker 取 item 時必須先做原子狀態轉移：`queued -> running`。
 2. 同一個 `item_id` 在同一時間只允許一個 runner 持有。
 3. 若 process restart 時留下 `running` item，系統啟動後需把它們回收為：
+
+## 10. Outcome Note (`2026-04-02`)
+
+Implemented in the dashboard API MVP:
+
+1. `POST /api/skills/scan-jobs`
+2. `POST /api/skills/test-jobs`
+3. `GET /api/skills/action-jobs/{job_id}`
+4. `GET /api/skills/action-jobs/{job_id}/items`
+5. `POST /api/skills/action-jobs/{job_id}/retry-failures`
+6. `POST /api/skills/action-jobs/{job_id}/items/{item_id}/retry`
+
+Current implementation characteristics:
+
+- single-instance, in-memory job store inside cached `GovernanceService`
+- background execution via daemon thread runner
+- job items freeze `target_revision_id` at enqueue time when available
+- manual retry allowed only for retriable failure codes
+- existing synchronous `POST /api/skills/scan` and `POST /api/skills/test` remain unchanged
+
+Still not implemented from the original design:
+
+- `governance_action_jobs` / `governance_action_job_items` DB tables
+- cross-process durability and restart recovery
+- automated retry backoff worker policy
+- actor/RBAC refinement beyond existing authenticated dashboard access
+
+Validated with:
+
+```bash
+.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests -q
+```
    - `queued`，若無任何完成證據
    - 或 `failed` + `error_code=WORKER_ABORTED`，若要保守處理
 4. job summary 重建時以 item table 為 source of truth，不信任記憶體中的暫存狀態。

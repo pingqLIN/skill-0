@@ -152,3 +152,71 @@ def test_trigger_test_batch_action_result(client, auth_header):
     assert data["status"] == "noop"
     assert data["processed"] == 0
     assert data["results"] == []
+
+
+def test_enqueue_scan_job(client, auth_header, mock_service):
+    response = client.post(
+        "/api/skills/scan-jobs",
+        headers=auth_header,
+        json={"skill_ids": ["sk_001"], "selection_mode": "explicit", "max_attempts": 2},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["job_type"] == "scan_batch"
+    assert data["status"] == "queued"
+    mock_service.enqueue_action_job.assert_called_once_with(
+        job_type="scan_batch",
+        skill_ids=["sk_001"],
+        requested_by="testuser",
+        selection_mode="explicit",
+        max_attempts=2,
+    )
+
+
+def test_get_action_job(client, auth_header, mock_service):
+    response = client.get(
+        "/api/skills/action-jobs/job_scan_20260402_001",
+        headers=auth_header,
+    )
+    assert response.status_code == 200
+    assert response.json()["job_id"] == "job_scan_20260402_001"
+    mock_service.get_action_job.assert_called_once_with("job_scan_20260402_001")
+
+
+def test_get_action_job_items(client, auth_header, mock_service):
+    response = client.get(
+        "/api/skills/action-jobs/job_scan_20260402_001/items",
+        headers=auth_header,
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["item_id"] == "job_scan_20260402_001_item_sk_001_01"
+    mock_service.get_action_job_items.assert_called_once_with("job_scan_20260402_001")
+
+
+def test_retry_action_job_failures(client, auth_header, mock_service):
+    response = client.post(
+        "/api/skills/action-jobs/job_scan_20260402_001/retry-failures",
+        headers=auth_header,
+    )
+    assert response.status_code == 200
+    assert response.json()["status"] == "queued"
+    mock_service.retry_action_job_failures.assert_called_once_with(
+        job_id="job_scan_20260402_001",
+        requested_by="testuser",
+    )
+
+
+def test_retry_action_job_item(client, auth_header, mock_service):
+    response = client.post(
+        "/api/skills/action-jobs/job_scan_20260402_001/items/job_scan_20260402_001_item_sk_001_01/retry",
+        headers=auth_header,
+    )
+    assert response.status_code == 200
+    assert response.json()["status"] == "queued"
+    mock_service.retry_action_job_item.assert_called_once_with(
+        job_id="job_scan_20260402_001",
+        item_id="job_scan_20260402_001_item_sk_001_01",
+        requested_by="testuser",
+    )

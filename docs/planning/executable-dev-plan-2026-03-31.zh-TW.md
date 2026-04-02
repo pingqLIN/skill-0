@@ -112,6 +112,7 @@ cd skill-0-dashboard/apps/web && npm run build
 3. `CP-02` 已完成規格收斂：  
    - 已新增 `governance-p1-async-retry-spec-2026-03-31.md`
    - 已定義 `job_id`、job/item 狀態機、retry policy、API 與資料模型邊界
+   - `2026-04-02` 已落地單 instance MVP：dashboard API 支援 async batch scan/test job、job status/items 查詢與 manual retry
 
 4. `CP-03` 已完成規格收斂：  
    - 已新增 `runtime-risk-hardening-spec-2026-03-31.md`
@@ -134,6 +135,12 @@ cd skill-0-dashboard/apps/web && npm run build
    - rate limiter 已切換到 trusted proxy aware client IP extraction
    - `/api/search`、`/api/similar`、`/api/cluster` backend failure 已統一回傳 structured `503`
    - 最小驗證：`.venv/bin/python -m pytest tests/test_api_security.py tests/integration/test_rate_limiting.py tests/integration/test_api_core.py -q`
+
+8. `CP-02` MVP 已於 `2026-04-02` 補齊：
+   - dashboard API 新增 `scan-jobs` / `test-jobs` / `action-jobs` / retry endpoints
+   - 目前為 cached `GovernanceService` 內的單 instance memory-backed job runner
+   - 保留既有同步 `scan/test` 入口，未破壞現有 UI 路徑
+   - 最小驗證：`.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests -q`
 
 ---
 
