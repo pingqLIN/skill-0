@@ -10,11 +10,11 @@ COPY skill-0-dashboard/apps/web/ .
 RUN npm run build
 
 # Stage 2: Serve
-FROM nginx:alpine
+FROM nginxinc/nginx-unprivileged:1.29.5-alpine-slim@sha256:806f6d3e4bece5525e9b4d5086b5d7bf9149d3e6300174dded6fe64272cee99a
 
 # SPA routing config
 RUN printf 'server {\n\
-    listen 80;\n\
+    listen 8080;\n\
     server_name _;\n\
     root /usr/share/nginx/html;\n\
     index index.html;\n\
@@ -48,7 +48,7 @@ RUN printf 'server {\n\
 
 COPY --from=build /app/dist /usr/share/nginx/html
 
-EXPOSE 80
+EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
-    CMD wget -q --spider http://127.0.0.1/ || exit 1
+    CMD wget -q --spider http://127.0.0.1:8080/ || exit 1

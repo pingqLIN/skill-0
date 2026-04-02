@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # 使用 setdefault 確保 conftest.py 優先設定的值不被覆蓋
 os.environ.setdefault("SKILL0_ENV", "development")
-os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key")
+os.environ.setdefault("JWT_SECRET_KEY", "skill0-test-jwt-secret-key-0123456789")
 os.environ.setdefault("API_USERNAME", "testadmin")
 os.environ.setdefault("API_PASSWORD", "testpass123")
 os.environ.setdefault("API_RATE_LIMIT", "1000/minute")
@@ -147,7 +147,7 @@ def test_expired_token_rejected():
             "sub": "testadmin",
             "exp": datetime.now(timezone.utc) - timedelta(hours=1),
         },
-        "test-secret-key",
+        "skill0-test-jwt-secret-key-0123456789",
         algorithm="HS256",
     )
     resp = client.get(
@@ -176,7 +176,7 @@ def test_token_with_wrong_secret_rejected():
             "sub": "testadmin",
             "exp": datetime.now(timezone.utc) + timedelta(hours=1),
         },
-        "wrong-secret",
+        "skill0-wrong-jwt-secret-key-9876543210",
         algorithm="HS256",
     )
     resp = client.get(

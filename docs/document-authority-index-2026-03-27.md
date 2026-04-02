@@ -33,6 +33,8 @@ Purpose: `separate live authority from historical and conceptual documents`
 
 ## Design And Conceptual Pressure Tests
 
+- [governance-p1-async-retry-spec-2026-03-31.md](<repo-root>/docs/planning/governance-p1-async-retry-spec-2026-03-31.md)
+- [runtime-risk-hardening-spec-2026-03-31.md](<repo-root>/docs/planning/runtime-risk-hardening-spec-2026-03-31.md)
 - [schema-extension-design-complex-skills-2026-03-24.md](<repo-root>/docs/schema-extension-design-complex-skills-2026-03-24.md)
 - [devils-advocate-review-conceptual-2026-03-27.md](<repo-root>/docs/devils-advocate-review-conceptual-2026-03-27.md)
 - [devils-advocate-review-conceptual-2026-03-27.zh-TW.md](<repo-root>/docs/devils-advocate-review-conceptual-2026-03-27.zh-TW.md)

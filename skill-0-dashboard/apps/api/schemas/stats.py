@@ -12,6 +12,7 @@ class StatsOverview(BaseModel):
     rejected_count: int
     blocked_count: int
     high_risk_count: int
+    avg_fidelity_score: float
     avg_equivalence_score: float
 
 

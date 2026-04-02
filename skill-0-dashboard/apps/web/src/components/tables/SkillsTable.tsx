@@ -60,7 +60,7 @@ export function SkillsTable({ data, sortBy, sortOrder, onSort }: Props) {
         <TableRow>
           <SortHeader column="name" label="Name" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
           <SortHeader column="risk_score" label="Risk" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
-          <TableHead>Equivalence</TableHead>
+          <TableHead>Fidelity</TableHead>
           <SortHeader column="status" label="Status" sortBy={sortBy} sortOrder={sortOrder} onSort={onSort} />
           <TableHead>Author</TableHead>
           <TableHead>License</TableHead>
@@ -82,8 +82,8 @@ export function SkillsTable({ data, sortBy, sortOrder, onSort }: Props) {
               </Badge>
             </TableCell>
             <TableCell>
-              {skill.equivalence_score !== null 
-                ? `${Math.round(skill.equivalence_score * 100)}%`
+              {skill.fidelity_score !== null 
+                ? `${Math.round(skill.fidelity_score * 100)}%`
                 : '-'}
             </TableCell>
             <TableCell>

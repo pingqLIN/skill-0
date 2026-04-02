@@ -1,18 +1,12 @@
 """Tests for the Governance Dashboard API — service and router"""
 
-import sys
-from pathlib import Path
 from unittest.mock import MagicMock, patch
-from typing import Optional
 
 import pytest
 from fastapi.testclient import TestClient
 
-# Ensure the dashboard API package is importable
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-from api.main import app  # noqa: E402 — dashboard API
-from api.dependencies import get_governance_service  # noqa: E402
+from apps.api.main import app
+from apps.api.dependencies import get_governance_service
 
 
 # ---------------------------------------------------------------------------
@@ -46,7 +40,7 @@ def _make_mock_service():
         "status": "success",
         "skill_id": "skill_001",
         "processed": 1,
-        "results": [{"skill_id": "skill_001", "status": "success", "overall_score": 0.95}],
+        "results": [{"skill_id": "skill_001", "status": "success", "fidelity_score": 0.95, "overall_score": 0.95}],
         "error_code": None,
         "error_message": None,
         "hint": None,
@@ -89,15 +83,18 @@ def client(mock_service):
 
 
 class TestActionReadiness:
-    def test_readiness_all_ok(self, client, mock_service):
-        resp = client.get("/api/skills/skill_001/action-readiness")
+    def test_readiness_all_ok(self, client, mock_service, auth_header):
+        resp = client.get(
+            "/api/skills/skill_001/action-readiness",
+            headers=auth_header,
+        )
         assert resp.status_code == 200
         data = resp.json()
         assert data["can_scan"] is True
         assert data["can_test"] is True
         assert data["reasons"] == []
 
-    def test_readiness_source_missing(self, client, mock_service):
+    def test_readiness_source_missing(self, client, mock_service, auth_header):
         mock_service.get_action_readiness.return_value = {
             "skill_id": "skill_001",
             "can_scan": False,
@@ -106,14 +103,17 @@ class TestActionReadiness:
             "installed_path_exists": True,
             "reasons": ["source_path does not exist: /missing/file.md"],
         }
-        resp = client.get("/api/skills/skill_001/action-readiness")
+        resp = client.get(
+            "/api/skills/skill_001/action-readiness",
+            headers=auth_header,
+        )
         assert resp.status_code == 200
         data = resp.json()
         assert data["can_scan"] is False
         assert len(data["reasons"]) == 1
         assert "source_path" in data["reasons"][0]
 
-    def test_readiness_installed_missing(self, client, mock_service):
+    def test_readiness_installed_missing(self, client, mock_service, auth_header):
         mock_service.get_action_readiness.return_value = {
             "skill_id": "skill_001",
             "can_scan": True,
@@ -122,14 +122,20 @@ class TestActionReadiness:
             "installed_path_exists": False,
             "reasons": ["installed_path is not set"],
         }
-        resp = client.get("/api/skills/skill_001/action-readiness")
+        resp = client.get(
+            "/api/skills/skill_001/action-readiness",
+            headers=auth_header,
+        )
         assert resp.status_code == 200
         data = resp.json()
         assert data["can_test"] is False
 
-    def test_readiness_skill_not_found(self, client, mock_service):
+    def test_readiness_skill_not_found(self, client, mock_service, auth_header):
         mock_service.get_action_readiness.return_value = None
-        resp = client.get("/api/skills/nonexistent/action-readiness")
+        resp = client.get(
+            "/api/skills/nonexistent/action-readiness",
+            headers=auth_header,
+        )
         assert resp.status_code == 404
 
 
@@ -139,22 +145,25 @@ class TestActionReadiness:
 
 
 class TestScanAction:
-    def test_scan_single_skill_success(self, client, mock_service):
-        resp = client.post("/api/skills/scan?skill_id=skill_001")
+    def test_scan_single_skill_success(self, client, mock_service, auth_header):
+        resp = client.post(
+            "/api/skills/scan?skill_id=skill_001",
+            headers=auth_header,
+        )
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "success"
         assert data["processed"] == 1
         mock_service.run_scan.assert_called_once_with("skill_001")
 
-    def test_scan_batch(self, client, mock_service):
-        resp = client.post("/api/skills/scan")
+    def test_scan_batch(self, client, mock_service, auth_header):
+        resp = client.post("/api/skills/scan", headers=auth_header)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "noop"
         mock_service.run_scan_batch.assert_called_once()
 
-    def test_scan_failed(self, client, mock_service):
+    def test_scan_failed(self, client, mock_service, auth_header):
         mock_service.run_scan.return_value = {
             "status": "failed",
             "skill_id": "skill_001",
@@ -164,7 +173,10 @@ class TestScanAction:
             "error_message": "Source path does not exist",
             "hint": "Ensure the skill's source_path is set.",
         }
-        resp = client.post("/api/skills/scan?skill_id=skill_001")
+        resp = client.post(
+            "/api/skills/scan?skill_id=skill_001",
+            headers=auth_header,
+        )
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "failed"
@@ -177,22 +189,25 @@ class TestScanAction:
 
 
 class TestTestAction:
-    def test_test_single_skill_success(self, client, mock_service):
-        resp = client.post("/api/skills/test?skill_id=skill_001")
+    def test_test_single_skill_success(self, client, mock_service, auth_header):
+        resp = client.post(
+            "/api/skills/test?skill_id=skill_001",
+            headers=auth_header,
+        )
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "success"
         assert data["processed"] == 1
         mock_service.run_test.assert_called_once_with("skill_001")
 
-    def test_test_batch(self, client, mock_service):
-        resp = client.post("/api/skills/test")
+    def test_test_batch(self, client, mock_service, auth_header):
+        resp = client.post("/api/skills/test", headers=auth_header)
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "noop"
         mock_service.run_test_batch.assert_called_once()
 
-    def test_test_failed_installed_missing(self, client, mock_service):
+    def test_test_failed_installed_missing(self, client, mock_service, auth_header):
         mock_service.run_test.return_value = {
             "status": "failed",
             "skill_id": "skill_001",
@@ -202,7 +217,10 @@ class TestTestAction:
             "error_message": "Installed path does not exist",
             "hint": "Ensure installed_path is set.",
         }
-        resp = client.post("/api/skills/test?skill_id=skill_001")
+        resp = client.post(
+            "/api/skills/test?skill_id=skill_001",
+            headers=auth_header,
+        )
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] == "failed"
@@ -226,14 +244,15 @@ class TestGovernanceServiceReadiness:
 
     def _make_service(self, skill):
         """Build a GovernanceService with a patched DB."""
-        from api.services.governance import GovernanceService  # noqa
+        from apps.api.services.governance import GovernanceService  # noqa
 
         svc = object.__new__(GovernanceService)
         svc.db = MagicMock()
         svc.db.get_skill.return_value = skill
         return svc
 
-    def test_readiness_with_existing_paths(self, tmp_path):
+    def test_readiness_with_existing_paths(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("SKILL0_ALLOWED_PATH_ROOTS", str(tmp_path))
         src = tmp_path / "source.md"
         src.write_text("skill content")
         inst = tmp_path / "installed.md"
@@ -260,7 +279,8 @@ class TestGovernanceServiceReadiness:
         assert result["can_test"] is False  # requires both source + installed
         assert any("source_path" in r for r in result["reasons"])
 
-    def test_readiness_installed_missing(self, tmp_path):
+    def test_readiness_installed_missing(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("SKILL0_ALLOWED_PATH_ROOTS", str(tmp_path))
         src = tmp_path / "source.md"
         src.write_text("skill content")
 
@@ -272,7 +292,7 @@ class TestGovernanceServiceReadiness:
         assert any("installed_path" in r for r in result["reasons"])
 
     def test_readiness_skill_not_found(self):
-        from api.services.governance import GovernanceService  # noqa
+        from apps.api.services.governance import GovernanceService  # noqa
 
         svc = object.__new__(GovernanceService)
         svc.db = MagicMock()
@@ -281,12 +301,28 @@ class TestGovernanceServiceReadiness:
         result = svc.get_action_readiness("ghost")
         assert result is None
 
+    def test_readiness_rejects_paths_outside_allowed_roots(self, tmp_path, monkeypatch):
+        allowed_root = tmp_path / "allowed"
+        allowed_root.mkdir()
+        monkeypatch.setenv("SKILL0_ALLOWED_PATH_ROOTS", str(allowed_root))
+
+        external_file = tmp_path / "outside.md"
+        external_file.write_text("outside")
+        skill = self._make_skill(source_path=str(external_file), installed_path=str(external_file))
+        svc = self._make_service(skill)
+
+        result = svc.get_action_readiness("skill_001")
+        assert result is not None
+        assert result["can_scan"] is False
+        assert result["can_test"] is False
+        assert any("outside allowed roots" in reason for reason in result["reasons"])
+
 
 class TestGovernanceServiceRunScan:
     """Unit tests for run_scan with a mocked DB and scanner."""
 
     def _make_service_with_skill(self, source_path=""):
-        from api.services.governance import GovernanceService  # noqa
+        from apps.api.services.governance import GovernanceService  # noqa
 
         svc = object.__new__(GovernanceService)
         svc.db = MagicMock()
@@ -298,7 +334,7 @@ class TestGovernanceServiceRunScan:
         return svc
 
     def test_scan_skill_not_found(self):
-        from api.services.governance import GovernanceService  # noqa
+        from apps.api.services.governance import GovernanceService  # noqa
 
         svc = object.__new__(GovernanceService)
         svc.db = MagicMock()
@@ -314,7 +350,8 @@ class TestGovernanceServiceRunScan:
         assert result["status"] == "failed"
         assert result["error_code"] == "SOURCE_PATH_MISSING"
 
-    def test_scan_runtime_error(self, tmp_path):
+    def test_scan_runtime_error(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("SKILL0_ALLOWED_PATH_ROOTS", str(tmp_path))
         src = tmp_path / "source.md"
         src.write_text("skill content")
         svc = self._make_service_with_skill(source_path=str(src))
@@ -326,12 +363,25 @@ class TestGovernanceServiceRunScan:
         assert result["status"] == "failed"
         assert result["error_code"] == "SCAN_RUNTIME_ERROR"
 
+    def test_scan_source_path_not_allowed(self, tmp_path, monkeypatch):
+        allowed_root = tmp_path / "allowed"
+        allowed_root.mkdir()
+        monkeypatch.setenv("SKILL0_ALLOWED_PATH_ROOTS", str(allowed_root))
+
+        external_file = tmp_path / "outside.md"
+        external_file.write_text("outside")
+        svc = self._make_service_with_skill(source_path=str(external_file))
+
+        result = svc.run_scan("skill_001")
+        assert result["status"] == "failed"
+        assert result["error_code"] == "SOURCE_PATH_NOT_ALLOWED"
+
 
 class TestGovernanceServiceRunTest:
     """Unit tests for run_test with a mocked DB."""
 
     def _make_service(self, source_path="", installed_path=""):
-        from api.services.governance import GovernanceService  # noqa
+        from apps.api.services.governance import GovernanceService  # noqa
 
         svc = object.__new__(GovernanceService)
         svc.db = MagicMock()
@@ -343,7 +393,7 @@ class TestGovernanceServiceRunTest:
         return svc
 
     def test_test_skill_not_found(self):
-        from api.services.governance import GovernanceService  # noqa
+        from apps.api.services.governance import GovernanceService  # noqa
 
         svc = object.__new__(GovernanceService)
         svc.db = MagicMock()
@@ -353,13 +403,29 @@ class TestGovernanceServiceRunTest:
         assert result["status"] == "failed"
         assert result["error_code"] == "PATH_NOT_FOUND"
 
-    def test_test_installed_path_missing(self, tmp_path):
+    def test_test_installed_path_missing(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("SKILL0_ALLOWED_PATH_ROOTS", str(tmp_path))
         src = tmp_path / "source.md"
         src.write_text("skill")
         svc = self._make_service(source_path=str(src), installed_path="")
         result = svc.run_test("skill_001")
         assert result["status"] == "failed"
         assert result["error_code"] == "INSTALLED_PATH_MISSING"
+
+    def test_test_installed_path_not_allowed(self, tmp_path, monkeypatch):
+        allowed_root = tmp_path / "allowed"
+        allowed_root.mkdir()
+        monkeypatch.setenv("SKILL0_ALLOWED_PATH_ROOTS", str(allowed_root))
+
+        source = allowed_root / "source.md"
+        source.write_text("source")
+        external_installed = tmp_path / "outside.md"
+        external_installed.write_text("installed")
+        svc = self._make_service(source_path=str(source), installed_path=str(external_installed))
+
+        result = svc.run_test("skill_001")
+        assert result["status"] == "failed"
+        assert result["error_code"] == "INSTALLED_PATH_NOT_ALLOWED"
 
     def test_test_source_path_missing(self, tmp_path):
         inst = tmp_path / "installed.md"

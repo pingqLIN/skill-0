@@ -29,7 +29,7 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 os.environ.setdefault("SKILL0_ENV", "development")
-os.environ.setdefault("JWT_SECRET_KEY", "test-secret-key")
+os.environ.setdefault("JWT_SECRET_KEY", "skill0-test-jwt-secret-key-0123456789")
 os.environ.setdefault("API_USERNAME", "testadmin")
 os.environ.setdefault("API_PASSWORD", "testpass123")
 os.environ.setdefault("API_RATE_LIMIT", "1000/minute")
