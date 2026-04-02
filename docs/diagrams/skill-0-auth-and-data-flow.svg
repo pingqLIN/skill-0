@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">Skill-0 Auth and Data Flow</title>
+  <desc id="desc">Sequence-oriented diagram showing login, JWT acquisition, protected dashboard API access, and governance data retrieval flow.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#244b76"/>
+    </marker>
+    <style>
+      .bg { fill: #f7f8fb; }
+      .title { font: 700 28px Arial, sans-serif; fill: #17324d; }
+      .subtitle { font: 400 15px Arial, sans-serif; fill: #4f6478; }
+      .lane-title { font: 700 18px Arial, sans-serif; fill: #17324d; }
+      .lane-text { font: 400 13px Arial, sans-serif; fill: #41586f; }
+      .step { font: 700 14px Arial, sans-serif; fill: #17324d; }
+      .note { font: 400 13px Arial, sans-serif; fill: #32485e; }
+      .tiny { font: 400 12px Arial, sans-serif; fill: #587085; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1200" height="820"/>
+  <text class="title" x="60" y="60">Skill-0 Auth and Governance Data Flow</text>
+  <text class="subtitle" x="60" y="88">Validated end-to-end with production-style compose on 2026-03-23</text>
+
+  <rect x="70" y="120" width="220" height="90" rx="16" fill="#e8f0ff" stroke="#244b76" stroke-width="2"/>
+  <text class="lane-title" x="180" y="155" text-anchor="middle">Browser / Operator</text>
+  <text class="lane-text" x="180" y="180" text-anchor="middle">Submits login and uses review UI</text>
+
+  <rect x="350" y="120" width="220" height="90" rx="16" fill="#fff1d8" stroke="#b67a1f" stroke-width="2"/>
+  <text class="lane-title" x="460" y="155" text-anchor="middle">Web UI</text>
+  <text class="lane-text" x="460" y="180" text-anchor="middle">AuthProvider + axios clients</text>
+
+  <rect x="630" y="120" width="220" height="90" rx="16" fill="#dff4e8" stroke="#2f7d53" stroke-width="2"/>
+  <text class="lane-title" x="740" y="155" text-anchor="middle">Core API</text>
+  <text class="lane-text" x="740" y="180" text-anchor="middle">Issues JWT, serves search and health</text>
+
+  <rect x="910" y="120" width="220" height="90" rx="16" fill="#f8e3ea" stroke="#9d3d63" stroke-width="2"/>
+  <text class="lane-title" x="1020" y="155" text-anchor="middle">Dashboard API</text>
+  <text class="lane-text" x="1020" y="180" text-anchor="middle">Validates JWT, reads governance data</text>
+
+  <line x1="180" y1="210" x2="180" y2="760" stroke="#b8c3d1" stroke-width="2" stroke-dasharray="8 8"/>
+  <line x1="460" y1="210" x2="460" y2="760" stroke="#b8c3d1" stroke-width="2" stroke-dasharray="8 8"/>
+  <line x1="740" y1="210" x2="740" y2="760" stroke="#b8c3d1" stroke-width="2" stroke-dasharray="8 8"/>
+  <line x1="1020" y1="210" x2="1020" y2="760" stroke="#b8c3d1" stroke-width="2" stroke-dasharray="8 8"/>
+
+  <rect x="95" y="250" width="170" height="48" rx="12" fill="#ffffff" stroke="#d1d8e0"/>
+  <text class="step" x="180" y="280" text-anchor="middle">1. Enter credentials</text>
+
+  <line x1="205" y1="322" x2="435" y2="322" stroke="#244b76" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text class="note" x="320" y="312" text-anchor="middle">username + password</text>
+
+  <rect x="375" y="350" width="170" height="48" rx="12" fill="#ffffff" stroke="#d1d8e0"/>
+  <text class="step" x="460" y="380" text-anchor="middle">2. POST /api/auth/token</text>
+
+  <line x1="485" y1="422" x2="715" y2="422" stroke="#244b76" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text class="note" x="600" y="412" text-anchor="middle">login request</text>
+
+  <line x1="715" y1="480" x2="485" y2="480" stroke="#244b76" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text class="note" x="600" y="470" text-anchor="middle">JWT access token</text>
+
+  <rect x="375" y="510" width="170" height="64" rx="12" fill="#ffffff" stroke="#d1d8e0"/>
+  <text class="step" x="460" y="538" text-anchor="middle">3. Store token</text>
+  <text class="tiny" x="460" y="558" text-anchor="middle">localStorage + auth state</text>
+
+  <line x1="485" y1="610" x2="995" y2="610" stroke="#244b76" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text class="note" x="740" y="600" text-anchor="middle">4. GET /dashboard-api/api/stats with Bearer token</text>
+
+  <rect x="935" y="640" width="170" height="72" rx="12" fill="#ffffff" stroke="#d1d8e0"/>
+  <text class="step" x="1020" y="668" text-anchor="middle">5. Validate JWT</text>
+  <text class="tiny" x="1020" y="688" text-anchor="middle">shared secret with Core API</text>
+  <text class="tiny" x="1020" y="704" text-anchor="middle">query governance.db</text>
+
+  <line x1="995" y1="736" x2="485" y2="736" stroke="#244b76" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text class="note" x="740" y="726" text-anchor="middle">6. Return protected stats / reviews / audit data</text>
+
+  <rect x="95" y="680" width="170" height="48" rx="12" fill="#ffffff" stroke="#d1d8e0"/>
+  <text class="step" x="180" y="710" text-anchor="middle">7. Review and act</text>
+
+  <line x1="205" y1="760" x2="435" y2="760" stroke="#244b76" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text class="note" x="320" y="750" text-anchor="middle">UI renders dashboard state</text>
+
+  <rect x="70" y="240" width="1060" height="540" rx="20" fill="none" stroke="#dbe2ea" stroke-width="1.5"/>
+
+  <rect x="70" y="90" width="510" height="20" rx="10" fill="#244b76" opacity="0.08"/>
+  <text class="tiny" x="90" y="104">Auth path</text>
+  <rect x="620" y="90" width="510" height="20" rx="10" fill="#9d3d63" opacity="0.08"/>
+  <text class="tiny" x="640" y="104">Protected governance data path</text>
+</svg>
