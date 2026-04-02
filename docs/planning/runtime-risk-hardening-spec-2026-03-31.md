@@ -1,8 +1,10 @@
 # Runtime Risk Hardening Spec
 
 Updated: `2026-03-31`
-Implementation status: `🟡 Designed`
+Implementation status: `🟢 Implemented in core API baseline on 2026-04-02`
 Scope: `api/main.py runtime baseline hardening`
+
+Status note: The core API implementation for trusted proxy client IP extraction and structured search-backend `503` responses landed on `2026-04-02`. Treat the design sections below as the rationale and contract record for the implemented baseline.
 
 ## 1. Purpose
 
@@ -188,3 +190,22 @@ server side log 應保留：
 4. cover search/similar/cluster with graceful error handling
 5. add metrics/log assertions where practical
 6. refresh docs and verification note
+
+## 12. Outcome Note (`2026-04-02`)
+
+Implemented in `api/main.py`:
+
+1. `_extract_client_ip(request)` now supports trusted proxy mode with:
+   - `SKILL0_TRUST_PROXY_HEADERS`
+   - `SKILL0_TRUSTED_PROXY_CIDRS`
+   - header precedence `CF-Connecting-IP` -> `X-Forwarded-For` -> `X-Real-IP`
+2. baseline rate limiter bucket keys now use extracted client IP
+3. `/api/search`, `/api/similar`, and `/api/cluster` runtime backend failures now return structured `503`
+4. `detail.request_id` now matches the request middleware `X-Request-ID`
+5. `skill0_search_failures_total{endpoint,reason}` metric now records backend-unavailable failures
+
+Validated with:
+
+```bash
+.venv/bin/python -m pytest tests/test_api_security.py tests/integration/test_rate_limiting.py tests/integration/test_api_core.py -q
+```

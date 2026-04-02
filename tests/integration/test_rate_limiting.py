@@ -228,6 +228,18 @@ def test_auth_and_api_rate_limits_are_separate_buckets():
     assert len(_rate_limit_store["auth:testclient"]) == 1
 
 
+def test_rate_limit_uses_extracted_client_ip(monkeypatch, mock_search_engine):
+    monkeypatch.setattr(api_module, "API_RATE_LIMIT", "2/minute")
+    monkeypatch.setattr(api_module, "_extract_client_ip", lambda request: "198.51.100.8")
+    _rate_limit_store.clear()
+
+    now = time.time()
+    _rate_limit_store["api:198.51.100.8"] = [now - 0.1, now - 0.05]
+
+    resp = client.get("/api/stats")
+    assert resp.status_code == 429
+
+
 def test_rate_limit_store_cleared_between_tests():
     """
     驗證 autouse fixture 正確清空 _rate_limit_store，

@@ -419,6 +419,54 @@ class TestErrorHandling:
         )
         assert resp.status_code == 422
 
+    def test_search_backend_failure_returns_structured_503(self, client, monkeypatch):
+        import api.main as api_module
+
+        class BrokenEngine:
+            def search(self, query, limit=5):
+                raise RuntimeError("backend offline")
+
+        monkeypatch.setattr(api_module, "get_search_engine", lambda: BrokenEngine())
+
+        resp = client.post("/api/search", json={"query": "PDF processing", "limit": 3})
+        assert resp.status_code == 503
+        data = resp.json()
+        assert data["detail"]["code"] == "SEARCH_BACKEND_UNAVAILABLE"
+        assert data["detail"]["message"] == "Search service is temporarily unavailable."
+        assert data["detail"]["request_id"] == resp.headers["X-Request-ID"]
+
+    def test_similar_backend_failure_returns_structured_503(self, client, monkeypatch):
+        import api.main as api_module
+
+        class BrokenEngine:
+            def find_similar(self, skill_name, limit=5):
+                raise RuntimeError("backend offline")
+
+        monkeypatch.setattr(api_module, "get_search_engine", lambda: BrokenEngine())
+
+        resp = client.get("/api/similar/sample-skill", params={"limit": 3})
+        assert resp.status_code == 503
+        data = resp.json()
+        assert data["detail"]["code"] == "SEARCH_BACKEND_UNAVAILABLE"
+        assert data["detail"]["message"] == "Search service is temporarily unavailable."
+        assert data["detail"]["request_id"] == resp.headers["X-Request-ID"]
+
+    def test_cluster_backend_failure_returns_structured_503(self, client, monkeypatch):
+        import api.main as api_module
+
+        class BrokenEngine:
+            def cluster_skills(self, n_clusters=5):
+                raise RuntimeError("backend offline")
+
+        monkeypatch.setattr(api_module, "get_search_engine", lambda: BrokenEngine())
+
+        resp = client.get("/api/cluster", params={"n": 3})
+        assert resp.status_code == 503
+        data = resp.json()
+        assert data["detail"]["code"] == "SEARCH_BACKEND_UNAVAILABLE"
+        assert data["detail"]["message"] == "Search service is temporarily unavailable."
+        assert data["detail"]["request_id"] == resp.headers["X-Request-ID"]
+
     def test_similar_missing_body(self, client):
         """POST /api/similar without body returns 422"""
         resp = client.post("/api/similar")
