@@ -14,6 +14,7 @@ import logging
 from pathlib import Path
 import time
 import uuid
+import ipaddress
 from contextvars import ContextVar
 from urllib.parse import urlparse
 
@@ -185,6 +186,11 @@ SEARCH_LATENCY = Histogram(
     "skill0_search_duration_seconds",
     "Search operation latency in seconds",
 )
+SEARCH_FAILURES = Counter(
+    "skill0_search_failures_total",
+    "Total search backend failures",
+    ["endpoint", "reason"],
+)
 
 
 @app.middleware("http")
@@ -286,6 +292,108 @@ def _parse_rate_limit(limit_str: str) -> tuple:
     return count, period
 
 
+def _parse_proxy_ip(value: Optional[str]) -> Optional[str]:
+    """Return a normalized IP string when the candidate is valid."""
+    if not value:
+        return None
+
+    candidate = value.strip()
+    if not candidate:
+        return None
+
+    try:
+        return str(ipaddress.ip_address(candidate))
+    except ValueError:
+        return None
+
+
+def _trusted_proxy_networks() -> list[ipaddress._BaseNetwork]:
+    """Parse trusted proxy CIDRs from environment, skipping invalid entries."""
+    cidr_text = os.getenv("SKILL0_TRUSTED_PROXY_CIDRS", "")
+    networks: list[ipaddress._BaseNetwork] = []
+    for raw_cidr in cidr_text.split(","):
+        cidr = raw_cidr.strip()
+        if not cidr:
+            continue
+        try:
+            networks.append(ipaddress.ip_network(cidr, strict=False))
+        except ValueError:
+            logger.warning("invalid_trusted_proxy_cidr", cidr=cidr)
+    return networks
+
+
+def _proxy_headers_trusted(peer_host: Optional[str]) -> bool:
+    """Return True only when proxy-header trust is enabled and the socket peer is trusted."""
+    if not _env_flag("SKILL0_TRUST_PROXY_HEADERS", default=False):
+        return False
+
+    peer_ip = _parse_proxy_ip(peer_host)
+    if peer_ip is None:
+        return False
+
+    peer_address = ipaddress.ip_address(peer_ip)
+    return any(peer_address in network for network in _trusted_proxy_networks())
+
+
+def _extract_client_ip(request: Request) -> str:
+    """Extract the effective client IP, honoring trusted proxy headers when enabled."""
+    peer_host = request.client.host if request.client else "unknown"
+    if not _proxy_headers_trusted(peer_host):
+        return peer_host
+
+    forwarded_candidates = [
+        ("CF-Connecting-IP", request.headers.get("CF-Connecting-IP")),
+        (
+            "X-Forwarded-For",
+            next(
+                (
+                    part.strip()
+                    for part in request.headers.get("X-Forwarded-For", "").split(",")
+                    if part.strip()
+                ),
+                None,
+            ),
+        ),
+        ("X-Real-IP", request.headers.get("X-Real-IP")),
+    ]
+
+    for header_name, raw_value in forwarded_candidates:
+        if not raw_value:
+            continue
+        parsed_ip = _parse_proxy_ip(raw_value)
+        if parsed_ip:
+            return parsed_ip
+        logger.warning(
+            "invalid_forwarded_ip_header",
+            header=header_name,
+            value=raw_value,
+            peer_host=peer_host,
+        )
+
+    return peer_host
+
+
+def _search_service_unavailable(endpoint: str, exc: Exception) -> HTTPException:
+    """Return a structured 503 without leaking backend/runtime details."""
+    request_id = request_id_var.get() or generate_request_id()
+    SEARCH_FAILURES.labels(endpoint=endpoint, reason="backend_unavailable").inc()
+    logger.exception(
+        "search_backend_unavailable",
+        endpoint=endpoint,
+        request_id=request_id,
+        error_type=type(exc).__name__,
+        error=str(exc),
+    )
+    return HTTPException(
+        status_code=503,
+        detail={
+            "code": "SEARCH_BACKEND_UNAVAILABLE",
+            "message": "Search service is temporarily unavailable.",
+            "request_id": request_id,
+        },
+    )
+
+
 async def check_rate_limit(request: Request):
     """Rate limit dependency for baseline API traffic."""
     await _enforce_rate_limit(request=request, limit_str=API_RATE_LIMIT, scope='api')
@@ -298,7 +406,7 @@ async def check_auth_rate_limit(request: Request):
 
 async def _enforce_rate_limit(request: Request, limit_str: str, scope: str):
     """Shared rate-limit implementation with scope separation."""
-    client_ip = request.client.host if request.client else "unknown"
+    client_ip = _extract_client_ip(request)
     try:
         max_requests, period = _parse_rate_limit(limit_str)
     except ValueError as exc:
@@ -570,8 +678,11 @@ async def search_skills(request: SearchRequest):
     """
     start = time.time()
     
-    engine = get_search_engine()
-    results = engine.search(request.query, limit=request.limit)
+    try:
+        engine = get_search_engine()
+        results = engine.search(request.query, limit=request.limit)
+    except Exception as exc:
+        raise _search_service_unavailable("/api/search", exc) from exc
     
     elapsed = (time.time() - start) * 1000
     
@@ -595,8 +706,11 @@ async def search_skills_get(
     """
     start = time.time()
     
-    engine = get_search_engine()
-    results = engine.search(q, limit=limit)
+    try:
+        engine = get_search_engine()
+        results = engine.search(q, limit=limit)
+    except Exception as exc:
+        raise _search_service_unavailable("/api/search", exc) from exc
     
     elapsed = (time.time() - start) * 1000
     
@@ -617,8 +731,11 @@ async def find_similar_skills(request: SimilarRequest):
     """
     start = time.time()
     
-    engine = get_search_engine()
-    results = engine.find_similar(request.skill_name, limit=request.limit)
+    try:
+        engine = get_search_engine()
+        results = engine.find_similar(request.skill_name, limit=request.limit)
+    except Exception as exc:
+        raise _search_service_unavailable("/api/similar", exc) from exc
     
     if not results:
         raise HTTPException(status_code=404, detail=f"Skill '{request.skill_name}' not found")
@@ -643,8 +760,11 @@ async def find_similar_skills_get(
     """
     start = time.time()
     
-    engine = get_search_engine()
-    results = engine.find_similar(skill_name, limit=limit)
+    try:
+        engine = get_search_engine()
+        results = engine.find_similar(skill_name, limit=limit)
+    except Exception as exc:
+        raise _search_service_unavailable("/api/similar", exc) from exc
     
     if not results:
         raise HTTPException(status_code=404, detail=f"Skill '{skill_name}' not found")
@@ -668,8 +788,11 @@ async def cluster_skills(
     
     Automatically group all skills using K-Means clustering.
     """
-    engine = get_search_engine()
-    clusters = engine.cluster_skills(n_clusters=n)
+    try:
+        engine = get_search_engine()
+        clusters = engine.cluster_skills(n_clusters=n)
+    except Exception as exc:
+        raise _search_service_unavailable("/api/cluster", exc) from exc
     
     # Convert format
     formatted_clusters = {}

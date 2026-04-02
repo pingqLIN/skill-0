@@ -116,6 +116,7 @@ cd skill-0-dashboard/apps/web && npm run build
 4. `CP-03` 已完成規格收斂：  
    - 已新增 `runtime-risk-hardening-spec-2026-03-31.md`
    - 已定義 trusted proxy header policy、client IP extraction 與 search `503` contract
+   - `2026-04-02` 已在 `api/main.py` 落地 trusted proxy client IP extraction 與 search/similar/cluster graceful `503` handling
 
 5. `CP-07` 已對本輪文件治理切片完成驗證：  
    - `python tools/check_doc_status_markers.py` passed
@@ -128,6 +129,11 @@ cd skill-0-dashboard/apps/web && npm run build
    - `3534eb0` `Normalize parsed corpus and align fidelity tooling`
    - `6d3ad5e` `Add review dossier and shared documentation bundle`
    - 剩餘未收斂項已降到單檔 spillover 與少數 process docs
+
+7. `CP-03` 核心實作已於 `2026-04-02` 補齊：
+   - rate limiter 已切換到 trusted proxy aware client IP extraction
+   - `/api/search`、`/api/similar`、`/api/cluster` backend failure 已統一回傳 structured `503`
+   - 最小驗證：`.venv/bin/python -m pytest tests/test_api_security.py tests/integration/test_rate_limiting.py tests/integration/test_api_core.py -q`
 
 ---
 
