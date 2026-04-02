@@ -10,6 +10,7 @@ import {
   useEnqueueTestJob,
   useActionJob,
   useActionJobItems,
+  useRetryActionJobItem,
 } from '@/api/skills';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -42,6 +43,14 @@ const severityColors: Record<string, string> = {
   info: 'text-blue-600',
 };
 
+const NON_RETRIABLE_ERROR_CODES = new Set([
+  'PATH_NOT_FOUND',
+  'SOURCE_PATH_MISSING',
+  'SOURCE_PATH_NOT_ALLOWED',
+  'INSTALLED_PATH_MISSING',
+  'INSTALLED_PATH_NOT_ALLOWED',
+]);
+
 export function SkillDetail() {
   const { skillId } = useParams<{ skillId: string }>();
   const navigate = useNavigate();
@@ -51,6 +60,7 @@ export function SkillDetail() {
   const { data: readiness } = useActionReadiness(skillId || '');
   const scanJobMutation = useEnqueueScanJob();
   const testJobMutation = useEnqueueTestJob();
+  const retryJobItemMutation = useRetryActionJobItem();
   const [actionMessage, setActionMessage] = useState<{ text: string; ok: boolean } | null>(null);
   const [actionKind, setActionKind] = useState<'scan' | 'test' | null>(null);
   const [activeJobId, setActiveJobId] = useState('');
@@ -152,8 +162,43 @@ export function SkillDetail() {
   const activeActionPending =
     scanJobMutation.isPending ||
     testJobMutation.isPending ||
+    retryJobItemMutation.isPending ||
     actionJob?.status === 'queued' ||
     actionJob?.status === 'running';
+
+  const retriableFailedItem = actionJobItems.find((item) =>
+    item.status === 'failed' &&
+    item.attempt_number < item.max_attempts &&
+    item.error_code !== null &&
+    !NON_RETRIABLE_ERROR_CODES.has(item.error_code)
+  );
+
+  const handleRetryFailedItem = async () => {
+    const targetJobId = actionJob?.job_id ?? activeJobId;
+    if (!targetJobId || !retriableFailedItem) {
+      return;
+    }
+
+    setActionMessage(null);
+    const retryJob = await retryJobItemMutation.mutateAsync({
+      jobId: targetJobId,
+      itemId: retriableFailedItem.item_id,
+    }).catch((e: Error) => {
+      setActionMessage({ text: e.message, ok: false });
+      return null;
+    });
+
+    if (!retryJob) {
+      return;
+    }
+
+    setActiveJobId(retryJob.job_id);
+    setActionMessage({
+      text: `${actionKind === 'test' ? 'Test' : 'Scan'} retry job queued`,
+      ok: true,
+    });
+    setShowDetails(true);
+  };
 
   const renderActionJobRow = (item: ActionJobItem, job: ActionJobSummary) => {
     const row = item.result ?? {};
@@ -302,6 +347,18 @@ export function SkillDetail() {
                     <span className="font-medium">{item.skill_id}:</span> {item.error_message ?? item.error_code}
                   </div>
                 ))}
+                {retriableFailedItem && (
+                  <div className="pt-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={handleRetryFailedItem}
+                      disabled={retryJobItemMutation.isPending}
+                    >
+                      {retryJobItemMutation.isPending ? 'Retrying…' : 'Retry failed item'}
+                    </Button>
+                  </div>
+                )}
               </div>
             )}
           </CardContent>

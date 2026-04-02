@@ -164,3 +164,12 @@ export function useActionJobItems(jobId: string) {
     },
   });
 }
+
+export function useRetryActionJobItem() {
+  return useMutation<ActionJobSummary, Error, { jobId: string; itemId: string }>({
+    mutationFn: async ({ jobId, itemId }) => {
+      const { data } = await api.post(`/api/skills/action-jobs/${jobId}/items/${itemId}/retry`);
+      return data;
+    },
+  });
+}
