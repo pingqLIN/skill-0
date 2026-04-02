@@ -54,9 +54,9 @@ export function ReviewCard({ skill, onApprove, onReject, isApproving, isRejectin
               <Badge className={riskColors[skill.risk_level]}>
                 {skill.risk_level} ({skill.risk_score})
               </Badge>
-              {skill.equivalence_score !== null && (
+              {skill.fidelity_score !== null && (
                 <Badge variant="outline">
-                  {Math.round(skill.equivalence_score * 100)}% equiv
+                  {Math.round(skill.fidelity_score * 100)}% fidelity
                 </Badge>
               )}
               <Badge variant="outline">{skill.license_spdx}</Badge>

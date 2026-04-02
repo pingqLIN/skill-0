@@ -13,7 +13,7 @@
 ├─────────────────────────────────────────────────────────────────────────┤
 │                                                                         │
 │  ┌─────────────┐   ┌─────────────┐   ┌─────────────┐   ┌────────────┐  │
-│  │   Intake    │ → │  Security   │ → │  Equivalence│ → │  Registry  │  │
+│  │   Intake    │ → │  Security   │ → │  Fidelity   │ → │  Registry  │  │
 │  │   Layer     │   │   Scanner   │   │   Tester    │   │  Manager   │  │
 │  └─────────────┘   └─────────────┘   └─────────────┘   └────────────┘  │
 │        │                 │                  │                 │         │
@@ -80,7 +80,7 @@
       "approved_at": "ISO8601 timestamp"
     },
     
-    "equivalence": {
+    "fidelity": {
       "tested_at": "ISO8601 timestamp",
       "semantic_similarity": "number 0-1",
       "structure_preserved": "boolean",
@@ -245,7 +245,9 @@ allowed_licenses:
     - Proprietary
 ```
 
-## 4. 等價性測試框架
+## 4. Fidelity 測試框架
+
+> 註：目前 runtime 與資料庫相容層仍保留 `equivalence_*` 命名，但對外語義應視為 fidelity。只有在具備 fixture、canonical outputs 與可重現 comparison rules 時，才應宣稱 strict equivalence。
 
 ### 4.1 測試維度
 
@@ -279,7 +281,7 @@ def compute_semantic_similarity(original: str, converted: str) -> float:
 ### 4.3 Runtime 測試
 
 ```python
-def test_runtime_equivalence(skill_name: str, test_prompts: list[str]) -> dict:
+def test_runtime_fidelity(skill_name: str, test_prompts: list[str]) -> dict:
     """
     測試轉換前後 skill 在相同 prompt 下的觸發行為
     
@@ -320,7 +322,7 @@ def test_runtime_equivalence(skill_name: str, test_prompts: list[str]) -> dict:
 ```
 ┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
 │  Import  │ ──▶ │  Scan    │ ──▶ │  Convert │ ──▶ │  Test    │
-│  Source  │     │  Security│     │  Format  │     │ Equiv.   │
+│  Source  │     │  Security│     │  Format  │     │ Fidelity │
 └──────────┘     └──────────┘     └──────────┘     └──────────┘
                       │                                  │
                       ▼                                  ▼
@@ -346,7 +348,7 @@ skill-0 import <source> [--auto-approve] [--skip-tests]
 # 僅掃描安全
 skill-0 scan <skill_path>
 
-# 僅測試等價性
+# 僅測試 fidelity
 skill-0 test <original_path> <converted_path>
 
 # 審查待核准
@@ -376,12 +378,12 @@ skill-0/
 │   ├── skill_converter.py             # 格式轉換 (已存在)
 │   ├── skill_installer.py             # 安裝管理 (已存在)
 │   ├── skill_scanner.py               # 安全掃描 (新增)
-│   ├── skill_tester.py                # 等價測試 (新增)
+│   ├── skill_tester.py                # fidelity 測試 (新增)
 │   └── skill_governance.py            # 治理主程式 (新增)
 └── tests/
     └── governance/
         ├── test_scanner.py
-        └── test_equivalence.py
+        └── test_fidelity.py
 ```
 
 ## 8. 版本紀錄

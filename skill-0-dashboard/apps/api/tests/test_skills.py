@@ -52,14 +52,19 @@ def test_get_skill_found(client, auth_header, mock_service):
     """GET /api/skills/{skill_id} 找到技能時回傳 200 與詳細資料。"""
     mock_service.get_skill.return_value = {
         "skill_id": "sk_001",
+        "current_revision_id": "rev_002",
+        "revision_id": "rev_002",
+        "revision_number": 2,
         "name": "Test Skill",
         "status": "approved",
         "risk_level": "low",
         "risk_score": 15,
+        "fidelity_score": 0.92,
         "equivalence_score": 0.92,
         "author_name": "test",
         "license_spdx": "MIT",
         "source_url": "",
+        "source_checksum": "checksum-002",
         "source_type": "github",
         "source_path": "/path/to/skill",
         "version": "1.0.0",
@@ -69,12 +74,16 @@ def test_get_skill_found(client, auth_header, mock_service):
         "scan_history": [],
         "test_history": [],
         "audit_events": [],
+        "revision_history": [],
     }
     response = client.get("/api/skills/sk_001", headers=auth_header)
     assert response.status_code == 200
     data = response.json()
     assert data["skill_id"] == "sk_001"
     assert data["name"] == "Test Skill"
+    assert data["current_revision_id"] == "rev_002"
+    assert data["revision_number"] == 2
+    assert data["fidelity_score"] == 0.92
 
 
 def test_get_skill_not_found(client, auth_header, mock_service):
@@ -85,8 +94,40 @@ def test_get_skill_not_found(client, auth_header, mock_service):
     assert "not found" in response.json()["detail"].lower()
 
 
-def test_trigger_scan_stub(client, auth_header):
-    """POST /api/skills/scan 回傳 queued 狀態（stub 端點）。"""
+def test_get_skill_revisions(client, auth_header, mock_service):
+    """GET /api/skills/{skill_id}/revisions 回傳 revision 清單。"""
+    mock_service.get_skill_revisions.return_value = [
+        {
+            "revision_id": "rev_002",
+            "revision_number": 2,
+            "status": "approved",
+            "version": "2.0.0",
+            "source_commit": "def45678",
+            "source_path": "/path/to/skill",
+            "source_checksum": "checksum-002",
+            "risk_level": "low",
+            "risk_score": 10,
+            "fidelity_score": 0.95,
+            "equivalence_score": 0.95,
+            "approved_by": "admin",
+            "approved_at": "2026-01-02T00:00:00",
+            "created_at": "2026-01-02T00:00:00",
+            "updated_at": "2026-01-02T00:00:00",
+            "is_current": True,
+        }
+    ]
+
+    response = client.get("/api/skills/sk_001/revisions", headers=auth_header)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["revision_id"] == "rev_002"
+    assert data[0]["revision_number"] == 2
+    mock_service.get_skill_revisions.assert_called_once_with("sk_001")
+
+
+def test_trigger_scan_action_result(client, auth_header):
+    """POST /api/skills/scan 回傳目前 ActionResult 格式。"""
     response = client.post(
         "/api/skills/scan",
         headers=auth_header,
@@ -94,17 +135,20 @@ def test_trigger_scan_stub(client, auth_header):
     )
     assert response.status_code == 200
     data = response.json()
-    assert data["status"] == "queued"
-    assert "sk_001" in data["message"]
+    assert data["status"] == "success"
+    assert data["skill_id"] == "sk_001"
+    assert data["processed"] == 1
+    assert data["results"][0]["skill_id"] == "sk_001"
 
 
-def test_trigger_test_stub(client, auth_header):
-    """POST /api/skills/test 回傳 queued 狀態（stub 端點）。"""
+def test_trigger_test_batch_action_result(client, auth_header):
+    """POST /api/skills/test（未指定 skill）回傳批次 ActionResult。"""
     response = client.post(
         "/api/skills/test",
         headers=auth_header,
     )
     assert response.status_code == 200
     data = response.json()
-    assert data["status"] == "queued"
-    assert "message" in data
+    assert data["status"] == "noop"
+    assert data["processed"] == 0
+    assert data["results"] == []

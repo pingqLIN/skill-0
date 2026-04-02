@@ -107,7 +107,15 @@ cd skill-0-dashboard/apps/web && npm run build
    - 已將本文件加入 `document-authority-index`
    - 後續仍可逐步擴大到其他歷史規劃/評估文件
 
-3. `CP-07` 已對本輪文件治理切片完成驗證：  
+3. `CP-02` 已完成規格收斂：  
+   - 已新增 `governance-p1-async-retry-spec-2026-03-31.md`
+   - 已定義 `job_id`、job/item 狀態機、retry policy、API 與資料模型邊界
+
+4. `CP-03` 已完成規格收斂：  
+   - 已新增 `runtime-risk-hardening-spec-2026-03-31.md`
+   - 已定義 trusted proxy header policy、client IP extraction 與 search `503` contract
+
+5. `CP-07` 已對本輪文件治理切片完成驗證：  
    - `python tools/check_doc_status_markers.py` passed
    - `python tools/validate_skill_schema.py parsed` passed
    - Python / web regression 與 web build 已在本輪重跑並通過
@@ -122,6 +130,7 @@ cd skill-0-dashboard/apps/web && npm run build
 2. 已將 `docs/planning/plan.md`、`plan-20-skills.md`、`yolo-dev-plan.md` 補上 historical status note。  
 3. 已將本文件加入 `docs/document-authority-index-2026-03-27.md`。  
 4. 已新增 `tools/check_doc_status_markers.py`，並在 `.github/workflows/ci.yml` 加入 `docs-status` gate。  
+5. 已新增 Governance P1 與 Runtime hardening 兩份可執行規格草案。  
 
 ### Sprint S1（1-2 天）
 

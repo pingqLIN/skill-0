@@ -15,6 +15,7 @@ def test_get_stats_overview(client, auth_header):
     assert "rejected_count" in data
     assert "blocked_count" in data
     assert "high_risk_count" in data
+    assert "avg_fidelity_score" in data
     assert "avg_equivalence_score" in data
 
 

@@ -1,0 +1,11 @@
+# Skill-0 API runtime dependencies
+sqlite-vec>=0.1.0
+sentence-transformers>=2.2.0
+numpy>=1.21.0
+scikit-learn>=1.0.0
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+pydantic>=2.0.0
+PyJWT>=2.7.0
+prometheus_client>=0.14.0
+structlog>=23.0.0
