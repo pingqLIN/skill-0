@@ -1,9 +1,11 @@
 # Skill-0 現階段可執行開發計畫（YOLO 模式）
 
-更新日期：`2026-03-31`  
-文件狀態：`Working v0.3`  
+更新日期：`2026-04-02`  
+文件狀態：`Working v0.4`  
 適用範圍：`<repo-root>`  
 協作模式：主代理（全局監察/決策整合） + 子代理 5.3（文件落地/細節修編）
+
+Status note: `2026-04-02` 已完成 worktree 收斂主線，CP-01 可視為完成；本文件目前作為後續 checkpoint 的現行執行入口，而非 2026-03-31 當下的未整理快照。
 
 ---
 
@@ -23,9 +25,9 @@
 
 ### 2.1 未完成主線（高優先）
 
-1. **Worktree 尚未收斂為可審查分支包**
-   - 現況：大量異動仍在單一 dirty worktree（含 `parsed/`、dashboard、docs 混雜）
-   - 來源：`docs/remaining-worktree-triage-2026-03-27.md`
+1. **Worktree 收斂主線已完成，僅剩尾端殘項待清理**
+   - 現況：原本混雜的 `parsed/`、dashboard、docs 已拆成 4 個 commit；目前只剩 `parsed/agent-skills-skill.json` 與少量 process docs 未收束
+   - 來源：`docs/remaining-worktree-triage-2026-04-02.md`
 
 2. **Governance Phase 2 的 P1 尚未開始**
    - 現況：批次 scan/test 非同步化、retry 機制仍未實作
@@ -54,9 +56,9 @@
 
 以下事項已由主代理在本地重新驗證，可作為本計畫的最新證據基線：
 
-1. `parsed/` 目前共有 `195` 個 checked-in JSON。  
-2. `converted-skills/` 目前共有 `163` 個目錄。  
-3. Python 測試收集數量為 `176`，完整回歸結果為 `176 passed`。  
+1. `parsed/` 目前共有 `196` 個 checked-in JSON。  
+2. `converted-skills/` 目前共有 `164` 個目錄。  
+3. Python 測試收集數量為 `185`，完整回歸結果為 `185 passed`。  
 4. Dashboard web 測試結果為 `18 passed`。  
 5. Dashboard web production build 已成功完成。  
 
@@ -119,6 +121,13 @@ cd skill-0-dashboard/apps/web && npm run build
    - `python tools/check_doc_status_markers.py` passed
    - `python tools/validate_skill_schema.py parsed` passed
    - Python / web regression 與 web build 已在本輪重跑並通過
+
+6. `CP-01` 已於 `2026-04-02` 完成收斂：  
+   - `e2fc8c1` `Add yolo-unattended skill and targeted parser safety`
+   - `99f56e5` `Harden dashboard auth and governance runtime`
+   - `3534eb0` `Normalize parsed corpus and align fidelity tooling`
+   - `6d3ad5e` `Add review dossier and shared documentation bundle`
+   - 剩餘未收斂項已降到單檔 spillover 與少數 process docs
 
 ---
 
