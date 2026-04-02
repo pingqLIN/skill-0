@@ -427,6 +427,119 @@ class TestGovernanceServiceRunTest:
         assert result["status"] == "failed"
         assert result["error_code"] == "INSTALLED_PATH_NOT_ALLOWED"
 
+
+class TestGovernanceServiceActionJobs:
+    def _make_service(self, source_path="", installed_path=""):
+        from apps.api.services.governance import GovernanceService  # noqa
+
+        svc = object.__new__(GovernanceService)
+        svc.db = MagicMock()
+        skill = MagicMock()
+        skill.skill_id = "skill_001"
+        skill.source_path = source_path
+        skill.installed_path = installed_path
+        svc.db.get_skill.return_value = skill
+        svc.db.list_skills.return_value = []
+        svc.db.get_current_revision.return_value = None
+        svc._ensure_action_job_state()
+        return svc
+
+    def test_enqueue_action_job_creates_queued_job(self, monkeypatch):
+        svc = self._make_service()
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_001"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+
+        assert job["status"] == "queued"
+        assert job["job_type"] == "scan_batch"
+        assert job["requested_by"] == "reviewer"
+        assert job["summary"]["queued"] == 1
+        items = svc.get_action_job_items(job["job_id"])
+        assert items is not None
+        assert len(items) == 1
+        assert items[0]["skill_id"] == "skill_001"
+
+    def test_run_action_job_marks_success_and_failure(self, monkeypatch):
+        svc = self._make_service()
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+
+        def fake_run_scan(skill_id):
+            if skill_id == "skill_ok":
+                return {
+                    "status": "success",
+                    "skill_id": skill_id,
+                    "processed": 1,
+                    "results": [{"skill_id": skill_id, "status": "success"}],
+                }
+            return {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "SCAN_RUNTIME_ERROR",
+                "error_message": "scanner crash",
+            }
+
+        monkeypatch.setattr(svc, "run_scan", fake_run_scan)
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_ok", "skill_bad"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+
+        svc._run_action_job(job["job_id"])
+
+        updated = svc.get_action_job(job["job_id"])
+        assert updated is not None
+        assert updated["status"] == "completed_with_failures"
+        assert updated["summary"]["succeeded"] == 1
+        assert updated["summary"]["failed"] == 1
+
+    def test_retry_action_job_item_creates_follow_on_job(self, monkeypatch):
+        svc = self._make_service()
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+        monkeypatch.setattr(
+            svc,
+            "run_scan",
+            lambda skill_id: {
+                "status": "failed",
+                "skill_id": skill_id,
+                "processed": 0,
+                "results": [],
+                "error_code": "SCAN_RUNTIME_ERROR",
+                "error_message": "scanner crash",
+            },
+        )
+
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_retry"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+        svc._run_action_job(job["job_id"])
+        item = svc.get_action_job_items(job["job_id"])[0]
+
+        retry_job = svc.retry_action_job_item(
+            job_id=job["job_id"],
+            item_id=item["item_id"],
+            requested_by="reviewer",
+        )
+
+        retry_items = svc.get_action_job_items(retry_job["job_id"])
+        assert retry_job["selection_mode"] == "retry_item"
+        assert retry_items[0]["attempt_number"] == 2
+        assert retry_items[0]["retry_of_item_id"] == item["item_id"]
+
     def test_test_source_path_missing(self, tmp_path):
         inst = tmp_path / "installed.md"
         inst.write_text("installed")

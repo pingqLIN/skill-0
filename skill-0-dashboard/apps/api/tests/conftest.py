@@ -201,6 +201,50 @@ def mock_service():
         "error_message": None,
         "hint": None,
     }
+    service.enqueue_action_job.return_value = {
+        "job_id": "job_scan_20260402_001",
+        "job_type": "scan_batch",
+        "status": "queued",
+        "requested_by": "testuser",
+        "selection_mode": "explicit",
+        "queued_items": 1,
+        "max_attempts": 2,
+        "queued_at": "2026-04-02T12:00:00Z",
+        "started_at": None,
+        "completed_at": None,
+        "error_code": None,
+        "error_message": None,
+        "summary": {
+            "total": 1,
+            "queued": 1,
+            "running": 0,
+            "succeeded": 0,
+            "failed": 0,
+            "retrying": 0,
+            "skipped": 0,
+        },
+    }
+    service.get_action_job.return_value = service.enqueue_action_job.return_value
+    service.get_action_job_items.return_value = [
+        {
+            "item_id": "job_scan_20260402_001_item_sk_001_01",
+            "job_id": "job_scan_20260402_001",
+            "skill_id": "sk_001",
+            "target_revision_id": "rev_001",
+            "action_type": "scan",
+            "status": "queued",
+            "attempt_number": 1,
+            "max_attempts": 2,
+            "started_at": None,
+            "completed_at": None,
+            "result": None,
+            "error_code": None,
+            "error_message": None,
+            "retry_of_item_id": None,
+        }
+    ]
+    service.retry_action_job_failures.return_value = service.enqueue_action_job.return_value
+    service.retry_action_job_item.return_value = service.enqueue_action_job.return_value
 
     # --- reviews ---
     service.get_pending_reviews.return_value = []

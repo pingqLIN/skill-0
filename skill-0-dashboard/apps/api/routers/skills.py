@@ -5,7 +5,14 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 
 from ..schemas.skill import RevisionSummary, SkillSummary, SkillDetail, SkillListResponse
-from ..schemas.action import ActionReadiness, ActionResult
+from ..schemas.action import (
+    ActionJobItem,
+    ActionJobRequest,
+    ActionJobSummary,
+    ActionReadiness,
+    ActionResult,
+)
+from ..auth import require_auth
 from ..services.governance import GovernanceService
 from ..dependencies import get_governance_service
 
@@ -105,3 +112,101 @@ def trigger_test(
     else:
         result = service.run_test_batch()
     return ActionResult(**result)
+
+
+@router.post("/skills/scan-jobs", response_model=ActionJobSummary)
+def enqueue_scan_job(
+    request: ActionJobRequest,
+    user: dict = Depends(require_auth),
+    service: GovernanceService = Depends(get_governance_service),
+) -> ActionJobSummary:
+    """Enqueue an async security scan batch job."""
+    data = service.enqueue_action_job(
+        job_type="scan_batch",
+        skill_ids=request.skill_ids,
+        requested_by=user.get("sub", "unknown"),
+        selection_mode=request.selection_mode,
+        max_attempts=request.max_attempts,
+    )
+    return ActionJobSummary(**data)
+
+
+@router.post("/skills/test-jobs", response_model=ActionJobSummary)
+def enqueue_test_job(
+    request: ActionJobRequest,
+    user: dict = Depends(require_auth),
+    service: GovernanceService = Depends(get_governance_service),
+) -> ActionJobSummary:
+    """Enqueue an async fidelity test batch job."""
+    data = service.enqueue_action_job(
+        job_type="test_batch",
+        skill_ids=request.skill_ids,
+        requested_by=user.get("sub", "unknown"),
+        selection_mode=request.selection_mode,
+        max_attempts=request.max_attempts,
+    )
+    return ActionJobSummary(**data)
+
+
+@router.get("/skills/action-jobs/{job_id}", response_model=ActionJobSummary)
+def get_action_job(
+    job_id: str,
+    service: GovernanceService = Depends(get_governance_service),
+) -> ActionJobSummary:
+    """Get async action job status."""
+    data = service.get_action_job(job_id)
+    if not data:
+        raise HTTPException(status_code=404, detail="Action job not found")
+    return ActionJobSummary(**data)
+
+
+@router.get("/skills/action-jobs/{job_id}/items", response_model=list[ActionJobItem])
+def list_action_job_items(
+    job_id: str,
+    service: GovernanceService = Depends(get_governance_service),
+) -> list[ActionJobItem]:
+    """List async action job items."""
+    data = service.get_action_job_items(job_id)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Action job not found")
+    return [ActionJobItem(**item) for item in data]
+
+
+@router.post("/skills/action-jobs/{job_id}/retry-failures", response_model=ActionJobSummary)
+def retry_action_job_failures(
+    job_id: str,
+    user: dict = Depends(require_auth),
+    service: GovernanceService = Depends(get_governance_service),
+) -> ActionJobSummary:
+    """Retry failed items from a previous async action job."""
+    try:
+        data = service.retry_action_job_failures(
+            job_id=job_id,
+            requested_by=user.get("sub", "unknown"),
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Action job not found") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return ActionJobSummary(**data)
+
+
+@router.post("/skills/action-jobs/{job_id}/items/{item_id}/retry", response_model=ActionJobSummary)
+def retry_action_job_item(
+    job_id: str,
+    item_id: str,
+    user: dict = Depends(require_auth),
+    service: GovernanceService = Depends(get_governance_service),
+) -> ActionJobSummary:
+    """Retry a specific failed async action job item."""
+    try:
+        data = service.retry_action_job_item(
+            job_id=job_id,
+            item_id=item_id,
+            requested_by=user.get("sub", "unknown"),
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Action job item not found") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return ActionJobSummary(**data)

@@ -8,6 +8,7 @@ with the underlying governance database.
 import os
 import sys
 import json
+import threading
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any, Optional
@@ -39,6 +40,322 @@ class GovernanceService:
             str(TOOLS_DIR.parent / "governance" / "db" / "governance.db"),
         ))
         self.db = GovernanceDB(db_path=db_path)
+        self._action_jobs: Dict[str, Dict[str, Any]] = {}
+        self._action_job_items: Dict[str, List[Dict[str, Any]]] = {}
+        self._action_job_lock = threading.Lock()
+        self._action_job_sequence = 0
+
+    def _ensure_action_job_state(self) -> None:
+        """Backfill runtime-only action job state for tests using object.__new__."""
+        if not hasattr(self, "_action_jobs"):
+            self._action_jobs = {}
+        if not hasattr(self, "_action_job_items"):
+            self._action_job_items = {}
+        if not hasattr(self, "_action_job_lock"):
+            self._action_job_lock = threading.Lock()
+        if not hasattr(self, "_action_job_sequence"):
+            self._action_job_sequence = 0
+
+    def _utcnow_iso(self) -> str:
+        return datetime.utcnow().isoformat() + "Z"
+
+    def _job_action_type(self, job_type: str) -> str:
+        return "scan" if job_type == "scan_batch" else "test"
+
+    def _is_retriable_error(self, error_code: Optional[str]) -> bool:
+        non_retriable = {
+            "PATH_NOT_FOUND",
+            "SOURCE_PATH_MISSING",
+            "SOURCE_PATH_NOT_ALLOWED",
+            "INSTALLED_PATH_MISSING",
+            "INSTALLED_PATH_NOT_ALLOWED",
+        }
+        return bool(error_code) and error_code not in non_retriable
+
+    def _compute_job_summary(self, items: List[Dict[str, Any]]) -> Dict[str, int]:
+        summary = {
+            "total": len(items),
+            "queued": 0,
+            "running": 0,
+            "succeeded": 0,
+            "failed": 0,
+            "retrying": 0,
+            "skipped": 0,
+        }
+        for item in items:
+            status = item.get("status")
+            if status in summary:
+                summary[status] += 1
+        return summary
+
+    def _serialize_job(self, job_id: str) -> Optional[Dict[str, Any]]:
+        self._ensure_action_job_state()
+        with self._action_job_lock:
+            job = self._action_jobs.get(job_id)
+            if not job:
+                return None
+            items = [dict(item) for item in self._action_job_items.get(job_id, [])]
+            payload = dict(job)
+            payload["summary"] = self._compute_job_summary(items)
+            payload["queued_items"] = len(items)
+            return payload
+
+    def _serialize_job_items(self, job_id: str) -> Optional[List[Dict[str, Any]]]:
+        self._ensure_action_job_state()
+        with self._action_job_lock:
+            if job_id not in self._action_jobs:
+                return None
+            return [dict(item) for item in self._action_job_items.get(job_id, [])]
+
+    def _make_job_id(self, job_type: str) -> str:
+        self._ensure_action_job_state()
+        with self._action_job_lock:
+            self._action_job_sequence += 1
+            sequence = self._action_job_sequence
+        prefix = "scan" if job_type == "scan_batch" else "test"
+        return f"job_{prefix}_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}_{sequence:03d}"
+
+    def _build_job_item(
+        self,
+        *,
+        job_id: str,
+        job_type: str,
+        skill_id: str,
+        target_revision_id: Optional[str],
+        max_attempts: int,
+        attempt_number: int = 1,
+        retry_of_item_id: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        item_id = f"{job_id}_item_{skill_id.replace('/', '_')}_{attempt_number:02d}"
+        return {
+            "item_id": item_id,
+            "job_id": job_id,
+            "skill_id": skill_id,
+            "target_revision_id": target_revision_id,
+            "action_type": self._job_action_type(job_type),
+            "status": "queued" if attempt_number == 1 else "retrying",
+            "attempt_number": attempt_number,
+            "max_attempts": max_attempts,
+            "started_at": None,
+            "completed_at": None,
+            "result": None,
+            "error_code": None,
+            "error_message": None,
+            "retry_of_item_id": retry_of_item_id,
+        }
+
+    def _start_action_job_runner(self, job_id: str) -> None:
+        self._ensure_action_job_state()
+        thread = threading.Thread(
+            target=self._run_action_job,
+            args=(job_id,),
+            daemon=True,
+        )
+        thread.start()
+
+    def enqueue_action_job(
+        self,
+        *,
+        job_type: str,
+        skill_ids: Optional[List[str]],
+        requested_by: str,
+        selection_mode: str = "explicit",
+        max_attempts: int = 2,
+    ) -> Dict[str, Any]:
+        """Create and start an async governance action job."""
+        self._ensure_action_job_state()
+        selected_skill_ids = [skill_id for skill_id in (skill_ids or []) if skill_id]
+
+        if selection_mode == "pending" or (selection_mode == "explicit" and not selected_skill_ids):
+            selected_skill_ids = [skill.skill_id for skill in self.db.list_skills(status="pending", limit=1000)]
+            if selection_mode == "explicit":
+                selection_mode = "pending"
+
+        job_id = self._make_job_id(job_type)
+        queued_at = self._utcnow_iso()
+        items: List[Dict[str, Any]] = []
+        for skill_id in selected_skill_ids:
+            current_revision = self.db.get_current_revision(skill_id)
+            items.append(
+                self._build_job_item(
+                    job_id=job_id,
+                    job_type=job_type,
+                    skill_id=skill_id,
+                    target_revision_id=current_revision.revision_id if current_revision else None,
+                    max_attempts=max_attempts,
+                )
+            )
+
+        with self._action_job_lock:
+            self._action_jobs[job_id] = {
+                "job_id": job_id,
+                "job_type": job_type,
+                "status": "queued",
+                "requested_by": requested_by,
+                "selection_mode": selection_mode,
+                "max_attempts": max_attempts,
+                "queued_at": queued_at,
+                "started_at": None,
+                "completed_at": None,
+                "error_code": None,
+                "error_message": None,
+            }
+            self._action_job_items[job_id] = items
+
+        if items:
+            self._start_action_job_runner(job_id)
+        else:
+            with self._action_job_lock:
+                self._action_jobs[job_id]["status"] = "completed"
+                self._action_jobs[job_id]["completed_at"] = self._utcnow_iso()
+
+        return self._serialize_job(job_id) or {}
+
+    def _run_action_job(self, job_id: str) -> None:
+        """Execute a queued async action job in-process."""
+        self._ensure_action_job_state()
+        with self._action_job_lock:
+            job = self._action_jobs.get(job_id)
+            items = self._action_job_items.get(job_id, [])
+            if not job:
+                return
+            job["status"] = "running"
+            job["started_at"] = self._utcnow_iso()
+            job_type = job["job_type"]
+
+        runner = self.run_scan if job_type == "scan_batch" else self.run_test
+
+        for item in items:
+            with self._action_job_lock:
+                item["status"] = "running"
+                item["started_at"] = self._utcnow_iso()
+
+            result = runner(item["skill_id"])
+
+            with self._action_job_lock:
+                item["result"] = result
+                item["completed_at"] = self._utcnow_iso()
+                item["error_code"] = result.get("error_code")
+                item["error_message"] = result.get("error_message")
+                item["status"] = "succeeded" if result.get("status") == "success" else "failed"
+
+        with self._action_job_lock:
+            summary = self._compute_job_summary(items)
+            if summary["failed"] == 0:
+                final_status = "completed"
+            elif summary["succeeded"] == 0:
+                final_status = "failed"
+            else:
+                final_status = "completed_with_failures"
+            job["status"] = final_status
+            job["completed_at"] = self._utcnow_iso()
+
+    def get_action_job(self, job_id: str) -> Optional[Dict[str, Any]]:
+        """Fetch a serialized async action job."""
+        return self._serialize_job(job_id)
+
+    def get_action_job_items(self, job_id: str) -> Optional[List[Dict[str, Any]]]:
+        """Fetch serialized items for an async action job."""
+        return self._serialize_job_items(job_id)
+
+    def retry_action_job_failures(self, *, job_id: str, requested_by: str) -> Dict[str, Any]:
+        """Create a new async job for all retriable failed items from a prior job."""
+        self._ensure_action_job_state()
+        with self._action_job_lock:
+            job = self._action_jobs.get(job_id)
+            items = [dict(item) for item in self._action_job_items.get(job_id, [])]
+
+        if not job:
+            raise KeyError(job_id)
+
+        failed_items = [
+            item for item in items
+            if item.get("status") == "failed" and self._is_retriable_error(item.get("error_code"))
+        ]
+        if not failed_items:
+            raise ValueError("No retriable failed items found for this action job")
+
+        return self._enqueue_retry_job(
+            source_job=job,
+            source_items=failed_items,
+            requested_by=requested_by,
+            selection_mode="retry_failures",
+        )
+
+    def retry_action_job_item(self, *, job_id: str, item_id: str, requested_by: str) -> Dict[str, Any]:
+        """Create a new async job for a specific retriable failed item."""
+        self._ensure_action_job_state()
+        with self._action_job_lock:
+            job = self._action_jobs.get(job_id)
+            items = [dict(item) for item in self._action_job_items.get(job_id, [])]
+
+        if not job:
+            raise KeyError(job_id)
+
+        source_item = next((item for item in items if item.get("item_id") == item_id), None)
+        if not source_item:
+            raise KeyError(item_id)
+        if source_item.get("status") != "failed":
+            raise ValueError("Only failed items can be retried")
+        if not self._is_retriable_error(source_item.get("error_code")):
+            raise ValueError("Item is not retriable")
+
+        return self._enqueue_retry_job(
+            source_job=job,
+            source_items=[source_item],
+            requested_by=requested_by,
+            selection_mode="retry_item",
+        )
+
+    def _enqueue_retry_job(
+        self,
+        *,
+        source_job: Dict[str, Any],
+        source_items: List[Dict[str, Any]],
+        requested_by: str,
+        selection_mode: str,
+    ) -> Dict[str, Any]:
+        """Create a retry job derived from prior failed items."""
+        self._ensure_action_job_state()
+        job_type = source_job["job_type"]
+        max_attempts = source_job.get("max_attempts", 2)
+        job_id = self._make_job_id(job_type)
+        queued_at = self._utcnow_iso()
+        items: List[Dict[str, Any]] = []
+
+        for source_item in source_items:
+            if source_item.get("attempt_number", 1) >= max_attempts:
+                raise ValueError("Retry would exceed max_attempts")
+            items.append(
+                self._build_job_item(
+                    job_id=job_id,
+                    job_type=job_type,
+                    skill_id=source_item["skill_id"],
+                    target_revision_id=source_item.get("target_revision_id"),
+                    max_attempts=max_attempts,
+                    attempt_number=source_item.get("attempt_number", 1) + 1,
+                    retry_of_item_id=source_item["item_id"],
+                )
+            )
+
+        with self._action_job_lock:
+            self._action_jobs[job_id] = {
+                "job_id": job_id,
+                "job_type": job_type,
+                "status": "queued",
+                "requested_by": requested_by,
+                "selection_mode": selection_mode,
+                "max_attempts": max_attempts,
+                "queued_at": queued_at,
+                "started_at": None,
+                "completed_at": None,
+                "error_code": None,
+                "error_message": None,
+            }
+            self._action_job_items[job_id] = items
+
+        self._start_action_job_runner(job_id)
+        return self._serialize_job(job_id) or {}
 
     def _allowed_path_roots(self) -> List[Path]:
         raw_roots = os.getenv("SKILL0_ALLOWED_PATH_ROOTS", str(TOOLS_DIR.parent))
