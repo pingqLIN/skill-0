@@ -1,0 +1,281 @@
+{
+  "$schema": "../schema/skill-decomposition.schema.json",
+  "meta": {
+    "skill_id": "claude__skill__yolo_unattended",
+    "name": "yolo-unattended",
+    "skill_layer": "claude_skill",
+    "title": "Yolo Unattended Skill",
+    "description": "Unattended execution protocol for the Skill-0 repository. Use when asked to keep developing this project autonomously with minimal interruptions until a user-specified local cutoff such as 06:00 or 07",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-04-01T20:51:05.685701Z",
+    "parser_version": "skill-0 v2.4-auto",
+    "parsed_by": "auto_parse.py"
+  },
+  "original_definition": {
+    "source": "converted-skills/yolo-unattended/SKILL.md",
+    "skill_name": "yolo-unattended",
+    "skill_description": "Unattended execution protocol for the Skill-0 repository. Use when asked to keep developing this project autonomously with minimal interruptions until a user-specified local cutoff such as 06:00 or 07:00, while following the live execution plan, checkpoint-based delivery, validation commands, and dirty-worktree safety rules."
+  },
+  "decomposition": {
+    "actions": [
+      {
+        "name": "Run .venv/bin/python",
+        "description": ".venv/bin/python scripts/auto_parse.py --force --skills <skill-name> --validate",
+        "action_type": "external_call",
+        "id": "a_001",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Run cd",
+        "description": "cd skill-0-dashboard/apps/web && npm test && npm run build",
+        "action_type": "external_call",
+        "id": "a_002",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "\"follow the project plan without stopping\"",
+        "description": "\"follow the project plan without stopping\"",
+        "action_type": "state_change",
+        "id": "a_003",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "1. Read `AGENTS.md` and the current repo instructions before",
+        "description": "1. Read `AGENTS.md` and the current repo instructions before choosing work.",
+        "action_type": "io_read",
+        "id": "a_004",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Read the live execution plan at `docs/planning/executable",
+        "description": "2. Read the live execution plan at `docs/planning/executable-dev-plan-2026-03-31.zh-TW.md`.",
+        "action_type": "io_read",
+        "id": "a_005",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Prefer repo plan items already marked as incomplete or pa",
+        "description": "2. Prefer repo plan items already marked as incomplete or partially landed.",
+        "action_type": "io_read",
+        "id": "a_006",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "governance/runtime hardening before new expansion",
+        "description": "governance/runtime hardening before new expansion",
+        "action_type": "transform",
+        "id": "a_007",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "2. Gather only the local context needed to implement it safe",
+        "description": "2. Gather only the local context needed to implement it safely.",
+        "action_type": "transform",
+        "id": "a_008",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "3. Make the change end-to-end instead of stopping at analysi",
+        "description": "3. Make the change end-to-end instead of stopping at analysis.",
+        "action_type": "state_change",
+        "id": "a_009",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "4. Run the narrowest relevant validation immediately after t",
+        "description": "4. Run the narrowest relevant validation immediately after the change.",
+        "action_type": "transform",
+        "id": "a_010",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "merged code changes in the working tree",
+        "description": "merged code changes in the working tree",
+        "action_type": "transform",
+        "id": "a_011",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "updated repo documents that change execution clarity",
+        "description": "updated repo documents that change execution clarity",
+        "action_type": "state_change",
+        "id": "a_012",
+        "deterministic": true,
+        "side_effects": []
+      },
+      {
+        "name": "Before stopping, leave a concise handoff that states:",
+        "description": "Before stopping, leave a concise handoff that states:",
+        "action_type": "state_change",
+        "id": "a_013",
+        "deterministic": true,
+        "side_effects": []
+      }
+    ],
+    "rules": [
+      {
+        "description": "3. Check `git status --short` and treat the worktree as dirty unless proven otherwise.",
+        "id": "r_001",
+        "name": "3. Check `git status --short` and...",
+        "condition_expression": "required startup pass",
+        "condition_type": "validation",
+        "returns": "boolean"
+      },
+      {
+        "description": "4. Choose the smallest reviewable slice that moves the current checkpoint plan forward.",
+        "id": "r_002",
+        "name": "4. Choose the smallest reviewable slice...",
+        "condition_expression": "required startup pass",
+        "condition_type": "validation",
+        "returns": "boolean"
+      },
+      {
+        "description": "1. Pick one concrete slice with a clear acceptance check.",
+        "id": "r_003",
+        "name": "1. Pick one concrete slice with...",
+        "condition_expression": "operating loop",
+        "condition_type": "validation",
+        "returns": "boolean"
+      },
+      {
+        "description": "Keep updates short and factual. Report checkpoints, blockers, and validation results, then continue working.",
+        "id": "r_004",
+        "name": "Keep updates short and factual. Report...",
+        "condition_expression": "operating loop",
+        "condition_type": "validation",
+        "returns": "boolean"
+      },
+      {
+        "description": "If current local time is already past the requested cutoff, do not invent a new deadline; ask for a new cutoff or stop after the current safe checkpoi",
+        "id": "r_005",
+        "name": "If current local time is already...",
+        "condition_expression": "cutoff handling",
+        "condition_type": "state_check",
+        "returns": "boolean"
+      },
+      {
+        "description": "Do not start a cross-cutting or high-blast-radius change in the last 20 minutes before cutoff.",
+        "id": "r_006",
+        "name": "Do not start a cross-cutting or...",
+        "condition_expression": "cutoff handling",
+        "condition_type": "validation",
+        "returns": "boolean"
+      },
+      {
+        "description": "Do not wait for user confirmation on small implementation details that can be validated locally.",
+        "id": "r_007",
+        "name": "Do not wait for user confirmation...",
+        "condition_expression": "safe assumptions",
+        "condition_type": "validation",
+        "returns": "boolean"
+      },
+      {
+        "description": "Never revert user changes or unrelated dirty files.",
+        "id": "r_008",
+        "name": "Never revert user changes or unrelated...",
+        "condition_expression": "repository safety rules",
+        "condition_type": "validation",
+        "returns": "boolean"
+      },
+      {
+        "description": "Never edit `parsed/*.json` by hand; generate or normalize via tooling.",
+        "id": "r_009",
+        "name": "Never edit `parsed/*.json` by hand; generate...",
+        "condition_expression": "repository safety rules",
+        "condition_type": "type_check",
+        "returns": "boolean"
+      },
+      {
+        "description": "Never treat mutable skill rows as the governance source of truth.",
+        "id": "r_010",
+        "name": "Never treat mutable skill rows as...",
+        "condition_expression": "repository safety rules",
+        "condition_type": "validation",
+        "returns": "boolean"
+      }
+    ],
+    "directives": [
+      {
+        "directive_type": "knowledge",
+        "description": "Use this skill only inside the Skill-0 repository when the user wants continuous project execution with minimal back-and-forth.",
+        "decomposable": false,
+        "id": "d_001",
+        "name": "Use this skill only inside the..."
+      },
+      {
+        "directive_type": "completion",
+        "description": "1. Finish active convergence work before opening new feature surface.",
+        "decomposable": false,
+        "id": "d_002",
+        "name": "1. Finish active convergence work before..."
+      },
+      {
+        "directive_type": "preference",
+        "description": "3. Prefer fixes with direct evidence and clear validation commands.",
+        "decomposable": false,
+        "id": "d_003",
+        "name": "3. Prefer fixes with direct evidence..."
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "4. Delay broad expansion work until current baseline risks are closed.",
+        "decomposable": false,
+        "id": "d_004",
+        "name": "4. Delay broad expansion work until..."
+      },
+      {
+        "directive_type": "completion",
+        "description": "5. If the slice is complete and safe, move to the next highest-value slice.",
+        "decomposable": false,
+        "id": "d_005",
+        "name": "5. If the slice is complete..."
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Treat the user-provided cutoff, such as `06:00` or `07:00`, as local repository time unless the user gives a different timezone.",
+        "decomposable": false,
+        "id": "d_006",
+        "name": "Treat the user-provided cutoff, such as..."
+      },
+      {
+        "directive_type": "principle",
+        "description": "Use the final 20 minutes for validation, cleanup, and a precise handoff note.",
+        "decomposable": false,
+        "id": "d_007",
+        "name": "Use the final 20 minutes for..."
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Make reversible assumptions when the ambiguity is low-risk and local.",
+        "decomposable": false,
+        "id": "d_008",
+        "name": "Make reversible assumptions when the ambiguity..."
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Ask one direct question only when the unknown would change architecture, external behavior, or destructive operations.",
+        "decomposable": false,
+        "id": "d_009",
+        "name": "Ask one direct question only when..."
+      },
+      {
+        "directive_type": "knowledge",
+        "description": "Count work as progress only if it leaves one of these behind:",
+        "decomposable": false,
+        "id": "d_010",
+        "name": "Count work as progress only if..."
+      }
+    ]
+  }
+}
