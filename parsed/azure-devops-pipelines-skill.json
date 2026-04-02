@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__azure-devops-pipelines",
+    "skill_id": "claude__skill__azure_devops_pipelines",
     "name": "azure-devops-pipelines",
     "skill_layer": "claude_skill",
     "title": "Azure Devops Pipelines Skill",
@@ -142,21 +142,27 @@
     "rules": [
       {
         "description": "Use service connections with minimal required permissions",
-        "condition": "security considerations",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Use service connections with minimal required...",
+        "condition_expression": "security considerations",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Include rollback mechanisms and health checks",
-        "condition": "deployment strategies",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Include rollback mechanisms and health checks",
+        "condition_expression": "deployment strategies",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Include deployment health checks and automated rollback triggers",
-        "condition": "monitoring and observability",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Include deployment health checks and automated...",
+        "condition_expression": "monitoring and observability",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -164,61 +170,71 @@
         "directive_type": "knowledge",
         "description": "Use YAML syntax consistently with proper indentation (2 spaces)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use YAML syntax consistently with proper..."
       },
       {
         "directive_type": "knowledge",
         "description": "Always include meaningful names and display names for pipelines, stages, jobs, and steps",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Always include meaningful names and display..."
       },
       {
         "directive_type": "knowledge",
         "description": "Implement proper error handling and conditional execution",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Implement proper error handling and conditional..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use variables and parameters to make pipelines reusable and maintainable",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use variables and parameters to make..."
       },
       {
         "directive_type": "principle",
         "description": "Follow the principle of least privilege for service connections and permissions",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Follow the principle of least privilege..."
       },
       {
         "directive_type": "knowledge",
         "description": "Include comprehensive logging and diagnostics for troubleshooting",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Include comprehensive logging and diagnostics for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Organize complex pipelines using stages for better visualization and control",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Organize complex pipelines using stages for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use jobs to group related steps and enable parallel execution when possible",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use jobs to group related steps..."
       },
       {
         "directive_type": "knowledge",
         "description": "Keep pipeline files focused and modular - split large pipelines into multiple files",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Keep pipeline files focused and modular..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use specific agent pool versions and VM images for consistency",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use specific agent pool versions and..."
       }
     ]
   }

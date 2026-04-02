@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__swift-mcp-server",
+    "skill_id": "claude__skill__swift_mcp_server",
     "name": "swift-mcp-server",
     "skill_layer": "claude_skill",
     "title": "Swift Mcp Server Skill",
@@ -142,51 +142,67 @@
     "rules": [
       {
         "description": "\"limit\": .number(\"Maximum results\")",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "\"limit\": .number(\"Maximum results\")",
+        "condition_expression": "adding tools",
+        "condition_type": "range_check",
+        "returns": "boolean"
       },
       {
         "description": "\"required\": .array([.string(\"query\")])",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "\"required\": .array([.string(\"query\")])",
+        "condition_expression": "adding tools",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "let limit = params.arguments?[\"limit\"]?.intValue ?? 10",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "let limit = params.arguments?[\"limit\"]?.intValue ?? 10",
+        "condition_expression": "adding tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "let results = performSearch(query: query, limit: limit)",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "let results = performSearch(query: query, limit:...",
+        "condition_expression": "adding tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": ".init(name: \"topic\", description: \"Topic to analyze\", required: true),",
-        "condition": "adding prompts",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "init(name: \"topic\", description: \"Topic to analyze\",...",
+        "condition_expression": "adding prompts",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": ".init(name: \"depth\", description: \"Analysis depth\", required: false)",
-        "condition": "adding prompts",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "init(name: \"depth\", description: \"Analysis depth\", required:...",
+        "condition_expression": "adding prompts",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "\"required\": .array([.string(\"name\")])",
-        "condition": "json schema with value type",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "\"required\": .array([.string(\"name\")])",
+        "condition_expression": "json schema with value type",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate client connections with an initialize hook:",
-        "condition": "initialize hook",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Validate client connections with an initialize...",
+        "condition_expression": "initialize hook",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -194,61 +210,71 @@
         "directive_type": "strategy",
         "description": "When building MCP servers in Swift, follow these best practices and patterns using the official Swift SDK.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "When building MCP servers in Swift,..."
       },
       {
         "directive_type": "strategy",
         "description": "await server.withMethodHandler(ListTools.self) { _ in",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "await server.withMethodHandler(ListTools.self) { _ in"
       },
       {
         "directive_type": "strategy",
         "description": "await server.withMethodHandler(CallTool.self) { params in",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "await server.withMethodHandler(CallTool.self) { params in"
       },
       {
         "directive_type": "knowledge",
         "description": "let query = params.arguments?[\"query\"]?.stringValue ?? \"\"",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "let query = params.arguments?[\"query\"]?.stringValue ?? \"\""
       },
       {
         "directive_type": "completion",
         "description": "content: [.text(\"Found \\(results.count) results\")],",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "content: [.text(\"Found \\(results.count) results\")],"
       },
       {
         "directive_type": "knowledge",
         "description": "await server.withMethodHandler(ListResources.self) { params in",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "await server.withMethodHandler(ListResources.self) { params in"
       },
       {
         "directive_type": "knowledge",
         "description": "return .init(resources: resources, nextCursor: nil)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "return .init(resources: resources, nextCursor: nil)"
       },
       {
         "directive_type": "knowledge",
         "description": "throw MCPError.invalidParams(\"Unknown resource URI: \\(params.uri)\")",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "throw MCPError.invalidParams(\"Unknown resource URI: \\(params.uri)\")"
       },
       {
         "directive_type": "strategy",
         "description": "await server.withMethodHandler(ListPrompts.self) { params in",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "await server.withMethodHandler(ListPrompts.self) { params in"
       },
       {
         "directive_type": "strategy",
         "description": "await server.withMethodHandler(GetPrompt.self) { params in",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "await server.withMethodHandler(GetPrompt.self) { params in"
       }
     ]
   }

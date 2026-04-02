@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__prompt",
+    "skill_id": "claude__skill__prompt",
     "name": "prompt",
     "skill_layer": "claude_skill",
     "title": "Prompt Skill",
@@ -110,51 +110,67 @@
     "rules": [
       {
         "description": "Every prompt file should include YAML frontmatter with the following fields:",
-        "condition": "frontmatter requirements",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Every prompt file should include YAML...",
+        "condition_expression": "frontmatter requirements",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "| Field | Required | Description |",
-        "condition": "required/recommended fields",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "| Field | Required | Description...",
+        "condition_expression": "required/recommended fields",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Limit `tools` to the smallest set that enables the task. List them in the preferred execution order when the sequence matters.",
-        "condition": "tool and permission guidance",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Limit `tools` to the smallest set...",
+        "condition_expression": "tool and permission guidance",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid idioms, humor, or culturally specific references; favor neutral, inclusive language.",
-        "condition": "instruction tone and style",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Avoid idioms, humor, or culturally specific...",
+        "condition_expression": "instruction tone and style",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Provide validation steps—manual checks, automated commands, or acceptance criteria lists—that reviewers can execute after running the prompt.",
-        "condition": "output definition",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Provide validation steps—manual checks, automated commands,...",
+        "condition_expression": "output definition",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Embed Good/Bad examples or scaffolds (Markdown templates, JSON stubs) that the prompt should produce or follow.",
-        "condition": "examples and reusable assets",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Embed Good/Bad examples or scaffolds (Markdown...",
+        "condition_expression": "examples and reusable assets",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "[ ] Validation steps are actionable (commands, diff checks, review prompts).",
-        "condition": "quality assurance checklist",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "[ ] Validation steps are actionable...",
+        "condition_expression": "quality assurance checklist",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Review prompts periodically to ensure tool lists, model requirements, and linked documents remain valid.",
-        "condition": "maintenance guidance",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Review prompts periodically to ensure tool...",
+        "condition_expression": "maintenance guidance",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -162,61 +178,71 @@
         "directive_type": "completion",
         "description": "Instructions for creating effective and maintainable prompt files that guide GitHub Copilot in delivering consistent, high-quality outcomes across any",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Instructions for creating effective and maintainable..."
       },
       {
         "directive_type": "knowledge",
         "description": "Target audience: maintainers and contributors authoring reusable prompts for Copilot Chat.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Target audience: maintainers and contributors authoring..."
       },
       {
         "directive_type": "knowledge",
         "description": "Goals: predictable behaviour, clear expectations, minimal permissions, and portability across repositories.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Goals: predictable behaviour, clear expectations, minimal..."
       },
       {
         "directive_type": "knowledge",
         "description": "Primary references: VS Code documentation on prompt files and organization-specific conventions.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Primary references: VS Code documentation on..."
       },
       {
         "directive_type": "preference",
         "description": "| `description` | Recommended | A short description of the prompt (single sentence, actionable outcome) |",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "| `description` | Recommended | A..."
       },
       {
         "directive_type": "preference",
         "description": "| `name` | Optional | The name shown after typing `/` in chat. Defaults to filename if not specified |",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "| `name` | Optional | The..."
       },
       {
         "directive_type": "preference",
         "description": "| `agent` | Recommended | The agent to use: `ask`, `edit`, `agent`, or a custom agent name. Defaults to current agent |",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "| `agent` | Recommended | The..."
       },
       {
         "directive_type": "preference",
         "description": "| `model` | Optional | The language model to use. Defaults to the currently selected model |",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "| `model` | Optional | The..."
       },
       {
         "directive_type": "knowledge",
         "description": "| `tools` | Optional | List of tool/tool set names available for this prompt |",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "| `tools` | Optional | List..."
       },
       {
         "directive_type": "knowledge",
         "description": "| `argument-hint` | Optional | Hint text shown in chat input to guide user interaction |",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "| `argument-hint` | Optional | Hint..."
       }
     ]
   }

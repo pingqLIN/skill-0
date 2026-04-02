@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__java-11-to-java-17-upgrade",
+    "skill_id": "claude__skill__java_to_java_upgrade",
     "name": "java-11-to-java-17-upgrade",
     "skill_layer": "claude_skill",
     "title": "Java 11 To Java 17 Upgrade Skill",
@@ -142,39 +142,51 @@
     "rules": [
       {
         "description": "Migration Pattern: Use sealed classes for restricted inheritance",
-        "condition": "jep 409: sealed classes (java 17)",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Migration Pattern: Use sealed classes for...",
+        "condition_expression": "jep 409: sealed classes (java 17)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "sm.checkPermission(new RuntimePermission(\"shutdownHooks\"));",
-        "condition": "jep 411: deprecate the security manager for removal",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "sm.checkPermission(new RuntimePermission(\"shutdownHooks\"));",
+        "condition_expression": "jep 411: deprecate the security manager for removal",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "// Most applications don't need Security Manager functionality",
-        "condition": "jep 411: deprecate the security manager for removal",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "// Most applications don't need Security...",
+        "condition_expression": "jep 411: deprecate the security manager for removal",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Verify dependency compatibility",
-        "condition": "phase 1: foundation (weeks 1-2)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Verify dependency compatibility",
+        "condition_expression": "phase 1: foundation (weeks 1-2)",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Identify inheritance restrictions",
-        "condition": "phase 4: sealed classes (weeks 7-8)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Identify inheritance restrictions",
+        "condition_expression": "phase 4: sealed classes (weeks 7-8)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Faster creation and equality checks",
-        "condition": "records vs traditional classes",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Faster creation and equality checks",
+        "condition_expression": "records vs traditional classes",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -182,61 +194,71 @@
         "directive_type": "strategy",
         "description": "This guide provides comprehensive GitHub Copilot instructions for upgrading Java projects from JDK 11 to JDK 17, covering major language features, API",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This guide provides comprehensive GitHub Copilot..."
       },
       {
         "directive_type": "knowledge",
         "description": "public boolean equals(Object obj) { /* boilerplate */ }",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "public boolean equals(Object obj) { /*..."
       },
       {
         "directive_type": "knowledge",
         "description": "if (age < 0) throw new IllegalArgumentException(\"Age cannot be negative\");",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "if (age < 0) throw new..."
       },
       {
         "directive_type": "strategy",
         "description": "Migration Pattern: Simplify instanceof checks",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Migration Pattern: Simplify instanceof checks"
       },
       {
         "directive_type": "knowledge",
         "description": "// Old: Traditional instanceof with casting",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "// Old: Traditional instanceof with casting"
       },
       {
         "directive_type": "strategy",
         "description": "public String processObject(Object obj) {",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "public String processObject(Object obj) {"
       },
       {
         "directive_type": "knowledge",
         "description": "} else if (obj instanceof Integer) {",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "} else if (obj instanceof Integer)..."
       },
       {
         "directive_type": "knowledge",
         "description": "} else if (obj instanceof List<?>) {",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "} else if (obj instanceof List<?>)..."
       },
       {
         "directive_type": "knowledge",
         "description": "return \"List with \" + list.size() + \" elements\";",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "return \"List with \" + list.size()..."
       },
       {
         "directive_type": "strategy",
         "description": "// New: Pattern matching for instanceof (Java 16+)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "// New: Pattern matching for instanceof..."
       }
     ]
   }

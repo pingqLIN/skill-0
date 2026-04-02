@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__go-mcp-server",
+    "skill_id": "claude__skill__go_mcp_server",
     "name": "go-mcp-server",
     "skill_layer": "claude_skill",
     "title": "Go Mcp Server Skill",
@@ -142,39 +142,51 @@
     "rules": [
       {
         "description": "Limit int    `json:\"limit,omitempty\" jsonschema:\"maximum results to return\"`",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Limit int `json:\"limit,omitempty\" jsonschema:\"maximum results to...",
+        "condition_expression": "adding tools",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "results := performSearch(ctx, input.Query, input.Limit)",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "results := performSearch(ctx, input.Query, input.Limit)",
+        "condition_expression": "adding tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Always return proper errors and use context for cancellation:",
-        "condition": "error handling",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Always return proper errors and use...",
+        "condition_expression": "error handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Name     string   `json:\"name\" jsonschema:\"required,description=User's name\"`",
-        "condition": "json schema tags",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Name string `json:\"name\" jsonschema:\"required,description=User's name\"`",
+        "condition_expression": "json schema tags",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "input := ToolInput{Query: \"test\", Limit: 10}",
-        "condition": "testing",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "input := ToolInput{Query: \"test\", Limit: 10}",
+        "condition_expression": "testing",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "require github.com/modelcontextprotocol/go-sdk v1.0.0",
-        "condition": "module setup",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "require github.com/modelcontextprotocol/go-sdk v1.0.0",
+        "condition_expression": "module setup",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -182,61 +194,71 @@
         "directive_type": "strategy",
         "description": "When building MCP servers in Go, follow these best practices and patterns using the official Go SDK.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "When building MCP servers in Go,..."
       },
       {
         "directive_type": "completion",
         "description": "Use `mcp.AddTool` with struct-based input and output for type safety:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use `mcp.AddTool` with struct-based input and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Query string `json:\"query\" jsonschema:\"the search query\"`",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Query string `json:\"query\" jsonschema:\"the search query\"`"
       },
       {
         "directive_type": "completion",
         "description": "Results []string `json:\"results\" jsonschema:\"list of search results\"`",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Results []string `json:\"results\" jsonschema:\"list of search..."
       },
       {
         "directive_type": "completion",
         "description": "Count   int      `json:\"count\" jsonschema:\"number of results found\"`",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Count int `json:\"count\" jsonschema:\"number of results..."
       },
       {
         "directive_type": "knowledge",
         "description": "func SearchTool(ctx context.Context, req *mcp.CallToolRequest, input ToolInput) (",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "func SearchTool(ctx context.Context, req *mcp.CallToolRequest, input..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `mcp.AddResource` for providing accessible data:",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use `mcp.AddResource` for providing accessible data"
       },
       {
         "directive_type": "knowledge",
         "description": "For communication over stdin/stdout (most common for desktop integrations):",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "For communication over stdin/stdout (most common..."
       },
       {
         "directive_type": "knowledge",
         "description": "func MyTool(ctx context.Context, req *mcp.CallToolRequest, input MyInput) (",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "func MyTool(ctx context.Context, req *mcp.CallToolRequest, input..."
       },
       {
         "directive_type": "completion",
         "description": "return nil, MyOutput{}, fmt.Errorf(\"query cannot be empty\")",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "return nil, MyOutput{}, fmt.Errorf(\"query cannot be..."
       }
     ]
   }

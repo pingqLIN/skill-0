@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-platform-connector",
+    "skill_id": "claude__skill__power_platform_connector",
     "name": "power-platform-connector",
     "skill_layer": "claude_skill",
     "title": "Power Platform Connector Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "API version specifications to ensure compatibility with Power Platform services.",
-        "condition": "3. settings.json",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "API version specifications to ensure compatibility...",
+        "condition_expression": "3. settings.json",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "1. Always validate against Swagger 2.0 spec - The schema enforces strict Swagger 2.0 compliance",
-        "condition": "when working with api definitions (swagger)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "1. Always validate against Swagger 2.0...",
+        "condition_expression": "when working with api definitions (swagger)",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "`x-ms-summary`: Use this to provide user-friendly display names and ensure you use title case formatting.",
-        "condition": "when working with api definitions (swagger)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "`x-ms-summary`: Use this to provide user-friendly...",
+        "condition_expression": "when working with api definitions (swagger)",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "`x-ms-safe-operation`: Use this to mark POST operations as safe when they don't have side effects.",
-        "condition": "when working with api definitions (swagger)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "`x-ms-safe-operation`: Use this to mark POST...",
+        "condition_expression": "when working with api definitions (swagger)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "`x-ms-test-value`: Use this to provide sample values for testing, but never include secrets or sensitive data.",
-        "condition": "when working with api definitions (swagger)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "`x-ms-test-value`: Use this to provide sample...",
+        "condition_expression": "when working with api definitions (swagger)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "You should define appropriate `securityDefinitions` for your API to ensure proper authentication.",
-        "condition": "when working with api definitions (swagger)",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "You should define appropriate `securityDefinitions` for...",
+        "condition_expression": "when working with api definitions (swagger)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "You should use `oauth2` for modern APIs, `apiKey` for simple token authentication, and consider `basic` auth only for internal/legacy systems.",
-        "condition": "when working with api definitions (swagger)",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "You should use `oauth2` for modern...",
+        "condition_expression": "when working with api definitions (swagger)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Each security definition must be exactly one type (this constraint is enforced by oneOf validation).",
-        "condition": "when working with api definitions (swagger)",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Each security definition must be exactly...",
+        "condition_expression": "when working with api definitions (swagger)",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "You should use descriptive `description` fields to help users understand each parameter's purpose.",
-        "condition": "when working with api definitions (swagger)",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "You should use descriptive `description` fields...",
+        "condition_expression": "when working with api definitions (swagger)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "You should implement `x-ms-summary` for better user experience (title case is required).",
-        "condition": "when working with api definitions (swagger)",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "You should implement `x-ms-summary` for better...",
+        "condition_expression": "when working with api definitions (swagger)",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "This workspace contains JSON Schema definitions for Power Platform Custom Connectors, specifically for the `paconn` (Power Apps Connector) tool. The s",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This workspace contains JSON Schema definitions..."
       },
       {
         "directive_type": "knowledge",
         "description": "API Definitions (Swagger 2.0 format)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "API Definitions (Swagger 2.0 format)"
       },
       {
         "directive_type": "knowledge",
         "description": "API Properties (connector metadata and configuration)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "API Properties (connector metadata and configuration)"
       },
       {
         "directive_type": "knowledge",
         "description": "Settings (environment and deployment configuration)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Settings (environment and deployment configuration)"
       },
       {
         "directive_type": "knowledge",
         "description": "Purpose: This file contains Swagger 2.0 API definitions with Power Platform extensions.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Purpose: This file contains Swagger 2.0..."
       },
       {
         "directive_type": "knowledge",
         "description": "Standard Swagger 2.0 properties including info, paths, definitions, and more.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Standard Swagger 2.0 properties including info,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Microsoft-specific extensions that begin with `x-ms-*` prefixes.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Microsoft-specific extensions that begin with `x-ms-*`..."
       },
       {
         "directive_type": "strategy",
         "description": "Security definitions that support OAuth2, API Key, and Basic Auth authentication methods.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Security definitions that support OAuth2, API..."
       },
       {
         "directive_type": "knowledge",
         "description": "Environment GUID targeting for specific Power Platform environments.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Environment GUID targeting for specific Power..."
       },
       {
         "directive_type": "knowledge",
         "description": "`x-ms-trigger`: Use this to mark operations as triggers with values of `batch` or `single`.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "`x-ms-trigger`: Use this to mark operations..."
       }
     ]
   }

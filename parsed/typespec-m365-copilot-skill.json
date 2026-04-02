@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__typespec-m365-copilot",
+    "skill_id": "claude__skill__typespec_m_copilot",
     "name": "typespec-m365-copilot",
     "skill_layer": "claude_skill",
     "title": "Typespec M365 Copilot Skill",
@@ -142,51 +142,67 @@
     "rules": [
       {
         "description": "Always include required imports at the top of TypeSpec files:",
-        "condition": "import statements",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always include required imports at the...",
+        "condition_expression": "import statements",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid generic names like \"Helper\" or \"Bot\"",
-        "condition": "agent declaration",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Avoid generic names like \"Helper\" or...",
+        "condition_expression": "agent declaration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "title: \"Action-Oriented Title\",  // e.g., \"Check Status\"",
-        "condition": "conversation starters",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "title: \"Action-Oriented Title\", // e.g., \"Check...",
+        "condition_expression": "conversation starters",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "2. Check all file paths in `@card` decorators exist",
-        "condition": "before provisioning",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "2. Check all file paths in...",
+        "condition_expression": "before provisioning",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "3. Verify authentication references match configuration",
-        "condition": "before provisioning",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "3. Verify authentication references match configuration",
+        "condition_expression": "before provisioning",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "4. Ensure capability scoping is appropriate",
-        "condition": "before provisioning",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "4. Ensure capability scoping is appropriate",
+        "condition_expression": "before provisioning",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "1. Scope Capabilities: Don't grant access to all data if only subset needed",
-        "condition": "performance optimization",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "1. Scope Capabilities: Don't grant access...",
+        "condition_expression": "performance optimization",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "2. Limit Operations: Only expose API operations the agent actually uses",
-        "condition": "performance optimization",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "2. Limit Operations: Only expose API...",
+        "condition_expression": "performance optimization",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -194,61 +210,71 @@
         "directive_type": "knowledge",
         "description": "When working with TypeSpec for Microsoft 365 Copilot:",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "When working with TypeSpec for Microsoft..."
       },
       {
         "directive_type": "knowledge",
         "description": "1. Type Safety First: Leverage TypeSpec's strong typing for all models and operations",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "1. Type Safety First: Leverage TypeSpec's..."
       },
       {
         "directive_type": "principle",
         "description": "2. Declarative Approach: Use decorators to describe intent, not implementation",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "2. Declarative Approach: Use decorators to..."
       },
       {
         "directive_type": "knowledge",
         "description": "3. Scoped Capabilities: Always scope capabilities to specific resources when possible",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "3. Scoped Capabilities: Always scope capabilities..."
       },
       {
         "directive_type": "knowledge",
         "description": "4. Clear Instructions: Write explicit, detailed agent instructions",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "4. Clear Instructions: Write explicit, detailed..."
       },
       {
         "directive_type": "knowledge",
         "description": "5. User-Centric: Design for the end-user experience in Microsoft 365 Copilot",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "5. User-Centric: Design for the end-user..."
       },
       {
         "directive_type": "knowledge",
         "description": "│   ├── cards/              # Adaptive Card templates",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "│ ├── cards/ # Adaptive Card..."
       },
       {
         "directive_type": "knowledge",
         "description": "│   ├── .generated/         # Generated manifests (auto-generated)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "│ ├── .generated/ # Generated manifests..."
       },
       {
         "directive_type": "knowledge",
         "description": "│   └── manifest.json       # Teams app manifest",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "│ └── manifest.json # Teams app..."
       },
       {
         "directive_type": "knowledge",
         "description": "│   ├── main.tsp           # Agent definition",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "│ ├── main.tsp # Agent definition"
       }
     ]
   }

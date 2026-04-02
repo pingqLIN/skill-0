@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__go",
+    "skill_id": "claude__skill__go",
     "name": "go",
     "skill_layer": "claude_skill",
     "title": "Go Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Prefer early return over if-else chains; use `if condition { return }` pattern to avoid else blocks",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Prefer early return over if-else chains;...",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid using emoji in code and comments",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Avoid using emoji in code and...",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid underscores, hyphens, or mixedCaps",
-        "condition": "packages",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Avoid underscores, hyphens, or mixedCaps",
+        "condition_expression": "packages",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid generic names like `util`, `common`, or `base`",
-        "condition": "packages",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Avoid generic names like `util`, `common`,...",
+        "condition_expression": "packages",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Package names should be singular, not plural",
-        "condition": "packages",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Package names should be singular, not...",
+        "condition_expression": "packages",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "NEVER duplicate `package` declarations - each Go file must have exactly ONE `package` line",
-        "condition": "package declaration rules (critical):",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "NEVER duplicate `package` declarations - each...",
+        "condition_expression": "package declaration rules (critical):",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "PRESERVE the existing `package` declaration - do not add another one",
-        "condition": "package declaration rules (critical):",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "PRESERVE the existing `package` declaration -...",
+        "condition_expression": "package declaration rules (critical):",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "BEFORE writing any code, check what package name other `.go` files in the same directory use",
-        "condition": "package declaration rules (critical):",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "BEFORE writing any code, check what...",
+        "condition_expression": "package declaration rules (critical):",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "ALWAYS verify the target file doesn't already have a `package` declaration before adding one",
-        "condition": "package declaration rules (critical):",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "ALWAYS verify the target file doesn't...",
+        "condition_expression": "package declaration rules (critical):",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "NEVER create files with multiple `package` lines or duplicate declarations",
-        "condition": "package declaration rules (critical):",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "NEVER create files with multiple `package`...",
+        "condition_expression": "package declaration rules (critical):",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Follow idiomatic Go practices and community standards when writing Go code. These instructions are based on [Effective Go](https://go.dev/doc/effectiv",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Follow idiomatic Go practices and community..."
       },
       {
         "directive_type": "knowledge",
         "description": "Keep the happy path left-aligned (minimize indentation)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Keep the happy path left-aligned (minimize..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use mixedCaps or MixedCaps (camelCase) rather than underscores",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use mixedCaps or MixedCaps (camelCase) rather..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use single-letter variables only for very short scopes (like loop indices)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use single-letter variables only for very..."
       },
       {
         "directive_type": "knowledge",
         "description": "Consider using typed constants for better type safety",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Consider using typed constants for better..."
       },
       {
         "directive_type": "preference",
         "description": "Strive for self-documenting code; prefer clear variable names, function names, and code structure over comments",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Strive for self-documenting code; prefer clear..."
       },
       {
         "directive_type": "knowledge",
         "description": "Translate comments to other languages only upon specific user request",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Translate comments to other languages only..."
       },
       {
         "directive_type": "knowledge",
         "description": "Wrap errors with context using `fmt.Errorf` with `%w` verb",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Wrap errors with context using `fmt.Errorf`..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer generics over unconstrained types; when an unconstrained type is truly needed, use the predeclared alias `any` instead of `interface{}` (Go 1.1",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Prefer generics over unconstrained types; when..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use pointer receivers for large structs or when you need to modify the receiver",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use pointer receivers for large structs..."
       }
     ]
   }

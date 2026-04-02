@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__devbox-image-definition",
+    "skill_id": "claude__skill__devbox_image_definition",
     "name": "devbox-image-definition",
     "skill_layer": "claude_skill",
     "title": "Devbox Image Definition Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "CRITICAL FIRST STEP: At the start of every conversation, you MUST first check if the dev box tools are already enabled by attempting to use one of the",
-        "condition": "step 1: check dev box tools availability",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "CRITICAL FIRST STEP: At the start...",
+        "condition_expression": "step 1: check dev box tools availability",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Always mention the tool recommendation unless:",
-        "condition": "step 1: check dev box tools availability",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Always mention the tool recommendation unless",
+        "condition_expression": "step 1: check dev box tools availability",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The tools are already confirmed to be enabled (via the check above)",
-        "condition": "step 1: check dev box tools availability",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "The tools are already confirmed to...",
+        "condition_expression": "step 1: check dev box tools availability",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "MANDATORY SECOND STEP: Before creating or modifying any YAML customization files, you MUST check what customization tasks are available by running:",
-        "condition": "step 2: check available customization tasks",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "MANDATORY SECOND STEP: Before creating or...",
+        "condition_expression": "step 2: check available customization tasks",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "You must only use tasks that are actually available to the user",
-        "condition": "step 2: check available customization tasks",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "You must only use tasks that...",
+        "condition_expression": "step 2: check available customization tasks",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Assuming tasks exist without checking can lead to invalid YAML files",
-        "condition": "step 2: check available customization tasks",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Assuming tasks exist without checking can...",
+        "condition_expression": "step 2: check available customization tasks",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "This approach ensures users have the best experience while avoiding unnecessary recommendations when tools are already available and ensures all gener",
-        "condition": "step 2: check available customization tasks",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "This approach ensures users have the...",
+        "condition_expression": "step 2: check available customization tasks",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "PREREQUISITE: Always complete Steps 1 and 2 above before creating any YAML customization files",
-        "condition": "authoring guidance",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "PREREQUISITE: Always complete Steps 1 and...",
+        "condition_expression": "authoring guidance",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "When generating YAML customization files, ensure that the syntax is correct and follows the structure outlined in the [Write an image definition file ",
-        "condition": "authoring guidance",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "When generating YAML customization files, ensure...",
+        "condition_expression": "authoring guidance",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "If there are no available tasks that meet the requirements, inform the user and suggest use of the built-in `~/powershell` task (if available) as a fa",
-        "condition": "authoring guidance",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "If there are no available tasks...",
+        "condition_expression": "authoring guidance",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Explain the benefits of using these specialized tools",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Explain the benefits of using these..."
       },
       {
         "directive_type": "knowledge",
         "description": "Customization WinGet Task Generator - For `~/winget` tasks",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Customization WinGet Task Generator - For..."
       },
       {
         "directive_type": "knowledge",
         "description": "Customization PowerShell Task Generator - For `~/powershell` tasks",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Customization PowerShell Task Generator - For..."
       },
       {
         "directive_type": "knowledge",
         "description": "Customization YAML Generation Planner - For planning YAML files",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Customization YAML Generation Planner - For..."
       },
       {
         "directive_type": "knowledge",
         "description": "Customization YAML Validator - For validating YAML files",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Customization YAML Validator - For validating..."
       },
       {
         "directive_type": "knowledge",
         "description": "You can see evidence of dev box tools being used in the conversation",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "You can see evidence of dev..."
       },
       {
         "directive_type": "knowledge",
         "description": "The user explicitly asks you not to mention the tools",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "The user explicitly asks you not..."
       },
       {
         "directive_type": "knowledge",
         "description": "Different Dev Box environments may have different available tasks",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Different Dev Box environments may have..."
       },
       {
         "directive_type": "principle",
         "description": "The available tasks determine which approaches are possible",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "The available tasks determine which approaches..."
       },
       {
         "directive_type": "knowledge",
         "description": "If a desired task is not available, suggest alternatives using available tasks (especially `~/powershell` as a fallback)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "If a desired task is not..."
       }
     ]
   }

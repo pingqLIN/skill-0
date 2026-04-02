@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__springboot-4-migration",
+    "skill_id": "claude__skill__springboot_migration",
     "name": "springboot-4-migration",
     "skill_layer": "claude_skill",
     "title": "Springboot 4 Migration Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Do not deploy Spring Boot 4.0 apps to non-Servlet 6.1 containers",
-        "condition": "undertow removed",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Do not deploy Spring Boot 4.0...",
+        "condition_expression": "undertow removed",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "hazelcast-spring-session = \"3.x.x\" # Check Hazelcast documentation",
-        "condition": "spring session hazelcast and mongodb removed",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "hazelcast-spring-session = \"3.x.x\" # Check Hazelcast...",
+        "condition_expression": "spring session hazelcast and mongodb removed",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "mongodb-spring-session = \"4.x.x\"   # Check MongoDB documentation",
-        "condition": "spring session hazelcast and mongodb removed",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "mongodb-spring-session = \"4.x.x\" # Check MongoDB...",
+        "condition_expression": "spring session hazelcast and mongodb removed",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Spock does not yet support Groovy 5 (required for Spring Boot 4.0).",
-        "condition": "spock framework removed",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Spock does not yet support Groovy...",
+        "condition_expression": "spock framework removed",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Embedded launch scripts for \"fully executable\" jars removed (Unix-specific, limited use).",
-        "condition": "executable jar launch scripts removed",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Embedded launch scripts for \"fully executable\"...",
+        "condition_expression": "executable jar launch scripts removed",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Null checkers (SpotBugs, NullAway) may report new issues",
-        "condition": "nullability annotations: jspecify",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Null checkers (SpotBugs, NullAway) may report...",
+        "condition_expression": "nullability annotations: jspecify",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "RestClient methods like `body()` are now explicitly marked as nullable - always check for null or use `Objects.requireNonNull()`",
-        "condition": "nullability annotations: jspecify",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "RestClient methods like `body()` are now...",
+        "condition_expression": "nullability annotations: jspecify",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "// Explicit nullable types may be required",
-        "condition": "nullability annotations: jspecify",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "// Explicit nullable types may be...",
+        "condition_expression": "nullability annotations: jspecify",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "enabled: true # Must explicitly enable in 4.0",
-        "condition": "live reload disabled by default",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "enabled: true # Must explicitly enable...",
+        "condition_expression": "live reload disabled by default",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "map.from(source::method).always().to(destination::method)",
-        "condition": "propertymapper api behavioral change",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "map.from(source::method).always().to(destination::method)",
+        "condition_expression": "propertymapper api behavioral change",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "This guide provides comprehensive GitHub Copilot instructions for upgrading Spring Boot projects from version 3.x to 4.0, with emphasis on Gradle Kotl",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This guide provides comprehensive GitHub Copilot..."
       },
       {
         "directive_type": "knowledge",
         "description": "Key architectural changes in Spring Boot 4.0:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Key architectural changes in Spring Boot..."
       },
       {
         "directive_type": "knowledge",
         "description": "Modular dependency structure with focused, smaller modules",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Modular dependency structure with focused, smaller..."
       },
       {
         "directive_type": "knowledge",
         "description": "Spring Framework 7.x required",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Spring Framework 7.x required"
       },
       {
         "directive_type": "knowledge",
         "description": "Jakarta EE 11 (Servlet 6.1 baseline)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Jakarta EE 11 (Servlet 6.1 baseline)"
       },
       {
         "directive_type": "knowledge",
         "description": "Jackson 3.x migration (package namespace changes)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Jackson 3.x migration (package namespace changes)"
       },
       {
         "directive_type": "knowledge",
         "description": "Kotlin 2.2+ requirement",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Kotlin 2.2+ requirement"
       },
       {
         "directive_type": "knowledge",
         "description": "Comprehensive property reorganization",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Comprehensive property reorganization"
       },
       {
         "directive_type": "knowledge",
         "description": "Gradle: 8.5+ (for Kotlin DSL and version catalog support)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Gradle: 8.5+ (for Kotlin DSL and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Remove all deprecated API usage from Spring Boot 3.x. These will be compilation errors in 4.0:",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Remove all deprecated API usage from..."
       }
     ]
   }

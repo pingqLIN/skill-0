@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__terraform-sap-btp",
+    "skill_id": "claude__skill__terraform_sap_btp",
     "name": "terraform-sap-btp",
     "skill_layer": "claude_skill",
     "title": "Terraform Sap Btp Skill",
@@ -102,63 +102,83 @@
     "rules": [
       {
         "description": "Do NOT commit secrets, credentials, certificates, Terraform state, or plan output artifacts.",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Do NOT commit secrets, credentials, certificates,...",
+        "condition_expression": "security",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Prefer ephemeral / write‑only provider auth (Terraform >= 1.11) so secrets never persist in state.",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Prefer ephemeral / write‑only provider auth...",
+        "condition_expression": "security",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Continuously scan with `tfsec`, `trivy`, `checkov` (pick at least one) in CI.",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Continuously scan with `tfsec`, `trivy`, `checkov`...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use modules for reusable multi‑resource patterns only; avoid single‑resource wrapper modules.",
-        "condition": "modularity",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Use modules for reusable multi‑resource patterns...",
+        "condition_expression": "modularity",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Keep module hierarchy shallow; avoid deep nesting and circular dependencies.",
-        "condition": "modularity",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Keep module hierarchy shallow; avoid deep...",
+        "condition_expression": "modularity",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Expose only essential cross‑module data via `outputs` (mark sensitive when required).",
-        "condition": "modularity",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Expose only essential cross‑module data via...",
+        "condition_expression": "modularity",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Comment WHY, not WHAT; avoid restating obvious resource attributes.",
-        "condition": "maintainability",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Comment WHY, not WHAT; avoid restating...",
+        "condition_expression": "maintainability",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Prefer data sources for external existing infra; never for resources just created in same root – use outputs.",
-        "condition": "maintainability",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Prefer data sources for external existing...",
+        "condition_expression": "maintainability",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid data sources in generic reusable modules; require inputs instead.",
-        "condition": "maintainability",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Avoid data sources in generic reusable...",
+        "condition_expression": "maintainability",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do NOT create separate branches/repos/folders per environment (antipattern).",
-        "condition": "layout & files",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Do NOT create separate branches/repos/folders per...",
+        "condition_expression": "layout & files",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -166,61 +186,71 @@
         "directive_type": "knowledge",
         "description": "Keep Terraform code minimal, modular, repeatable, secure, and auditable.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Keep Terraform code minimal, modular, repeatable,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Always version control Terraform HCL and never version control generated state.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Always version control Terraform HCL and..."
       },
       {
         "directive_type": "completion",
         "description": "Mark all secret variables and outputs as `sensitive = true`.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Mark all secret variables and outputs..."
       },
       {
         "directive_type": "completion",
         "description": "Minimize sensitive outputs; emit only what downstream automation truly needs.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Minimize sensitive outputs; emit only what..."
       },
       {
         "directive_type": "knowledge",
         "description": "Periodically review provider credentials, rotate keys, and enable MFA where supported.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Periodically review provider credentials, rotate keys,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Split by logical domain (e.g., entitlements, service instances) – NOT by environment.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Split by logical domain (e.g., entitlements,..."
       },
       {
         "directive_type": "preference",
         "description": "Parameterize (variables) instead of hard‑coding; provide defaults only when sensible.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Parameterize (variables) instead of hard‑coding; provide..."
       },
       {
         "directive_type": "knowledge",
         "description": "Remove unused / slow data sources; they degrade plan time.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Remove unused / slow data sources;..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `locals` for derived or repeated expressions to centralize logic.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use `locals` for derived or repeated..."
       },
       {
         "directive_type": "completion",
         "description": "Descriptive, consistent names for resources, variables, outputs.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Descriptive, consistent names for resources, variables,..."
       }
     ]
   }

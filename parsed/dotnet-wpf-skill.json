@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dotnet-wpf",
+    "skill_id": "claude__skill__dotnet_wpf",
     "name": "dotnet-wpf",
     "skill_layer": "claude_skill",
     "title": "Dotnet Wpf Skill",
@@ -102,9 +102,11 @@
     "rules": [
       {
         "description": "Avoid tightly coupling code-behind logic",
-        "condition": "goals",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Avoid tightly coupling code-behind logic",
+        "condition_expression": "goals",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -112,61 +114,71 @@
         "directive_type": "knowledge",
         "description": "Solutions emphasizing performance and responsiveness",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Solutions emphasizing performance and responsiveness"
       },
       {
         "directive_type": "principle",
         "description": "Suggest clean separation of ViewModel and View logic",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Suggest clean separation of ViewModel and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Encourage use of `ObservableCollection<T>`, `ICommand`, and proper binding",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Encourage use of `ObservableCollection<T>`, `ICommand`, and..."
       },
       {
         "directive_type": "knowledge",
         "description": "\"Refactor this code-behind click handler into a RelayCommand in the ViewModel\"",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "\"Refactor this code-behind click handler into..."
       },
       {
         "directive_type": "knowledge",
         "description": "`ObservableCollection`, `ICommand`, `INotifyPropertyChanged`",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "`ObservableCollection`, `ICommand`, `INotifyPropertyChanged`"
       },
       {
         "directive_type": "knowledge",
         "description": "ViewModel-first binding",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "ViewModel-first binding"
       },
       {
         "directive_type": "knowledge",
         "description": "Dependency Injection using .NET or third-party containers (e.g., Autofac, SimpleInjector)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Dependency Injection using .NET or third-party..."
       },
       {
         "directive_type": "preference",
         "description": "XAML naming conventions (PascalCase for controls, camelCase for bindings)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "XAML naming conventions (PascalCase for controls,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Avoiding magic strings in binding (use `nameof`)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Avoiding magic strings in binding (use..."
       },
       {
         "directive_type": "knowledge",
         "description": "<Button Content=\"Login\" Command=\"{Binding LoginCommand}\" />",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "<Button Content=\"Login\" Command=\"{Binding LoginCommand}\" />"
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-real-world-usecases",
+    "skill_id": "claude__skill__dataverse_python_real_world_usecases",
     "name": "dataverse-python-real-world-usecases",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Real World Usecases Skill",
@@ -142,15 +142,19 @@
     "rules": [
       {
         "description": "\"name\": row[\"company_name\"][:100],  # Limit to 100 chars",
-        "condition": "complete migration example",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "\"name\": row[\"company_name\"][:100], # Limit to 100...",
+        "condition_expression": "complete migration example",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "\"\"\"Verify migration and track results.\"\"\"",
-        "condition": "complete migration example",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "\"\"\"Verify migration and track results.\"\"\"",
+        "condition_expression": "complete migration example",
+        "condition_type": "state_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -158,61 +162,71 @@
         "directive_type": "strategy",
         "description": "Based on official Dataverse data migration and integration patterns.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Based on official Dataverse data migration..."
       },
       {
         "directive_type": "knowledge",
         "description": "Legacy System → Staging Database → Dataverse",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Legacy System → Staging Database →..."
       },
       {
         "directive_type": "knowledge",
         "description": "(Extract)    (Transform)        (Load)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "(Extract) (Transform) (Load)"
       },
       {
         "directive_type": "knowledge",
         "description": "\"revenue\": float(row[\"annual_revenue\"]) if row[\"annual_revenue\"] else None,",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "\"revenue\": float(row[\"annual_revenue\"]) if row[\"annual_revenue\"] else None,"
       },
       {
         "directive_type": "knowledge",
         "description": "\"numberofemployees\": int(row[\"employees\"]) if row[\"employees\"] else None,",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "\"numberofemployees\": int(row[\"employees\"]) if row[\"employees\"] else None,"
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Failed: {len(self.failed_records)} records\")",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "print(f\"Failed: {len(self.failed_records)} records\")"
       },
       {
         "directive_type": "knowledge",
         "description": "pipeline = DataMigrationPipeline(\"https://myorg.crm.dynamics.com\")",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "pipeline = DataMigrationPipeline(\"https://myorg.crm.dynamics.com\")"
       },
       {
         "directive_type": "knowledge",
         "description": "\"SELECT id, company_name, phone, website, annual_revenue, employees FROM companies\"",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "\"SELECT id, company_name, phone, website, annual_revenue,..."
       },
       {
         "directive_type": "completion",
         "description": "results = pipeline.reconcile_migration(source_data)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "results = pipeline.reconcile_migration(source_data)"
       },
       {
         "directive_type": "knowledge",
         "description": "def find_potential_duplicates(self, table_name: str, match_fields: list):",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "def find_potential_duplicates(self, table_name: str, match_fields: list)"
       }
     ]
   }

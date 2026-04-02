@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dotnet-maui",
+    "skill_id": "claude__skill__dotnet_maui",
     "name": "dotnet-maui",
     "skill_layer": "claude_skill",
     "title": "Dotnet Maui Skill",
@@ -118,63 +118,83 @@
     "rules": [
       {
         "description": "NEVER use ListView (deprecated). Use CollectionView.",
-        "condition": "critical rules (consistency)",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "NEVER use ListView (deprecated). Use CollectionView",
+        "condition_expression": "critical rules (consistency)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "NEVER use TableView (deprecated). Prefer CollectionView or layouts such as Grid/VerticalStackLayout.",
-        "condition": "critical rules (consistency)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "NEVER use TableView (deprecated). Prefer CollectionView...",
+        "condition_expression": "critical rules (consistency)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "NEVER use Frame (deprecated). Use Border instead.",
-        "condition": "critical rules (consistency)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "NEVER use Frame (deprecated). Use Border...",
+        "condition_expression": "critical rules (consistency)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "NEVER use `*AndExpand` layout options (deprecated). Use Grid and explicit sizing instead.",
-        "condition": "critical rules (consistency)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "NEVER use `*AndExpand` layout options (deprecated)....",
+        "condition_expression": "critical rules (consistency)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "NEVER place ScrollView or CollectionView inside StackLayout/VerticalStackLayout/HorizontalStackLayout (can break scrolling and virtualization). Use Gr",
-        "condition": "critical rules (consistency)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "NEVER place ScrollView or CollectionView inside...",
+        "condition_expression": "critical rules (consistency)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "NEVER reference images as `.svg` at runtime. Use PNG/JPG resources.",
-        "condition": "critical rules (consistency)",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "NEVER reference images as `.svg` at...",
+        "condition_expression": "critical rules (consistency)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "NEVER mix Shell navigation with NavigationPage/TabbedPage/FlyoutPage.",
-        "condition": "critical rules (consistency)",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "NEVER mix Shell navigation with NavigationPage/TabbedPage/FlyoutPage",
+        "condition_expression": "critical rules (consistency)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "NEVER use renderers. Use handlers.",
-        "condition": "critical rules (consistency)",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "NEVER use renderers. Use handlers",
+        "condition_expression": "critical rules (consistency)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "NEVER set `BackgroundColor`; use `Background` (supports gradients/brushes and is the preferred modern API).",
-        "condition": "critical rules (consistency)",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "NEVER set `BackgroundColor`; use `Background` (supports...",
+        "condition_expression": "critical rules (consistency)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Set `MainPage` once at startup; avoid changing it frequently.",
-        "condition": "shell navigation",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Set `MainPage` once at startup; avoid...",
+        "condition_expression": "shell navigation",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -182,61 +202,71 @@
         "directive_type": "knowledge",
         "description": "Keep UI (Views) focused on layout and bindings; keep logic in ViewModels and services.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Keep UI (Views) focused on layout..."
       },
       {
         "directive_type": "strategy",
         "description": "Follow PascalCase for component names, method names, and public members.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Follow PascalCase for component names, method..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use camelCase for private fields and local variables.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use camelCase for private fields and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Prefix interface names with \"I\" (e.g., IUserService).",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Prefix interface names with \"I\" (e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Utilize .NET MAUI's built-in features for component lifecycle (e.g. OnAppearing, OnDisappearing).",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Utilize .NET MAUI's built-in features for..."
       },
       {
         "directive_type": "strategy",
         "description": "Use data binding effectively with `{Binding}` and MVVM patterns.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use data binding effectively with `{Binding}`..."
       },
       {
         "directive_type": "knowledge",
         "description": "Structure .NET MAUI components and services following Separation of Concerns.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Structure .NET MAUI components and services..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use the language version supported by the repo's target .NET SDK and settings; avoid requiring preview language features unless the project is already",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use the language version supported by..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer `VerticalStackLayout`/`HorizontalStackLayout` over `StackLayout Orientation=\"...\"` (more performant).",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Prefer `VerticalStackLayout`/`HorizontalStackLayout` over `StackLayout Orientati"
       },
       {
         "directive_type": "knowledge",
         "description": "Use `BindableLayout` for small, non-scrollable lists (≤20 items). Use `CollectionView` for larger or scrollable lists.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use `BindableLayout` for small, non-scrollable lists..."
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__apex",
+    "skill_id": "claude__skill__apex",
     "name": "apex",
     "skill_layer": "claude_skill",
     "title": "Apex Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Always use the latest Apex features and best practices for the Salesforce Platform.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always use the latest Apex features...",
+        "condition_expression": "general instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Be mindful of governor limits and design solutions that scale efficiently.",
-        "condition": "general instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Be mindful of governor limits and...",
+        "condition_expression": "general instructions",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Always write bulkified code - Design all code to handle collections of records, not individual records.",
-        "condition": "bulkification",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Always write bulkified code - Design...",
+        "condition_expression": "bulkification",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid SOQL queries and DML statements inside loops.",
-        "condition": "bulkification",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Avoid SOQL queries and DML statements...",
+        "condition_expression": "bulkification",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Ideal for matching related records, lookups, and avoiding nested loops.",
-        "condition": "maps for o(1) lookup",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Ideal for matching related records, lookups,...",
+        "condition_expression": "maps for o(1) lookup",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Be aware of Salesforce governor limits: SOQL queries (100), DML statements (150), heap size (6MB), CPU time (10s).",
-        "condition": "governor limits",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Be aware of Salesforce governor limits:...",
+        "condition_expression": "governor limits",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Monitor governor limits proactively using `System.Limits` class to check consumption before hitting limits.",
-        "condition": "governor limits",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Monitor governor limits proactively using `System.Limits`...",
+        "condition_expression": "governor limits",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "List<Account> accounts = [SELECT Id, Name FROM Account WHERE IsActive__c = true LIMIT 200];",
-        "condition": "governor limits",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "List<Account> accounts = [SELECT Id, Name...",
+        "condition_expression": "governor limits",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Always check CRUD/FLS permissions before performing SOQL queries or DML operations.",
-        "condition": "security and data access",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Always check CRUD/FLS permissions before performing...",
+        "condition_expression": "security and data access",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Use `WITH SECURITY_ENFORCED` in SOQL queries to enforce field-level security.",
-        "condition": "security and data access",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Use `WITH SECURITY_ENFORCED` in SOQL queries...",
+        "condition_expression": "security and data access",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Document external dependencies, integration points, and their purposes in comments.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Document external dependencies, integration points, and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Classes: Use `PascalCase` for class names. Name classes descriptively to reflect their purpose.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Classes: Use `PascalCase` for class names...."
       },
       {
         "directive_type": "knowledge",
         "description": "Controllers: suffix with `Controller` (e.g., `AccountController`)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Controllers: suffix with `Controller` (e.g., `AccountController`)"
       },
       {
         "directive_type": "knowledge",
         "description": "Trigger Handlers: suffix with `TriggerHandler` (e.g., `AccountTriggerHandler`)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Trigger Handlers: suffix with `TriggerHandler` (e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Service Classes: suffix with `Service` (e.g., `AccountService`)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Service Classes: suffix with `Service` (e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Selector Classes: suffix with `Selector` (e.g., `AccountSelector`)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Selector Classes: suffix with `Selector` (e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Test Classes: suffix with `Test` (e.g., `AccountServiceTest`)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Test Classes: suffix with `Test` (e.g.,..."
       },
       {
         "directive_type": "principle",
         "description": "Batch Classes: suffix with `Batch` (e.g., `AccountCleanupBatch`)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Batch Classes: suffix with `Batch` (e.g.,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Queueable Classes: suffix with `Queueable` (e.g., `EmailNotificationQueueable`)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Queueable Classes: suffix with `Queueable` (e.g.,..."
       },
       {
         "directive_type": "strategy",
         "description": "Methods: Use `camelCase` for method names. Use verbs to indicate actions.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Methods: Use `camelCase` for method names...."
       }
     ]
   }

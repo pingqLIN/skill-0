@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__convert-cassandra-to-spring-data-cosmos",
+    "skill_id": "claude__skill__convert_cassandra_to_spring_data_cosmos",
     "name": "convert-cassandra-to-spring-data-cosmos",
     "skill_layer": "claude_skill",
     "title": "Convert Cassandra To Spring Data Cosmos Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Bulk data migration (code conversion only - data must be migrated separately)",
-        "condition": "applicability",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Bulk data migration (code conversion only...",
+        "condition_expression": "applicability",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Java 11 or higher (Java 17+ required for Spring Boot 3.x)",
-        "condition": "prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Java 11 or higher (Java 17+...",
+        "condition_expression": "prerequisites",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "For Gradle projects with Spring Boot 3.x: Ensure JAVA_HOME environment variable points to Java 17+",
-        "condition": "prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "For Gradle projects with Spring Boot...",
+        "condition_expression": "prerequisites",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "CRITICAL: Before running your application, ensure the database exists in your Cosmos DB account.",
-        "condition": "database setup for azure cosmos db",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "CRITICAL: Before running your application, ensure...",
+        "condition_expression": "database setup for azure cosmos db",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "4. Enter the database name matching your application configuration (check `application.properties` or `application.yml` for the configured database na",
-        "condition": "option 1: manual database creation (recommended for first run)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "4. Enter the database name matching...",
+        "condition_expression": "option 1: manual database creation (recommended for first run)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Spring Data Cosmos can auto-create the database on first connection, but this requires:",
-        "condition": "option 2: automatic creation",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Spring Data Cosmos can auto-create the...",
+        "condition_expression": "option 2: automatic creation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Configuration (no key required):",
-        "condition": "the application will automatically use your cli credentials",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Configuration (no key required)",
+        "condition_expression": "the application will automatically use your cli credentials",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "[xxx] does not have required RBAC permissions to perform action",
-        "condition": "rbac permissions required",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "[xxx] does not have required RBAC...",
+        "condition_expression": "rbac permissions required",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Alternative: If you're logged in with `az login`, your account should already have permissions if you're the owner/contributor of the Cosmos DB accoun",
-        "condition": "assign the role (replace <resource-group> with your actual resource group)",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Alternative: If you're logged in with...",
+        "condition_expression": "assign the role (replace <resource-group> with your actual resource group)",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Problem: Spring Boot 3.0+ requires Java 17 or higher. Using Java 11 causes build failures.",
-        "condition": "java version requirements (spring boot 3.x)",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Problem: Spring Boot 3.0+ requires Java...",
+        "condition_expression": "java version requirements (spring boot 3.x)",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Spring Boot 2.x - 3.x applications (both reactive and non-reactive)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Spring Boot 2.x - 3.x applications..."
       },
       {
         "directive_type": "knowledge",
         "description": "Applications using Spring Data Cassandra, Cassandra DAOs, or DataStax drivers",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Applications using Spring Data Cassandra, Cassandra..."
       },
       {
         "directive_type": "knowledge",
         "description": "Both synchronous and reactive (Spring WebFlux) applications",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Both synchronous and reactive (Spring WebFlux)..."
       },
       {
         "directive_type": "knowledge",
         "description": "Non-Spring frameworks (Jakarta EE, Micronaut, Quarkus, plain Java)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Non-Spring frameworks (Jakarta EE, Micronaut, Quarkus,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Complex Cassandra features (materialized views, UDTs, counters, custom types)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Complex Cassandra features (materialized views, UDTs,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Cassandra-specific features like lightweight transactions (LWT) or batch operations across partitions",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Cassandra-specific features like lightweight transactions (LWT)..."
       },
       {
         "directive_type": "knowledge",
         "description": "This guide provides step-by-step instructions for converting reactive Spring Boot applications from Apache Cassandra to Azure Cosmos DB using Spring D",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "This guide provides step-by-step instructions for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Maven 3.6+ or Gradle 6+ (depending on your project)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Maven 3.6+ or Gradle 6+ (depending..."
       },
       {
         "directive_type": "strategy",
         "description": "Basic understanding of your application's data model and query patterns",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Basic understanding of your application's data..."
       },
       {
         "directive_type": "knowledge",
         "description": "5. Choose throughput settings (Manual or Autoscale based on your needs)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "5. Choose throughput settings (Manual or..."
       }
     ]
   }

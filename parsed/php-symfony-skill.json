@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__php-symfony",
+    "skill_id": "claude__skill__php_symfony",
     "name": "php-symfony",
     "skill_layer": "claude_skill",
     "title": "Php Symfony Skill",
@@ -126,63 +126,83 @@
     "rules": [
       {
         "description": "Do not create bundles for application code",
-        "condition": "project structure",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Do not create bundles for application...",
+        "condition_expression": "project structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do not use environment variables to control application behavior",
-        "condition": "environment configuration",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Do not use environment variables to...",
+        "condition_expression": "environment configuration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never commit secrets to the repository",
-        "condition": "sensitive configuration",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Never commit secrets to the repository",
+        "condition_expression": "sensitive configuration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Prefix parameters with `app.` to avoid collisions",
-        "condition": "application configuration",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Prefix parameters with `app.` to avoid...",
+        "condition_expression": "application configuration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Keep services private whenever possible",
-        "condition": "services & dependency injection",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Keep services private whenever possible",
+        "condition_expression": "services & dependency injection",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid accessing services via `$container->get()`",
-        "condition": "services & dependency injection",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Avoid accessing services via `$container->get()`",
+        "condition_expression": "services & dependency injection",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Do not place business logic in controllers",
-        "condition": "controllers",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Do not place business logic in...",
+        "condition_expression": "controllers",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid putting business logic in repositories",
-        "condition": "doctrine & persistence",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Avoid putting business logic in repositories",
+        "condition_expression": "doctrine & persistence",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid business logic in Twig templates",
-        "condition": "templates (twig)",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Avoid business logic in Twig templates",
+        "condition_expression": "templates (twig)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid using `|raw` unless content is trusted and sanitized",
-        "condition": "templates (twig)",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Avoid using `|raw` unless content is...",
+        "condition_expression": "templates (twig)",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -190,61 +210,71 @@
         "directive_type": "principle",
         "description": "Instructions for developing Symfony applications following the official Symfony Best Practices and core framework philosophy.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Instructions for developing Symfony applications following..."
       },
       {
         "directive_type": "knowledge",
         "description": "Symfony (latest stable or LTS)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Symfony (latest stable or LTS)"
       },
       {
         "directive_type": "preference",
         "description": "Default Symfony directory structure",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Default Symfony directory structure"
       },
       {
         "directive_type": "knowledge",
         "description": "Autowiring and autoconfiguration enabled",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Autowiring and autoconfiguration enabled"
       },
       {
         "directive_type": "knowledge",
         "description": "Doctrine ORM when persistence is needed",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Doctrine ORM when persistence is needed"
       },
       {
         "directive_type": "knowledge",
         "description": "Twig for templating",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Twig for templating"
       },
       {
         "directive_type": "knowledge",
         "description": "Symfony Forms, Validator, Security, Messenger as needed",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Symfony Forms, Validator, Security, Messenger as..."
       },
       {
         "directive_type": "knowledge",
         "description": "PHPUnit for testing",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "PHPUnit for testing"
       },
       {
         "directive_type": "knowledge",
         "description": "Attribute-based configuration where supported",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Attribute-based configuration where supported"
       },
       {
         "directive_type": "knowledge",
         "description": "Keep configuration in `config/`, application code in `src/`, templates in `templates/`",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Keep configuration in `config/`, application code..."
       }
     ]
   }

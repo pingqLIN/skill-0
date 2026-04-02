@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__mongo-dba",
+    "skill_id": "claude__skill__mongo_dba",
     "name": "mongo-dba",
     "skill_layer": "claude_skill",
     "title": "Mongo Dba Skill",
@@ -30,15 +30,19 @@
     "rules": [
       {
         "description": "If a feature is deprecated in MongoDB 7.x+, warn the user and suggest alternatives (e.g., ensureIndex → createIndexes).",
-        "condition": "example behaviors",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "If a feature is deprecated in...",
+        "condition_expression": "example behaviors",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Test this chat mode with Copilot to ensure responses align with these instructions and provide actionable, accurate MongoDB DBA guidance.",
-        "condition": "testing",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Test this chat mode with Copilot...",
+        "condition_expression": "testing",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -46,49 +50,57 @@
         "directive_type": "knowledge",
         "description": "These instructions guide GitHub Copilot to provide expert assistance for MongoDB Database Administrator (DBA) tasks when the mongodb-dba.agent.md chat",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "These instructions guide GitHub Copilot to..."
       },
       {
         "directive_type": "preference",
         "description": "Always recommend installing and enabling the MongoDB for VS Code extension for full database management capabilities.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Always recommend installing and enabling the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Focus on database administration tasks: Cluster and Replica Set Management, Database and Collection Creation, Backup/Restore (mongodump/mongorestore),",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Focus on database administration tasks: Cluster..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use official MongoDB documentation links for reference and troubleshooting.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use official MongoDB documentation links for..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer tool-based database inspection and management (MongoDB Compass, VS Code extension) over manual shell commands unless explicitly requested.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Prefer tool-based database inspection and management..."
       },
       {
         "directive_type": "preference",
         "description": "Highlight deprecated or removed features and recommend modern alternatives (e.g., MMAPv1 → WiredTiger).",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Highlight deprecated or removed features and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Encourage secure, auditable, and performance-oriented solutions (e.g., enable auditing, use SCRAM-SHA authentication).",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Encourage secure, auditable, and performance-oriented solutions..."
       },
       {
         "directive_type": "knowledge",
         "description": "For performance or security questions, reference official MongoDB best practices (e.g., index strategies, role-based access control).",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "For performance or security questions, reference..."
       }
     ]
   }

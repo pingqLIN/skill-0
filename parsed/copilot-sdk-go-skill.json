@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__copilot-sdk-go",
+    "skill_id": "claude__skill__copilot_sdk_go",
     "name": "copilot-sdk-go",
     "skill_layer": "claude_skill",
     "title": "Copilot Sdk Go Skill",
@@ -142,33 +142,43 @@
     "rules": [
       {
         "description": "Note: Final events (`AssistantMessage`, `AssistantReasoning`) are ALWAYS sent regardless of streaming setting.",
-        "condition": "handling streaming events",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Note: Final events (`AssistantMessage`, `AssistantReasoning`) are...",
+        "condition_expression": "handling streaming events",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always check for security vulnerabilities",
-        "condition": "append mode (default - preserves guardrails)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Always check for security vulnerabilities",
+        "condition_expression": "append mode (default - preserves guardrails)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use Ping to verify server connectivity:",
-        "condition": "connectivity testing",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Use Ping to verify server connectivity",
+        "condition_expression": "connectivity testing",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "ALWAYS use `defer` for cleanup:",
-        "condition": "cleanup with defer",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "ALWAYS use `defer` for cleanup",
+        "condition_expression": "cleanup with defer",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "\"required\": []string{\"user_id\"},",
-        "condition": "tool with struct return type",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "\"required\": []string{\"user_id\"},",
+        "condition_expression": "tool with struct return type",
+        "condition_type": "type_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -176,61 +186,71 @@
         "directive_type": "knowledge",
         "description": "The SDK is in technical preview and may have breaking changes",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "The SDK is in technical preview..."
       },
       {
         "directive_type": "knowledge",
         "description": "Requires Go 1.21 or later",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Requires Go 1.21 or later"
       },
       {
         "directive_type": "knowledge",
         "description": "Requires GitHub Copilot CLI installed and in PATH",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Requires GitHub Copilot CLI installed and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Uses goroutines and channels for concurrent operations",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Uses goroutines and channels for concurrent..."
       },
       {
         "directive_type": "knowledge",
         "description": "No external dependencies beyond the standard library",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "No external dependencies beyond the standard..."
       },
       {
         "directive_type": "knowledge",
         "description": "When creating a CopilotClient, use `ClientOptions`:",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "When creating a CopilotClient, use `ClientOptions`"
       },
       {
         "directive_type": "preference",
         "description": "`CLIPath` - Path to CLI executable (default: \"copilot\" from PATH)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "`CLIPath` - Path to CLI executable..."
       },
       {
         "directive_type": "preference",
         "description": "`UseStdio` - Use stdio transport instead of TCP (default: true)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "`UseStdio` - Use stdio transport instead..."
       },
       {
         "directive_type": "knowledge",
         "description": "SystemMessage: &copilot.SystemMessageConfig{ ... },",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "SystemMessage: &copilot.SystemMessageConfig{ ... },"
       },
       {
         "directive_type": "knowledge",
         "description": "`Model` - Model name (\"gpt-5\", \"claude-sonnet-4.5\", etc.)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "`Model` - Model name (\"gpt-5\", \"claude-sonnet-4.5\",..."
       }
     ]
   }

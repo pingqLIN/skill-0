@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-modules",
+    "skill_id": "claude__skill__dataverse_python_modules",
     "name": "dataverse-python-modules",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Modules Skill",
@@ -145,61 +145,71 @@
         "directive_type": "knowledge",
         "description": "Container for language, timeouts, retries. Immutable.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Container for language, timeouts, retries. Immutable"
       },
       {
         "directive_type": "knowledge",
         "description": "`language_code: int = 1033` — LCID for localized labels and messages.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "`language_code: int = 1033` — LCID..."
       },
       {
         "directive_type": "constraint",
         "description": "`http_retries: int | None` — (Reserved) Maximum retry attempts for transient errors.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "`http_retries: int | None` — (Reserved)..."
       },
       {
         "directive_type": "knowledge",
         "description": "`http_backoff: float | None` — (Reserved) Backoff multiplier between retries.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "`http_backoff: float | None` — (Reserved)..."
       },
       {
         "directive_type": "knowledge",
         "description": "`http_timeout: float | None` — (Reserved) Request timeout in seconds.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "`http_timeout: float | None` — (Reserved)..."
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Code: {e.code}\")                # Error category",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "print(f\"Code: {e.code}\") # Error category"
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Subcode: {e.subcode}\")          # Specific error",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "print(f\"Subcode: {e.subcode}\") # Specific error"
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Status: {e.status_code}\")       # HTTP status (if applicable)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "print(f\"Status: {e.status_code}\") # HTTP status (if..."
       },
       {
         "directive_type": "knowledge",
         "description": "print(f\"Transient: {e.is_transient}\")   # Retry-worthy?",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "print(f\"Transient: {e.is_transient}\") # Retry-worthy?"
       },
       {
         "directive_type": "knowledge",
         "description": "Table/column creation, deletion, or inspection failures.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Table/column creation, deletion, or inspection failures"
       }
     ]
   }

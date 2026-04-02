@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__devops-core-principles",
+    "skill_id": "claude__skill__devops_core_principles",
     "name": "devops-core-principles",
     "skill_layer": "claude_skill",
     "title": "Devops Core Principles Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "As GitHub Copilot, you must understand and advocate for the core principles of DevOps. Your goal is to guide developers in adopting a collaborative, a",
-        "condition": "your mission",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "As GitHub Copilot, you must understand...",
+        "condition_expression": "your mission",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "CALMS is an acronym that represents the five key pillars of a successful DevOps culture. You should always consider these when analyzing or generating",
-        "condition": "the calms framework (pillars of devops)",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "CALMS is an acronym that represents...",
+        "condition_expression": "the calms framework (pillars of devops)",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Infrastructure as Code (IaC): Manage and provision infrastructure through code (e.g., Terraform, Ansible, Pulumi) rather than manual processes. This e",
-        "condition": "2. **a - automation**",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Infrastructure as Code (IaC): Manage and...",
+        "condition_expression": "2. **a - automation**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Key Takeaway: If a task is repeatable, it should be automated. This frees up engineers for more complex problems, reduces human error, and ensures con",
-        "condition": "2. **a - automation**",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Key Takeaway: If a task is...",
+        "condition_expression": "2. **a - automation**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Maximizing Flow: Ensure a smooth, continuous flow of value from idea to production. This involves reducing batch sizes (smaller commits, smaller PRs, ",
-        "condition": "3. **l - lean**",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Maximizing Flow: Ensure a smooth, continuous...",
+        "condition_expression": "3. **l - lean**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Build Quality In: Integrate quality checks throughout the development process, rather than relying solely on end-of-cycle testing. This reduces the co",
-        "condition": "3. **l - lean**",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Build Quality In: Integrate quality checks...",
+        "condition_expression": "3. **l - lean**",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Experimentation & A/B Testing: Use metrics to validate hypotheses and measure the impact of changes.",
-        "condition": "4. **m - measurement**",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Experimentation & A/B Testing: Use metrics...",
+        "condition_expression": "4. **m - measurement**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Emphasize using data to validate changes, identify areas for optimization, and justify architectural decisions.",
-        "condition": "4. **m - measurement**",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Emphasize using data to validate changes,...",
+        "condition_expression": "4. **m - measurement**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Key Takeaway: You can't improve what you don't measure. Data-driven decisions are essential for identifying areas for improvement, demonstrating value",
-        "condition": "4. **m - measurement**",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Key Takeaway: You can't improve what...",
+        "condition_expression": "4. **m - measurement**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Tooling & Platforms: Share common tools, platforms, and practices across teams to ensure consistency and leverage collective expertise.",
-        "condition": "5. **s - sharing**",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Tooling & Platforms: Share common tools,...",
+        "condition_expression": "5. **s - sharing**",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "principle",
         "description": "It emphasizes communication, collaboration, integration, and automation to improve the flow of work between development and operations teams. This lea",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "It emphasizes communication, collaboration, integration, and..."
       },
       {
         "directive_type": "principle",
         "description": "Principle: Foster a collaborative, blameless culture that prioritizes shared responsibility, trust, and continuous learning.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Principle: Foster a collaborative, blameless culture..."
       },
       {
         "directive_type": "knowledge",
         "description": "Breaking Down Silos: Encourage communication and empathy between development, operations, security, and even business teams. Promote cross-functional ",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Breaking Down Silos: Encourage communication and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Shared Responsibility: Shift from \"it's ops' problem\" or \"it's dev's bug\" to \"we own this together.\" This includes owning the code from commit to prod",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Shared Responsibility: Shift from \"it's ops'..."
       },
       {
         "directive_type": "knowledge",
         "description": "Continuous Learning & Improvement: Promote a growth mindset. Encourage experimentation, knowledge sharing, and adapting to new tools and practices.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Continuous Learning & Improvement: Promote a..."
       },
       {
         "directive_type": "completion",
         "description": "Feedback Loops: Establish fast and clear feedback channels between all stages of the software delivery lifecycle and between teams.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Feedback Loops: Establish fast and clear..."
       },
       {
         "directive_type": "knowledge",
         "description": "When discussing code reviews, suggest adding context about the 'why' behind changes, fostering understanding.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "When discussing code reviews, suggest adding..."
       },
       {
         "directive_type": "knowledge",
         "description": "In problem-solving scenarios, suggest investigating across the entire pipeline, not just the code.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "In problem-solving scenarios, suggest investigating across..."
       },
       {
         "directive_type": "knowledge",
         "description": "When generating documentation, emphasize clarity and accessibility for both developers and operations personnel.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "When generating documentation, emphasize clarity and..."
       },
       {
         "directive_type": "preference",
         "description": "Recommend communication tools or practices (e.g., daily stand-ups, shared chat channels) where appropriate in a team context.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Recommend communication tools or practices (e.g.,..."
       }
     ]
   }

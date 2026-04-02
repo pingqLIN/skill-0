@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__nestjs",
+    "skill_id": "claude__skill__nestjs",
     "name": "nestjs",
     "skill_layer": "claude_skill",
     "title": "Nestjs Skill",
@@ -142,57 +142,75 @@
     "rules": [
       {
         "description": "message: 'Password must contain uppercase, lowercase and number',",
-        "condition": "**3. dtos and validation**",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "message: 'Password must contain uppercase, lowercase...",
+        "condition_expression": "**3. dtos and validation**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use metadata to define required roles",
-        "condition": "**role-based access control**",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Use metadata to define required roles",
+        "condition_expression": "**role-based access control**",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "it('should create a user', async () => {",
-        "condition": "**unit testing**",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "it('should create a user', async ()...",
+        "condition_expression": "**unit testing**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Validate configuration at startup",
-        "condition": "**environment configuration**",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Validate configuration at startup",
+        "condition_expression": "**environment configuration**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Circular Dependencies: Avoid importing modules that create circular references",
-        "condition": "common pitfalls to avoid",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Circular Dependencies: Avoid importing modules that...",
+        "condition_expression": "common pitfalls to avoid",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Heavy Controllers: Don't put business logic in controllers",
-        "condition": "common pitfalls to avoid",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Heavy Controllers: Don't put business logic...",
+        "condition_expression": "common pitfalls to avoid",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Missing Error Handling: Always handle errors appropriately",
-        "condition": "common pitfalls to avoid",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Missing Error Handling: Always handle errors...",
+        "condition_expression": "common pitfalls to avoid",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Improper DI Usage: Don't create instances manually when DI can handle it",
-        "condition": "common pitfalls to avoid",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Improper DI Usage: Don't create instances...",
+        "condition_expression": "common pitfalls to avoid",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Missing Validation: Always validate input data",
-        "condition": "common pitfalls to avoid",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Missing Validation: Always validate input data",
+        "condition_expression": "common pitfalls to avoid",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -200,61 +218,71 @@
         "directive_type": "principle",
         "description": "Principle: NestJS uses a powerful DI container that manages the instantiation and lifetime of providers.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Principle: NestJS uses a powerful DI..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `@Injectable()` decorator for services, repositories, and other providers",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use `@Injectable()` decorator for services, repositories,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Inject dependencies through constructor parameters with proper typing",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Inject dependencies through constructor parameters with..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use custom providers when you need specific instantiation logic",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use custom providers when you need..."
       },
       {
         "directive_type": "principle",
         "description": "Principle: Organize code into feature modules that encapsulate related functionality.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Principle: Organize code into feature modules..."
       },
       {
         "directive_type": "knowledge",
         "description": "Guidance for Copilot:",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Guidance for Copilot"
       },
       {
         "directive_type": "knowledge",
         "description": "Create feature modules with `@Module()` decorator",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Create feature modules with `@Module()` decorator"
       },
       {
         "directive_type": "knowledge",
         "description": "Import only necessary modules and avoid circular dependencies",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Import only necessary modules and avoid..."
       },
       {
         "directive_type": "strategy",
         "description": "Use `forRoot()` and `forFeature()` patterns for configurable modules",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use `forRoot()` and `forFeature()` patterns for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Implement shared modules for common functionality",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Implement shared modules for common functionality"
       }
     ]
   }

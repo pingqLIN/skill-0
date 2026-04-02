@@ -1,14 +1,14 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__xlsx",
+    "skill_id": "claude__skill__xlsx",
     "name": "xlsx",
     "skill_layer": "claude_skill",
     "title": "Xlsx Skill",
     "description": "Comprehensive spreadsheet creation, editing, and analysis with support for formulas, formatting, data analysis, and visualization.",
-    "schema_version": "2.1.0",
-    "parse_timestamp": "2026-01-26T13:25:10.959075Z",
-    "parser_version": "skill-0 v2.1",
+    "schema_version": "2.4.0",
+    "parse_timestamp": "2026-03-27T11:53:43.759464Z",
+    "parser_version": "skill-0 v2.4",
     "parsed_by": "skill-0-batch"
   },
   "original_definition": {
@@ -70,38 +70,47 @@
     "rules": [
       {
         "id": "r_001",
+        "name": "Use formulas instead of hardcoded values",
         "description": "Use formulas instead of hardcoded values",
-        "condition": "always",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "always",
+        "returns": "boolean"
       },
       {
         "id": "r_002",
+        "name": "Verify zero formula errors before delivery",
         "description": "Verify zero formula errors before delivery",
-        "condition": "on_output",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "on_output",
+        "returns": "boolean"
       },
       {
         "id": "r_003",
+        "name": "Use proper color coding for financial...",
         "description": "Use proper color coding for financial models",
-        "condition": "when_financial",
-        "output": "proceed_or_halt"
+        "condition_type": "validation",
+        "condition_expression": "when_financial",
+        "returns": "boolean"
       }
     ],
     "directives": [
       {
         "id": "d_001",
+        "name": "Use Excel formulas instead of calculating...",
         "directive_type": "principle",
         "description": "Use Excel formulas instead of calculating in Python",
         "decomposable": true
       },
       {
         "id": "d_002",
+        "name": "Every model must have zero formula...",
         "directive_type": "constraint",
         "description": "Every model must have zero formula errors",
         "decomposable": true
       },
       {
         "id": "d_003",
+        "name": "Blue text for inputs, black for...",
         "directive_type": "knowledge",
         "description": "Blue text for inputs, black for formulas, green for links",
         "decomposable": true

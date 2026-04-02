@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__spec-driven-workflow-v1",
+    "skill_id": "claude__skill__spec_driven_workflow_v",
     "name": "spec-driven-workflow-v1",
     "skill_layer": "claude_skill",
     "title": "Spec Driven Workflow V1 Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Bridge the gap between requirements and implementation.",
-        "condition": "spec driven workflow v1",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Bridge the gap between requirements and...",
+        "condition_expression": "spec driven workflow v1",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "`requirements.md`: User stories and acceptance criteria in structured EARS notation.",
-        "condition": "spec driven workflow v1",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "`requirements.md`: User stories and acceptance criteria...",
+        "condition_expression": "spec driven workflow v1",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Context: [Current state, requirements, and reference to prior steps]",
-        "condition": "[type] - [action] - [timestamp]",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Context: [Current state, requirements, and reference...",
+        "condition_expression": "[type] - [action] - [timestamp]",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Never skip any step. Use consistent terminology. Reduce ambiguity.",
-        "condition": "execution workflow (6-phase loop)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Never skip any step. Use consistent...",
+        "condition_expression": "execution workflow (6-phase loop)",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Produce a clear, testable set of requirements.",
-        "condition": "**phase 1: analyze**",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Produce a clear, testable set of...",
+        "condition_expression": "**phase 1: analyze**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "[ ] Define requirements in EARS Notation:",
-        "condition": "**phase 1: analyze**",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "[ ] Define requirements in EARS...",
+        "condition_expression": "**phase 1: analyze**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Transform feature requests into structured, testable requirements.",
-        "condition": "**phase 1: analyze**",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Transform feature requests into structured, testable...",
+        "condition_expression": "**phase 1: analyze**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Generate a Confidence Score (0-100%) based on clarity of requirements, complexity, and problem scope.",
-        "condition": "**phase 1: analyze**",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Generate a Confidence Score (0-100%) based...",
+        "condition_expression": "**phase 1: analyze**",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Do not proceed until all requirements are clear and documented.",
-        "condition": "**phase 1: analyze**",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Do not proceed until all requirements...",
+        "condition_expression": "**phase 1: analyze**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do not merge or deploy code until all implementation steps are documented and tested.",
-        "condition": "**phase 3: implement**",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Do not merge or deploy code...",
+        "condition_expression": "**phase 3: implement**",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Use the detailed templates as the primary source of truth for all documentation.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use the detailed templates as the..."
       },
       {
         "directive_type": "principle",
         "description": "Decision: [Approach chosen and rationale, referencing the Decision Record if applicable]",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Decision: [Approach chosen and rationale, referencing..."
       },
       {
         "directive_type": "knowledge",
         "description": "Execution: [Steps taken with parameters and commands used. For code, include file paths.]",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Execution: [Steps taken with parameters and..."
       },
       {
         "directive_type": "completion",
         "description": "Output: [Complete and unabridged results, logs, command outputs, and metrics]",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Output: [Complete and unabridged results, logs,..."
       },
       {
         "directive_type": "completion",
         "description": "Validation: [Success verification method and results. If failed, include a remediation plan.]",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Validation: [Success verification method and results...."
       },
       {
         "directive_type": "knowledge",
         "description": "Next: [Automatic continuation plan to the next specific action]",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Next: [Automatic continuation plan to the..."
       },
       {
         "directive_type": "knowledge",
         "description": "Context: [Situation requiring decision and data driving it]",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Context: [Situation requiring decision and data..."
       },
       {
         "directive_type": "knowledge",
         "description": "Options: [Alternatives evaluated with brief pros and cons]",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Options: [Alternatives evaluated with brief pros..."
       },
       {
         "directive_type": "knowledge",
         "description": "Rationale: [Why the selected option is superior, with trade-offs explicitly stated]",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Rationale: [Why the selected option is..."
       },
       {
         "directive_type": "knowledge",
         "description": "Review: [Conditions or schedule for reassessing this decision]",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Review: [Conditions or schedule for reassessing..."
       }
     ]
   }

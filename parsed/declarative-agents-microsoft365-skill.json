@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__declarative-agents-microsoft365",
+    "skill_id": "claude__skill__declarative_agents_microsoft",
     "name": "declarative-agents-microsoft365",
     "skill_layer": "claude_skill",
     "title": "Declarative Agents Microsoft365 Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Name: Maximum 100 characters, required",
-        "condition": "character limits & constraints",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Name: Maximum 100 characters, required",
+        "condition_expression": "character limits & constraints",
+        "condition_type": "range_check",
+        "returns": "boolean"
       },
       {
         "description": "Description: Maximum 1000 characters, required",
-        "condition": "character limits & constraints",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Description: Maximum 1000 characters, required",
+        "condition_expression": "character limits & constraints",
+        "condition_type": "range_check",
+        "returns": "boolean"
       },
       {
         "description": "Instructions: Maximum 8000 characters, required",
-        "condition": "character limits & constraints",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Instructions: Maximum 8000 characters, required",
+        "condition_expression": "character limits & constraints",
+        "condition_type": "range_check",
+        "returns": "boolean"
       },
       {
         "description": "\"capabilities\": [\"${REQUIRED_CAPABILITIES}\"]",
-        "condition": "development environment",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "\"capabilities\": [\"${REQUIRED_CAPABILITIES}\"]",
+        "condition_expression": "development environment",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "// Validate against v1.5 schema",
-        "condition": "1. schema validation",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "// Validate against v1.5 schema",
+        "condition_expression": "1. schema validation",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "const isValid = validator.validate(agentManifest);",
-        "condition": "1. schema validation",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "const isValid = validator.validate(agentManifest);",
+        "condition_expression": "1. schema validation",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "function validateName(name: string): boolean {",
-        "condition": "2. character limit management",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "function validateName(name: string): boolean {",
+        "condition_expression": "2. character limit management",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "function validateDescription(description: string): boolean {",
-        "condition": "2. character limit management",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "function validateDescription(description: string): boolean {",
+        "condition_expression": "2. character limit management",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "function validateInstructions(instructions: string): boolean {",
-        "condition": "2. character limit management",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "function validateInstructions(instructions: string): boolean {",
+        "condition_expression": "2. character limit management",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "2. Conversation Flow: Validate conversation starters",
-        "condition": "testing scenarios",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "2. Conversation Flow: Validate conversation starters",
+        "condition_expression": "testing scenarios",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Microsoft 365 Copilot declarative agents are powerful custom AI assistants that extend Microsoft 365 Copilot with specialized capabilities, enterprise",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Microsoft 365 Copilot declarative agents are..."
       },
       {
         "directive_type": "knowledge",
         "description": "\"$schema\": \"https://developer.microsoft.com/json-schemas/copilot/declarative-agent/v1.5/schema.json\",",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "\"$schema\": \"https://developer.microsoft.com/json-schemas/copilot/declarative-age"
       },
       {
         "directive_type": "knowledge",
         "description": "2. OneDriveAndSharePoint: File access, document search, content management",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "2. OneDriveAndSharePoint: File access, document search,..."
       },
       {
         "directive_type": "knowledge",
         "description": "4. MicrosoftGraph: Access to Microsoft 365 services and data",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "4. MicrosoftGraph: Access to Microsoft 365..."
       },
       {
         "directive_type": "knowledge",
         "description": "5. TeamsAndOutlook: Teams chat, meetings, email integration",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "5. TeamsAndOutlook: Teams chat, meetings, email..."
       },
       {
         "directive_type": "strategy",
         "description": "6. CopilotForMicrosoft365: Advanced Copilot features and workflows",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "6. CopilotForMicrosoft365: Advanced Copilot features and..."
       },
       {
         "directive_type": "knowledge",
         "description": "7. PowerPlatform: Power Apps, Power Automate, Power BI integration",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "7. PowerPlatform: Power Apps, Power Automate,..."
       },
       {
         "directive_type": "knowledge",
         "description": "9. WordAndExcel: Document creation, editing, analysis",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "9. WordAndExcel: Document creation, editing, analysis"
       },
       {
         "directive_type": "knowledge",
         "description": "10. EnterpriseApplications: Third-party business system integration",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "10. EnterpriseApplications: Third-party business system integration"
       },
       {
         "directive_type": "knowledge",
         "description": "@jsonSchema(\"/schemas/declarative-agent/v1.5/schema.json\")",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "@jsonSchema(\"/schemas/declarative-agent/v1.5/schema.json\")"
       }
     ]
   }

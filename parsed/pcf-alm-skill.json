@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-alm",
+    "skill_id": "claude__skill__pcf_alm",
     "name": "pcf-alm",
     "skill_layer": "claude_skill",
     "title": "Pcf Alm Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "You don't normally deploy a code component into Microsoft Dataverse that has been built in development mode since it's often too large to import and m",
-        "condition": "building pcfproj code component projects",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "You don't normally deploy a code...",
+        "condition_expression": "building pcfproj code component projects",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "| npm start watch | Always development |   |",
-        "condition": "build commands",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "| npm start watch | Always...",
+        "condition_expression": "build commands",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When developing code components, it's recommended that you use a source code control provider such as Azure DevOps or GitHub. When committing changes ",
-        "condition": "source code control with code components",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "When developing code components, it's recommended...",
+        "condition_expression": "source code control with code components",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Since the `/out` folder is excluded, the resulting `bundle.js` file (and related resources) built will not be added to the source control. When your c",
-        "condition": "msbuild output directories",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Since the `/out` folder is excluded,...",
+        "condition_expression": "msbuild output directories",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The only files that are required are the `*.data.xml` files since they contain metadata that describes the resources required by the packaging process",
-        "condition": "example solution structure",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "The only files that are required...",
+        "condition_expression": "example solution structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "A solution project is created using `pac solution init` and then using `pac solution add-reference` to add one or more code components. This solution ",
-        "condition": "1. segmented solutions",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "A solution project is created using...",
+        "condition_expression": "1. segmented solutions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "2. Shared use - You want to share your code components between multiple environments and therefore don't want to couple your code components with any ",
-        "condition": "1. segmented solutions",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "2. Shared use - You want...",
+        "condition_expression": "1. segmented solutions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When deploying an update to a code component, the version in the `ControlManifest.Input.xml` must at minimum have its PATCH (the last part of the vers",
-        "condition": "incrementing the patch version",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "When deploying an update to a...",
+        "condition_expression": "incrementing the patch version",
+        "condition_type": "range_check",
+        "returns": "boolean"
       },
       {
         "description": "Consuming code components in canvas apps is different from doing so in model-driven apps. Code components must be explicitly added to the app by selec",
-        "condition": "canvas apps alm considerations",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Consuming code components in canvas apps...",
+        "condition_expression": "canvas apps alm considerations",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "To update to a new version of the code component after it's deployed (and the control version incremented), the app maker must first open the app in P",
-        "condition": "canvas apps alm considerations",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "To update to a new version...",
+        "condition_expression": "canvas apps alm considerations",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "This article describes considerations and strategies for working with specific aspects of lifecycle management from the perspective of code components",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This article describes considerations and strategies..."
       },
       {
         "directive_type": "knowledge",
         "description": "When developing code components, you would follow the steps below:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "When developing code components, you would..."
       },
       {
         "directive_type": "knowledge",
         "description": "The following diagram shows the one-to-many relationship between `cdsproj` and `pcfproj` projects:",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "The following diagram shows the one-to-many..."
       },
       {
         "directive_type": "knowledge",
         "description": "![One-to-many relationship between cdsproj and pcfproj projects](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/code",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "![One-to-many relationship between cdsproj and pcfproj..."
       },
       {
         "directive_type": "knowledge",
         "description": "<ProjectGuid>6aaf0d27-ec8b-471e-9ed4-7b3bbc35bbab</ProjectGuid>",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "<ProjectGuid>6aaf0d27-ec8b-471e-9ed4-7b3bbc35bbab</ProjectGuid>"
       },
       {
         "directive_type": "knowledge",
         "description": "|---------|-----------------|------------------------------|",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "|---------|-----------------|------------------------------|"
       },
       {
         "directive_type": "knowledge",
         "description": "│       │       └── {3d60f361-84c5-eb11-bacc-000d3a9d0f1d}.xml",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "│ │ └── {3d60f361-84c5-eb11-bacc-000d3a9d0f1d}.xml"
       },
       {
         "directive_type": "completion",
         "description": "Under the `Controls` folder, you can see there are subfolders for each code component included in the solution. When committing this folder structure ",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Under the `Controls` folder, you can..."
       },
       {
         "directive_type": "knowledge",
         "description": "![Solution Strategies](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/solution-strategies.png)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "![Solution Strategies](https://learn.microsoft.com/en-us/power-apps/developer/co"
       },
       {
         "directive_type": "knowledge",
         "description": "More information: [Package and distribute extensions using solutions](https://learn.microsoft.com/en-us/powerapps/developer/data-platform/introduction",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "More information: [Package and distribute extensions..."
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__azure-functions-typescript",
+    "skill_id": "claude__skill__azure_functions_typescript",
     "name": "azure-functions-typescript",
     "skill_layer": "claude_skill",
     "title": "Azure Functions Typescript Skill",
@@ -46,21 +46,27 @@
     "rules": [
       {
         "description": "Whenever possible, use Node.js v20 built-in modules instead of external packages",
-        "condition": "guidance for code generation",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Whenever possible, use Node.js v20 built-in...",
+        "condition_expression": "guidance for code generation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Always use Node.js async functions, like `node:fs/promises` instead of `fs` to avoid blocking the event loop",
-        "condition": "guidance for code generation",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Always use Node.js async functions, like...",
+        "condition_expression": "guidance for code generation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Each endpoint should have its own function file, and use the following naming convention: `src/functions/<resource-name>-<http-verb>.ts`",
-        "condition": "guidance for code generation",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Each endpoint should have its own...",
+        "condition_expression": "guidance for code generation",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -68,13 +74,15 @@
         "directive_type": "knowledge",
         "description": "Ask before adding any extra dependencies to the project",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Ask before adding any extra dependencies..."
       },
       {
         "directive_type": "strategy",
         "description": "description: TypeScript patterns for Azure Functions Triggers on: /*.ts, /*.js, **/*.json",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "description: TypeScript patterns for Azure Functions..."
       }
     ]
   }
