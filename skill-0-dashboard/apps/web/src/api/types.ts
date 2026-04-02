@@ -203,3 +203,57 @@ export interface ActionResult {
   error_message: string | null;
   hint: string | null;
 }
+
+export type ActionJobType = 'scan_batch' | 'test_batch';
+export type ActionJobStatus =
+  | 'queued'
+  | 'running'
+  | 'completed'
+  | 'completed_with_failures'
+  | 'failed'
+  | 'cancelled';
+export type ActionJobItemStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'skipped' | 'retrying';
+export type ActionSelectionMode = 'explicit' | 'pending' | 'retry_failures' | 'retry_item';
+
+export interface ActionJobSummaryCounts {
+  total: number;
+  queued: number;
+  running: number;
+  succeeded: number;
+  failed: number;
+  retrying: number;
+  skipped: number;
+}
+
+export interface ActionJobSummary {
+  job_id: string;
+  job_type: ActionJobType;
+  status: ActionJobStatus;
+  requested_by: string;
+  selection_mode: ActionSelectionMode;
+  queued_items: number;
+  max_attempts: number;
+  queued_at: string;
+  started_at: string | null;
+  completed_at: string | null;
+  error_code: string | null;
+  error_message: string | null;
+  summary: ActionJobSummaryCounts;
+}
+
+export interface ActionJobItem {
+  item_id: string;
+  job_id: string;
+  skill_id: string;
+  target_revision_id: string | null;
+  action_type: 'scan' | 'test';
+  status: ActionJobItemStatus;
+  attempt_number: number;
+  max_attempts: number;
+  started_at: string | null;
+  completed_at: string | null;
+  result: Record<string, unknown> | null;
+  error_code: string | null;
+  error_message: string | null;
+  retry_of_item_id: string | null;
+}

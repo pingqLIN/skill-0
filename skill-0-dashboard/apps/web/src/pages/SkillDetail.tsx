@@ -1,13 +1,22 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { useSkill, useSkillRevisions, useActionReadiness, useTriggerScan, useTriggerTest } from '@/api/skills';
+import {
+  useSkill,
+  useSkillRevisions,
+  useActionReadiness,
+  useEnqueueScanJob,
+  useEnqueueTestJob,
+  useActionJob,
+  useActionJobItems,
+} from '@/api/skills';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { ArrowLeft, Shield, TestTube, FileText, CheckCircle, XCircle, ExternalLink, Scale, Lock, User, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
-import type { ActionResult } from '@/api/types';
+import type { ActionJobItem, ActionJobSummary } from '@/api/types';
 
 const riskColors: Record<string, string> = {
   safe: 'bg-green-100 text-green-800',
@@ -36,59 +45,149 @@ const severityColors: Record<string, string> = {
 export function SkillDetail() {
   const { skillId } = useParams<{ skillId: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { data: skill, isLoading, error } = useSkill(skillId || '');
   const { data: revisions } = useSkillRevisions(skillId || '');
   const { data: readiness } = useActionReadiness(skillId || '');
-  const scanMutation = useTriggerScan();
-  const testMutation = useTriggerTest();
+  const scanJobMutation = useEnqueueScanJob();
+  const testJobMutation = useEnqueueTestJob();
   const [actionMessage, setActionMessage] = useState<{ text: string; ok: boolean } | null>(null);
-  const [actionResult, setActionResult] = useState<ActionResult | null>(null);
   const [actionKind, setActionKind] = useState<'scan' | 'test' | null>(null);
+  const [activeJobId, setActiveJobId] = useState('');
   const [showDetails, setShowDetails] = useState(false);
+  const { data: actionJob } = useActionJob(activeJobId);
+  const { data: actionJobItems = [] } = useActionJobItems(activeJobId);
+
+  useEffect(() => {
+    if (!skillId || !actionJob) {
+      return;
+    }
+
+    const kindLabel = actionKind === 'test' ? 'Test' : 'Scan';
+    if (actionJob.status === 'queued') {
+      setActionMessage({ text: `${kindLabel} job queued`, ok: true });
+      return;
+    }
+
+    if (actionJob.status === 'running') {
+      const done = actionJob.summary.succeeded + actionJob.summary.failed + actionJob.summary.skipped;
+      setActionMessage({
+        text: `${kindLabel} job running — ${done}/${actionJob.summary.total} completed`,
+        ok: true,
+      });
+      return;
+    }
+
+    if (actionJob.status === 'completed') {
+      queryClient.invalidateQueries({ queryKey: ['skill', skillId] });
+      queryClient.invalidateQueries({ queryKey: ['skill-revisions', skillId] });
+      queryClient.invalidateQueries({ queryKey: ['action-readiness', skillId] });
+      if (actionKind === 'scan') {
+        const riskScore = actionJobItems[0]?.result?.risk_score;
+        setActionMessage({
+          text: `Scan complete — risk score: ${riskScore !== undefined ? String(riskScore) : '-'}`,
+          ok: true,
+        });
+      } else {
+        const overallScore = actionJobItems[0]?.result?.overall_score;
+        setActionMessage({
+          text: `Test complete — score: ${typeof overallScore === 'number' ? Math.round(overallScore * 100) : 0}%`,
+          ok: true,
+        });
+      }
+      return;
+    }
+
+    if (actionJob.status === 'completed_with_failures' || actionJob.status === 'failed') {
+      queryClient.invalidateQueries({ queryKey: ['skill', skillId] });
+      queryClient.invalidateQueries({ queryKey: ['skill-revisions', skillId] });
+      queryClient.invalidateQueries({ queryKey: ['action-readiness', skillId] });
+      const failedItem = actionJobItems.find((item) => item.status === 'failed');
+      setActionMessage({
+        text: failedItem?.error_message ?? actionJob.error_message ?? `${kindLabel} job failed`,
+        ok: false,
+      });
+    }
+  }, [actionJob, actionJobItems, actionKind, queryClient, skillId]);
 
   const handleScan = async () => {
     if (!skillId) return;
     setActionMessage(null);
-    setActionResult(null);
+    setActiveJobId('');
     setShowDetails(false);
     setActionKind('scan');
-    const result = await scanMutation.mutateAsync(skillId).catch((e: Error) => {
+    const job = await scanJobMutation.mutateAsync({ skill_ids: [skillId] }).catch((e: Error) => {
       setActionMessage({ text: e.message, ok: false });
       return null;
     });
-    if (!result) return;
-    setActionResult(result);
-    if (result.status === 'success') {
-      setActionMessage({ text: `Scan complete — risk score: ${result.results[0]?.risk_score ?? '-'}`, ok: true });
-    } else {
-      setActionMessage({ text: result.error_message ?? result.error_code ?? 'Scan failed', ok: false });
-    }
+    if (!job) return;
+    setActiveJobId(job.job_id);
+    setActionMessage({ text: 'Scan job queued', ok: true });
   };
 
   const handleTest = async () => {
     if (!skillId) return;
     setActionMessage(null);
-    setActionResult(null);
+    setActiveJobId('');
     setShowDetails(false);
     setActionKind('test');
-    const result = await testMutation.mutateAsync(skillId).catch((e: Error) => {
+    const job = await testJobMutation.mutateAsync({ skill_ids: [skillId] }).catch((e: Error) => {
       setActionMessage({ text: e.message, ok: false });
       return null;
     });
-    if (!result) return;
-    setActionResult(result);
-    if (result.status === 'success') {
-      setActionMessage({ text: `Test complete — score: ${Math.round(((result.results[0]?.overall_score as number) ?? 0) * 100)}%`, ok: true });
-    } else {
-      setActionMessage({ text: result.error_message ?? result.error_code ?? 'Test failed', ok: false });
-    }
+    if (!job) return;
+    setActiveJobId(job.job_id);
+    setActionMessage({ text: 'Test job queued', ok: true });
   };
 
-  const actionStatusColors: Record<string, string> = {
-    success: 'bg-green-100 text-green-800',
+  const actionJobStatusColors: Record<string, string> = {
+    queued: 'bg-blue-100 text-blue-800',
+    running: 'bg-indigo-100 text-indigo-800',
+    completed: 'bg-green-100 text-green-800',
+    completed_with_failures: 'bg-amber-100 text-amber-800',
     failed: 'bg-red-100 text-red-800',
-    partial: 'bg-amber-100 text-amber-800',
-    noop: 'bg-gray-100 text-gray-800',
+    cancelled: 'bg-gray-100 text-gray-800',
+  };
+
+  const activeActionPending =
+    scanJobMutation.isPending ||
+    testJobMutation.isPending ||
+    actionJob?.status === 'queued' ||
+    actionJob?.status === 'running';
+
+  const renderActionJobRow = (item: ActionJobItem, job: ActionJobSummary) => {
+    const row = item.result ?? {};
+    return (
+      <TableRow key={item.item_id}>
+        <TableCell className="font-mono text-xs">{item.skill_id}</TableCell>
+        <TableCell className="font-mono text-xs">{item.target_revision_id ?? '-'}</TableCell>
+        <TableCell>
+          <Badge className={actionJobStatusColors[item.status] ?? 'bg-gray-100 text-gray-800'}>
+            {item.status}
+          </Badge>
+        </TableCell>
+        <TableCell>{item.attempt_number}/{item.max_attempts}</TableCell>
+        {job.job_type === 'scan_batch' && (
+          <>
+            <TableCell>
+              <Badge className={riskColors[String(row.risk_level)] ?? 'bg-gray-100 text-gray-800'}>
+                {String(row.risk_level ?? '-')}
+              </Badge>
+            </TableCell>
+            <TableCell>{row.risk_score !== undefined ? String(row.risk_score) : '-'}</TableCell>
+            <TableCell>{row.findings_count !== undefined ? String(row.findings_count) : '-'}</TableCell>
+          </>
+        )}
+        {job.job_type === 'test_batch' && (
+          <>
+            <TableCell>{typeof row.overall_score === 'number' ? `${Math.round(row.overall_score * 100)}%` : '-'}</TableCell>
+            <TableCell>
+              {row.passed === true ? <CheckCircle className="h-4 w-4 text-green-600" /> : row.passed === false ? <XCircle className="h-4 w-4 text-red-600" /> : '-'}
+            </TableCell>
+          </>
+        )}
+      </TableRow>
+    );
   };
 
   if (isLoading) {
@@ -129,7 +228,7 @@ export function SkillDetail() {
         <div className={`mb-2 px-4 py-3 rounded-md text-sm flex items-center gap-2 ${actionMessage.ok ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
           {actionMessage.ok ? <CheckCircle className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
           {actionMessage.text}
-          {actionResult && (
+          {actionJob && (
             <button
               className="ml-auto text-xs underline opacity-70 hover:opacity-100 flex items-center gap-1"
               onClick={() => setShowDetails(v => !v)}
@@ -142,78 +241,67 @@ export function SkillDetail() {
       )}
 
       {/* Action Result Details Panel */}
-      {actionResult && showDetails && (
+      {actionJob && showDetails && (
         <Card className="mb-4 border-slate-200">
           <CardHeader className="py-3">
             <CardTitle className="text-sm flex items-center gap-2">
               {actionKind === 'scan' ? <Shield className="h-4 w-4" /> : <TestTube className="h-4 w-4" />}
-              {actionKind === 'scan' ? 'Scan' : 'Test'} Result
-              <Badge className={actionStatusColors[actionResult.status] ?? 'bg-gray-100 text-gray-800'}>
-                {actionResult.status}
+              {actionKind === 'scan' ? 'Scan' : 'Test'} Job
+              <Badge className={actionJobStatusColors[actionJob.status] ?? 'bg-gray-100 text-gray-800'}>
+                {actionJob.status}
               </Badge>
             </CardTitle>
           </CardHeader>
           <CardContent className="py-3 space-y-3 text-sm">
             <div className="flex gap-4 text-muted-foreground">
               <span>
-                Processed: <strong>{actionResult.processed}</strong>
+                Job ID: <strong className="font-mono">{actionJob.job_id}</strong>
+              </span>
+              <span>
+                Total: <strong>{actionJob.summary.total}</strong>
+              </span>
+              <span>
+                Succeeded: <strong>{actionJob.summary.succeeded}</strong>
+              </span>
+              <span>
+                Failed: <strong>{actionJob.summary.failed}</strong>
               </span>
             </div>
 
-            {actionResult.results.length > 0 && (
+            {actionJobItems.length > 0 && (
               <Table>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Skill ID</TableHead>
                     <TableHead>Revision</TableHead>
                     <TableHead>Status</TableHead>
-                    {actionKind === 'scan' && <>
+                    <TableHead>Attempt</TableHead>
+                    {actionJob.job_type === 'scan_batch' && <>
                       <TableHead>Risk Level</TableHead>
                       <TableHead>Risk Score</TableHead>
                       <TableHead>Findings</TableHead>
                     </>}
-                    {actionKind === 'test' && <>
+                    {actionJob.job_type === 'test_batch' && <>
                       <TableHead>Score</TableHead>
                       <TableHead>Passed</TableHead>
                     </>}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {actionResult.results.map((row, idx) => (
-                    <TableRow key={row.skill_id !== undefined ? String(row.skill_id) : idx}>
-                      <TableCell className="font-mono text-xs">{String(row.skill_id ?? '-')}</TableCell>
-                      <TableCell className="font-mono text-xs">{String(row.revision_id ?? actionResult.revision_id ?? '-') }</TableCell>
-                      <TableCell>
-                        <Badge className={actionStatusColors[String(row.status)] ?? 'bg-gray-100 text-gray-800'}>
-                          {String(row.status ?? '-')}
-                        </Badge>
-                      </TableCell>
-                      {actionKind === 'scan' && <>
-                        <TableCell>
-                          <Badge className={riskColors[String(row.risk_level)] ?? 'bg-gray-100 text-gray-800'}>
-                            {String(row.risk_level ?? '-')}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{row.risk_score !== undefined ? String(row.risk_score) : '-'}</TableCell>
-                        <TableCell>{row.findings_count !== undefined ? String(row.findings_count) : '-'}</TableCell>
-                      </>}
-                      {actionKind === 'test' && <>
-                        <TableCell>{row.overall_score !== undefined ? `${Math.round((row.overall_score as number) * 100)}%` : '-'}</TableCell>
-                        <TableCell>
-                          {row.passed === true ? <CheckCircle className="h-4 w-4 text-green-600" /> : row.passed === false ? <XCircle className="h-4 w-4 text-red-600" /> : '-'}
-                        </TableCell>
-                      </>}
-                    </TableRow>
-                  ))}
+                  {actionJobItems.map((item) => renderActionJobRow(item, actionJob))}
                 </TableBody>
               </Table>
             )}
 
-            {(actionResult.error_code || actionResult.error_message || actionResult.hint) && (
+            {(actionJob.error_code || actionJob.error_message || actionJobItems.some((item) => item.error_code || item.error_message)) && (
               <div className="rounded-md bg-red-50 border border-red-200 p-3 text-sm space-y-1">
-                {actionResult.error_code && <div><span className="font-medium">Error code:</span> {actionResult.error_code}</div>}
-                {actionResult.error_message && <div><span className="font-medium">Message:</span> {actionResult.error_message}</div>}
-                {actionResult.hint && <div><span className="font-medium">Hint:</span> {actionResult.hint}</div>}
+                {actionJob.error_code && <div><span className="font-medium">Job error code:</span> {actionJob.error_code}</div>}
+                {actionJob.error_message && <div><span className="font-medium">Job message:</span> {actionJob.error_message}</div>}
+                {actionJobItems.filter((item) => item.error_code || item.error_message).map((item) => (
+                  <div key={item.item_id}>
+                    <span className="font-medium">{item.skill_id}:</span> {item.error_message ?? item.error_code}
+                  </div>
+                ))}
               </div>
             )}
           </CardContent>
@@ -239,10 +327,10 @@ export function SkillDetail() {
               variant="outline"
               size="sm"
               onClick={handleScan}
-              disabled={!readiness?.can_scan || scanMutation.isPending}
+              disabled={!readiness?.can_scan || activeActionPending}
               title={readiness?.can_scan ? 'Run security scan' : (readiness?.reasons.join('; ') ?? 'Checking readiness…')}
             >
-              {scanMutation.isPending ? 'Scanning…' : 'Re-scan'}
+              {scanJobMutation.isPending || (actionJob?.status === 'queued' || actionJob?.status === 'running') && actionKind === 'scan' ? 'Scanning…' : 'Re-scan'}
               {readiness && !readiness.can_scan && <AlertCircle className="h-3 w-3 ml-1 text-amber-500" />}
             </Button>
           </div>
@@ -251,10 +339,10 @@ export function SkillDetail() {
               variant="outline"
               size="sm"
               onClick={handleTest}
-              disabled={!readiness?.can_test || testMutation.isPending}
+              disabled={!readiness?.can_test || activeActionPending}
               title={readiness?.can_test ? 'Run fidelity test' : (readiness?.reasons.join('; ') ?? 'Checking readiness…')}
             >
-              {testMutation.isPending ? 'Testing…' : 'Re-test'}
+              {testJobMutation.isPending || (actionJob?.status === 'queued' || actionJob?.status === 'running') && actionKind === 'test' ? 'Testing…' : 'Re-test'}
               {readiness && !readiness.can_test && <AlertCircle className="h-3 w-3 ml-1 text-amber-500" />}
             </Button>
           </div>
