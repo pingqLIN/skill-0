@@ -19,6 +19,14 @@ Suitable shared documents include:
 - evidence/risk language used by both review surfaces
 - cross-repo session coordination rules
 
+Current shared source set:
+
+1. `README.md`
+2. `01-parser-contract.md`
+3. `02-mode-and-equivalence-contract.md`
+4. `03-shared-terminology.md`
+5. `04-cross-repo-session-rules.md`
+
 Unsuitable shared documents include:
 
 - release notes

@@ -71,6 +71,9 @@ jobs:
       - name: Validate document status markers
         run: python tools/check_doc_status_markers.py
 
+      - name: Validate shared-doc source set
+        run: python tools/check_shared_docs.py
+
   compile-check:
     runs-on: ubuntu-latest
     timeout-minutes: 10

@@ -1,6 +1,9 @@
 # Shared Documentation Model For `skill-0` And `skill-0-GUI`
 
 Updated: `2026-03-23`
+Implementation status: `🟡 Source-of-truth model is implemented locally; cross-repo CI enforcement remains partial`
+
+Status note: This file defines the canonical shared-doc ownership model in `skill-0`. The source set under `docs/shared/` is live and should stay stable; stronger cross-repo mirroring enforcement is still an ongoing hardening task.
 
 ## Purpose
 

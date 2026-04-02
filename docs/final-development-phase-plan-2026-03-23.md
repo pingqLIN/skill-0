@@ -1,6 +1,7 @@
 # Skill-0 Final Development Phase Plan
 
 Updated: `2026-03-23`
+Status note: historical final-phase planning baseline. Several workstreams described here were later partially or fully implemented in follow-on `2026-04-02` commits, so this file should not be treated as the current execution entrypoint.
 
 ## 1. Document Purpose
 
