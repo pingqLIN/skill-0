@@ -102,7 +102,8 @@ cd skill-0-dashboard/apps/web && npm run build
 1. `CP-04` 已部分落地：  
    - 已新增 `tools/check_doc_status_markers.py`
    - 已在 `.github/workflows/ci.yml` 加入 `docs-status` gate
-   - 後續仍需決定是否擴大檢查範圍與 owner 規則
+   - 已新增 `tools/check_shared_docs.py`，檢查 `docs/shared/` source set 與 `docs/shared-documentation-model.md` / `docs/shared/README.md` 不漂移
+   - 後續仍需決定是否擴大到跨 repo mirrored docs 與 owner 規則
 
 2. `CP-05` 已部分落地：  
    - 已為 `plan.md`、`plan-20-skills.md`、`yolo-dev-plan.md` 補上 historical status note
