@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__ai-prompt-engineering-safety-best-practices",
+    "skill_id": "claude__skill__ai_prompt_engineering_safety_best_practices",
     "name": "ai-prompt-engineering-safety-best-practices",
     "skill_layer": "claude_skill",
     "title": "Ai Prompt Engineering Safety Best Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "As GitHub Copilot, you must understand and apply the principles of effective prompt engineering, AI safety, and responsible AI usage. Your goal is to ",
-        "condition": "your mission",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "As GitHub Copilot, you must understand...",
+        "condition_expression": "your mission",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Prompt engineering is the art and science of designing effective prompts for large language models (LLMs) and AI assistants like GitHub Copilot. Well-",
-        "condition": "introduction",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Prompt engineering is the art and...",
+        "condition_expression": "introduction",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Constraints: Limitations or requirements that guide the output",
-        "condition": "what is prompt engineering?",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Constraints: Limitations or requirements that guide...",
+        "condition_expression": "what is prompt engineering?",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "8. [Templates & Checklists](#templates--checklists)",
-        "condition": "table of contents",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "8. [Templates & Checklists](#templates--checklists)",
+        "condition_expression": "table of contents",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Validate assumptions about user needs",
-        "condition": "iterative prompt development",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Validate assumptions about user needs",
+        "condition_expression": "iterative prompt development",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid assumptions about users or contexts",
-        "condition": "mitigation strategies",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Avoid assumptions about users or contexts",
+        "condition_expression": "mitigation strategies",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Write a story about a doctor. The doctor should be male and middle-aged.",
-        "condition": "mitigation strategies",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Write a story about a doctor....",
+        "condition_expression": "mitigation strategies",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Implement automated safety checks",
-        "condition": "mitigation strategies",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Implement automated safety checks",
+        "condition_expression": "mitigation strategies",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "const moderationResult = await contentModerator.check(output);",
-        "condition": "mitigation strategies",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "const moderationResult = await contentModerator.check(output);",
+        "condition_expression": "mitigation strategies",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "1. Automated Check: Initial safety screening",
-        "condition": "mitigation strategies",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "1. Automated Check: Initial safety screening",
+        "condition_expression": "mitigation strategies",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Prompt: The input text that instructs an AI system what to do",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Prompt: The input text that instructs..."
       },
       {
         "directive_type": "completion",
         "description": "Examples: Sample inputs and outputs that demonstrate the desired behavior",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Examples: Sample inputs and outputs that..."
       },
       {
         "directive_type": "knowledge",
         "description": "Quality: Clear prompts lead to more accurate and relevant responses",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Quality: Clear prompts lead to more..."
       },
       {
         "directive_type": "completion",
         "description": "Reliability: Consistent prompts produce more predictable results",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Reliability: Consistent prompts produce more predictable..."
       },
       {
         "directive_type": "knowledge",
         "description": "Efficiency: Good prompts reduce the need for multiple iterations",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Efficiency: Good prompts reduce the need..."
       },
       {
         "directive_type": "knowledge",
         "description": "1. [What is Prompt Engineering?](#what-is-prompt-engineering)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "1. [What is Prompt Engineering?](#what-is-prompt-engineering)"
       },
       {
         "directive_type": "knowledge",
         "description": "2. [Prompt Engineering Fundamentals](#prompt-engineering-fundamentals)",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "2. [Prompt Engineering Fundamentals](#prompt-engineering-fundamentals)"
       },
       {
         "directive_type": "knowledge",
         "description": "3. [Safety & Bias Mitigation](#safety--bias-mitigation)",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "3. [Safety & Bias Mitigation](#safety--bias-mitigation)"
       },
       {
         "directive_type": "knowledge",
         "description": "7. [Documentation & Support](#documentation--support)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "7. [Documentation & Support](#documentation--support)"
       },
       {
         "directive_type": "knowledge",
         "description": "State the task clearly and concisely",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "State the task clearly and concisely"
       }
     ]
   }

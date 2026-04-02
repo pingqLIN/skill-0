@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-bi-report-design-best-practices",
+    "skill_id": "claude__skill__power_bi_report_design_best_practices",
     "name": "power-bi-report-design-best-practices",
     "skill_layer": "claude_skill",
     "title": "Power Bi Report Design Best Practices Skill",
@@ -142,33 +142,43 @@
     "rules": [
       {
         "description": "Limit to 7-10 categories for readability",
-        "condition": "1. comparison visualizations",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Limit to 7-10 categories for readability",
+        "condition_expression": "1. comparison visualizations",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid jargon and technical abbreviations",
-        "condition": "2. typography and readability",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Avoid jargon and technical abbreviations",
+        "condition_expression": "2. typography and readability",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Check refresh and performance impact",
-        "condition": "2. custom visuals integration",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Check refresh and performance impact",
+        "condition_expression": "2. custom visuals integration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "□ Filters don't inadvertently exclude data",
-        "condition": "1. functional testing checklist",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "□ Filters don't inadvertently exclude data",
+        "condition_expression": "1. functional testing checklist",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Known limitations and workarounds",
-        "condition": "3. quality assurance framework",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Known limitations and workarounds",
+        "condition_expression": "3. quality assurance framework",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -176,61 +186,71 @@
         "directive_type": "knowledge",
         "description": "This document provides comprehensive instructions for designing effective, accessible, and performant Power BI reports and dashboards following Micros",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "This document provides comprehensive instructions for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Visual Hierarchy - Organize information by importance:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Visual Hierarchy - Organize information by..."
       },
       {
         "directive_type": "knowledge",
         "description": "Primary: Key metrics, KPIs, most critical insights (top-left, header area)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Primary: Key metrics, KPIs, most critical..."
       },
       {
         "directive_type": "knowledge",
         "description": "Secondary: Supporting details, trends, comparisons (main body)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Secondary: Supporting details, trends, comparisons (main..."
       },
       {
         "directive_type": "knowledge",
         "description": "Tertiary: Filters, controls, navigation elements (sidebars, footers)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Tertiary: Filters, controls, navigation elements (sidebars,..."
       },
       {
         "directive_type": "knowledge",
         "description": "┌─────────────────────────────────────┐",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "┌─────────────────────────────────────┐"
       },
       {
         "directive_type": "knowledge",
         "description": "│ Header: Title, KPIs, Key Metrics    │",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "│ Header: Title, KPIs, Key Metrics..."
       },
       {
         "directive_type": "knowledge",
         "description": "├─────────────────────────────────────┤",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "├─────────────────────────────────────┤"
       },
       {
         "directive_type": "knowledge",
         "description": "│ Main Content Area                   │",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "│ Main Content Area │"
       },
       {
         "directive_type": "knowledge",
         "description": "│ ┌─────────────┐ ┌─────────────────┐ │",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "│ ┌─────────────┐ ┌─────────────────┐ │"
       }
     ]
   }

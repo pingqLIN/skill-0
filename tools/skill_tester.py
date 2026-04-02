@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Skill Equivalence Tester
+Skill Fidelity Tester
 
-Tests conversion equivalence between original and converted skills.
+Tests conversion fidelity between original and converted skills.
 Uses semantic similarity, structure comparison, and keyword preservation.
 
 Usage:
@@ -49,8 +49,8 @@ except ImportError:
 
 
 @dataclass
-class EquivalenceResult:
-    """Result of equivalence testing"""
+class FidelityResult:
+    """Result of fidelity testing"""
 
     original_path: str
     converted_path: str
@@ -94,8 +94,8 @@ class EquivalenceResult:
         }
 
 
-class SkillEquivalenceTester:
-    """Test equivalence between original and converted skills"""
+class SkillFidelityTester:
+    """Test fidelity between original and converted skills"""
 
     VERSION = "1.0.0"
 
@@ -447,12 +447,12 @@ class SkillEquivalenceTester:
 
         return score, details
 
-    def test_equivalence(
+    def test_fidelity(
         self,
         original_path: Path,
         converted_path: Path,
-    ) -> EquivalenceResult:
-        """Test equivalence between original and converted skill"""
+    ) -> FidelityResult:
+        """Test fidelity between original and converted skill"""
         original_path = Path(original_path)
         converted_path = Path(converted_path)
 
@@ -501,7 +501,7 @@ class SkillEquivalenceTester:
         # Get skill name
         skill_name = conv_frontmatter.get("name", converted_path.parent.name)
 
-        result = EquivalenceResult(
+        result = FidelityResult(
             original_path=str(original_path),
             converted_path=str(converted_path),
             skill_name=skill_name,
@@ -610,7 +610,7 @@ class SkillEquivalenceTester:
         original_dir: Path,
         converted_dir: Path,
         match_by: str = "name",
-    ) -> List[EquivalenceResult]:
+    ) -> List[FidelityResult]:
         """Test all skills in directories"""
         results = []
         original_dir = Path(original_dir)
@@ -637,7 +637,7 @@ class SkillEquivalenceTester:
 
             if conv_dir:
                 try:
-                    result = self.test_equivalence(orig_file, conv_dir)
+                    result = self.test_fidelity(orig_file, conv_dir)
                     results.append(result)
                 except Exception as e:
                     self.log(f"Error testing {name}: {e}")
@@ -646,14 +646,14 @@ class SkillEquivalenceTester:
 
         return results
 
-    def format_report_text(self, result: EquivalenceResult) -> str:
+    def format_report_text(self, result: FidelityResult) -> str:
         """Format result as human-readable text"""
         lines = []
 
         status = "✅ PASSED" if result.passed else "❌ FAILED"
 
         lines.append("=" * 60)
-        lines.append(f"Equivalence Test Report: {result.skill_name}")
+        lines.append(f"Fidelity Test Report: {result.skill_name}")
         lines.append("=" * 60)
         lines.append(f"Status: {status}")
         lines.append(f"Overall Score: {result.overall_score:.1%}")
@@ -690,13 +690,25 @@ class SkillEquivalenceTester:
         lines.append("\n" + "=" * 60)
         return "\n".join(lines)
 
-    def format_report_json(self, result: EquivalenceResult) -> str:
+    def format_report_json(self, result: FidelityResult) -> str:
         """Format result as JSON"""
         return json.dumps(result.to_dict(), indent=2, ensure_ascii=False)
 
+    def test_equivalence(
+        self,
+        original_path: Path,
+        converted_path: Path,
+    ) -> FidelityResult:
+        """Backward-compatible alias for fidelity testing."""
+        return self.test_fidelity(original_path, converted_path)
+
+
+SkillEquivalenceTester = SkillFidelityTester
+EquivalenceResult = FidelityResult
+
 
 def main():
-    parser = argparse.ArgumentParser(description="Skill Equivalence Tester")
+    parser = argparse.ArgumentParser(description="Skill Fidelity Tester")
     parser.add_argument("-v", "--verbose", action="store_true")
     parser.add_argument(
         "--model", default="all-MiniLM-L6-v2", help="Sentence transformer model"
@@ -705,13 +717,13 @@ def main():
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     # test command
-    test_parser = subparsers.add_parser("test", help="Test equivalence of two skills")
+    test_parser = subparsers.add_parser("test", help="Test fidelity of two skills")
     test_parser.add_argument("original", type=Path, help="Original skill path")
     test_parser.add_argument("converted", type=Path, help="Converted skill path")
     test_parser.add_argument("--format", choices=["text", "json"], default="text")
 
     # batch command
-    batch_parser = subparsers.add_parser("batch", help="Test all skills in directories")
+    batch_parser = subparsers.add_parser("batch", help="Test fidelity across directories")
     batch_parser.add_argument(
         "original_dir", type=Path, help="Directory with original skills"
     )
@@ -732,11 +744,11 @@ def main():
     report_parser.add_argument("--output", type=Path)
 
     args = parser.parse_args()
-    tester = SkillEquivalenceTester(verbose=args.verbose, model_name=args.model)
+    tester = SkillFidelityTester(verbose=args.verbose, model_name=args.model)
 
     if args.command in ["test", "report"]:
         try:
-            result = tester.test_equivalence(args.original, args.converted)
+            result = tester.test_fidelity(args.original, args.converted)
 
             if args.format == "json":
                 output = tester.format_report_json(result)

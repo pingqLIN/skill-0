@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__instructions",
+    "skill_id": "claude__skill__instructions",
     "name": "instructions",
     "skill_layer": "claude_skill",
     "title": "Instructions Skill",
@@ -134,57 +134,75 @@
     "rules": [
       {
         "description": "Every instruction file must include YAML frontmatter with the following fields:",
-        "condition": "required frontmatter",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Every instruction file must include YAML...",
+        "condition_expression": "required frontmatter",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "A well-structured instruction file should include the following sections:",
-        "condition": "file structure",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "A well-structured instruction file should include...",
+        "condition_expression": "file structure",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Build commands to verify code",
-        "condition": "4. validation and verification (optional but recommended)",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Build commands to verify code",
+        "condition_expression": "4. validation and verification (optional but recommended)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Testing requirements",
-        "condition": "4. validation and verification (optional but recommended)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Testing requirements",
+        "condition_expression": "4. validation and verification (optional but recommended)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Write in imperative mood (\"Use\", \"Implement\", \"Avoid\")",
-        "condition": "writing style",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Write in imperative mood (\"Use\", \"Implement\",...",
+        "condition_expression": "writing style",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid ambiguous terms like \"should\", \"might\", \"possibly\"",
-        "condition": "writing style",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Avoid ambiguous terms like \"should\", \"might\",...",
+        "condition_expression": "writing style",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "2. Verify Examples: Ensure code examples are correct and run without errors",
-        "condition": "testing your instructions",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "2. Verify Examples: Ensure code examples...",
+        "condition_expression": "testing your instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "3. Check Glob Patterns: Confirm `applyTo` patterns match intended files",
-        "condition": "testing your instructions",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "3. Check Glob Patterns: Confirm `applyTo`...",
+        "condition_expression": "testing your instructions",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Build command: `command to verify`",
-        "condition": "validation",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Build command: `command to verify`",
+        "condition_expression": "validation",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -192,61 +210,71 @@
         "directive_type": "knowledge",
         "description": "Instructions for creating effective and maintainable custom instruction files that guide GitHub Copilot in generating domain-specific code and followi",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Instructions for creating effective and maintainable..."
       },
       {
         "directive_type": "knowledge",
         "description": "Target audience: Developers and GitHub Copilot working with domain-specific code",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Target audience: Developers and GitHub Copilot..."
       },
       {
         "directive_type": "knowledge",
         "description": "File format: Markdown with YAML frontmatter",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "File format: Markdown with YAML frontmatter"
       },
       {
         "directive_type": "preference",
         "description": "File naming convention: lowercase with hyphens (e.g., `react-best-practices.instructions.md`)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "File naming convention: lowercase with hyphens..."
       },
       {
         "directive_type": "knowledge",
         "description": "Location: `.github/instructions/` directory",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Location: `.github/instructions/` directory"
       },
       {
         "directive_type": "knowledge",
         "description": "Purpose: Provide context-aware guidance for code generation, review, and documentation",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Purpose: Provide context-aware guidance for code..."
       },
       {
         "directive_type": "knowledge",
         "description": "description: 'Brief description of the instruction purpose and scope'",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "description: 'Brief description of the instruction..."
       },
       {
         "directive_type": "strategy",
         "description": "applyTo: 'glob pattern for target files (e.g., /*.ts, /*.py)'",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "applyTo: 'glob pattern for target files..."
       },
       {
         "directive_type": "knowledge",
         "description": "description: Single-quoted string, 1-500 characters, clearly stating the purpose",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "description: Single-quoted string, 1-500 characters, clearly..."
       },
       {
         "directive_type": "strategy",
         "description": "applyTo: Glob pattern(s) specifying which files these instructions apply to",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "applyTo: Glob pattern(s) specifying which files..."
       }
     ]
   }

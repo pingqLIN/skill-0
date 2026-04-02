@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__dataverse-python-best-practices",
+    "skill_id": "claude__skill__dataverse_python_best_practices",
     "name": "dataverse-python-best-practices",
     "skill_layer": "claude_skill",
     "title": "Dataverse Python Best Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "When to use: Highly secure environments, certificate-pinning requirements.",
-        "condition": "certificate-based authentication",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "When to use: Highly secure environments,...",
+        "condition_expression": "certificate-based authentication",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "{\"name\": f\"Company {i}\", \"creditlimit\": 50000 + (i * 1000)}",
-        "condition": "sdk automatically uses createmultiple for arrays > 1 record",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "{\"name\": f\"Company {i}\", \"creditlimit\": 50000 +...",
+        "condition_expression": "sdk automatically uses createmultiple for arrays > 1 record",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Performance: Bulk create is optimized internally; no manual batching required.",
-        "condition": "sdk automatically uses createmultiple for arrays > 1 record",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Performance: Bulk create is optimized internally;...",
+        "condition_expression": "sdk automatically uses createmultiple for arrays > 1 record",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "select=[\"name\", \"creditlimit\", \"telephone1\"],",
-        "condition": "returns paginated results (generator)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "select=[\"name\", \"creditlimit\", \"telephone1\"],",
+        "condition_expression": "returns paginated results (generator)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "print(f\"{account['name']}: ${account['creditlimit']}\")",
-        "condition": "returns paginated results (generator)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "print(f\"{account['name']}: ${account['creditlimit']}\")",
+        "condition_expression": "returns paginated results (generator)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "`filter`: OData filter (must use lowercase logical names)",
-        "condition": "returns paginated results (generator)",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "`filter`: OData filter (must use lowercase...",
+        "condition_expression": "returns paginated results (generator)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "SELECT TOP 10 name, creditlimit",
-        "condition": "sql queries are read-only; use for complex analytics",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "SELECT TOP 10 name, creditlimit",
+        "condition_expression": "sql queries are read-only; use for complex analytics",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "print(f\"{row['name']}: ${row['creditlimit']}\")",
-        "condition": "sql queries are read-only; use for complex analytics",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "print(f\"{row['name']}: ${row['creditlimit']}\")",
+        "condition_expression": "sql queries are read-only; use for complex analytics",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "\"id1\": {\"creditlimit\": 100000},",
-        "condition": "for different updates per record, send multiple calls",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "\"id1\": {\"creditlimit\": 100000},",
+        "condition_expression": "for different updates per record, send multiple calls",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "\"id2\": {\"creditlimit\": 200000},",
-        "condition": "for different updates per record, send multiple calls",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "\"id2\": {\"creditlimit\": 200000},",
+        "condition_expression": "for different updates per record, send multiple calls",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "preference",
         "description": "Production-ready patterns and best practices extracted from Microsoft's official PowerPlatform-DataverseClient-Python repository, examples, and recomm",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Production-ready patterns and best practices extracted..."
       },
       {
         "directive_type": "knowledge",
         "description": "client = DataverseClient(\"https://yourorg.crm.dynamics.com\", credential)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "client = DataverseClient(\"https://yourorg.crm.dynamics.com\", credential)"
       },
       {
         "directive_type": "knowledge",
         "description": "When to use: Server-side applications, Azure automation, scheduled jobs.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "When to use: Server-side applications, Azure..."
       },
       {
         "directive_type": "knowledge",
         "description": "Best Practice: Create one `DataverseClient` instance and reuse it throughout your application.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Best Practice: Create one `DataverseClient` instance..."
       },
       {
         "directive_type": "knowledge",
         "description": "credential = InteractiveBrowserCredential()",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "credential = InteractiveBrowserCredential()"
       },
       {
         "directive_type": "knowledge",
         "description": "return client.get(\"account\", account_id)",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "return client.get(\"account\", account_id)"
       },
       {
         "directive_type": "knowledge",
         "description": "cls._instance = DataverseClient(",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "cls._instance = DataverseClient("
       },
       {
         "directive_type": "knowledge",
         "description": "\"https://yourorg.crm.dynamics.com\",",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "\"https://yourorg.crm.dynamics.com\","
       },
       {
         "directive_type": "knowledge",
         "description": "# Note: http_retries, http_backoff, http_timeout are reserved for internal use",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "# Note: http_retries, http_backoff, http_timeout are..."
       },
       {
         "directive_type": "knowledge",
         "description": "credential = ClientSecretCredential(tenant_id, client_id, client_secret)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "credential = ClientSecretCredential(tenant_id, client_id, client_secret)"
       }
     ]
   }

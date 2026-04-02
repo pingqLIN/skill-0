@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-api-reference",
+    "skill_id": "claude__skill__pcf_api_reference",
     "name": "pcf-api-reference",
     "skill_layer": "claude_skill",
     "title": "Pcf Api Reference Skill",
@@ -70,15 +70,19 @@
     "rules": [
       {
         "description": "Always check the API availability for your target platform (model-driven or canvas)",
-        "condition": "api version compatibility",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always check the API availability for...",
+        "condition_expression": "api version compatibility",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Test components in the target environment to ensure compatibility",
-        "condition": "api version compatibility",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Test components in the target environment...",
+        "condition_expression": "api version compatibility",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -86,61 +90,71 @@
         "directive_type": "knowledge",
         "description": "The following table shows all API interfaces available in the Power Apps component framework, along with their availability in model-driven apps and c",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "The following table shows all API..."
       },
       {
         "directive_type": "strategy",
         "description": "The `Context` object provides access to all framework capabilities and is passed to your component's lifecycle methods. It contains:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "The `Context` object provides access to..."
       },
       {
         "directive_type": "knowledge",
         "description": "Client: Information about the client (form factor, network status)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Client: Information about the client (form..."
       },
       {
         "directive_type": "knowledge",
         "description": "Device: Device capabilities (camera, location, microphone)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Device: Device capabilities (camera, location, microphone)"
       },
       {
         "directive_type": "strategy",
         "description": "Factory: Factory methods for creating framework objects",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Factory: Factory methods for creating framework..."
       },
       {
         "directive_type": "knowledge",
         "description": "Formatting: Number and date formatting",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Formatting: Number and date formatting"
       },
       {
         "directive_type": "knowledge",
         "description": "Mode: Component mode and tracking",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Mode: Component mode and tracking"
       },
       {
         "directive_type": "strategy",
         "description": "Navigation: Navigation methods",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Navigation: Navigation methods"
       },
       {
         "directive_type": "knowledge",
         "description": "Resources: Access to resources (images, strings)",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Resources: Access to resources (images, strings)"
       },
       {
         "directive_type": "knowledge",
         "description": "UserSettings: User settings (locale, number format, security roles)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "UserSettings: User settings (locale, number format,..."
       }
     ]
   }

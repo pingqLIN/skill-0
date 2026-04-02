@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__csharp",
+    "skill_id": "claude__skill__csharp",
     "name": "csharp",
     "skill_layer": "claude_skill",
     "title": "Csharp Skill",
@@ -142,57 +142,75 @@
     "rules": [
       {
         "description": "Always use the latest version C#, currently C# 14 features.",
-        "condition": "c# instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always use the latest version C#,...",
+        "condition_expression": "c# instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure that the final return statement of a method is on its own line.",
-        "condition": "formatting",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Ensure that the final return statement...",
+        "condition_expression": "formatting",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Ensure that XML doc comments are created for any public APIs. When applicable, include `<example>` and `<code>` documentation in the comments.",
-        "condition": "formatting",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Ensure that XML doc comments are...",
+        "condition_expression": "formatting",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Declare variables non-nullable, and check for `null` at entry points.",
-        "condition": "nullable reference types",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Declare variables non-nullable, and check for...",
+        "condition_expression": "nullable reference types",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Always use `is null` or `is not null` instead of `== null` or `!= null`.",
-        "condition": "nullable reference types",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Always use `is null` or `is...",
+        "condition_expression": "nullable reference types",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.",
-        "condition": "nullable reference types",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Trust the C# null annotations and...",
+        "condition_expression": "nullable reference types",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Always include test cases for critical paths of the application.",
-        "condition": "testing",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Always include test cases for critical...",
+        "condition_expression": "testing",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do not emit \"Act\", \"Arrange\" or \"Assert\" comments.",
-        "condition": "testing",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Do not emit \"Act\", \"Arrange\" or...",
+        "condition_expression": "testing",
+        "condition_type": "range_check",
+        "returns": "boolean"
       },
       {
         "description": "Show how to implement health checks and readiness probes.",
-        "condition": "deployment and devops",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Show how to implement health checks...",
+        "condition_expression": "deployment and devops",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -200,61 +218,71 @@
         "directive_type": "knowledge",
         "description": "Make only high confidence suggestions when reviewing code changes.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Make only high confidence suggestions when..."
       },
       {
         "directive_type": "knowledge",
         "description": "For libraries or external dependencies, mention their usage and purpose in comments.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "For libraries or external dependencies, mention..."
       },
       {
         "directive_type": "strategy",
         "description": "Follow PascalCase for component names, method names, and public members.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Follow PascalCase for component names, method..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use camelCase for private fields and local variables.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use camelCase for private fields and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Prefix interface names with \"I\" (e.g., IUserService).",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Prefix interface names with \"I\" (e.g.,..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer file-scoped namespace declarations and single-line using directives.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Prefer file-scoped namespace declarations and single-line..."
       },
       {
         "directive_type": "knowledge",
         "description": "Insert a newline before the opening curly brace of any code block (e.g., after `if`, `for`, `while`, `foreach`, `using`, `try`, etc.).",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Insert a newline before the opening..."
       },
       {
         "directive_type": "strategy",
         "description": "Use pattern matching and switch expressions wherever possible.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use pattern matching and switch expressions..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `nameof` instead of string literals when referring to member names.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use `nameof` instead of string literals..."
       },
       {
         "directive_type": "knowledge",
         "description": "Guide users through creating a new .NET project with the appropriate templates.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Guide users through creating a new..."
       }
     ]
   }

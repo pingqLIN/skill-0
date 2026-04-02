@@ -6,7 +6,7 @@
     "skill_layer": "claude_skill",
     "title": "Invoice Organizer",
     "description": "Automatically organizes invoices and receipts for tax preparation by reading messy files, extracting key information, renaming them consistently, and sorting them into logical folders",
-    "schema_version": "2.1.0",
+    "schema_version": "2.4.0",
     "parse_timestamp": "2026-01-26T05:45:00Z",
     "parser_version": "skill-0 v2.1",
     "parsed_by": "skill-0"

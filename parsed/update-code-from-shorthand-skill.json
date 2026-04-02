@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__update-code-from-shorthand",
+    "skill_id": "claude__skill__update_code_from_shorthand",
     "name": "update-code-from-shorthand",
     "skill_layer": "claude_skill",
     "title": "Update Code From Shorthand Skill",
@@ -142,51 +142,67 @@
     "rules": [
       {
         "description": "The `${REQUIRED_FILE}` following the `${openPrompt}`.",
-        "condition": "rules for updating code file from shorthand",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "The `${REQUIRED_FILE}` following the `${openPrompt}`",
+        "condition_expression": "rules for updating code file from shorthand",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "is to update a data file i.e. `JSON` or `XML` and means the edits should be focused on formatting",
-        "condition": "rules for updating code file from shorthand",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "is to update a data file...",
+        "condition_expression": "rules for updating code file from shorthand",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "probability this is to update a data file i.e. `JSON` or `XML` and means the edits should be focused",
-        "condition": "rules for updating code file from shorthand",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "probability this is to update a...",
+        "condition_expression": "rules for updating code file from shorthand",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "The `${REQUIRED_FILE}` will have two markers:",
-        "condition": "when to apply instructions and rules",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "The `${REQUIRED_FILE}` will have two markers",
+        "condition_expression": "when to apply instructions and rules",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "The content between the edit markers determines what to update in the `${REQUIRED_FILE}` or other",
-        "condition": "when to apply instructions and rules",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "The content between the edit markers...",
+        "condition_expression": "when to apply instructions and rules",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "> Edit the code file ${REQUIRED_FILE}.",
-        "condition": "prompt back following rules",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "> Edit the code file ${REQUIRED_FILE}",
+        "condition_expression": "prompt back following rules",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "> ${openMarker} - edit the code file ${REQUIRED_FILE}.",
-        "condition": "prompt back following rules",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "> ${openMarker} - edit the code...",
+        "condition_expression": "prompt back following rules",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "REQUIRED_FILE = `${input:file}`;",
-        "condition": "variables",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "REQUIRED_FILE = `${input:file}`;",
+        "condition_expression": "variables",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -194,61 +210,71 @@
         "directive_type": "knowledge",
         "description": "One or more files will be provided in the prompt. For each file in the prompt, look for the markers",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "One or more files will be..."
       },
       {
         "directive_type": "knowledge",
         "description": "valid code appropriate for the target file type and its extension.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "valid code appropriate for the target..."
       },
       {
         "directive_type": "knowledge",
         "description": "Expert 10x software engineer. Great at problem solving and generating creative solutions when given",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Expert 10x software engineer. Great at..."
       },
       {
         "directive_type": "knowledge",
         "description": "shorthand instructions, similar to brainstorming. The shorthand is like a hand-drawn sketch a client",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "shorthand instructions, similar to brainstorming. The..."
       },
       {
         "directive_type": "knowledge",
         "description": "If any comment has the text `REMOVE COMMENT`, `NOTE`, or similar within the comment, that",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "If any comment has the text..."
       },
       {
         "directive_type": "knowledge",
         "description": "comment is to be removed; and in all probability that line will need the correct syntax,",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "comment is to be removed; and..."
       },
       {
         "directive_type": "knowledge",
         "description": "If any text, following the file name implies `no need to edit code`, then in all probability this",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "If any text, following the file..."
       },
       {
         "directive_type": "knowledge",
         "description": "> Did you mean to prepend the prompt with \"${openPrompt}\"?",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "> Did you mean to prepend..."
       },
       {
         "directive_type": "knowledge",
         "description": "Remove all occurrences of the closeMarker or `${language:comment} end-shorthand`.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Remove all occurrences of the closeMarker..."
       },
       {
         "directive_type": "knowledge",
         "description": "`()=>` = 90% comment and 10% pseudo code blocks of mixed languages.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "`()=>` = 90% comment and 10%..."
       }
     ]
   }

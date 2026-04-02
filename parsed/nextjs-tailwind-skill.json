@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__nextjs-tailwind",
+    "skill_id": "claude__skill__nextjs_tailwind",
     "name": "nextjs-tailwind",
     "skill_layer": "claude_skill",
     "title": "Nextjs Tailwind Skill",
@@ -86,15 +86,19 @@
     "rules": [
       {
         "description": "Proper authentication checks",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Proper authentication checks",
+        "condition_expression": "security",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Rate limiting implementation",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Rate limiting implementation",
+        "condition_expression": "security",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -102,55 +106,64 @@
         "directive_type": "knowledge",
         "description": "Instructions for high-quality Next.js applications with Tailwind CSS styling and TypeScript.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Instructions for high-quality Next.js applications with..."
       },
       {
         "directive_type": "knowledge",
         "description": "Latest Next.js (App Router)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Latest Next.js (App Router)"
       },
       {
         "directive_type": "knowledge",
         "description": "TypeScript for type safety",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "TypeScript for type safety"
       },
       {
         "directive_type": "knowledge",
         "description": "Tailwind CSS for styling",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Tailwind CSS for styling"
       },
       {
         "directive_type": "knowledge",
         "description": "App Router with server and client components",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "App Router with server and client..."
       },
       {
         "directive_type": "knowledge",
         "description": "Group routes by feature/domain",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Group routes by feature/domain"
       },
       {
         "directive_type": "knowledge",
         "description": "Implement proper error boundaries",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Implement proper error boundaries"
       },
       {
         "directive_type": "preference",
         "description": "Use React Server Components by default",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use React Server Components by default"
       },
       {
         "directive_type": "knowledge",
         "description": "Leverage static optimization where possible",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Leverage static optimization where possible"
       }
     ]
   }

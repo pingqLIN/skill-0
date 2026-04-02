@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__terraform-azure",
+    "skill_id": "claude__skill__terraform_azure",
     "name": "terraform-azure",
     "skill_layer": "claude_skill",
     "title": "Terraform Azure Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "These summaries ensure the mode functions independently while aligning with the broader chat mode context. For full details, reference the original De",
-        "condition": "incorporated taming copilot directives (behavioral hierarchy)",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "These summaries ensure the mode functions...",
+        "condition_expression": "incorporated taming copilot directives (behavioral hierarchy)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Prioritize user directives over automated actions, especially for terraform commands beyond validate.",
-        "condition": "chat mode integration",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Prioritize user directives over automated actions,...",
+        "condition_expression": "chat mode integration",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Planning Files Awareness: Always check for planning files in the `.terraform-planning-files/` folder (if present). Read and incorporate relevant detai",
-        "condition": "chat mode integration",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Planning Files Awareness: Always check for...",
+        "condition_expression": "chat mode integration",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Any significant resource should use an AVM if available. AVMs are designed to be aligned to the Well Architected Framework, are supported and maintain",
-        "condition": "4. use azure verified modules (avm)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Any significant resource should use an...",
+        "condition_expression": "4. use azure verified modules (avm)",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "An exception to this instruction is if the user has been directed to use an internal private registry, or explicitly states they do not wish to use Az",
-        "condition": "4. use azure verified modules (avm)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "An exception to this instruction is...",
+        "condition_expression": "4. use azure verified modules (avm)",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "This aligns with the incorporated DevOps Automation principle by leveraging pre-validated, community-maintained modules.",
-        "condition": "4. use azure verified modules (avm)",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "This aligns with the incorporated DevOps...",
+        "condition_expression": "4. use azure verified modules (avm)",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Use `ephemeral` secrets with write-only parameters when supported (Terraform v1.11+) to avoid storing secrets in state files. Consult module documenta",
-        "condition": "6. secrets",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Use `ephemeral` secrets with write-only parameters...",
+        "condition_expression": "6. secrets",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Where secrets are required, store in Key Vault unless directed to use a different service.",
-        "condition": "6. secrets",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Where secrets are required, store in...",
+        "condition_expression": "6. secrets",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never write secrets to local filesystems or commit to git.",
-        "condition": "6. secrets",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Never write secrets to local filesystems...",
+        "condition_expression": "6. secrets",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Mark sensitive values appropriately, isolate them from other attributes, and avoid outputting sensitive data unless absolutely necessary. Follow TFNFR",
-        "condition": "6. secrets",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Mark sensitive values appropriately, isolate them...",
+        "condition_expression": "6. secrets",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Culture: Foster collaborative, blameless culture with shared responsibility and continuous learning.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Culture: Foster collaborative, blameless culture with..."
       },
       {
         "directive_type": "completion",
         "description": "Automation: Automate everything possible across the software delivery lifecycle to reduce manual effort and errors.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Automation: Automate everything possible across the..."
       },
       {
         "directive_type": "completion",
         "description": "Lean: Eliminate waste, maximize flow, and deliver value continuously by reducing batch sizes and bottlenecks.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Lean: Eliminate waste, maximize flow, and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Measurement: Measure everything relevant (e.g., DORA metrics: Deployment Frequency, Lead Time for Changes, Change Failure Rate, Mean Time to Recovery)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Measurement: Measure everything relevant (e.g., DORA..."
       },
       {
         "directive_type": "knowledge",
         "description": "Sharing: Promote knowledge sharing, collaboration, and transparency across teams.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Sharing: Promote knowledge sharing, collaboration, and..."
       },
       {
         "directive_type": "knowledge",
         "description": "Primacy of User Directives: Direct user commands take highest priority.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Primacy of User Directives: Direct user..."
       },
       {
         "directive_type": "knowledge",
         "description": "Factual Verification: Prioritize tools for current, factual answers over internal knowledge.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Factual Verification: Prioritize tools for current,..."
       },
       {
         "directive_type": "principle",
         "description": "Adherence to Philosophy: Follow minimalist, surgical approaches—code on request only, minimal necessary changes, direct and concise responses.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Adherence to Philosophy: Follow minimalist, surgical..."
       },
       {
         "directive_type": "preference",
         "description": "Tool Usage: Use tools purposefully; declare intent before action; prefer parallel calls when possible.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Tool Usage: Use tools purposefully; declare..."
       },
       {
         "directive_type": "knowledge",
         "description": "Treat this as a self-contained extension that incorporates summarized general rules for independent operation.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Treat this as a self-contained extension..."
       }
     ]
   }

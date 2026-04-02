@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__terraform",
+    "skill_id": "claude__skill__terraform",
     "name": "terraform",
     "skill_layer": "claude_skill",
     "title": "Terraform Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Always use the latest stable version of Terraform and its providers.",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always use the latest stable version...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never commit sensitive information such as AWS credentials, API keys, passwords, certificates, or Terraform state to version control.",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Never commit sensitive information such as...",
+        "condition_expression": "security",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Always mark sensitive variables as `sensitive = true` in your Terraform configurations.",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Always mark sensitive variables as `sensitive...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Deploy resources in private subnets whenever possible.",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Deploy resources in private subnets whenever...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use public subnets only for resources that require direct internet access, such as load balancers or NAT gateways.",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Use public subnets only for resources...",
+        "condition_expression": "security",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "Use tools like `trivy`, `tfsec`, or `checkov` to scan your Terraform configurations for security issues.",
-        "condition": "security",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Use tools like `trivy`, `tfsec`, or...",
+        "condition_expression": "security",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use modules to avoid duplication of configurations.",
-        "condition": "modularity",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Use modules to avoid duplication of...",
+        "condition_expression": "modularity",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid circular dependencies between modules.",
-        "condition": "modularity",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Avoid circular dependencies between modules",
+        "condition_expression": "modularity",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid unnecessary layers of abstraction; use modules only when they add value.",
-        "condition": "modularity",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Avoid unnecessary layers of abstraction; use...",
+        "condition_expression": "modularity",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid using modules for single resources; only use them for groups of related resources.",
-        "condition": "modularity",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Avoid using modules for single resources;...",
+        "condition_expression": "modularity",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Use Terraform to provision and manage infrastructure.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Use Terraform to provision and manage..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use version control for your Terraform configurations.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use version control for your Terraform..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use AWS environment variables to reference values stored in AWS Secrets Manager or SSM Parameter Store.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use AWS environment variables to reference..."
       },
       {
         "directive_type": "knowledge",
         "description": "This keeps sensitive values out of your Terraform state files.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "This keeps sensitive values out of..."
       },
       {
         "directive_type": "completion",
         "description": "This prevents sensitive values from being displayed in the Terraform plan or apply output.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "This prevents sensitive values from being..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use IAM roles and policies to control access to resources.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Use IAM roles and policies to..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use security groups and network ACLs to control network access to resources.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use security groups and network ACLs..."
       },
       {
         "directive_type": "knowledge",
         "description": "Regularly review and audit your Terraform configurations for security vulnerabilities.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Regularly review and audit your Terraform..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use separate projects for each major component of the infrastructure; this:",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use separate projects for each major..."
       },
       {
         "directive_type": "knowledge",
         "description": "Makes it easier to manage and maintain configurations",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Makes it easier to manage and..."
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__kotlin-mcp-server",
+    "skill_id": "claude__skill__kotlin_mcp_server",
     "name": "kotlin-mcp-server",
     "skill_layer": "claude_skill",
     "title": "Kotlin Mcp Server Skill",
@@ -142,51 +142,67 @@
     "rules": [
       {
         "description": "?: throw IllegalArgumentException(\"query is required\")",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "?: throw IllegalArgumentException(\"query is required\")",
+        "condition_expression": "adding tools",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "val limit = (request.params.arguments[\"limit\"] as? Number)?.toInt() ?: 10",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "val limit = (request.params.arguments[\"limit\"] as? Number)?.toInt()...",
+        "condition_expression": "adding tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "val results = performSearch(query, limit)",
-        "condition": "adding tools",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "val results = performSearch(query, limit)",
+        "condition_expression": "adding tools",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "?: throw IllegalArgumentException(\"topic is required\")",
-        "condition": "adding prompts",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "?: throw IllegalArgumentException(\"topic is required\")",
+        "condition_expression": "adding prompts",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "description = \"Process validated input\"",
-        "condition": "error handling",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "description = \"Process validated input\"",
+        "condition_expression": "error handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "?: throw IllegalArgumentException(\"input is required\")",
-        "condition": "error handling",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "?: throw IllegalArgumentException(\"input is required\")",
+        "condition_expression": "error handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "require(input.isNotBlank()) { \"input cannot be blank\" }",
-        "condition": "error handling",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "require(input.isNotBlank()) { \"input cannot be blank\"...",
+        "condition_expression": "error handling",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "arguments = mapOf(\"query\" to \"test\", \"limit\" to 5)",
-        "condition": "testing",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "arguments = mapOf(\"query\" to \"test\", \"limit\"...",
+        "condition_expression": "testing",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -194,61 +210,71 @@
         "directive_type": "strategy",
         "description": "When building MCP servers in Kotlin, follow these best practices and patterns using the official Kotlin SDK.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "When building MCP servers in Kotlin,..."
       },
       {
         "directive_type": "knowledge",
         "description": "prompts = ServerCapabilities.Prompts(listChanged = true)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "prompts = ServerCapabilities.Prompts(listChanged = true)"
       },
       {
         "directive_type": "knowledge",
         "description": "val query = request.params.arguments[\"query\"] as? String",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "val query = request.params.arguments[\"query\"] as? String"
       },
       {
         "directive_type": "knowledge",
         "description": "Use `server.addResource()` to provide accessible data:",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Use `server.addResource()` to provide accessible data"
       },
       {
         "directive_type": "knowledge",
         "description": "Use `server.addPrompt()` for reusable prompt templates:",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Use `server.addPrompt()` for reusable prompt templates"
       },
       {
         "directive_type": "knowledge",
         "description": "val topic = request.params.arguments?.get(\"topic\") as? String",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "val topic = request.params.arguments?.get(\"topic\") as? String"
       },
       {
         "directive_type": "knowledge",
         "description": "For HTTP-based communication using Server-Sent Events:",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "For HTTP-based communication using Server-Sent Events"
       },
       {
         "directive_type": "knowledge",
         "description": "All MCP operations are suspending functions. Use Kotlin coroutines properly:",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "All MCP operations are suspending functions...."
       },
       {
         "directive_type": "knowledge",
         "description": "description = \"Search multiple sources in parallel\"",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "description = \"Search multiple sources in..."
       },
       {
         "directive_type": "completion",
         "description": "content = listOf(TextContent(text = results.joinToString(\"\\n\")))",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "content = listOf(TextContent(text = results.joinToString(\"\\n\")))"
       }
     ]
   }

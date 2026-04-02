@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__copilot-thought-logging",
+    "skill_id": "claude__skill__copilot_thought_logging",
     "name": "copilot-thought-logging",
     "skill_layer": "claude_skill",
     "title": "Copilot Thought Logging Skill",
@@ -126,63 +126,83 @@
     "rules": [
       {
         "description": "You must review these instructions in full before executing any steps to understand the full instructions guidelines.",
-        "condition": "copilot process tracking instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "You must review these instructions in...",
+        "condition_expression": "copilot process tracking instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "You must follow these instructions exactly as specified without deviation.",
-        "condition": "copilot process tracking instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "You must follow these instructions exactly...",
+        "condition_expression": "copilot process tracking instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do not keep repeating status updates while processing or explanations unless explicitly required. This is bad and will flood Copilot session context.",
-        "condition": "copilot process tracking instructions",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Do not keep repeating status updates...",
+        "condition_expression": "copilot process tracking instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Phases must be executed one at a time and in the exact order specified.",
-        "condition": "copilot process tracking instructions",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Phases must be executed one at...",
+        "condition_expression": "copilot process tracking instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "This should include:",
-        "condition": "phase 2: planning",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "This should include",
+        "condition_expression": "phase 2: planning",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Ensure tasks are granular enough to be executed one at a time",
-        "condition": "phase 2: planning",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Ensure tasks are granular enough to...",
+        "condition_expression": "phase 2: planning",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "NEVER write \"# Phase X\" headers in responses",
-        "condition": "phase 4: summary",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "NEVER write \"# Phase X\" headers...",
+        "condition_expression": "phase 4: summary",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "NEVER repeat the word \"Phase\" in output unless explicitly required",
-        "condition": "phase 4: summary",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "NEVER repeat the word \"Phase\" in...",
+        "condition_expression": "phase 4: summary",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "NEVER provide explanations beyond the exact text specified",
-        "condition": "phase 4: summary",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "NEVER provide explanations beyond the exact...",
+        "condition_expression": "phase 4: summary",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "NEVER combine multiple phases in one response",
-        "condition": "phase 4: summary",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "NEVER combine multiple phases in one...",
+        "condition_expression": "phase 4: summary",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -190,37 +210,43 @@
         "directive_type": "completion",
         "description": "NO phase announcements (no \"# Phase X\" headers in output)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "NO phase announcements (no \"# Phase..."
       },
       {
         "directive_type": "completion",
         "description": "Only output the exact text specified in phase instructions",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Only output the exact text specified..."
       },
       {
         "directive_type": "completion",
         "description": "Work silently without announcements until complete.",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Work silently without announcements until complete"
       },
       {
         "directive_type": "completion",
         "description": "When this phase is complete keep mental note of this that <Phase 1> is done and does not need to be repeated.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "When this phase is complete keep..."
       },
       {
         "directive_type": "knowledge",
         "description": "Specific tasks for each action item in the action plan as a phase.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Specific tasks for each action item..."
       },
       {
         "directive_type": "completion",
         "description": "Repeat this pattern until all action items are complete",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Repeat this pattern until all action..."
       }
     ]
   }

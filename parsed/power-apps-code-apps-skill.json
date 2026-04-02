@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__power-apps-code-apps",
+    "skill_id": "claude__skill__power_apps_code_apps",
     "name": "power-apps-code-apps",
     "skill_layer": "claude_skill",
     "title": "Power Apps Code Apps Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Store sensitive data in data sources, never in application code",
-        "condition": "data management",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Store sensitive data in data sources,...",
+        "condition_expression": "data management",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid prop drilling with context or state management libraries",
-        "condition": "state management",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Avoid prop drilling with context or...",
+        "condition_expression": "state management",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Ensure mobile-friendly user interfaces",
-        "condition": "styling and ui",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Ensure mobile-friendly user interfaces",
+        "condition_expression": "styling and ui",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Storage SAS IP restrictions not supported",
-        "condition": "known limitations",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Storage SAS IP restrictions not supported",
+        "condition_expression": "known limitations",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Authentication failures: Verify environment setup and user permissions with `pac auth list`",
-        "condition": "development issues",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Authentication failures: Verify environment setup and...",
+        "condition_expression": "development issues",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "TypeScript compilation errors: Check verbatimModuleSyntax setting and SDK compatibility",
-        "condition": "development issues",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "TypeScript compilation errors: Check verbatimModuleSyntax setting...",
+        "condition_expression": "development issues",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Connector permission errors: Ensure proper consent flow and admin permissions",
-        "condition": "development issues",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Connector permission errors: Ensure proper consent...",
+        "condition_expression": "development issues",
+        "condition_type": "permission_check",
+        "returns": "boolean"
       },
       {
         "description": "PowerProvider initialization errors: Check console for SDK initialization failures",
-        "condition": "development issues",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "PowerProvider initialization errors: Check console for...",
+        "condition_expression": "development issues",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Vite dev server issues: Ensure host and port configuration match requirements",
-        "condition": "development issues",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Vite dev server issues: Ensure host...",
+        "condition_expression": "development issues",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Build failures: Verify all dependencies with `npm audit` and check build configuration",
-        "condition": "deployment issues",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Build failures: Verify all dependencies with...",
+        "condition_expression": "deployment issues",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Instructions for generating high-quality Power Apps Code Apps using TypeScript, React, and Power Platform SDK, following Microsoft's official best pra",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Instructions for generating high-quality Power Apps..."
       },
       {
         "directive_type": "knowledge",
         "description": "Power Apps Code Apps (Preview): Code-first web app development with Power Platform integration",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Power Apps Code Apps (Preview): Code-first..."
       },
       {
         "directive_type": "preference",
         "description": "TypeScript + React: Recommended frontend stack with Vite bundler",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "TypeScript + React: Recommended frontend stack..."
       },
       {
         "directive_type": "knowledge",
         "description": "Power Platform SDK: @microsoft/power-apps (current version ^0.3.1) for connector integration",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Power Platform SDK: @microsoft/power-apps (current version..."
       },
       {
         "directive_type": "knowledge",
         "description": "PAC CLI: Power Platform CLI for project management and deployment",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "PAC CLI: Power Platform CLI for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Port 3000: Required for local development with Power Platform SDK",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Port 3000: Required for local development..."
       },
       {
         "directive_type": "knowledge",
         "description": "Power Apps Premium: End-user licensing requirement for production use",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Power Apps Premium: End-user licensing requirement..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use well-organized folder structure with clear separation of concerns:",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use well-organized folder structure with clear..."
       },
       {
         "directive_type": "knowledge",
         "description": "├── hooks/              # Custom React hooks for Power Platform",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "├── hooks/ # Custom React hooks..."
       },
       {
         "directive_type": "knowledge",
         "description": "├── utils/             # Utility functions and helpers",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "├── utils/ # Utility functions and..."
       }
     ]
   }

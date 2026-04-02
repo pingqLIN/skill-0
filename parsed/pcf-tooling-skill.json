@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-tooling",
+    "skill_id": "claude__skill__pcf_tooling",
     "name": "pcf-tooling",
     "skill_layer": "claude_skill",
     "title": "Pcf Tooling Skill",
@@ -46,9 +46,11 @@
     "rules": [
       {
         "description": "> Important: To deploy your code component using Microsoft Power Platform CLI, you must have a Microsoft Dataverse environment with system administrat",
-        "condition": "get tooling for power apps component framework",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "> Important: To deploy your code...",
+        "condition_expression": "get tooling for power apps component framework",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -56,19 +58,22 @@
         "directive_type": "knowledge",
         "description": "[Learn Power Apps component framework](https://learn.microsoft.com/en-us/training/paths/use-power-apps-component-framework)",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "[Learn Power Apps component framework](https://learn.microsoft.com/en-us/trainin"
       },
       {
         "directive_type": "knowledge",
         "description": "description: Get Microsoft Power Platform CLI tooling for Power Apps Component Framework Triggers on: **/*.{ts,tsx,js,json,xml,pcfproj,csproj}",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "description: Get Microsoft Power Platform CLI..."
       },
       {
         "directive_type": "knowledge",
         "description": "triggers: \"**/*.{ts,tsx,js,json,xml,pcfproj,csproj}\"",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "triggers: \"**/*.{ts,tsx,js,json,xml,pcfproj,csproj}\""
       }
     ]
   }

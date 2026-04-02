@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-model-driven-apps",
+    "skill_id": "claude__skill__pcf_model_driven_apps",
     "name": "pcf-model-driven-apps",
     "skill_layer": "claude_skill",
     "title": "Pcf Model Driven Apps Skill",
@@ -54,21 +54,27 @@
     "rules": [
       {
         "description": "Before you start creating code components, make sure that you have installed all the [prerequisites](https://learn.microsoft.com/en-us/power-apps/deve",
-        "condition": "implementing code components",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Before you start creating code components,...",
+        "condition_expression": "implementing code components",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Whenever you update the code components and want to see the changes in runtime, you need to bump the version property in the manifest file.",
-        "condition": "update existing code components",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Whenever you update the code components...",
+        "condition_expression": "update existing code components",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Best Practice: It is recommended to always bump the version of the component whenever you make changes.",
-        "condition": "update existing code components",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Best Practice: It is recommended to...",
+        "condition_expression": "update existing code components",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -76,31 +82,36 @@
         "directive_type": "knowledge",
         "description": "To add code components to a column or a table in model-driven apps, see [Add code components to model-driven apps](https://learn.microsoft.com/en-us/p",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "To add code components to a..."
       },
       {
         "directive_type": "knowledge",
         "description": "![Add linear slider control](https://learn.microsoft.com/en-us/power-apps/maker/model-driven-apps/media/add-slider.png)",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "![Add linear slider control](https://learn.microsoft.com/en-us/power-apps/maker/"
       },
       {
         "directive_type": "knowledge",
         "description": "![Data Set Grid component](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/media/add-dataset-component.png)",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "![Data Set Grid component](https://learn.microsoft.com/en-us/power-apps/develope"
       },
       {
         "directive_type": "knowledge",
         "description": "[Power Apps component framework overview](https://learn.microsoft.com/en-us/power-apps/developer/component-framework/overview)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "[Power Apps component framework overview](https://learn.microsoft.com/en-us/powe"
       },
       {
         "directive_type": "knowledge",
         "description": "[Learn Power Apps component framework](https://learn.microsoft.com/en-us/training/paths/use-power-apps-component-framework)",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "[Learn Power Apps component framework](https://learn.microsoft.com/en-us/trainin"
       }
     ]
   }

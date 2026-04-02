@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__clojure",
+    "skill_id": "claude__skill__clojure",
     "name": "clojure",
     "skill_layer": "claude_skill",
     "title": "Clojure Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Always stay inside Calva's REPL instead of launching a second one from the terminal.",
-        "condition": "code evaluation tool usage",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Always stay inside Calva's REPL instead...",
+        "condition_expression": "code evaluation tool usage",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Do not over-escape JSON arguments when invoking REPL tools.",
-        "condition": "json strings in repl tool calls",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Do not over-escape JSON arguments when...",
+        "condition_expression": "json strings in repl tool calls",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Always align multi-line elements vertically in all data structures: vectors, maps, lists, sets, all code (since Clojure code is data). Misalignment ca",
-        "condition": "align data structure elements for bracket balancing",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Always align multi-line elements vertically in...",
+        "condition_expression": "align data structure elements for bracket balancing",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "(require '[clojure.repl.deps :refer [add-libs]])",
-        "condition": "repl dependency management",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "(require '[clojure.repl.deps :refer [add-libs]])",
+        "condition_expression": "repl dependency management",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Dynamic dependency loading requires Clojure 1.12 or later",
-        "condition": "repl dependency management",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Dynamic dependency loading requires Clojure 1.12...",
+        "condition_expression": "repl dependency management",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Never edit code files when the REPL is unavailable. When REPL evaluation returns errors indicating that the REPL is unavailable, stop immediately and ",
-        "condition": "repl availability discipline",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Never edit code files when the...",
+        "condition_expression": "repl availability discipline",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Interactive Programming requires a working REPL - You cannot verify behavior without evaluation",
-        "condition": "why this matters",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Interactive Programming requires a working REPL...",
+        "condition_expression": "why this matters",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When editing Clojure files, always use structural editing tools such as Insert Top Level Form, Replace Top Level Form, Create Clojure File, and Append",
-        "condition": "structural editing and repl-first habit",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "When editing Clojure files, always use...",
+        "condition_expression": "structural editing and repl-first habit",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "(require 'my.namespace :reload)",
-        "condition": "reloading namespaces",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "(require 'my.namespace :reload)",
+        "condition_expression": "reloading namespaces",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "(println \"Limit set to:\" limit))",
-        "condition": "indentation preferences",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "(println \"Limit set to:\" limit))",
+        "condition_expression": "indentation preferences",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Docstrings belong immediately after the function name and before the argument vector.",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Docstrings belong immediately after the function..."
       },
       {
         "directive_type": "knowledge",
         "description": ":city \"Oslo\"}  ; Misalignment → incorrect } placement",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "city \"Oslo\"} ; Misalignment → incorrect..."
       },
       {
         "directive_type": "knowledge",
         "description": ":city \"Oslo\"}  ; Proper alignment → correct } placement",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "city \"Oslo\"} ; Proper alignment →..."
       },
       {
         "directive_type": "knowledge",
         "description": "Critical: The bracket balancer relies on consistent indentation to determine structure.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Critical: The bracket balancer relies on..."
       },
       {
         "directive_type": "knowledge",
         "description": "(add-libs '{dk.ative/docjure {:mvn/version \"1.15.0\"}})",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "(add-libs '{dk.ative/docjure {:mvn/version \"1.15.0\"}})"
       },
       {
         "directive_type": "knowledge",
         "description": ";; => {:major 1, :minor 12, :incremental 1, :qualifier nil}",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": ";; => {:major 1, :minor 12,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Follow Clojure naming rules: namespaces in kebab-case, file paths in matching snake_case (e.g., `my.project.ns` → `my/project/ns.clj`).",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Follow Clojure naming rules: namespaces in..."
       },
       {
         "directive_type": "knowledge",
         "description": "Consistent indentation is crucial to help the bracket balancer.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Consistent indentation is crucial to help..."
       },
       {
         "directive_type": "knowledge",
         "description": "Keep the `and` and `or` arguments on separate lines:",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Keep the `and` and `or` arguments..."
       },
       {
         "directive_type": "preference",
         "description": "Prefer inline def debugging over println/console.log.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Prefer inline def debugging over println/console.log"
       }
     ]
   }

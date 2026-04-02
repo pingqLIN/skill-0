@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__pcf-fluent-modern-theming",
+    "skill_id": "claude__skill__pcf_fluent_modern_theming",
     "name": "pcf-fluent-modern-theming",
     "skill_layer": "claude_skill",
     "title": "Pcf Fluent Modern Theming Skill",
@@ -86,27 +86,35 @@
     "rules": [
       {
         "description": "Wrapping Fluent UI v9 controls as a component is the easiest way to utilize modern theming because the modern theme is automatically applied to these ",
-        "condition": "fluent ui v9 controls",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Wrapping Fluent UI v9 controls as...",
+        "condition_expression": "fluent ui v9 controls",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "When your component requires styling that is different from the current theme of the app, create your own `FluentProvider` and pass your own set of th",
-        "condition": "custom theme providers",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "When your component requires styling that...",
+        "condition_expression": "custom theme providers",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "A: Fluent v9 controls that rely on the React Portal need to be rewrapped in the theme provider to ensure styling is properly applied. You can use `Flu",
-        "condition": "q: some of my fluent ui v9 controls aren't getting styles",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "A: Fluent v9 controls that rely...",
+        "condition_expression": "q: some of my fluent ui v9 controls aren't getting styles",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "A: You can check if tokens are available: `context.fluentDesignLanguage?.tokenTheme`. Or in model-driven applications you can check app settings: `con",
-        "condition": "q: how can i check if modern theming is enabled?",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "A: You can check if tokens...",
+        "condition_expression": "q: how can i check if modern theming is enabled?",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -114,61 +122,71 @@
         "directive_type": "knowledge",
         "description": "[This topic is pre-release documentation and is subject to change.]",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "[This topic is pre-release documentation and..."
       },
       {
         "directive_type": "principle",
         "description": "Use modern theming, which is based on [Fluent UI React v9](https://react.fluentui.dev/), to style your component. This approach is recommended to get ",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Use modern theming, which is based..."
       },
       {
         "directive_type": "principle",
         "description": "This approach allows your component to use the same React and Fluent libraries as the platform, and therefore share the same React context that passes",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "This approach allows your component to..."
       },
       {
         "directive_type": "knowledge",
         "description": "<!-- Dependency on React controls & platform libraries -->",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "<!-- Dependency on React controls &..."
       },
       {
         "directive_type": "knowledge",
         "description": "<platform-library name=\"React\" version=\"16.14.0\" />",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "<platform-library name=\"React\" version=\"16.14.0\" />"
       },
       {
         "directive_type": "knowledge",
         "description": "<platform-library name=\"Fluent\" version=\"9.46.2\" />",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "<platform-library name=\"Fluent\" version=\"9.46.2\" />"
       },
       {
         "directive_type": "knowledge",
         "description": "return <ThemeProvider theme={theme}></ThemeProvider>;",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "return <ThemeProvider theme={theme}></ThemeProvider>;"
       },
       {
         "directive_type": "knowledge",
         "description": "Examples for each of these use cases are available at [Modern Theming API control](https://learn.microsoft.com/en-us/power-apps/developer/component-fr",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Examples for each of these use..."
       },
       {
         "directive_type": "knowledge",
         "description": "Option 2: Wrap your control inside `IdPrefixContext.Provider` and set your own `idPrefix` value. This prevents your component from getting theme token",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Option 2: Wrap your control inside..."
       },
       {
         "directive_type": "knowledge",
         "description": "<Label weight=\"semibold\">This label is not getting Modern Theming</Label>",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "<Label weight=\"semibold\">This label is not getting..."
       }
     ]
   }

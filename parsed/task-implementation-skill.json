@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__task-implementation",
+    "skill_id": "claude__skill__task_implementation",
     "name": "task-implementation",
     "skill_layer": "claude_skill",
     "title": "Task Implementation Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "You will implement your specific task plan located in `.copilot-tracking/plans/` and `.copilot-tracking/details/`. Your goal is to progressively and c",
-        "condition": "task plan implementation instructions",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "You will implement your specific task...",
+        "condition_expression": "task plan implementation instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Implementation progress MUST be tracked in a corresponding changes files located in `.copilot-tracking/changes/**`.",
-        "condition": "task plan implementation instructions",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Implementation progress MUST be tracked in...",
+        "condition_expression": "task plan implementation instructions",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "MUST complete before starting implementation:",
-        "condition": "1. plan analysis and preparation",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "MUST complete before starting implementation",
+        "condition_expression": "1. plan analysis and preparation",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "MANDATORY: Read and fully understand the complete plan file including scope, objectives, all phases, and every checklist item",
-        "condition": "1. plan analysis and preparation",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "MANDATORY: Read and fully understand the...",
+        "condition_expression": "1. plan analysis and preparation",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "MANDATORY: Read and fully understand the corresponding changes file completely - if any parts are missing from context, read the entire file back in u",
-        "condition": "1. plan analysis and preparation",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "MANDATORY: Read and fully understand the...",
+        "condition_expression": "1. plan analysis and preparation",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "MANDATORY: Identify all referenced files mentioned in the plan and examine them for context",
-        "condition": "1. plan analysis and preparation",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "MANDATORY: Identify all referenced files mentioned...",
+        "condition_expression": "1. plan analysis and preparation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "MANDATORY: Understand current project structure and conventions",
-        "condition": "1. plan analysis and preparation",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "MANDATORY: Understand current project structure and...",
+        "condition_expression": "1. plan analysis and preparation",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "2. MANDATORY before implementing any task:",
-        "condition": "2. systematic implementation process",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "2. MANDATORY before implementing any task",
+        "condition_expression": "2. systematic implementation process",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "ALWAYS ensure implementation is associated with a specific task from the plan",
-        "condition": "2. systematic implementation process",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "ALWAYS ensure implementation is associated with...",
+        "condition_expression": "2. systematic implementation process",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "ALWAYS read the entire details section for that task from the associated details markdown file in `.copilot-tracking/details/`**",
-        "condition": "2. systematic implementation process",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "ALWAYS read the entire details section...",
+        "condition_expression": "2. systematic implementation process",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "preference",
         "description": "Follow existing code patterns and conventions from the workspace",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Follow existing code patterns and conventions..."
       },
       {
         "directive_type": "knowledge",
         "description": "Include proper error handling, documentation, and follow best practices",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Include proper error handling, documentation, and..."
       },
       {
         "directive_type": "completion",
         "description": "If ALL tasks in a phase are complete `[x]`, mark the phase header as complete `[x]`",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "If ALL tasks in a phase..."
       },
       {
         "directive_type": "knowledge",
         "description": "Follow existing workspace patterns and conventions (check `copilot/` folder for standards)",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Follow existing workspace patterns and conventions..."
       },
       {
         "directive_type": "completion",
         "description": "Implement complete, working functionality that meets all task requirements",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Implement complete, working functionality that meets..."
       },
       {
         "directive_type": "knowledge",
         "description": "Include appropriate error handling and validation",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Include appropriate error handling and validation"
       },
       {
         "directive_type": "preference",
         "description": "Use consistent naming conventions and code structure from the workspace",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Use consistent naming conventions and code..."
       },
       {
         "directive_type": "knowledge",
         "description": "Add necessary documentation and comments for complex logic",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Add necessary documentation and comments for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Ensure compatibility with existing systems and dependencies",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Ensure compatibility with existing systems and..."
       },
       {
         "directive_type": "completion",
         "description": "All success criteria from the plan have been verified",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "All success criteria from the plan..."
       }
     ]
   }

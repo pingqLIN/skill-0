@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__memory-bank",
+    "skill_id": "claude__skill__memory_bank",
     "name": "memory-bank",
     "skill_layer": "claude_skill",
     "title": "Memory Bank Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Coding standards, domain knowledge, and preferences that AI should follow.",
-        "condition": "general",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Coding standards, domain knowledge, and preferences...",
+        "condition_expression": "general",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "You are an expert software engineer with a unique characteristic: my memory resets completely between sessions. This isn't a limitation - it's what dr",
-        "condition": "memory bank",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "You are an expert software engineer...",
+        "condition_expression": "memory bank",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "The Memory Bank consists of required core files and optional context files, all in Markdown format. Files build upon each other in a clear hierarchy:",
-        "condition": "memory bank structure",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "The Memory Bank consists of required...",
+        "condition_expression": "memory bank structure",
+        "condition_type": "type_check",
+        "returns": "boolean"
       },
       {
         "description": "Defines core requirements and goals",
-        "condition": "core files (required)",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Defines core requirements and goals",
+        "condition_expression": "core files (required)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "How it should work",
-        "condition": "core files (required)",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "How it should work",
+        "condition_expression": "core files (required)",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "ReadFiles --> CheckFiles{Files Complete?}",
-        "condition": "plan mode",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "ReadFiles --> CheckFiles{Files Complete?}",
+        "condition_expression": "plan mode",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "CheckFiles -->|No| Plan[Create Plan]",
-        "condition": "plan mode",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "CheckFiles -->|No| Plan[Create Plan]",
+        "condition_expression": "plan mode",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "CheckFiles -->|Yes| Verify[Verify Context]",
-        "condition": "plan mode",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "CheckFiles -->|Yes| Verify[Verify Context]",
+        "condition_expression": "plan mode",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Verify --> Strategy[Develop Strategy]",
-        "condition": "plan mode",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Verify --> Strategy[Develop Strategy]",
+        "condition_expression": "plan mode",
+        "condition_type": "threshold_check",
+        "returns": "boolean"
       },
       {
         "description": "Start[Start] --> Context[Check Memory Bank]",
-        "condition": "act mode",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Start[Start] --> Context[Check Memory Bank]",
+        "condition_expression": "act mode",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Includes task index file (`_index.md`) listing all tasks with their statuses",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Includes task index file (`_index.md`) listing..."
       },
       {
         "directive_type": "knowledge",
         "description": "Create additional files/folders within memory-bank/ when they help organize:",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Create additional files/folders within memory-bank/ when..."
       },
       {
         "directive_type": "knowledge",
         "description": "Complex feature documentation",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Complex feature documentation"
       },
       {
         "directive_type": "knowledge",
         "description": "Integration specifications",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Integration specifications"
       },
       {
         "directive_type": "knowledge",
         "description": "API documentation",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "API documentation"
       },
       {
         "directive_type": "knowledge",
         "description": "Testing strategies",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Testing strategies"
       },
       {
         "directive_type": "knowledge",
         "description": "Deployment procedures",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Deployment procedures"
       },
       {
         "directive_type": "knowledge",
         "description": "The `tasks/` folder contains individual markdown files for each task, along with an index file:",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "The `tasks/` folder contains individual markdown..."
       },
       {
         "directive_type": "knowledge",
         "description": "`tasks/_index.md` - Master list of all tasks with IDs, names, and current statuses",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "`tasks/_index.md` - Master list of all..."
       },
       {
         "directive_type": "knowledge",
         "description": "The `_index.md` file maintains a structured record of all tasks sorted by status:",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "The `_index.md` file maintains a structured..."
       }
     ]
   }

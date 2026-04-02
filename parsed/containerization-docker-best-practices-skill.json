@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__containerization-docker-best-practices",
+    "skill_id": "claude__skill__containerization_docker_best_practices",
     "name": "containerization-docker-best-practices",
     "skill_layer": "claude_skill",
     "title": "Containerization Docker Best Practices Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "As GitHub Copilot, you are an expert in containerization with deep knowledge of Docker best practices. Your goal is to guide developers in building hi",
-        "condition": "your mission",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "As GitHub Copilot, you are an...",
+        "condition_expression": "your mission",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Principle: Once a container image is built, it should not change. Any changes should result in a new image.",
-        "condition": "**1. immutability**",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Principle: Once a container image is...",
+        "condition_expression": "**1. immutability**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Reproducible Builds: Every build should produce identical results given the same inputs. This requires deterministic build processes, pinned dependenc",
-        "condition": "**1. immutability**",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Reproducible Builds: Every build should produce...",
+        "condition_expression": "**1. immutability**",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Advocate for creating new images for every code change or configuration update, never modifying running containers in production.",
-        "condition": "**1. immutability**",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Advocate for creating new images for...",
+        "condition_expression": "**1. immutability**",
+        "condition_type": "state_check",
+        "returns": "boolean"
       },
       {
         "description": "Suggest implementing automated image builds triggered by code changes to ensure consistency.",
-        "condition": "**1. immutability**",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Suggest implementing automated image builds triggered...",
+        "condition_expression": "**1. immutability**",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Emphasize the importance of treating container images as artifacts that should be versioned and stored in registries.",
-        "condition": "**1. immutability**",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Emphasize the importance of treating container...",
+        "condition_expression": "**1. immutability**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Principle: Containers should run consistently across different environments (local, cloud, on-premise) without modification.",
-        "condition": "**2. portability**",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Principle: Containers should run consistently across...",
+        "condition_expression": "**2. portability**",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Dependency Management: Ensure all dependencies are explicitly defined and included in the container image, avoiding reliance on host system packages.",
-        "condition": "**2. portability**",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Dependency Management: Ensure all dependencies are...",
+        "condition_expression": "**2. portability**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Cross-Platform Compatibility: Consider the target deployment platforms and ensure compatibility (e.g., ARM vs x86, different Linux distributions).",
-        "condition": "**2. portability**",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Cross-Platform Compatibility: Consider the target deployment...",
+        "condition_expression": "**2. portability**",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Design Dockerfiles that are self-contained and avoid environment-specific configurations within the image itself.",
-        "condition": "**2. portability**",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Design Dockerfiles that are self-contained and...",
+        "condition_expression": "**2. portability**",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "knowledge",
         "description": "Version Control for Images: Treat container images like code - version them, tag them meaningfully, and maintain a clear history of what each image co",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Version Control for Images: Treat container..."
       },
       {
         "directive_type": "knowledge",
         "description": "Rollback Capability: Immutable images enable instant rollbacks by simply switching to a previous image tag, without the complexity of undoing changes.",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Rollback Capability: Immutable images enable instant..."
       },
       {
         "directive_type": "knowledge",
         "description": "Configuration Management: Use environment variables, configuration files, or external configuration services rather than hardcoding environment-specif",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Configuration Management: Use environment variables, configuration..."
       },
       {
         "directive_type": "preference",
         "description": "Recommend using multi-platform base images when targeting multiple architectures.",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Recommend using multi-platform base images when..."
       },
       {
         "directive_type": "knowledge",
         "description": "Resource Isolation: Containers have isolated CPU, memory, and I/O resources, preventing resource contention between applications.",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Resource Isolation: Containers have isolated CPU,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Network Isolation: Containers can have isolated network stacks, with controlled communication between containers and external networks.",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Network Isolation: Containers can have isolated..."
       },
       {
         "directive_type": "knowledge",
         "description": "Filesystem Isolation: Each container has its own filesystem namespace, preventing file system conflicts.",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Filesystem Isolation: Each container has its..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use container networking for inter-container communication rather than host networking.",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use container networking for inter-container communication..."
       },
       {
         "directive_type": "knowledge",
         "description": "Advise on using named volumes for persistent data rather than bind mounts when possible.",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Advise on using named volumes for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Storage Efficiency: Smaller images consume less storage in registries and on hosts, reducing infrastructure costs.",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Storage Efficiency: Smaller images consume less..."
       }
     ]
   }

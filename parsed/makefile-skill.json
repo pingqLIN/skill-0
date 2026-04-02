@@ -1,7 +1,7 @@
 {
   "$schema": "../schema/skill-decomposition.schema.json",
   "meta": {
-    "skill_id": "claude__makefile",
+    "skill_id": "claude__skill__makefile",
     "name": "makefile",
     "skill_layer": "claude_skill",
     "title": "Makefile Skill",
@@ -142,63 +142,83 @@
     "rules": [
       {
         "description": "Use `.PHONY` to declare targets that don't represent files",
-        "condition": "file structure",
-        "output": "proceed_or_halt",
-        "id": "r_001"
+        "id": "r_001",
+        "name": "Use `.PHONY` to declare targets that...",
+        "condition_expression": "file structure",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Use variables to avoid duplication and improve maintainability",
-        "condition": "variables and substitution",
-        "output": "proceed_or_halt",
-        "id": "r_002"
+        "id": "r_002",
+        "name": "Use variables to avoid duplication and...",
+        "condition_expression": "variables and substitution",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Use order-only prerequisites (after `|`) for directories and dependencies that shouldn't trigger rebuilds",
-        "condition": "rules and prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_003"
+        "id": "r_003",
+        "name": "Use order-only prerequisites (after `|`) for...",
+        "condition_expression": "rules and prerequisites",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Include all actual dependencies to ensure correct rebuilds",
-        "condition": "rules and prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_004"
+        "id": "r_004",
+        "name": "Include all actual dependencies to ensure...",
+        "condition_expression": "rules and prerequisites",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Avoid circular dependencies between targets",
-        "condition": "rules and prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_005"
+        "id": "r_005",
+        "name": "Avoid circular dependencies between targets",
+        "condition_expression": "rules and prerequisites",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Combine related commands with `&&` or `;` on the same line when they must execute together",
-        "condition": "recipes and commands",
-        "output": "proceed_or_halt",
-        "id": "r_006"
+        "id": "r_006",
+        "name": "Combine related commands with `&&` or...",
+        "condition_expression": "recipes and commands",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Always declare phony targets with `.PHONY` to avoid conflicts with files of the same name",
-        "condition": "phony targets",
-        "output": "proceed_or_halt",
-        "id": "r_007"
+        "id": "r_007",
+        "name": "Always declare phony targets with `.PHONY`...",
+        "condition_expression": "phony targets",
+        "condition_type": "consistency_check",
+        "returns": "boolean"
       },
       {
         "description": "Avoid trailing whitespace after backslashes",
-        "condition": "splitting long lines",
-        "output": "proceed_or_halt",
-        "id": "r_008"
+        "id": "r_008",
+        "name": "Avoid trailing whitespace after backslashes",
+        "condition_expression": "splitting long lines",
+        "condition_type": "validation",
+        "returns": "boolean"
       },
       {
         "description": "Include generated dependency files with `-include $(deps)` to avoid errors if they don't exist",
-        "condition": "automatic prerequisites",
-        "output": "proceed_or_halt",
-        "id": "r_009"
+        "id": "r_009",
+        "name": "Include generated dependency files with `-include...",
+        "condition_expression": "automatic prerequisites",
+        "condition_type": "existence_check",
+        "returns": "boolean"
       },
       {
         "description": "Validate required variables and tools at the beginning of the makefile",
-        "condition": "error handling and debugging",
-        "output": "proceed_or_halt",
-        "id": "r_010"
+        "id": "r_010",
+        "name": "Validate required variables and tools at...",
+        "condition_expression": "error handling and debugging",
+        "condition_type": "validation",
+        "returns": "boolean"
       }
     ],
     "directives": [
@@ -206,61 +226,71 @@
         "directive_type": "principle",
         "description": "Instructions for writing clean, maintainable, and portable GNU Make Makefiles. These instructions are based on the [GNU Make manual](https://www.gnu.o",
         "decomposable": false,
-        "id": "d_001"
+        "id": "d_001",
+        "name": "Instructions for writing clean, maintainable, and..."
       },
       {
         "directive_type": "preference",
         "description": "Write clear and maintainable makefiles that follow GNU Make conventions",
         "decomposable": false,
-        "id": "d_002"
+        "id": "d_002",
+        "name": "Write clear and maintainable makefiles that..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use descriptive target names that clearly indicate their purpose",
         "decomposable": false,
-        "id": "d_003"
+        "id": "d_003",
+        "name": "Use descriptive target names that clearly..."
       },
       {
         "directive_type": "preference",
         "description": "Keep the default goal (first target) as the most common build operation",
         "decomposable": false,
-        "id": "d_004"
+        "id": "d_004",
+        "name": "Keep the default goal (first target)..."
       },
       {
         "directive_type": "knowledge",
         "description": "Prioritize readability over brevity when writing rules and recipes",
         "decomposable": false,
-        "id": "d_005"
+        "id": "d_005",
+        "name": "Prioritize readability over brevity when writing..."
       },
       {
         "directive_type": "knowledge",
         "description": "Add comments to explain complex rules, variables, or non-obvious behavior",
         "decomposable": false,
-        "id": "d_006"
+        "id": "d_006",
+        "name": "Add comments to explain complex rules,..."
       },
       {
         "directive_type": "preference",
         "description": "Name your makefile `Makefile` (recommended for visibility) or `makefile`",
         "decomposable": false,
-        "id": "d_007"
+        "id": "d_007",
+        "name": "Name your makefile `Makefile` (recommended for..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use `GNUmakefile` only for GNU Make-specific features incompatible with other make implementations",
         "decomposable": false,
-        "id": "d_008"
+        "id": "d_008",
+        "name": "Use `GNUmakefile` only for GNU Make-specific..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use standard variable names: `objects`, `OBJECTS`, `objs`, `OBJS`, `obj`, or `OBJ` for object file lists",
         "decomposable": false,
-        "id": "d_009"
+        "id": "d_009",
+        "name": "Use standard variable names: `objects`, `OBJECTS`,..."
       },
       {
         "directive_type": "knowledge",
         "description": "Use uppercase for built-in variable names (e.g., `CC`, `CFLAGS`, `LDFLAGS`)",
         "decomposable": false,
-        "id": "d_010"
+        "id": "d_010",
+        "name": "Use uppercase for built-in variable names..."
       }
     ]
   }
