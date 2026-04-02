@@ -8,6 +8,7 @@ import { SkillDetail } from './SkillDetail';
 const mockNavigate = vi.fn();
 const mockEnqueueScanMutateAsync = vi.fn();
 const mockEnqueueTestMutateAsync = vi.fn();
+const mockRetryActionJobItemMutateAsync = vi.fn();
 let currentActionJob: Record<string, unknown> | undefined;
 let currentActionJobItems: Array<Record<string, unknown>> = [];
 
@@ -94,6 +95,10 @@ vi.mock('@/api/skills', () => ({
     mutateAsync: mockEnqueueTestMutateAsync,
     isPending: false,
   }),
+  useRetryActionJobItem: () => ({
+    mutateAsync: mockRetryActionJobItemMutateAsync,
+    isPending: false,
+  }),
   useActionJob: () => ({ data: currentActionJob }),
   useActionJobItems: () => ({ data: currentActionJobItems }),
 }));
@@ -120,6 +125,7 @@ describe('SkillDetail async action jobs', () => {
     mockNavigate.mockReset();
     mockEnqueueScanMutateAsync.mockReset();
     mockEnqueueTestMutateAsync.mockReset();
+    mockRetryActionJobItemMutateAsync.mockReset();
     currentActionJob = undefined;
     currentActionJobItems = [];
     mockEnqueueScanMutateAsync.mockImplementation(async () => {
@@ -167,6 +173,50 @@ describe('SkillDetail async action jobs', () => {
       return { job_id: 'job_scan_001' };
     });
     mockEnqueueTestMutateAsync.mockResolvedValue({ job_id: 'job_test_001' });
+    mockRetryActionJobItemMutateAsync.mockImplementation(async () => {
+      currentActionJob = {
+        job_id: 'job_scan_retry_001',
+        job_type: 'scan_batch',
+        status: 'queued',
+        requested_by: 'testuser',
+        selection_mode: 'retry_item',
+        queued_items: 1,
+        max_attempts: 2,
+        queued_at: '2026-04-02T12:05:00Z',
+        started_at: null,
+        completed_at: null,
+        error_code: null,
+        error_message: null,
+        summary: {
+          total: 1,
+          queued: 1,
+          running: 0,
+          succeeded: 0,
+          failed: 0,
+          retrying: 0,
+          skipped: 0,
+        },
+      };
+      currentActionJobItems = [
+        {
+          item_id: 'job_scan_retry_001_item_sk_001_02',
+          job_id: 'job_scan_retry_001',
+          skill_id: 'sk_001',
+          target_revision_id: 'rev_001',
+          action_type: 'scan',
+          status: 'queued',
+          attempt_number: 2,
+          max_attempts: 2,
+          started_at: null,
+          completed_at: null,
+          result: null,
+          error_code: null,
+          error_message: null,
+          retry_of_item_id: 'job_scan_001_item_sk_001_01',
+        },
+      ];
+      return { job_id: 'job_scan_retry_001' };
+    });
   });
 
   it('enqueues a scan job from the detail page', async () => {
@@ -230,5 +280,61 @@ describe('SkillDetail async action jobs', () => {
     expect(screen.getByText('job_scan_001')).toBeInTheDocument();
     expect(screen.getAllByText('queued')).toHaveLength(2);
     expect(screen.getByText('1/2')).toBeInTheDocument();
+  });
+
+  it('retries a retriable failed item from the detail page', async () => {
+    currentActionJob = {
+      job_id: 'job_scan_001',
+      job_type: 'scan_batch',
+      status: 'failed',
+      requested_by: 'testuser',
+      selection_mode: 'explicit',
+      queued_items: 1,
+      max_attempts: 2,
+      queued_at: '2026-04-02T12:00:00Z',
+      started_at: '2026-04-02T12:00:01Z',
+      completed_at: '2026-04-02T12:00:02Z',
+      error_code: null,
+      error_message: null,
+      summary: {
+        total: 1,
+        queued: 0,
+        running: 0,
+        succeeded: 0,
+        failed: 1,
+        retrying: 0,
+        skipped: 0,
+      },
+    };
+    currentActionJobItems = [
+      {
+        item_id: 'job_scan_001_item_sk_001_01',
+        job_id: 'job_scan_001',
+        skill_id: 'sk_001',
+        target_revision_id: 'rev_001',
+        action_type: 'scan',
+        status: 'failed',
+        attempt_number: 1,
+        max_attempts: 2,
+        started_at: '2026-04-02T12:00:01Z',
+        completed_at: '2026-04-02T12:00:02Z',
+        result: null,
+        error_code: 'SCAN_RUNTIME_ERROR',
+        error_message: 'scanner crash',
+        retry_of_item_id: null,
+      },
+    ];
+
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
+    await user.click(screen.getByRole('button', { name: 'Retry failed item' }));
+
+    expect(mockRetryActionJobItemMutateAsync).toHaveBeenCalledWith({
+      jobId: 'job_scan_001',
+      itemId: 'job_scan_001_item_sk_001_01',
+    });
+    expect(await screen.findByText('Scan retry job queued')).toBeInTheDocument();
   });
 });
