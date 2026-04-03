@@ -754,12 +754,14 @@ class GovernanceDB:
                     result_json TEXT,
                     error_code TEXT,
                     error_message TEXT,
+                    claimed_by TEXT,
                     retry_of_item_id TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
                     FOREIGN KEY (job_id) REFERENCES action_jobs(job_id)
                 )
             """)
+            self._ensure_column(conn, "action_job_items", "claimed_by TEXT")
 
             # Create indexes
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_skills_name ON skills(name)")
@@ -1416,9 +1418,9 @@ class GovernanceDB:
                     INSERT INTO action_job_items (
                         item_id, job_id, skill_id, target_revision_id, action_type,
                         status, attempt_number, max_attempts, started_at, completed_at,
-                        result_json, error_code, error_message, retry_of_item_id,
+                        result_json, error_code, error_message, claimed_by, retry_of_item_id,
                         created_at, updated_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         item["item_id"],
@@ -1434,6 +1436,7 @@ class GovernanceDB:
                         json.dumps(item.get("result")) if item.get("result") is not None else None,
                         item.get("error_code"),
                         item.get("error_message"),
+                        item.get("claimed_by"),
                         item.get("retry_of_item_id"),
                         item.get("created_at", now),
                         item.get("updated_at", now),
@@ -1521,6 +1524,7 @@ class GovernanceDB:
             "result",
             "error_code",
             "error_message",
+            "claimed_by",
         }
         invalid = sorted(set(updates) - allowed)
         if invalid:
@@ -1540,6 +1544,52 @@ class GovernanceDB:
             values = list(db_updates.values()) + [item_id]
             cursor.execute(f"UPDATE action_job_items SET {set_clause} WHERE item_id = ?", values)
             return cursor.rowcount > 0
+
+    def claim_next_action_job_item(self, job_id: str, worker_id: str) -> Optional[Dict[str, Any]]:
+        """Atomically claim the next queued/retrying item for a worker."""
+        while True:
+            with self.connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(
+                    """
+                    SELECT item_id FROM action_job_items
+                    WHERE job_id = ? AND status IN ('queued', 'retrying')
+                    ORDER BY created_at ASC, item_id ASC
+                    LIMIT 1
+                    """,
+                    (job_id,),
+                )
+                row = cursor.fetchone()
+                if not row:
+                    return None
+
+                started_at = datetime.now().isoformat() + "Z"
+                updated_at = datetime.now().isoformat()
+                cursor.execute(
+                    """
+                    UPDATE action_job_items
+                    SET status = 'running',
+                        started_at = ?,
+                        completed_at = NULL,
+                        result_json = NULL,
+                        error_code = NULL,
+                        error_message = NULL,
+                        claimed_by = ?,
+                        updated_at = ?
+                    WHERE item_id = ? AND status IN ('queued', 'retrying')
+                    """,
+                    (started_at, worker_id, updated_at, row["item_id"]),
+                )
+                if cursor.rowcount != 1:
+                    continue
+
+                cursor.execute("SELECT * FROM action_job_items WHERE item_id = ?", (row["item_id"],))
+                claimed = cursor.fetchone()
+                if not claimed:
+                    return None
+                item = dict(claimed)
+                item["result"] = self._decode_json_field(item.pop("result_json", None), None)
+                return item
 
     # ============ Approval Workflow ============
 

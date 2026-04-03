@@ -156,6 +156,12 @@ cd skill-0-dashboard/apps/web && npm run build
    - action job API 不再依賴 process-local memory 作為唯一真實狀態
    - 最小驗證：`.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests/test_governance.py skill-0-dashboard/apps/api/tests/test_skills.py -q`
 
+11. `CP-02` worker claim discipline 已於 `2026-04-03` 補齊：
+   - runner 改為循環從 DB 原子 claim `queued/retrying` items，而不是先把整批 active items 載入記憶體
+   - 當其他 worker 仍持有 `running` item 時，job 不會被過早 finalize 成 terminal status
+   - 這一層已能防止多個 active API instance 對同一 item 重複執行；更進一步的 lease/heartbeat/cancel 仍屬 hardening
+   - 最小驗證：`.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests/test_governance.py -q`
+
 ---
 
 ## 5. 近期排程建議（可直接執行）
@@ -171,7 +177,7 @@ cd skill-0-dashboard/apps/web && npm run build
 
 ### Sprint S1（1-2 天）
 
-1. 推進 CP-02 下一階段：補上 job telemetry、取消語義與更清楚的 worker ownership 邊界。  
+1. 推進 CP-02 下一階段：補上 job telemetry、取消語義，以及更完整的 lease / heartbeat policy。  
 2. 擴大 async UI 覆蓋面：評估是否將 batch job 狀態延伸到更多治理入口，而不重複造輪子。  
 3. 持續收斂 CP-05：補齊其他歷史規劃/評估文件的 status note 與權威入口對齊。  
 
