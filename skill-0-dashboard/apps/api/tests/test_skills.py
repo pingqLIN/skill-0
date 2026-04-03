@@ -230,6 +230,19 @@ def test_retry_action_job_failures(client, auth_header, mock_service):
     )
 
 
+def test_cancel_action_job(client, auth_header, mock_service):
+    response = client.post(
+        "/api/skills/action-jobs/job_scan_20260402_001/cancel",
+        headers=auth_header,
+    )
+    assert response.status_code == 200
+    assert response.json()["status"] == "queued"
+    mock_service.cancel_action_job.assert_called_once_with(
+        job_id="job_scan_20260402_001",
+        requested_by="testuser",
+    )
+
+
 def test_retry_action_job_item(client, auth_header, mock_service):
     response = client.post(
         "/api/skills/action-jobs/job_scan_20260402_001/items/job_scan_20260402_001_item_sk_001_01/retry",

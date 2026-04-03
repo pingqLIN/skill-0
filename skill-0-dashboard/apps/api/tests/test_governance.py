@@ -578,6 +578,70 @@ class TestGovernanceServiceActionJobs:
         assert summary["status"] == "running"
         assert summary["completed_at"] is None
 
+    def test_cancel_action_job_marks_pending_items_cancelled(self, tmp_path, monkeypatch):
+        svc = self._make_service(tmp_path, monkeypatch)
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_cancel_a", "skill_cancel_b"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+
+        cancelled = svc.cancel_action_job(
+            job_id=job["job_id"],
+            requested_by="reviewer",
+        )
+        items = svc.get_action_job_items(job["job_id"])
+
+        assert cancelled["status"] == "cancelled"
+        assert cancelled["error_code"] == "JOB_CANCELLED"
+        assert all(item["status"] == "cancelled" for item in items)
+        assert svc.db.claim_next_action_job_item(job["job_id"], "worker-a", lease_seconds=60) is None
+
+    def test_cancel_action_job_stops_new_claims_but_preserves_running_item(self, tmp_path, monkeypatch):
+        svc = self._make_service(tmp_path, monkeypatch)
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_running", "skill_waiting"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+        running_item = svc.db.claim_next_action_job_item(job["job_id"], "worker-a", lease_seconds=60)
+
+        cancelled = svc.cancel_action_job(
+            job_id=job["job_id"],
+            requested_by="reviewer",
+        )
+        items_after_cancel = svc.get_action_job_items(job["job_id"])
+
+        assert running_item is not None
+        assert cancelled["status"] == "cancelled"
+        assert svc.db.claim_next_action_job_item(job["job_id"], "worker-b", lease_seconds=60) is None
+        assert next(item for item in items_after_cancel if item["skill_id"] == "skill_waiting")["status"] == "cancelled"
+        assert next(item for item in items_after_cancel if item["skill_id"] == "skill_running")["status"] == "running"
+
+        svc.db.update_action_job_item(
+            running_item["item_id"],
+            status="succeeded",
+            completed_at="2026-04-03T02:00:05Z",
+            result={"status": "success", "skill_id": "skill_running"},
+            error_code=None,
+            error_message=None,
+            claimed_by=None,
+            lease_expires_at=None,
+        )
+
+        finalized = svc._finalize_action_job(job["job_id"])
+        assert finalized is not None
+        assert finalized["status"] == "cancelled"
+        assert finalized["completed_at"] is not None
+
     def test_recovers_only_expired_running_jobs_from_database(self, tmp_path, monkeypatch):
         from apps.api.services.governance import GovernanceService  # noqa
 

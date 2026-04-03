@@ -40,7 +40,7 @@ JobStatus = Literal[
     "failed",
     "cancelled",
 ]
-ItemStatus = Literal["queued", "running", "succeeded", "failed", "skipped", "retrying"]
+ItemStatus = Literal["queued", "running", "succeeded", "failed", "skipped", "retrying", "cancelled"]
 SelectionMode = Literal["explicit", "pending", "retry_failures", "retry_item"]
 
 
@@ -62,6 +62,7 @@ class ActionJobSummaryCounts(BaseModel):
     failed: int = 0
     retrying: int = 0
     skipped: int = 0
+    cancelled: int = 0
 
 
 class ActionJobSummary(BaseModel):

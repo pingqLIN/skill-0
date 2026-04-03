@@ -96,6 +96,7 @@ class GovernanceService:
             "failed": 0,
             "retrying": 0,
             "skipped": 0,
+            "cancelled": 0,
         }
         for item in items:
             status = item.get("status")
@@ -202,9 +203,24 @@ class GovernanceService:
 
     def _recover_incomplete_action_jobs(self) -> None:
         self._ensure_action_job_state()
-        recoverable_jobs = self.db.list_action_jobs(statuses=["queued", "running"], limit=500)
+        recoverable_jobs = self.db.list_action_jobs(statuses=["queued", "running", "cancelled"], limit=500)
         for job in recoverable_jobs:
             items = self.db.get_action_job_items(job["job_id"])
+            if job["status"] == "cancelled":
+                for item in items:
+                    if item["status"] in {"queued", "retrying", "running"}:
+                        self.db.update_action_job_item(
+                            item["item_id"],
+                            status="cancelled",
+                            completed_at=self._utcnow_iso(),
+                            error_code="JOB_CANCELLED",
+                            error_message="Action job cancelled",
+                            claimed_by=None,
+                            lease_expires_at=None,
+                        )
+                self._finalize_action_job(job["job_id"])
+                continue
+
             stale_running_items = [
                 item for item in items
                 if item["status"] == "running" and self._is_item_lease_expired(item)
@@ -259,9 +275,21 @@ class GovernanceService:
         items = items if items is not None else self.db.get_action_job_items(job_id)
         if items is None:
             return None
+        job = self.db.get_action_job(job_id)
+        if not job:
+            return None
 
         summary = self._compute_job_summary(items)
         if summary["queued"] > 0 or summary["running"] > 0 or summary["retrying"] > 0:
+            return self._serialize_job(job_id)
+        if job.get("status") == "cancelled":
+            self.db.update_action_job(
+                job_id,
+                status="cancelled",
+                completed_at=job.get("completed_at") or self._utcnow_iso(),
+                error_code=job.get("error_code") or "JOB_CANCELLED",
+                error_message=job.get("error_message") or "Action job cancelled",
+            )
             return self._serialize_job(job_id)
         failed_items = [item for item in items if item.get("status") == "failed"]
         if summary["failed"] == 0:
@@ -354,6 +382,9 @@ class GovernanceService:
         job = self.db.get_action_job(job_id)
         if not job:
             return
+        if job.get("status") == "cancelled":
+            self._finalize_action_job(job_id)
+            return
 
         started_at = job.get("started_at") or self._utcnow_iso()
         self.db.update_action_job(
@@ -401,6 +432,37 @@ class GovernanceService:
     def get_action_job_items(self, job_id: str) -> Optional[List[Dict[str, Any]]]:
         """Fetch serialized items for an async action job."""
         return self._serialize_job_items(job_id)
+
+    def cancel_action_job(self, *, job_id: str, requested_by: str) -> Dict[str, Any]:
+        """Best-effort cancellation for a queued/running async action job."""
+        job = self.db.get_action_job(job_id)
+        if not job:
+            raise KeyError(job_id)
+        if job.get("status") in {"completed", "completed_with_failures", "failed", "cancelled"}:
+            raise ValueError("Only queued or running action jobs can be cancelled")
+
+        cancelled_at = self._utcnow_iso()
+        items = self.db.get_action_job_items(job_id)
+        has_running_items = False
+
+        for item in items:
+            if item.get("status") == "running":
+                has_running_items = True
+
+        self.db.cancel_pending_action_job_items(
+            job_id,
+            cancelled_at=cancelled_at,
+            error_message=f"Action job cancelled by {requested_by}",
+        )
+
+        self.db.update_action_job(
+            job_id,
+            status="cancelled",
+            completed_at=None if has_running_items else cancelled_at,
+            error_code="JOB_CANCELLED",
+            error_message=f"Action job cancelled by {requested_by}",
+        )
+        return self._finalize_action_job(job_id) or {}
 
     def retry_action_job_failures(self, *, job_id: str, requested_by: str) -> Dict[str, Any]:
         """Create a new async job for all retriable failed items from a prior job."""

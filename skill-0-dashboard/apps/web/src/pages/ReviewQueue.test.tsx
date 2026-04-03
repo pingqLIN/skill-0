@@ -11,6 +11,7 @@ const mockRejectMutate = vi.fn();
 const mockRejectMutateAsync = vi.fn();
 const mockEnqueueScanMutateAsync = vi.fn();
 const mockEnqueueTestMutateAsync = vi.fn();
+const mockCancelJobMutateAsync = vi.fn();
 const mockRetryFailuresMutateAsync = vi.fn();
 
 let currentActionJob: Record<string, unknown> | undefined;
@@ -85,6 +86,10 @@ vi.mock('@/api/skills', () => ({
     mutateAsync: mockEnqueueTestMutateAsync,
     isPending: false,
   }),
+  useCancelActionJob: () => ({
+    mutateAsync: mockCancelJobMutateAsync,
+    isPending: false,
+  }),
   useRetryActionJobFailures: () => ({
     mutateAsync: mockRetryFailuresMutateAsync,
     isPending: false,
@@ -118,6 +123,7 @@ describe('ReviewQueue async action jobs', () => {
     mockRejectMutateAsync.mockReset();
     mockEnqueueScanMutateAsync.mockReset();
     mockEnqueueTestMutateAsync.mockReset();
+    mockCancelJobMutateAsync.mockReset();
     mockRetryFailuresMutateAsync.mockReset();
     currentActionJob = undefined;
     currentActionJobItems = [];
@@ -188,6 +194,40 @@ describe('ReviewQueue async action jobs', () => {
     });
 
     mockEnqueueTestMutateAsync.mockResolvedValue({ job_id: 'job_test_001' });
+    mockCancelJobMutateAsync.mockImplementation(async ({ jobId }: { jobId: string }) => {
+      currentActionJob = {
+        ...(currentActionJob ?? {}),
+        job_id: jobId,
+        job_type: 'scan_batch',
+        status: 'cancelled',
+        requested_by: 'tester',
+        selection_mode: 'explicit',
+        queued_items: 2,
+        max_attempts: 2,
+        queued_at: '2026-04-03T00:00:00Z',
+        started_at: '2026-04-03T00:00:05Z',
+        completed_at: '2026-04-03T00:00:10Z',
+        error_code: 'JOB_CANCELLED',
+        error_message: 'Action job cancelled by tester',
+        summary: {
+          total: 2,
+          queued: 0,
+          running: 0,
+          succeeded: 0,
+          failed: 0,
+          retrying: 0,
+          skipped: 0,
+          cancelled: 2,
+        },
+      };
+      currentActionJobItems = currentActionJobItems.map((item) => ({
+        ...item,
+        status: item.status === 'running' ? 'cancelled' : item.status,
+        error_code: 'JOB_CANCELLED',
+        error_message: 'Action job cancelled by tester',
+      }));
+      return currentActionJob;
+    });
     mockRetryFailuresMutateAsync.mockImplementation(async () => {
       currentActionJob = {
         job_id: 'job_scan_retry_001',
@@ -383,5 +423,64 @@ describe('ReviewQueue async action jobs', () => {
 
     expect(mockRetryFailuresMutateAsync).toHaveBeenCalledWith({ jobId: 'job_scan_001' });
     expect(await screen.findByText('Scan retry job queued')).toBeInTheDocument();
+  });
+
+  it('cancels an active batch job from the review queue', async () => {
+    mockEnqueueScanMutateAsync.mockImplementationOnce(async () => {
+      currentActionJob = {
+        job_id: 'job_scan_001',
+        job_type: 'scan_batch',
+        status: 'running',
+        requested_by: 'tester',
+        selection_mode: 'explicit',
+        queued_items: 2,
+        max_attempts: 2,
+        queued_at: '2026-04-03T00:00:00Z',
+        started_at: '2026-04-03T00:00:05Z',
+        completed_at: null,
+        error_code: null,
+        error_message: null,
+        summary: {
+          total: 2,
+          queued: 1,
+          running: 1,
+          succeeded: 0,
+          failed: 0,
+          retrying: 0,
+          skipped: 0,
+          cancelled: 0,
+        },
+      };
+      currentActionJobItems = [
+        {
+          item_id: 'job_scan_001_item_sk_001_01',
+          job_id: 'job_scan_001',
+          skill_id: 'sk_001',
+          target_revision_id: 'rev_001',
+          action_type: 'scan',
+          status: 'running',
+          attempt_number: 1,
+          max_attempts: 2,
+          started_at: '2026-04-03T00:00:05Z',
+          completed_at: null,
+          claimed_by: 'worker-a',
+          lease_expires_at: '2026-04-03T00:01:05Z',
+          result: null,
+          error_code: null,
+          error_message: null,
+          retry_of_item_id: null,
+        },
+      ];
+      return { job_id: 'job_scan_001' };
+    });
+
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole('button', { name: 'Scan Pending (2)' }));
+    await user.click(screen.getByRole('button', { name: 'Cancel job' }));
+
+    expect(mockCancelJobMutateAsync).toHaveBeenCalledWith({ jobId: 'job_scan_001' });
+    expect(await screen.findByText('Scan job cancelled')).toBeInTheDocument();
   });
 });

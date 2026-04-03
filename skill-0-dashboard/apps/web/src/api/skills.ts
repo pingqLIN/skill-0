@@ -182,3 +182,17 @@ export function useRetryActionJobFailures() {
     },
   });
 }
+
+export function useCancelActionJob() {
+  const queryClient = useQueryClient();
+  return useMutation<ActionJobSummary, Error, { jobId: string }>({
+    mutationFn: async ({ jobId }) => {
+      const { data } = await api.post(`/api/skills/action-jobs/${jobId}/cancel`);
+      return data;
+    },
+    onSuccess: (data, { jobId }) => {
+      queryClient.setQueryData(['action-job', jobId], data);
+      queryClient.invalidateQueries({ queryKey: ['action-job-items', jobId] });
+    },
+  });
+}

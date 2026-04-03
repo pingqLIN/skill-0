@@ -222,6 +222,7 @@ def mock_service():
             "failed": 0,
             "retrying": 0,
             "skipped": 0,
+            "cancelled": 0,
         },
     }
     service.get_action_job.return_value = service.enqueue_action_job.return_value
@@ -246,6 +247,7 @@ def mock_service():
         }
     ]
     service.retry_action_job_failures.return_value = service.enqueue_action_job.return_value
+    service.cancel_action_job.return_value = service.enqueue_action_job.return_value
     service.retry_action_job_item.return_value = service.enqueue_action_job.return_value
 
     # --- reviews ---

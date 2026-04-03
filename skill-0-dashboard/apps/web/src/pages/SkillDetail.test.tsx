@@ -8,6 +8,7 @@ import { SkillDetail } from './SkillDetail';
 const mockNavigate = vi.fn();
 const mockEnqueueScanMutateAsync = vi.fn();
 const mockEnqueueTestMutateAsync = vi.fn();
+const mockCancelJobMutateAsync = vi.fn();
 const mockRetryActionJobItemMutateAsync = vi.fn();
 let currentActionJob: Record<string, unknown> | undefined;
 let currentActionJobItems: Array<Record<string, unknown>> = [];
@@ -95,6 +96,10 @@ vi.mock('@/api/skills', () => ({
     mutateAsync: mockEnqueueTestMutateAsync,
     isPending: false,
   }),
+  useCancelActionJob: () => ({
+    mutateAsync: mockCancelJobMutateAsync,
+    isPending: false,
+  }),
   useRetryActionJobItem: () => ({
     mutateAsync: mockRetryActionJobItemMutateAsync,
     isPending: false,
@@ -125,6 +130,7 @@ describe('SkillDetail async action jobs', () => {
     mockNavigate.mockReset();
     mockEnqueueScanMutateAsync.mockReset();
     mockEnqueueTestMutateAsync.mockReset();
+    mockCancelJobMutateAsync.mockReset();
     mockRetryActionJobItemMutateAsync.mockReset();
     currentActionJob = undefined;
     currentActionJobItems = [];
@@ -175,6 +181,40 @@ describe('SkillDetail async action jobs', () => {
       return { job_id: 'job_scan_001' };
     });
     mockEnqueueTestMutateAsync.mockResolvedValue({ job_id: 'job_test_001' });
+    mockCancelJobMutateAsync.mockImplementation(async ({ jobId }: { jobId: string }) => {
+      currentActionJob = {
+        ...(currentActionJob ?? {}),
+        job_id: jobId,
+        job_type: 'scan_batch',
+        status: 'cancelled',
+        requested_by: 'testuser',
+        selection_mode: 'explicit',
+        queued_items: 1,
+        max_attempts: 2,
+        queued_at: '2026-04-02T12:00:00Z',
+        started_at: '2026-04-02T12:00:01Z',
+        completed_at: '2026-04-02T12:00:05Z',
+        error_code: 'JOB_CANCELLED',
+        error_message: 'Action job cancelled by testuser',
+        summary: {
+          total: 1,
+          queued: 0,
+          running: 0,
+          succeeded: 0,
+          failed: 0,
+          retrying: 0,
+          skipped: 0,
+          cancelled: 1,
+        },
+      };
+      currentActionJobItems = currentActionJobItems.map((item) => ({
+        ...item,
+        status: 'cancelled',
+        error_code: 'JOB_CANCELLED',
+        error_message: 'Action job cancelled by testuser',
+      }));
+      return currentActionJob;
+    });
     mockRetryActionJobItemMutateAsync.mockImplementation(async () => {
       currentActionJob = {
         job_id: 'job_scan_retry_001',
@@ -346,5 +386,60 @@ describe('SkillDetail async action jobs', () => {
       itemId: 'job_scan_001_item_sk_001_01',
     });
     expect(await screen.findByText('Scan retry job queued')).toBeInTheDocument();
+  });
+
+  it('cancels an active job from the detail page', async () => {
+    currentActionJob = {
+      job_id: 'job_scan_001',
+      job_type: 'scan_batch',
+      status: 'running',
+      requested_by: 'testuser',
+      selection_mode: 'explicit',
+      queued_items: 1,
+      max_attempts: 2,
+      queued_at: '2026-04-02T12:00:00Z',
+      started_at: '2026-04-02T12:00:01Z',
+      completed_at: null,
+      error_code: null,
+      error_message: null,
+      summary: {
+        total: 1,
+        queued: 0,
+        running: 1,
+        succeeded: 0,
+        failed: 0,
+        retrying: 0,
+        skipped: 0,
+        cancelled: 0,
+      },
+    };
+    currentActionJobItems = [
+      {
+        item_id: 'job_scan_001_item_sk_001_01',
+        job_id: 'job_scan_001',
+        skill_id: 'sk_001',
+        target_revision_id: 'rev_001',
+        action_type: 'scan',
+        status: 'running',
+        attempt_number: 1,
+        max_attempts: 2,
+        started_at: '2026-04-02T12:00:01Z',
+        completed_at: null,
+        claimed_by: 'worker-skill-detail',
+        lease_expires_at: '2026-04-02T12:05:01Z',
+        result: null,
+        error_code: null,
+        error_message: null,
+        retry_of_item_id: null,
+      },
+    ];
+
+    const user = userEvent.setup();
+    renderPage();
+
+    await user.click(screen.getByRole('button', { name: 'Cancel job' }));
+
+    expect(mockCancelJobMutateAsync).toHaveBeenCalledWith({ jobId: 'job_scan_001' });
+    expect(await screen.findByText('Scan job cancelled')).toBeInTheDocument();
   });
 });

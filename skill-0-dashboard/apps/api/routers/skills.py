@@ -191,6 +191,25 @@ def retry_action_job_failures(
     return ActionJobSummary(**data)
 
 
+@router.post("/skills/action-jobs/{job_id}/cancel", response_model=ActionJobSummary)
+def cancel_action_job(
+    job_id: str,
+    user: dict = Depends(require_auth),
+    service: GovernanceService = Depends(get_governance_service),
+) -> ActionJobSummary:
+    """Cancel a queued or running async action job."""
+    try:
+        data = service.cancel_action_job(
+            job_id=job_id,
+            requested_by=user.get("sub", "unknown"),
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Action job not found") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return ActionJobSummary(**data)
+
+
 @router.post("/skills/action-jobs/{job_id}/items/{item_id}/retry", response_model=ActionJobSummary)
 def retry_action_job_item(
     job_id: str,
