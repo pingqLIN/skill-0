@@ -9,6 +9,7 @@ import os
 import sys
 import json
 import threading
+import uuid
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Any, Optional
@@ -42,6 +43,7 @@ class GovernanceService:
         self.db = GovernanceDB(db_path=db_path)
         self._action_job_lock = threading.Lock()
         self._active_action_job_threads: set[str] = set()
+        self._worker_id = f"worker-{os.getpid()}-{uuid.uuid4().hex[:8]}"
         self._recover_incomplete_action_jobs()
 
     def _ensure_action_job_state(self) -> None:
@@ -50,6 +52,8 @@ class GovernanceService:
             self._action_job_lock = threading.Lock()
         if not hasattr(self, "_active_action_job_threads"):
             self._active_action_job_threads = set()
+        if not hasattr(self, "_worker_id"):
+            self._worker_id = f"worker-{os.getpid()}-{uuid.uuid4().hex[:8]}"
 
     def _utcnow_iso(self) -> str:
         return datetime.utcnow().isoformat() + "Z"
@@ -131,6 +135,7 @@ class GovernanceService:
             "result": None,
             "error_code": None,
             "error_message": None,
+            "claimed_by": None,
             "retry_of_item_id": retry_of_item_id,
             "created_at": now,
             "updated_at": now,
@@ -175,6 +180,7 @@ class GovernanceService:
                     completed_at=None,
                     error_code=None,
                     error_message=None,
+                    claimed_by=None,
                 )
 
             self.db.update_action_job(
@@ -192,6 +198,8 @@ class GovernanceService:
             return None
 
         summary = self._compute_job_summary(items)
+        if summary["queued"] > 0 or summary["running"] > 0 or summary["retrying"] > 0:
+            return self._serialize_job(job_id)
         failed_items = [item for item in items if item.get("status") == "failed"]
         if summary["failed"] == 0:
             final_status = "completed"
@@ -284,8 +292,6 @@ class GovernanceService:
         if not job:
             return
 
-        items = self.db.get_action_job_items(job_id)
-        active_items = [item for item in items if item["status"] in {"queued", "running", "retrying"}]
         started_at = job.get("started_at") or self._utcnow_iso()
         self.db.update_action_job(
             job_id,
@@ -299,17 +305,10 @@ class GovernanceService:
 
         runner = self.run_scan if job_type == "scan_batch" else self.run_test
 
-        for item in active_items:
-            self.db.update_action_job_item(
-                item["item_id"],
-                status="running",
-                started_at=self._utcnow_iso(),
-                completed_at=None,
-                error_code=None,
-                error_message=None,
-                result=None,
-            )
-
+        while True:
+            item = self.db.claim_next_action_job_item(job_id, self._worker_id)
+            if not item:
+                break
             result = runner(item["skill_id"])
 
             self.db.update_action_job_item(
@@ -319,6 +318,7 @@ class GovernanceService:
                 error_code=result.get("error_code"),
                 error_message=result.get("error_message"),
                 status="succeeded" if result.get("status") == "success" else "failed",
+                claimed_by=self._worker_id,
             )
 
         self._finalize_action_job(job_id)

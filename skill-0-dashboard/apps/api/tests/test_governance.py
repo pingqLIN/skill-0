@@ -536,6 +536,47 @@ class TestGovernanceServiceActionJobs:
         assert retry_items[0]["attempt_number"] == 2
         assert retry_items[0]["retry_of_item_id"] == item["item_id"]
 
+    def test_claim_next_action_job_item_is_atomic(self, tmp_path, monkeypatch):
+        svc = self._make_service(tmp_path, monkeypatch)
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_claim"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+
+        claimed = svc.db.claim_next_action_job_item(job["job_id"], "worker-a")
+        duplicate_claim = svc.db.claim_next_action_job_item(job["job_id"], "worker-b")
+
+        assert claimed is not None
+        assert claimed["skill_id"] == "skill_claim"
+        assert claimed["claimed_by"] == "worker-a"
+        assert duplicate_claim is None
+
+    def test_finalize_action_job_does_not_close_while_items_are_running(self, tmp_path, monkeypatch):
+        svc = self._make_service(tmp_path, monkeypatch)
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_active"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+        svc.db.update_action_job(job["job_id"], status="running", started_at="2026-04-03T02:00:00Z")
+        claimed = svc.db.claim_next_action_job_item(job["job_id"], "worker-a")
+
+        summary = svc._finalize_action_job(job["job_id"])
+
+        assert claimed is not None
+        assert summary is not None
+        assert summary["status"] == "running"
+        assert summary["completed_at"] is None
+
     def test_recovers_running_jobs_from_database(self, tmp_path, monkeypatch):
         from apps.api.services.governance import GovernanceService  # noqa
 
@@ -574,6 +615,7 @@ class TestGovernanceServiceActionJobs:
         assert recovered_item["completed_at"] is None
         assert recovered_item["error_code"] is None
         assert recovered_item["error_message"] is None
+        assert recovered_item["claimed_by"] is None
 
     def test_test_source_path_missing(self, tmp_path):
         from apps.api.services.governance import GovernanceService  # noqa
