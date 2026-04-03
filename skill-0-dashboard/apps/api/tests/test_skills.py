@@ -184,6 +184,26 @@ def test_get_action_job(client, auth_header, mock_service):
 
 
 def test_get_action_job_items(client, auth_header, mock_service):
+    mock_service.get_action_job_items.return_value = [
+        {
+            "item_id": "job_scan_20260402_001_item_sk_001_01",
+            "job_id": "job_scan_20260402_001",
+            "skill_id": "sk_001",
+            "target_revision_id": "rev_001",
+            "action_type": "scan",
+            "status": "running",
+            "attempt_number": 1,
+            "max_attempts": 2,
+            "started_at": "2026-04-03T01:00:00Z",
+            "completed_at": None,
+            "claimed_by": "worker-a",
+            "lease_expires_at": "2026-04-03T01:05:00Z",
+            "result": None,
+            "error_code": None,
+            "error_message": None,
+            "retry_of_item_id": None,
+        }
+    ]
     response = client.get(
         "/api/skills/action-jobs/job_scan_20260402_001/items",
         headers=auth_header,
@@ -192,6 +212,8 @@ def test_get_action_job_items(client, auth_header, mock_service):
     data = response.json()
     assert len(data) == 1
     assert data[0]["item_id"] == "job_scan_20260402_001_item_sk_001_01"
+    assert data[0]["claimed_by"] == "worker-a"
+    assert data[0]["lease_expires_at"] == "2026-04-03T01:05:00Z"
     mock_service.get_action_job_items.assert_called_once_with("job_scan_20260402_001")
 
 

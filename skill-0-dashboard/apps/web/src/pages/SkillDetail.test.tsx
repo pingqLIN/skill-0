@@ -164,6 +164,8 @@ describe('SkillDetail async action jobs', () => {
           max_attempts: 2,
           started_at: null,
           completed_at: null,
+          claimed_by: null,
+          lease_expires_at: null,
           result: null,
           error_code: null,
           error_message: null,
@@ -209,6 +211,8 @@ describe('SkillDetail async action jobs', () => {
           max_attempts: 2,
           started_at: null,
           completed_at: null,
+          claimed_by: null,
+          lease_expires_at: null,
           result: null,
           error_code: null,
           error_message: null,
@@ -233,20 +237,20 @@ describe('SkillDetail async action jobs', () => {
     currentActionJob = {
       job_id: 'job_scan_001',
       job_type: 'scan_batch',
-      status: 'queued',
+      status: 'running',
       requested_by: 'testuser',
       selection_mode: 'explicit',
       queued_items: 1,
       max_attempts: 2,
       queued_at: '2026-04-02T12:00:00Z',
-      started_at: null,
+      started_at: '2026-04-02T12:00:01Z',
       completed_at: null,
       error_code: null,
       error_message: null,
       summary: {
         total: 1,
-        queued: 1,
-        running: 0,
+        queued: 0,
+        running: 1,
         succeeded: 0,
         failed: 0,
         retrying: 0,
@@ -260,11 +264,13 @@ describe('SkillDetail async action jobs', () => {
         skill_id: 'sk_001',
         target_revision_id: 'rev_001',
         action_type: 'scan',
-        status: 'queued',
+        status: 'running',
         attempt_number: 1,
         max_attempts: 2,
-        started_at: null,
+        started_at: '2026-04-02T12:00:01Z',
         completed_at: null,
+        claimed_by: 'worker-skill-detail',
+        lease_expires_at: '2026-04-02T12:05:01Z',
         result: null,
         error_code: null,
         error_message: null,
@@ -278,8 +284,10 @@ describe('SkillDetail async action jobs', () => {
     await user.click(screen.getByRole('button', { name: 'Show details' }));
 
     expect(screen.getByText('job_scan_001')).toBeInTheDocument();
-    expect(screen.getAllByText('queued')).toHaveLength(2);
+    expect(screen.getAllByText('running')).toHaveLength(2);
     expect(screen.getByText('1/2')).toBeInTheDocument();
+    expect(screen.getByText('worker-skill-detail')).toBeInTheDocument();
+    expect(screen.getByText('2026-04-02T12:05:01Z')).toBeInTheDocument();
   });
 
   it('retries a retriable failed item from the detail page', async () => {
@@ -318,6 +326,8 @@ describe('SkillDetail async action jobs', () => {
         max_attempts: 2,
         started_at: '2026-04-02T12:00:01Z',
         completed_at: '2026-04-02T12:00:02Z',
+        claimed_by: null,
+        lease_expires_at: null,
         result: null,
         error_code: 'SCAN_RUNTIME_ERROR',
         error_message: 'scanner crash',

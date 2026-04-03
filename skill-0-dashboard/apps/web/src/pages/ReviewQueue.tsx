@@ -59,6 +59,10 @@ const NON_RETRIABLE_ERROR_CODES = new Set([
   'INSTALLED_PATH_NOT_ALLOWED',
 ]);
 
+function formatLeaseExpiry(leaseExpiresAt: string | null) {
+  return leaseExpiresAt ?? '-';
+}
+
 export function ReviewQueue() {
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState<FilterType>('all');
@@ -273,6 +277,8 @@ export function ReviewQueue() {
           </Badge>
         </TableCell>
         <TableCell>{item.attempt_number}/{item.max_attempts}</TableCell>
+        <TableCell className="font-mono text-xs">{item.claimed_by ?? '-'}</TableCell>
+        <TableCell className="font-mono text-xs">{formatLeaseExpiry(item.lease_expires_at)}</TableCell>
         {job.job_type === 'scan_batch' && (
           <>
             <TableCell>
@@ -422,6 +428,8 @@ export function ReviewQueue() {
                     <TableHead>Skill ID</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Attempt</TableHead>
+                    <TableHead>Worker</TableHead>
+                    <TableHead>Lease Expires</TableHead>
                     {actionJob.job_type === 'scan_batch' && (
                       <>
                         <TableHead>Risk Level</TableHead>

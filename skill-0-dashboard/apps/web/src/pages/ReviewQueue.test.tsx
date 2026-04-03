@@ -158,6 +158,8 @@ describe('ReviewQueue async action jobs', () => {
           max_attempts: 2,
           started_at: null,
           completed_at: null,
+          claimed_by: null,
+          lease_expires_at: null,
           result: null,
           error_code: null,
           error_message: null,
@@ -174,6 +176,8 @@ describe('ReviewQueue async action jobs', () => {
           max_attempts: 2,
           started_at: null,
           completed_at: null,
+          claimed_by: null,
+          lease_expires_at: null,
           result: null,
           error_code: null,
           error_message: null,
@@ -220,6 +224,8 @@ describe('ReviewQueue async action jobs', () => {
           max_attempts: 2,
           started_at: null,
           completed_at: null,
+          claimed_by: null,
+          lease_expires_at: null,
           result: null,
           error_code: null,
           error_message: null,
@@ -243,6 +249,53 @@ describe('ReviewQueue async action jobs', () => {
   });
 
   it('shows queued batch job details when expanded', async () => {
+    mockEnqueueScanMutateAsync.mockImplementationOnce(async () => {
+      currentActionJob = {
+        job_id: 'job_scan_001',
+        job_type: 'scan_batch',
+        status: 'running',
+        requested_by: 'tester',
+        selection_mode: 'explicit',
+        queued_items: 2,
+        max_attempts: 2,
+        queued_at: '2026-04-03T00:00:00Z',
+        started_at: '2026-04-03T00:00:05Z',
+        completed_at: null,
+        error_code: null,
+        error_message: null,
+        summary: {
+          total: 2,
+          queued: 1,
+          running: 1,
+          succeeded: 0,
+          failed: 0,
+          retrying: 0,
+          skipped: 0,
+        },
+      };
+      currentActionJobItems = [
+        {
+          item_id: 'job_scan_001_item_sk_001_01',
+          job_id: 'job_scan_001',
+          skill_id: 'sk_001',
+          target_revision_id: 'rev_001',
+          action_type: 'scan',
+          status: 'running',
+          attempt_number: 1,
+          max_attempts: 2,
+          started_at: '2026-04-03T00:00:05Z',
+          completed_at: null,
+          claimed_by: 'worker-a',
+          lease_expires_at: '2026-04-03T00:01:05Z',
+          result: null,
+          error_code: null,
+          error_message: null,
+          retry_of_item_id: null,
+        },
+      ];
+      return { job_id: 'job_scan_001' };
+    });
+
     const user = userEvent.setup();
     renderPage();
 
@@ -251,8 +304,8 @@ describe('ReviewQueue async action jobs', () => {
 
     expect(screen.getByText('job_scan_001')).toBeInTheDocument();
     expect(screen.getByText('sk_001')).toBeInTheDocument();
-    expect(screen.getByText('Total:')).toBeInTheDocument();
-    expect(screen.getByText('Succeeded:')).toBeInTheDocument();
+    expect(screen.getByText('worker-a')).toBeInTheDocument();
+    expect(screen.getByText('2026-04-03T00:01:05Z')).toBeInTheDocument();
   });
 
   it('retries retriable failed batch items from the review queue', async () => {
@@ -292,6 +345,8 @@ describe('ReviewQueue async action jobs', () => {
           max_attempts: 2,
           started_at: '2026-04-03T00:00:01Z',
           completed_at: '2026-04-03T00:00:02Z',
+          claimed_by: null,
+          lease_expires_at: null,
           result: { risk_level: 'safe', risk_score: 10 },
           error_code: null,
           error_message: null,
@@ -308,6 +363,8 @@ describe('ReviewQueue async action jobs', () => {
           max_attempts: 2,
           started_at: '2026-04-03T00:00:01Z',
           completed_at: '2026-04-03T00:00:02Z',
+          claimed_by: null,
+          lease_expires_at: null,
           result: null,
           error_code: 'SCAN_RUNTIME_ERROR',
           error_message: 'scanner crash',

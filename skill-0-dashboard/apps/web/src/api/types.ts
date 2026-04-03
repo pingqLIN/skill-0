@@ -252,6 +252,8 @@ export interface ActionJobItem {
   max_attempts: number;
   started_at: string | null;
   completed_at: string | null;
+  claimed_by: string | null;
+  lease_expires_at: string | null;
   result: Record<string, unknown> | null;
   error_code: string | null;
   error_message: string | null;
