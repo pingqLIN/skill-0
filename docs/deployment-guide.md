@@ -3,7 +3,7 @@
 ## Prerequisites
 
 - Python 3.12+
-- Node.js 20+ and npm
+- Node.js 20.19.x and npm
 - Docker and Docker Compose (for containerized deployment)
 - SQLite 3.35+ (for WAL mode and `.backup` command)
 
@@ -73,7 +73,7 @@ Endpoints:
 
 ```bash
 cd skill-0-dashboard/apps/api
-../../.venv/bin/python -m uvicorn main:app --reload --port 8001
+../../../.venv/bin/python -m uvicorn main:app --reload --port 8001
 ```
 
 Endpoints:
@@ -83,8 +83,9 @@ Endpoints:
 ### 5. Start Web Frontend (port 5173)
 
 ```bash
+nvm use || nvm install 20.19.0
 cd skill-0-dashboard/apps/web
-npm install
+npm ci
 npm run dev
 ```
 
@@ -112,13 +113,13 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 Production overrides:
 - Volume mounts removed (code baked into images)
 - `restart: always` policy
-- Resource limits enforced (API: 512MB/1CPU, Dashboard: 256MB/0.5CPU, Web: 128MB/0.25CPU)
+- Resource limits enforced (API: 1GB/1CPU, Dashboard: 256MB/0.5CPU, Web: 128MB/0.25CPU)
 
 ### Container Details
 
 | Service | Dockerfile | Base Image | Port | Healthcheck |
 |---------|-----------|------------|------|-------------|
-| `api` | `Dockerfile.api` | `python:3.12-slim` | 8000 | `GET /api/health` |
+| `api` | `Dockerfile.api` | `python:3.12-slim` | 8000 | `GET /health` |
 | `dashboard` | `Dockerfile.dashboard` | `python:3.12-slim` | 8001 | `GET /health` |
 | `web` | `Dockerfile.web` | `node:20-slim` (build) + `nginx:alpine` (serve) | 80 | `wget http://localhost/` |
 

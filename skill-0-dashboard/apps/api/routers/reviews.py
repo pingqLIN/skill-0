@@ -4,6 +4,7 @@ from typing import List
 
 from fastapi import APIRouter, Depends, HTTPException
 
+from ..auth import require_auth
 from ..schemas.skill import SkillSummary
 from ..schemas.review import ReviewAction
 from ..services.governance import GovernanceService
@@ -25,11 +26,15 @@ def list_pending_reviews(
 def approve_skill(
     skill_id: str,
     action: ReviewAction,
+    user: dict = Depends(require_auth),
     service: GovernanceService = Depends(get_governance_service),
 ) -> dict:
     """Approve a skill for use"""
+    reviewer = user.get("sub")
+    if not reviewer:
+        raise HTTPException(status_code=401, detail="Invalid token")
     success = service.approve_skill(
-        skill_id, reviewer=action.reviewer, reason=action.reason
+        skill_id, reviewer=reviewer, reason=action.reason
     )
     if not success:
         raise HTTPException(
@@ -39,7 +44,7 @@ def approve_skill(
     return {
         "status": "approved",
         "skill_id": skill_id,
-        "reviewer": action.reviewer,
+        "reviewer": reviewer,
         "reason": action.reason,
     }
 
@@ -48,11 +53,15 @@ def approve_skill(
 def reject_skill(
     skill_id: str,
     action: ReviewAction,
+    user: dict = Depends(require_auth),
     service: GovernanceService = Depends(get_governance_service),
 ) -> dict:
     """Reject a skill"""
+    reviewer = user.get("sub")
+    if not reviewer:
+        raise HTTPException(status_code=401, detail="Invalid token")
     success = service.reject_skill(
-        skill_id, reviewer=action.reviewer, reason=action.reason
+        skill_id, reviewer=reviewer, reason=action.reason
     )
     if not success:
         raise HTTPException(
@@ -62,6 +71,6 @@ def reject_skill(
     return {
         "status": "rejected",
         "skill_id": skill_id,
-        "reviewer": action.reviewer,
+        "reviewer": reviewer,
         "reason": action.reason,
     }
