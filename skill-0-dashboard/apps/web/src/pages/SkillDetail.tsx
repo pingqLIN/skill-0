@@ -51,6 +51,10 @@ const NON_RETRIABLE_ERROR_CODES = new Set([
   'INSTALLED_PATH_NOT_ALLOWED',
 ]);
 
+function formatLeaseExpiry(leaseExpiresAt: string | null) {
+  return leaseExpiresAt ?? '-';
+}
+
 export function SkillDetail() {
   const { skillId } = useParams<{ skillId: string }>();
   const navigate = useNavigate();
@@ -212,6 +216,8 @@ export function SkillDetail() {
           </Badge>
         </TableCell>
         <TableCell>{item.attempt_number}/{item.max_attempts}</TableCell>
+        <TableCell className="font-mono text-xs">{item.claimed_by ?? '-'}</TableCell>
+        <TableCell className="font-mono text-xs">{formatLeaseExpiry(item.lease_expires_at)}</TableCell>
         {job.job_type === 'scan_batch' && (
           <>
             <TableCell>
@@ -321,6 +327,8 @@ export function SkillDetail() {
                     <TableHead>Revision</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Attempt</TableHead>
+                    <TableHead>Worker</TableHead>
+                    <TableHead>Lease Expires</TableHead>
                     {actionJob.job_type === 'scan_batch' && <>
                       <TableHead>Risk Level</TableHead>
                       <TableHead>Risk Score</TableHead>

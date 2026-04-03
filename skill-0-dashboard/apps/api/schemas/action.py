@@ -95,6 +95,8 @@ class ActionJobItem(BaseModel):
     max_attempts: int = 2
     started_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
+    claimed_by: Optional[str] = None
+    lease_expires_at: Optional[datetime] = None
     result: Optional[Dict[str, Any]] = None
     error_code: Optional[str] = None
     error_message: Optional[str] = None

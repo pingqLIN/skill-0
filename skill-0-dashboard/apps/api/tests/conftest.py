@@ -237,6 +237,8 @@ def mock_service():
             "max_attempts": 2,
             "started_at": None,
             "completed_at": None,
+            "claimed_by": None,
+            "lease_expires_at": None,
             "result": None,
             "error_code": None,
             "error_message": None,
