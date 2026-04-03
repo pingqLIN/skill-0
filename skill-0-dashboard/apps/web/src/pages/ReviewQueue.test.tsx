@@ -140,8 +140,14 @@ describe('ReviewQueue async action jobs', () => {
         queued_at: '2026-04-03T00:00:00Z',
         started_at: null,
         completed_at: null,
+        cancelled_at: null,
+        cancelled_by: null,
         error_code: null,
         error_message: null,
+        active_workers: [],
+        active_lease_expires_at: null,
+        last_item_started_at: null,
+        last_item_completed_at: null,
         summary: {
           total: 2,
           queued: 2,
@@ -150,6 +156,7 @@ describe('ReviewQueue async action jobs', () => {
           failed: 0,
           retrying: 0,
           skipped: 0,
+          cancelled: 0,
         },
       };
       currentActionJobItems = [
@@ -207,8 +214,14 @@ describe('ReviewQueue async action jobs', () => {
         queued_at: '2026-04-03T00:00:00Z',
         started_at: '2026-04-03T00:00:05Z',
         completed_at: '2026-04-03T00:00:10Z',
+        cancelled_at: '2026-04-03T00:00:10Z',
+        cancelled_by: 'tester',
         error_code: 'JOB_CANCELLED',
         error_message: 'Action job cancelled by tester',
+        active_workers: [],
+        active_lease_expires_at: null,
+        last_item_started_at: '2026-04-03T00:00:05Z',
+        last_item_completed_at: '2026-04-03T00:00:10Z',
         summary: {
           total: 2,
           queued: 0,
@@ -240,8 +253,14 @@ describe('ReviewQueue async action jobs', () => {
         queued_at: '2026-04-03T00:05:00Z',
         started_at: null,
         completed_at: null,
+        cancelled_at: null,
+        cancelled_by: null,
         error_code: null,
         error_message: null,
+        active_workers: [],
+        active_lease_expires_at: null,
+        last_item_started_at: null,
+        last_item_completed_at: null,
         summary: {
           total: 1,
           queued: 1,
@@ -250,6 +269,7 @@ describe('ReviewQueue async action jobs', () => {
           failed: 0,
           retrying: 0,
           skipped: 0,
+          cancelled: 0,
         },
       };
       currentActionJobItems = [
@@ -301,8 +321,14 @@ describe('ReviewQueue async action jobs', () => {
         queued_at: '2026-04-03T00:00:00Z',
         started_at: '2026-04-03T00:00:05Z',
         completed_at: null,
+        cancelled_at: null,
+        cancelled_by: null,
         error_code: null,
         error_message: null,
+        active_workers: ['worker-a'],
+        active_lease_expires_at: '2026-04-03T00:01:05Z',
+        last_item_started_at: '2026-04-03T00:00:05Z',
+        last_item_completed_at: null,
         summary: {
           total: 2,
           queued: 1,
@@ -311,6 +337,7 @@ describe('ReviewQueue async action jobs', () => {
           failed: 0,
           retrying: 0,
           skipped: 0,
+          cancelled: 0,
         },
       };
       currentActionJobItems = [
@@ -344,8 +371,10 @@ describe('ReviewQueue async action jobs', () => {
 
     expect(screen.getByText('job_scan_001')).toBeInTheDocument();
     expect(screen.getByText('sk_001')).toBeInTheDocument();
-    expect(screen.getByText('worker-a')).toBeInTheDocument();
-    expect(screen.getByText('2026-04-03T00:01:05Z')).toBeInTheDocument();
+    expect(screen.getAllByText('worker-a')).toHaveLength(2);
+    expect(screen.getAllByText('2026-04-03T00:01:05Z')).toHaveLength(2);
+    expect(screen.getByText(/Active workers:/)).toBeInTheDocument();
+    expect(screen.getByText(/Last item start:/)).toBeInTheDocument();
   });
 
   it('retries retriable failed batch items from the review queue', async () => {
@@ -361,8 +390,14 @@ describe('ReviewQueue async action jobs', () => {
         queued_at: '2026-04-03T00:00:00Z',
         started_at: '2026-04-03T00:00:01Z',
         completed_at: '2026-04-03T00:00:02Z',
+        cancelled_at: null,
+        cancelled_by: null,
         error_code: null,
         error_message: 'scan batch failed',
+        active_workers: [],
+        active_lease_expires_at: null,
+        last_item_started_at: '2026-04-03T00:00:01Z',
+        last_item_completed_at: '2026-04-03T00:00:02Z',
         summary: {
           total: 2,
           queued: 0,
@@ -371,6 +406,7 @@ describe('ReviewQueue async action jobs', () => {
           failed: 1,
           retrying: 0,
           skipped: 0,
+          cancelled: 0,
         },
       };
       currentActionJobItems = [
@@ -438,8 +474,14 @@ describe('ReviewQueue async action jobs', () => {
         queued_at: '2026-04-03T00:00:00Z',
         started_at: '2026-04-03T00:00:05Z',
         completed_at: null,
+        cancelled_at: null,
+        cancelled_by: null,
         error_code: null,
         error_message: null,
+        active_workers: ['worker-a'],
+        active_lease_expires_at: '2026-04-03T00:01:05Z',
+        last_item_started_at: '2026-04-03T00:00:05Z',
+        last_item_completed_at: null,
         summary: {
           total: 2,
           queued: 1,

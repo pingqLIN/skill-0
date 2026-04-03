@@ -56,6 +56,10 @@ function formatLeaseExpiry(leaseExpiresAt: string | null) {
   return leaseExpiresAt ?? '-';
 }
 
+function formatTelemetryValue(value: string | null | undefined) {
+  return value ?? '-';
+}
+
 export function SkillDetail() {
   const { skillId } = useParams<{ skillId: string }>();
   const navigate = useNavigate();
@@ -351,7 +355,7 @@ export function SkillDetail() {
             </CardTitle>
           </CardHeader>
           <CardContent className="py-3 space-y-3 text-sm">
-            <div className="flex gap-4 text-muted-foreground">
+            <div className="flex flex-wrap gap-4 text-muted-foreground">
               <span>
                 Job ID: <strong className="font-mono">{actionJob.job_id}</strong>
               </span>
@@ -363,6 +367,32 @@ export function SkillDetail() {
               </span>
               <span>
                 Failed: <strong>{actionJob.summary.failed}</strong>
+              </span>
+              <span>
+                Running: <strong>{actionJob.summary.running}</strong>
+              </span>
+              <span>
+                Cancelled: <strong>{actionJob.summary.cancelled}</strong>
+              </span>
+            </div>
+            <div className="grid gap-2 text-muted-foreground md:grid-cols-2 xl:grid-cols-3">
+              <span>
+                Active workers: <strong className="font-mono">{actionJob.active_workers.length > 0 ? actionJob.active_workers.join(', ') : '-'}</strong>
+              </span>
+              <span>
+                Lease horizon: <strong className="font-mono">{formatTelemetryValue(actionJob.active_lease_expires_at)}</strong>
+              </span>
+              <span>
+                Last item start: <strong className="font-mono">{formatTelemetryValue(actionJob.last_item_started_at)}</strong>
+              </span>
+              <span>
+                Last item finish: <strong className="font-mono">{formatTelemetryValue(actionJob.last_item_completed_at)}</strong>
+              </span>
+              <span>
+                Cancelled by: <strong className="font-mono">{formatTelemetryValue(actionJob.cancelled_by)}</strong>
+              </span>
+              <span>
+                Cancelled at: <strong className="font-mono">{formatTelemetryValue(actionJob.cancelled_at)}</strong>
               </span>
             </div>
 

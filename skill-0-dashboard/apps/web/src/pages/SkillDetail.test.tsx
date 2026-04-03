@@ -146,8 +146,14 @@ describe('SkillDetail async action jobs', () => {
         queued_at: '2026-04-02T12:00:00Z',
         started_at: null,
         completed_at: null,
+        cancelled_at: null,
+        cancelled_by: null,
         error_code: null,
         error_message: null,
+        active_workers: [],
+        active_lease_expires_at: null,
+        last_item_started_at: null,
+        last_item_completed_at: null,
         summary: {
           total: 1,
           queued: 1,
@@ -156,6 +162,7 @@ describe('SkillDetail async action jobs', () => {
           failed: 0,
           retrying: 0,
           skipped: 0,
+          cancelled: 0,
         },
       };
       currentActionJobItems = [
@@ -194,8 +201,14 @@ describe('SkillDetail async action jobs', () => {
         queued_at: '2026-04-02T12:00:00Z',
         started_at: '2026-04-02T12:00:01Z',
         completed_at: '2026-04-02T12:00:05Z',
+        cancelled_at: '2026-04-02T12:00:05Z',
+        cancelled_by: 'testuser',
         error_code: 'JOB_CANCELLED',
         error_message: 'Action job cancelled by testuser',
+        active_workers: [],
+        active_lease_expires_at: null,
+        last_item_started_at: '2026-04-02T12:00:01Z',
+        last_item_completed_at: '2026-04-02T12:00:05Z',
         summary: {
           total: 1,
           queued: 0,
@@ -227,8 +240,14 @@ describe('SkillDetail async action jobs', () => {
         queued_at: '2026-04-02T12:05:00Z',
         started_at: null,
         completed_at: null,
+        cancelled_at: null,
+        cancelled_by: null,
         error_code: null,
         error_message: null,
+        active_workers: [],
+        active_lease_expires_at: null,
+        last_item_started_at: null,
+        last_item_completed_at: null,
         summary: {
           total: 1,
           queued: 1,
@@ -237,6 +256,7 @@ describe('SkillDetail async action jobs', () => {
           failed: 0,
           retrying: 0,
           skipped: 0,
+          cancelled: 0,
         },
       };
       currentActionJobItems = [
@@ -285,8 +305,14 @@ describe('SkillDetail async action jobs', () => {
       queued_at: '2026-04-02T12:00:00Z',
       started_at: '2026-04-02T12:00:01Z',
       completed_at: null,
+      cancelled_at: null,
+      cancelled_by: null,
       error_code: null,
       error_message: null,
+      active_workers: ['worker-skill-detail'],
+      active_lease_expires_at: '2026-04-02T12:05:01Z',
+      last_item_started_at: '2026-04-02T12:00:01Z',
+      last_item_completed_at: null,
       summary: {
         total: 1,
         queued: 0,
@@ -295,6 +321,7 @@ describe('SkillDetail async action jobs', () => {
         failed: 0,
         retrying: 0,
         skipped: 0,
+        cancelled: 0,
       },
     };
     currentActionJobItems = [
@@ -326,8 +353,10 @@ describe('SkillDetail async action jobs', () => {
     expect(screen.getByText('job_scan_001')).toBeInTheDocument();
     expect(screen.getAllByText('running')).toHaveLength(2);
     expect(screen.getByText('1/2')).toBeInTheDocument();
-    expect(screen.getByText('worker-skill-detail')).toBeInTheDocument();
-    expect(screen.getByText('2026-04-02T12:05:01Z')).toBeInTheDocument();
+    expect(screen.getAllByText('worker-skill-detail')).toHaveLength(2);
+    expect(screen.getAllByText('2026-04-02T12:05:01Z')).toHaveLength(2);
+    expect(screen.getByText(/Active workers:/)).toBeInTheDocument();
+    expect(screen.getByText(/Lease horizon:/)).toBeInTheDocument();
   });
 
   it('retries a retriable failed item from the detail page', async () => {
@@ -342,8 +371,14 @@ describe('SkillDetail async action jobs', () => {
       queued_at: '2026-04-02T12:00:00Z',
       started_at: '2026-04-02T12:00:01Z',
       completed_at: '2026-04-02T12:00:02Z',
+      cancelled_at: null,
+      cancelled_by: null,
       error_code: null,
       error_message: null,
+      active_workers: [],
+      active_lease_expires_at: null,
+      last_item_started_at: '2026-04-02T12:00:01Z',
+      last_item_completed_at: '2026-04-02T12:00:02Z',
       summary: {
         total: 1,
         queued: 0,
@@ -352,6 +387,7 @@ describe('SkillDetail async action jobs', () => {
         failed: 1,
         retrying: 0,
         skipped: 0,
+        cancelled: 0,
       },
     };
     currentActionJobItems = [
@@ -400,8 +436,14 @@ describe('SkillDetail async action jobs', () => {
       queued_at: '2026-04-02T12:00:00Z',
       started_at: '2026-04-02T12:00:01Z',
       completed_at: null,
+      cancelled_at: null,
+      cancelled_by: null,
       error_code: null,
       error_message: null,
+      active_workers: ['worker-skill-detail'],
+      active_lease_expires_at: '2026-04-02T12:05:01Z',
+      last_item_started_at: '2026-04-02T12:00:01Z',
+      last_item_completed_at: null,
       summary: {
         total: 1,
         queued: 0,

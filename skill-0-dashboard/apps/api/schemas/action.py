@@ -78,8 +78,14 @@ class ActionJobSummary(BaseModel):
     queued_at: datetime
     started_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
+    cancelled_at: Optional[datetime] = None
+    cancelled_by: Optional[str] = None
     error_code: Optional[str] = None
     error_message: Optional[str] = None
+    active_workers: List[str] = []
+    active_lease_expires_at: Optional[datetime] = None
+    last_item_started_at: Optional[datetime] = None
+    last_item_completed_at: Optional[datetime] = None
     summary: ActionJobSummaryCounts
 
 
