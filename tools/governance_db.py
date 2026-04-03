@@ -16,7 +16,7 @@ import sqlite3
 import uuid
 import hashlib
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional, List, Dict, Any
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -755,6 +755,7 @@ class GovernanceDB:
                     error_code TEXT,
                     error_message TEXT,
                     claimed_by TEXT,
+                    lease_expires_at TEXT,
                     retry_of_item_id TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL,
@@ -762,6 +763,7 @@ class GovernanceDB:
                 )
             """)
             self._ensure_column(conn, "action_job_items", "claimed_by TEXT")
+            self._ensure_column(conn, "action_job_items", "lease_expires_at TEXT")
 
             # Create indexes
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_skills_name ON skills(name)")
@@ -1418,9 +1420,9 @@ class GovernanceDB:
                     INSERT INTO action_job_items (
                         item_id, job_id, skill_id, target_revision_id, action_type,
                         status, attempt_number, max_attempts, started_at, completed_at,
-                        result_json, error_code, error_message, claimed_by, retry_of_item_id,
-                        created_at, updated_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        result_json, error_code, error_message, claimed_by, lease_expires_at,
+                        retry_of_item_id, created_at, updated_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         item["item_id"],
@@ -1437,6 +1439,7 @@ class GovernanceDB:
                         item.get("error_code"),
                         item.get("error_message"),
                         item.get("claimed_by"),
+                        item.get("lease_expires_at"),
                         item.get("retry_of_item_id"),
                         item.get("created_at", now),
                         item.get("updated_at", now),
@@ -1525,6 +1528,7 @@ class GovernanceDB:
             "error_code",
             "error_message",
             "claimed_by",
+            "lease_expires_at",
         }
         invalid = sorted(set(updates) - allowed)
         if invalid:
@@ -1545,7 +1549,7 @@ class GovernanceDB:
             cursor.execute(f"UPDATE action_job_items SET {set_clause} WHERE item_id = ?", values)
             return cursor.rowcount > 0
 
-    def claim_next_action_job_item(self, job_id: str, worker_id: str) -> Optional[Dict[str, Any]]:
+    def claim_next_action_job_item(self, job_id: str, worker_id: str, lease_seconds: int) -> Optional[Dict[str, Any]]:
         """Atomically claim the next queued/retrying item for a worker."""
         while True:
             with self.connection() as conn:
@@ -1563,7 +1567,9 @@ class GovernanceDB:
                 if not row:
                     return None
 
-                started_at = datetime.now().isoformat() + "Z"
+                now_utc = datetime.utcnow()
+                started_at = now_utc.isoformat() + "Z"
+                lease_expires_at_iso = (now_utc + timedelta(seconds=max(lease_seconds, 1))).isoformat() + "Z"
                 updated_at = datetime.now().isoformat()
                 cursor.execute(
                     """
@@ -1575,10 +1581,11 @@ class GovernanceDB:
                         error_code = NULL,
                         error_message = NULL,
                         claimed_by = ?,
+                        lease_expires_at = ?,
                         updated_at = ?
                     WHERE item_id = ? AND status IN ('queued', 'retrying')
                     """,
-                    (started_at, worker_id, updated_at, row["item_id"]),
+                    (started_at, worker_id, lease_expires_at_iso, updated_at, row["item_id"]),
                 )
                 if cursor.rowcount != 1:
                     continue
@@ -1590,6 +1597,27 @@ class GovernanceDB:
                 item = dict(claimed)
                 item["result"] = self._decode_json_field(item.pop("result_json", None), None)
                 return item
+
+    def refresh_action_job_item_lease(self, item_id: str, worker_id: str, lease_seconds: int) -> bool:
+        """Extend the lease for a running item held by the same worker."""
+        lease_expires_at_iso = (datetime.utcnow() + timedelta(seconds=max(lease_seconds, 1))).isoformat() + "Z"
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                UPDATE action_job_items
+                SET lease_expires_at = ?,
+                    updated_at = ?
+                WHERE item_id = ? AND status = 'running' AND claimed_by = ?
+                """,
+                (
+                    lease_expires_at_iso,
+                    datetime.now().isoformat(),
+                    item_id,
+                    worker_id,
+                ),
+            )
+            return cursor.rowcount == 1
 
     # ============ Approval Workflow ============
 
