@@ -429,23 +429,19 @@ class TestGovernanceServiceRunTest:
 
 
 class TestGovernanceServiceActionJobs:
-    def _make_service(self, source_path="", installed_path=""):
+    def _make_service(self, tmp_path, monkeypatch):
         from apps.api.services.governance import GovernanceService  # noqa
 
-        svc = object.__new__(GovernanceService)
-        svc.db = MagicMock()
-        skill = MagicMock()
-        skill.skill_id = "skill_001"
-        skill.source_path = source_path
-        skill.installed_path = installed_path
-        svc.db.get_skill.return_value = skill
-        svc.db.list_skills.return_value = []
-        svc.db.get_current_revision.return_value = None
-        svc._ensure_action_job_state()
+        db_path = tmp_path / "governance.db"
+        monkeypatch.setenv("SKILL0_GOVERNANCE_DB_PATH", str(db_path))
+        original_recover = GovernanceService._recover_incomplete_action_jobs
+        monkeypatch.setattr(GovernanceService, "_recover_incomplete_action_jobs", lambda self: None)
+        svc = GovernanceService()
+        monkeypatch.setattr(GovernanceService, "_recover_incomplete_action_jobs", original_recover)
         return svc
 
-    def test_enqueue_action_job_creates_queued_job(self, monkeypatch):
-        svc = self._make_service()
+    def test_enqueue_action_job_creates_queued_job(self, tmp_path, monkeypatch):
+        svc = self._make_service(tmp_path, monkeypatch)
         monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
 
         job = svc.enqueue_action_job(
@@ -465,8 +461,8 @@ class TestGovernanceServiceActionJobs:
         assert len(items) == 1
         assert items[0]["skill_id"] == "skill_001"
 
-    def test_run_action_job_marks_success_and_failure(self, monkeypatch):
-        svc = self._make_service()
+    def test_run_action_job_marks_success_and_failure(self, tmp_path, monkeypatch):
+        svc = self._make_service(tmp_path, monkeypatch)
         monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
 
         def fake_run_scan(skill_id):
@@ -503,8 +499,8 @@ class TestGovernanceServiceActionJobs:
         assert updated["summary"]["succeeded"] == 1
         assert updated["summary"]["failed"] == 1
 
-    def test_retry_action_job_item_creates_follow_on_job(self, monkeypatch):
-        svc = self._make_service()
+    def test_retry_action_job_item_creates_follow_on_job(self, tmp_path, monkeypatch):
+        svc = self._make_service(tmp_path, monkeypatch)
         monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
         monkeypatch.setattr(
             svc,
@@ -540,10 +536,57 @@ class TestGovernanceServiceActionJobs:
         assert retry_items[0]["attempt_number"] == 2
         assert retry_items[0]["retry_of_item_id"] == item["item_id"]
 
+    def test_recovers_running_jobs_from_database(self, tmp_path, monkeypatch):
+        from apps.api.services.governance import GovernanceService  # noqa
+
+        svc = self._make_service(tmp_path, monkeypatch)
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_recover"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+        item = svc.get_action_job_items(job["job_id"])[0]
+        svc.db.update_action_job(job["job_id"], status="running", started_at="2026-04-03T01:00:00Z")
+        svc.db.update_action_job_item(
+            item["item_id"],
+            status="running",
+            started_at="2026-04-03T01:00:01Z",
+            completed_at=None,
+            error_code="SCAN_RUNTIME_ERROR",
+            error_message="stale failure",
+        )
+
+        recovered_jobs = []
+        monkeypatch.setattr(GovernanceService, "_start_action_job_runner", lambda self, job_id: recovered_jobs.append(job_id))
+        recovered_service = GovernanceService()
+
+        assert recovered_jobs == [job["job_id"]]
+        recovered_job = recovered_service.get_action_job(job["job_id"])
+        recovered_item = recovered_service.get_action_job_items(job["job_id"])[0]
+        assert recovered_job is not None
+        assert recovered_job["status"] == "queued"
+        assert recovered_item["status"] == "queued"
+        assert recovered_item["started_at"] is None
+        assert recovered_item["completed_at"] is None
+        assert recovered_item["error_code"] is None
+        assert recovered_item["error_message"] is None
+
     def test_test_source_path_missing(self, tmp_path):
+        from apps.api.services.governance import GovernanceService  # noqa
+
         inst = tmp_path / "installed.md"
         inst.write_text("installed")
-        svc = self._make_service(source_path="/missing/file.md", installed_path=str(inst))
+        svc = object.__new__(GovernanceService)
+        svc.db = MagicMock()
+        skill = MagicMock()
+        skill.skill_id = "skill_001"
+        skill.source_path = "/missing/file.md"
+        skill.installed_path = str(inst)
+        svc.db.get_skill.return_value = skill
         result = svc.run_test("skill_001")
         assert result["status"] == "failed"
         assert result["error_code"] == "SOURCE_PATH_MISSING"

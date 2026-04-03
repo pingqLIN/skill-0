@@ -173,3 +173,12 @@ export function useRetryActionJobItem() {
     },
   });
 }
+
+export function useRetryActionJobFailures() {
+  return useMutation<ActionJobSummary, Error, { jobId: string }>({
+    mutationFn: async ({ jobId }) => {
+      const { data } = await api.post(`/api/skills/action-jobs/${jobId}/retry-failures`);
+      return data;
+    },
+  });
+}

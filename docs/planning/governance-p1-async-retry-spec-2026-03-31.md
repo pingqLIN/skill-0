@@ -1,10 +1,10 @@
 # Governance P1 Async Job And Retry Spec
 
-Updated: `2026-03-31`
-Implementation status: `🟢 Partially implemented on 2026-04-02 (single-instance in-memory MVP)`
+Updated: `2026-04-03`
+Implementation status: `🟢 Implemented through DB-backed durable MVP on 2026-04-03`
 Scope: `skill-0-dashboard/apps/api governance scan/test actions`
 
-Status note: The dashboard API now exposes async batch scan/test job endpoints, in-memory job/item tracking, and manual retry flows for single-instance operation. The DB-backed job tables proposed below remain future work; treat this document as the design record plus the gap list beyond the MVP.
+Status note: The dashboard API now exposes async batch scan/test job endpoints, persists job/item state into `governance.db`, supports manual retry flows, and re-enqueues unfinished queued/running work during service startup. Treat this document as the design record plus the remaining hardening gap list beyond the durable MVP.
 
 ## 1. Purpose
 
@@ -274,23 +274,24 @@ Implemented in the dashboard API MVP:
 
 Current implementation characteristics:
 
-- single-instance, in-memory job store inside cached `GovernanceService`
-- background execution via daemon thread runner
+- job state is persisted in `governance.db` via durable job / item tables
+- background execution still uses an in-process daemon thread runner
+- service startup recovers unfinished `queued/running` jobs and re-enqueues incomplete items
 - job items freeze `target_revision_id` at enqueue time when available
 - manual retry allowed only for retriable failure codes
 - existing synchronous `POST /api/skills/scan` and `POST /api/skills/test` remain unchanged
 
 Still not implemented from the original design:
 
-- `governance_action_jobs` / `governance_action_job_items` DB tables
-- cross-process durability and restart recovery
+- worker lease / duplicate execution protection across multiple active API instances
 - automated retry backoff worker policy
 - actor/RBAC refinement beyond existing authenticated dashboard access
+- richer telemetry, cancellation semantics, and queue prioritization
 
 Validated with:
 
 ```bash
-.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests -q
+.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests/test_governance.py skill-0-dashboard/apps/api/tests/test_skills.py -q
 ```
    - `queued`，若無任何完成證據
    - 或 `failed` + `error_code=WORKER_ABORTED`，若要保守處理
