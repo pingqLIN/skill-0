@@ -548,12 +548,13 @@ class TestGovernanceServiceActionJobs:
             max_attempts=2,
         )
 
-        claimed = svc.db.claim_next_action_job_item(job["job_id"], "worker-a")
-        duplicate_claim = svc.db.claim_next_action_job_item(job["job_id"], "worker-b")
+        claimed = svc.db.claim_next_action_job_item(job["job_id"], "worker-a", lease_seconds=60)
+        duplicate_claim = svc.db.claim_next_action_job_item(job["job_id"], "worker-b", lease_seconds=60)
 
         assert claimed is not None
         assert claimed["skill_id"] == "skill_claim"
         assert claimed["claimed_by"] == "worker-a"
+        assert claimed["lease_expires_at"] is not None
         assert duplicate_claim is None
 
     def test_finalize_action_job_does_not_close_while_items_are_running(self, tmp_path, monkeypatch):
@@ -568,7 +569,7 @@ class TestGovernanceServiceActionJobs:
             max_attempts=2,
         )
         svc.db.update_action_job(job["job_id"], status="running", started_at="2026-04-03T02:00:00Z")
-        claimed = svc.db.claim_next_action_job_item(job["job_id"], "worker-a")
+        claimed = svc.db.claim_next_action_job_item(job["job_id"], "worker-a", lease_seconds=60)
 
         summary = svc._finalize_action_job(job["job_id"])
 
@@ -577,7 +578,7 @@ class TestGovernanceServiceActionJobs:
         assert summary["status"] == "running"
         assert summary["completed_at"] is None
 
-    def test_recovers_running_jobs_from_database(self, tmp_path, monkeypatch):
+    def test_recovers_only_expired_running_jobs_from_database(self, tmp_path, monkeypatch):
         from apps.api.services.governance import GovernanceService  # noqa
 
         svc = self._make_service(tmp_path, monkeypatch)
@@ -599,6 +600,8 @@ class TestGovernanceServiceActionJobs:
             completed_at=None,
             error_code="SCAN_RUNTIME_ERROR",
             error_message="stale failure",
+            lease_expires_at="2026-04-03T01:00:30Z",
+            claimed_by="worker-stale",
         )
 
         recovered_jobs = []
@@ -616,6 +619,83 @@ class TestGovernanceServiceActionJobs:
         assert recovered_item["error_code"] is None
         assert recovered_item["error_message"] is None
         assert recovered_item["claimed_by"] is None
+        assert recovered_item["lease_expires_at"] is None
+
+    def test_keeps_live_running_job_claimed_during_recovery(self, tmp_path, monkeypatch):
+        from apps.api.services.governance import GovernanceService  # noqa
+
+        svc = self._make_service(tmp_path, monkeypatch)
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_live"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+        item = svc.get_action_job_items(job["job_id"])[0]
+        svc.db.update_action_job(job["job_id"], status="running", started_at="2026-04-03T01:00:00Z")
+        svc.db.update_action_job_item(
+            item["item_id"],
+            status="running",
+            started_at="2026-04-03T01:00:01Z",
+            completed_at=None,
+            lease_expires_at="2099-04-03T01:00:30Z",
+            claimed_by="worker-live",
+        )
+
+        recovered_jobs = []
+        monkeypatch.setattr(GovernanceService, "_start_action_job_runner", lambda self, job_id: recovered_jobs.append(job_id))
+        recovered_service = GovernanceService()
+
+        assert recovered_jobs == []
+        recovered_job = recovered_service.get_action_job(job["job_id"])
+        recovered_item = recovered_service.get_action_job_items(job["job_id"])[0]
+        assert recovered_job is not None
+        assert recovered_job["status"] == "running"
+        assert recovered_item["status"] == "running"
+        assert recovered_item["claimed_by"] == "worker-live"
+        assert recovered_item["lease_expires_at"] == "2099-04-03T01:00:30Z"
+
+    def test_run_action_job_refreshes_item_lease_with_heartbeat(self, tmp_path, monkeypatch):
+        svc = self._make_service(tmp_path, monkeypatch)
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+        monkeypatch.setenv("SKILL0_ACTION_JOB_LEASE_SECONDS", "5")
+        monkeypatch.setenv("SKILL0_ACTION_JOB_HEARTBEAT_SECONDS", "0.05")
+
+        refresh_calls = []
+        original_refresh = svc.db.refresh_action_job_item_lease
+
+        def tracked_refresh(item_id, worker_id, lease_seconds):
+            refresh_calls.append((item_id, worker_id, lease_seconds))
+            return original_refresh(item_id, worker_id, lease_seconds)
+
+        monkeypatch.setattr(svc.db, "refresh_action_job_item_lease", tracked_refresh)
+
+        def slow_scan(skill_id):
+            import time
+            time.sleep(0.2)
+            return {
+                "status": "success",
+                "skill_id": skill_id,
+                "processed": 1,
+                "results": [{"skill_id": skill_id, "status": "success"}],
+            }
+
+        monkeypatch.setattr(svc, "run_scan", slow_scan)
+
+        job = svc.enqueue_action_job(
+            job_type="scan_batch",
+            skill_ids=["skill_heartbeat"],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+
+        svc._run_action_job(job["job_id"])
+
+        assert refresh_calls
 
     def test_test_source_path_missing(self, tmp_path):
         from apps.api.services.governance import GovernanceService  # noqa

@@ -277,14 +277,16 @@ Current implementation characteristics:
 - job state is persisted in `governance.db` via durable job / item tables
 - background execution still uses an in-process daemon thread runner
 - workers now atomically claim `queued/retrying` items from DB before execution, so duplicate item execution is blocked even if multiple API instances start runners for the same job
+- claimed items now carry `lease_expires_at`, and the active worker refreshes that lease while work is in flight
 - service startup recovers unfinished `queued/running` jobs and re-enqueues incomplete items
+- recovery now only requeues `running` items whose lease has expired; valid live leases stay bound to the current worker
 - job items freeze `target_revision_id` at enqueue time when available
 - manual retry allowed only for retriable failure codes
 - existing synchronous `POST /api/skills/scan` and `POST /api/skills/test` remain unchanged
 
 Still not implemented from the original design:
 
-- full lease / heartbeat policy for long-running items
+- richer lease / heartbeat observability and explicit expiry reason semantics
 - automated retry backoff worker policy
 - actor/RBAC refinement beyond existing authenticated dashboard access
 - richer telemetry, cancellation semantics, and queue prioritization

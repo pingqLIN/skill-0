@@ -61,6 +61,22 @@ class GovernanceService:
     def _job_action_type(self, job_type: str) -> str:
         return "scan" if job_type == "scan_batch" else "test"
 
+    def _action_job_item_lease_seconds(self) -> int:
+        raw = os.getenv("SKILL0_ACTION_JOB_LEASE_SECONDS", "300")
+        try:
+            return max(int(raw), 5)
+        except ValueError:
+            return 300
+
+    def _action_job_item_heartbeat_seconds(self) -> float:
+        raw = os.getenv("SKILL0_ACTION_JOB_HEARTBEAT_SECONDS")
+        if raw:
+            try:
+                return max(float(raw), 0.1)
+            except ValueError:
+                pass
+        return max(self._action_job_item_lease_seconds() / 3.0, 1.0)
+
     def _is_retriable_error(self, error_code: Optional[str]) -> bool:
         non_retriable = {
             "PATH_NOT_FOUND",
@@ -158,20 +174,54 @@ class GovernanceService:
             with self._action_job_lock:
                 self._active_action_job_threads.discard(job_id)
 
+    def _is_item_lease_expired(self, item: Dict[str, Any], *, now: Optional[datetime] = None) -> bool:
+        lease_expires_at = item.get("lease_expires_at")
+        if not lease_expires_at:
+            return True
+        current = now or datetime.utcnow()
+        try:
+            expiry = datetime.fromisoformat(str(lease_expires_at).replace("Z", ""))
+        except ValueError:
+            return True
+        return expiry <= current
+
+    def _start_item_heartbeat(self, item_id: str) -> tuple[threading.Event, threading.Thread]:
+        stop_event = threading.Event()
+        interval = self._action_job_item_heartbeat_seconds()
+        lease_seconds = self._action_job_item_lease_seconds()
+
+        def heartbeat() -> None:
+            while not stop_event.wait(interval):
+                refreshed = self.db.refresh_action_job_item_lease(item_id, self._worker_id, lease_seconds)
+                if not refreshed:
+                    return
+
+        thread = threading.Thread(target=heartbeat, args=(), daemon=True)
+        thread.start()
+        return stop_event, thread
+
     def _recover_incomplete_action_jobs(self) -> None:
         self._ensure_action_job_state()
         recoverable_jobs = self.db.list_action_jobs(statuses=["queued", "running"], limit=500)
         for job in recoverable_jobs:
             items = self.db.get_action_job_items(job["job_id"])
-            active_items = [
+            stale_running_items = [
                 item for item in items
-                if item["status"] in {"queued", "running", "retrying"}
+                if item["status"] == "running" and self._is_item_lease_expired(item)
             ]
-            if not active_items:
+            runnable_items = [
+                item for item in items
+                if item["status"] in {"queued", "retrying"}
+            ]
+            live_running_items = [
+                item for item in items
+                if item["status"] == "running" and not self._is_item_lease_expired(item)
+            ]
+            if not stale_running_items and not runnable_items and not live_running_items:
                 self._finalize_action_job(job["job_id"], items)
                 continue
 
-            for item in active_items:
+            for item in stale_running_items:
                 recovered_status = "retrying" if item["attempt_number"] > 1 else "queued"
                 self.db.update_action_job_item(
                     item["item_id"],
@@ -181,16 +231,29 @@ class GovernanceService:
                     error_code=None,
                     error_message=None,
                     claimed_by=None,
+                    lease_expires_at=None,
                 )
+                runnable_items.append(item)
 
-            self.db.update_action_job(
-                job["job_id"],
-                status="queued",
-                completed_at=None,
-                error_code=None,
-                error_message=None,
-            )
-            self._start_action_job_runner(job["job_id"])
+            if runnable_items:
+                self.db.update_action_job(
+                    job["job_id"],
+                    status="running" if live_running_items else "queued",
+                    completed_at=None,
+                    error_code=None,
+                    error_message=None,
+                )
+                self._start_action_job_runner(job["job_id"])
+                continue
+
+            if live_running_items:
+                self.db.update_action_job(
+                    job["job_id"],
+                    status="running",
+                    completed_at=None,
+                    error_code=None,
+                    error_message=None,
+                )
 
     def _finalize_action_job(self, job_id: str, items: Optional[List[Dict[str, Any]]] = None) -> Optional[Dict[str, Any]]:
         items = items if items is not None else self.db.get_action_job_items(job_id)
@@ -306,10 +369,17 @@ class GovernanceService:
         runner = self.run_scan if job_type == "scan_batch" else self.run_test
 
         while True:
-            item = self.db.claim_next_action_job_item(job_id, self._worker_id)
+            item = self.db.claim_next_action_job_item(
+                job_id,
+                self._worker_id,
+                self._action_job_item_lease_seconds(),
+            )
             if not item:
                 break
+            stop_heartbeat, heartbeat_thread = self._start_item_heartbeat(item["item_id"])
             result = runner(item["skill_id"])
+            stop_heartbeat.set()
+            heartbeat_thread.join(timeout=max(self._action_job_item_heartbeat_seconds(), 1.0))
 
             self.db.update_action_job_item(
                 item["item_id"],
@@ -318,7 +388,8 @@ class GovernanceService:
                 error_code=result.get("error_code"),
                 error_message=result.get("error_message"),
                 status="succeeded" if result.get("status") == "success" else "failed",
-                claimed_by=self._worker_id,
+                claimed_by=None,
+                lease_expires_at=None,
             )
 
         self._finalize_action_job(job_id)

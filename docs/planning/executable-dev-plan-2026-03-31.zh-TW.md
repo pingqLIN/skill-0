@@ -162,6 +162,12 @@ cd skill-0-dashboard/apps/web && npm run build
    - 這一層已能防止多個 active API instance 對同一 item 重複執行；更進一步的 lease/heartbeat/cancel 仍屬 hardening
    - 最小驗證：`.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests/test_governance.py -q`
 
+12. `CP-02` lease / heartbeat 已於 `2026-04-03` 再補一格：
+   - claimed item 現在帶有 `lease_expires_at`，active worker 會在執行期間定期 refresh lease
+   - recovery 只會回收 lease 已過期的 `running` item，仍在有效 lease 內的 item 會保留給既有 worker
+   - 這讓「active worker 被誤當 orphaned」的風險下降，後續剩餘工作集中在 cancel semantics 與 richer telemetry
+   - 最小驗證：`.venv/bin/python -m pytest skill-0-dashboard/apps/api/tests/test_governance.py -q`
+
 ---
 
 ## 5. 近期排程建議（可直接執行）
@@ -177,7 +183,7 @@ cd skill-0-dashboard/apps/web && npm run build
 
 ### Sprint S1（1-2 天）
 
-1. 推進 CP-02 下一階段：補上 job telemetry、取消語義，以及更完整的 lease / heartbeat policy。  
+1. 推進 CP-02 下一階段：補上 job telemetry、取消語義，以及更完整的 lease expiry / heartbeat observability。  
 2. 擴大 async UI 覆蓋面：評估是否將 batch job 狀態延伸到更多治理入口，而不重複造輪子。  
 3. 持續收斂 CP-05：補齊其他歷史規劃/評估文件的 status note 與權威入口對齊。  
 
