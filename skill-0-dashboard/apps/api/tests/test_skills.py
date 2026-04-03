@@ -174,12 +174,24 @@ def test_enqueue_scan_job(client, auth_header, mock_service):
 
 
 def test_get_action_job(client, auth_header, mock_service):
+    mock_service.get_action_job.return_value = {
+        **mock_service.get_action_job.return_value,
+        "cancelled_at": None,
+        "cancelled_by": None,
+        "active_workers": ["worker-a"],
+        "active_lease_expires_at": "2026-04-03T01:05:00Z",
+        "last_item_started_at": "2026-04-03T01:00:00Z",
+        "last_item_completed_at": None,
+    }
     response = client.get(
         "/api/skills/action-jobs/job_scan_20260402_001",
         headers=auth_header,
     )
     assert response.status_code == 200
-    assert response.json()["job_id"] == "job_scan_20260402_001"
+    data = response.json()
+    assert data["job_id"] == "job_scan_20260402_001"
+    assert data["active_workers"] == ["worker-a"]
+    assert data["active_lease_expires_at"] == "2026-04-03T01:05:00Z"
     mock_service.get_action_job.assert_called_once_with("job_scan_20260402_001")
 
 

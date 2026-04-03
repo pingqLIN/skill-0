@@ -112,6 +112,23 @@ class GovernanceService:
         payload = dict(job)
         payload["summary"] = self._compute_job_summary(items)
         payload["queued_items"] = len(items)
+        payload["active_workers"] = sorted({
+            str(item["claimed_by"])
+            for item in items
+            if item.get("status") == "running" and item.get("claimed_by")
+        })
+        payload["active_lease_expires_at"] = max(
+            (str(item["lease_expires_at"]) for item in items if item.get("status") == "running" and item.get("lease_expires_at")),
+            default=None,
+        )
+        payload["last_item_started_at"] = max(
+            (str(item["started_at"]) for item in items if item.get("started_at")),
+            default=None,
+        )
+        payload["last_item_completed_at"] = max(
+            (str(item["completed_at"]) for item in items if item.get("completed_at")),
+            default=None,
+        )
         return payload
 
     def _serialize_job_items(self, job_id: str) -> Optional[List[Dict[str, Any]]]:
@@ -256,6 +273,8 @@ class GovernanceService:
                     job["job_id"],
                     status="running" if live_running_items else "queued",
                     completed_at=None,
+                    cancelled_at=None,
+                    cancelled_by=None,
                     error_code=None,
                     error_message=None,
                 )
@@ -267,6 +286,8 @@ class GovernanceService:
                     job["job_id"],
                     status="running",
                     completed_at=None,
+                    cancelled_at=None,
+                    cancelled_by=None,
                     error_code=None,
                     error_message=None,
                 )
@@ -286,7 +307,9 @@ class GovernanceService:
             self.db.update_action_job(
                 job_id,
                 status="cancelled",
-                completed_at=job.get("completed_at") or self._utcnow_iso(),
+                completed_at=job.get("completed_at") or job.get("cancelled_at") or self._utcnow_iso(),
+                cancelled_at=job.get("cancelled_at") or self._utcnow_iso(),
+                cancelled_by=job.get("cancelled_by"),
                 error_code=job.get("error_code") or "JOB_CANCELLED",
                 error_message=job.get("error_message") or "Action job cancelled",
             )
@@ -358,6 +381,8 @@ class GovernanceService:
                 "queued_at": queued_at,
                 "started_at": None,
                 "completed_at": None,
+                "cancelled_at": None,
+                "cancelled_by": None,
                 "error_code": None,
                 "error_message": None,
                 "created_at": queued_at,
@@ -392,6 +417,8 @@ class GovernanceService:
             status="running",
             started_at=started_at,
             completed_at=None,
+            cancelled_at=None,
+            cancelled_by=None,
             error_code=None,
             error_message=None,
         )
@@ -459,6 +486,8 @@ class GovernanceService:
             job_id,
             status="cancelled",
             completed_at=None if has_running_items else cancelled_at,
+            cancelled_at=cancelled_at,
+            cancelled_by=requested_by,
             error_code="JOB_CANCELLED",
             error_message=f"Action job cancelled by {requested_by}",
         )
@@ -550,6 +579,8 @@ class GovernanceService:
                 "queued_at": queued_at,
                 "started_at": None,
                 "completed_at": None,
+                "cancelled_at": None,
+                "cancelled_by": None,
                 "error_code": None,
                 "error_message": None,
                 "created_at": queued_at,

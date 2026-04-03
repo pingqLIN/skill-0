@@ -556,6 +556,11 @@ class TestGovernanceServiceActionJobs:
         assert claimed["claimed_by"] == "worker-a"
         assert claimed["lease_expires_at"] is not None
         assert duplicate_claim is None
+        job_summary = svc.get_action_job(job["job_id"])
+        assert job_summary is not None
+        assert job_summary["active_workers"] == ["worker-a"]
+        assert job_summary["active_lease_expires_at"] is not None
+        assert job_summary["last_item_started_at"] is not None
 
     def test_finalize_action_job_does_not_close_while_items_are_running(self, tmp_path, monkeypatch):
         svc = self._make_service(tmp_path, monkeypatch)
@@ -598,6 +603,8 @@ class TestGovernanceServiceActionJobs:
 
         assert cancelled["status"] == "cancelled"
         assert cancelled["error_code"] == "JOB_CANCELLED"
+        assert cancelled["cancelled_by"] == "reviewer"
+        assert cancelled["cancelled_at"] is not None
         assert all(item["status"] == "cancelled" for item in items)
         assert svc.db.claim_next_action_job_item(job["job_id"], "worker-a", lease_seconds=60) is None
 
@@ -622,6 +629,8 @@ class TestGovernanceServiceActionJobs:
 
         assert running_item is not None
         assert cancelled["status"] == "cancelled"
+        assert cancelled["cancelled_by"] == "reviewer"
+        assert cancelled["cancelled_at"] is not None
         assert svc.db.claim_next_action_job_item(job["job_id"], "worker-b", lease_seconds=60) is None
         assert next(item for item in items_after_cancel if item["skill_id"] == "skill_waiting")["status"] == "cancelled"
         assert next(item for item in items_after_cancel if item["skill_id"] == "skill_running")["status"] == "running"

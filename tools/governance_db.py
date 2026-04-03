@@ -732,12 +732,16 @@ class GovernanceDB:
                     queued_at TEXT NOT NULL,
                     started_at TEXT,
                     completed_at TEXT,
+                    cancelled_at TEXT,
+                    cancelled_by TEXT,
                     error_code TEXT,
                     error_message TEXT,
                     created_at TEXT NOT NULL,
                     updated_at TEXT NOT NULL
                 )
             """)
+            self._ensure_column(conn, "action_jobs", "cancelled_at TEXT")
+            self._ensure_column(conn, "action_jobs", "cancelled_by TEXT")
 
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS action_job_items (
@@ -1394,8 +1398,8 @@ class GovernanceDB:
                 INSERT INTO action_jobs (
                     job_id, job_type, status, requested_by, selection_mode,
                     max_attempts, queued_at, started_at, completed_at,
-                    error_code, error_message, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    cancelled_at, cancelled_by, error_code, error_message, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     job["job_id"],
@@ -1407,6 +1411,8 @@ class GovernanceDB:
                     job["queued_at"],
                     job.get("started_at"),
                     job.get("completed_at"),
+                    job.get("cancelled_at"),
+                    job.get("cancelled_by"),
                     job.get("error_code"),
                     job.get("error_message"),
                     job.get("created_at", now),
@@ -1501,6 +1507,8 @@ class GovernanceDB:
             "status",
             "started_at",
             "completed_at",
+            "cancelled_at",
+            "cancelled_by",
             "error_code",
             "error_message",
         }

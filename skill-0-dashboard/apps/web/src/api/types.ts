@@ -237,8 +237,14 @@ export interface ActionJobSummary {
   queued_at: string;
   started_at: string | null;
   completed_at: string | null;
+  cancelled_at: string | null;
+  cancelled_by: string | null;
   error_code: string | null;
   error_message: string | null;
+  active_workers: string[];
+  active_lease_expires_at: string | null;
+  last_item_started_at: string | null;
+  last_item_completed_at: string | null;
   summary: ActionJobSummaryCounts;
 }
 
