@@ -212,7 +212,7 @@ export type ActionJobStatus =
   | 'completed_with_failures'
   | 'failed'
   | 'cancelled';
-export type ActionJobItemStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'skipped' | 'retrying';
+export type ActionJobItemStatus = 'queued' | 'running' | 'succeeded' | 'failed' | 'skipped' | 'retrying' | 'cancelled';
 export type ActionSelectionMode = 'explicit' | 'pending' | 'retry_failures' | 'retry_item';
 
 export interface ActionJobSummaryCounts {
@@ -223,6 +223,7 @@ export interface ActionJobSummaryCounts {
   failed: number;
   retrying: number;
   skipped: number;
+  cancelled: number;
 }
 
 export interface ActionJobSummary {

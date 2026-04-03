@@ -6,6 +6,7 @@ import { usePendingReviews, useApproveSkill, useRejectSkill } from '@/api/review
 import {
   useActionJob,
   useActionJobItems,
+  useCancelActionJob,
   useEnqueueScanJob,
   useEnqueueTestJob,
   useRetryActionJobFailures,
@@ -76,6 +77,7 @@ export function ReviewQueue() {
   const rejectMutation = useRejectSkill();
   const scanJobMutation = useEnqueueScanJob();
   const testJobMutation = useEnqueueTestJob();
+  const cancelJobMutation = useCancelActionJob();
   const retryFailuresMutation = useRetryActionJobFailures();
   const { data: actionJob } = useActionJob(activeJobId);
   const { data: actionJobItems = [] } = useActionJobItems(activeJobId);
@@ -122,6 +124,14 @@ export function ReviewQueue() {
       setFeedback({
         message: `${kindLabel} job complete - ${actionJob.summary.succeeded}/${actionJob.summary.total} succeeded`,
         type: 'success',
+      });
+      return;
+    }
+
+    if (actionJob.status === 'cancelled') {
+      setFeedback({
+        message: `${kindLabel} job cancelled`,
+        type: 'error',
       });
       return;
     }
@@ -256,12 +266,36 @@ export function ReviewQueue() {
     });
   };
 
+  const handleCancelJob = async () => {
+    const targetJobId = actionJob?.job_id ?? activeJobId;
+    if (!targetJobId) {
+      return;
+    }
+
+    setFeedback(null);
+    const cancelledJob = await cancelJobMutation.mutateAsync({ jobId: targetJobId }).catch((error: Error) => {
+      setFeedback({ message: error.message, type: 'error' });
+      return null;
+    });
+
+    if (!cancelledJob) {
+      return;
+    }
+
+    setFeedback({
+      message: `${actionKind === 'test' ? 'Test' : 'Scan'} job cancelled`,
+      type: 'error',
+    });
+    queryClient.invalidateQueries({ queryKey: ['action-job-items', targetJobId] });
+  };
+
   const activeActionPending =
     isBulkApproving ||
     approveMutation.isPending ||
     rejectMutation.isPending ||
     scanJobMutation.isPending ||
     testJobMutation.isPending ||
+    cancelJobMutation.isPending ||
     retryFailuresMutation.isPending ||
     actionJob?.status === 'queued' ||
     actionJob?.status === 'running';
@@ -374,6 +408,19 @@ export function ReviewQueue() {
         >
           <span>{feedback.message}</span>
           <div className="ml-4 flex items-center gap-3">
+            {actionJob && (
+              <>
+                {(actionJob.status === 'queued' || actionJob.status === 'running') && (
+                  <button
+                    onClick={() => void handleCancelJob()}
+                    className="text-xs underline inline-flex items-center gap-1"
+                    disabled={cancelJobMutation.isPending}
+                  >
+                    {cancelJobMutation.isPending ? 'Cancelling...' : 'Cancel job'}
+                  </button>
+                )}
+              </>
+            )}
             {actionJob && (
               <button
                 onClick={() => setShowJobDetails((value) => !value)}

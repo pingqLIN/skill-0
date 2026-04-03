@@ -1556,9 +1556,13 @@ class GovernanceDB:
                 cursor = conn.cursor()
                 cursor.execute(
                     """
-                    SELECT item_id FROM action_job_items
-                    WHERE job_id = ? AND status IN ('queued', 'retrying')
-                    ORDER BY created_at ASC, item_id ASC
+                    SELECT i.item_id
+                    FROM action_job_items AS i
+                    JOIN action_jobs AS j ON j.job_id = i.job_id
+                    WHERE i.job_id = ?
+                      AND i.status IN ('queued', 'retrying')
+                      AND j.status IN ('queued', 'running')
+                    ORDER BY i.created_at ASC, i.item_id ASC
                     LIMIT 1
                     """,
                     (job_id,),
@@ -1597,6 +1601,31 @@ class GovernanceDB:
                 item = dict(claimed)
                 item["result"] = self._decode_json_field(item.pop("result_json", None), None)
                 return item
+
+    def cancel_pending_action_job_items(self, job_id: str, *, cancelled_at: str, error_message: str) -> int:
+        """Mark all queued/retrying items in a job as cancelled."""
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                UPDATE action_job_items
+                SET status = 'cancelled',
+                    completed_at = ?,
+                    error_code = 'JOB_CANCELLED',
+                    error_message = ?,
+                    claimed_by = NULL,
+                    lease_expires_at = NULL,
+                    updated_at = ?
+                WHERE job_id = ? AND status IN ('queued', 'retrying')
+                """,
+                (
+                    cancelled_at,
+                    error_message,
+                    datetime.now().isoformat(),
+                    job_id,
+                ),
+            )
+            return cursor.rowcount
 
     def refresh_action_job_item_lease(self, item_id: str, worker_id: str, lease_seconds: int) -> bool:
         """Extend the lease for a running item held by the same worker."""

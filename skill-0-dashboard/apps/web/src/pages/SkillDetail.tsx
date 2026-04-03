@@ -10,6 +10,7 @@ import {
   useEnqueueTestJob,
   useActionJob,
   useActionJobItems,
+  useCancelActionJob,
   useRetryActionJobItem,
 } from '@/api/skills';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -64,6 +65,7 @@ export function SkillDetail() {
   const { data: readiness } = useActionReadiness(skillId || '');
   const scanJobMutation = useEnqueueScanJob();
   const testJobMutation = useEnqueueTestJob();
+  const cancelJobMutation = useCancelActionJob();
   const retryJobItemMutation = useRetryActionJobItem();
   const [actionMessage, setActionMessage] = useState<{ text: string; ok: boolean } | null>(null);
   const [actionKind, setActionKind] = useState<'scan' | 'test' | null>(null);
@@ -109,6 +111,14 @@ export function SkillDetail() {
           ok: true,
         });
       }
+      return;
+    }
+
+    if (actionJob.status === 'cancelled') {
+      setActionMessage({
+        text: `${kindLabel} job cancelled`,
+        ok: false,
+      });
       return;
     }
 
@@ -166,6 +176,7 @@ export function SkillDetail() {
   const activeActionPending =
     scanJobMutation.isPending ||
     testJobMutation.isPending ||
+    cancelJobMutation.isPending ||
     retryJobItemMutation.isPending ||
     actionJob?.status === 'queued' ||
     actionJob?.status === 'running';
@@ -202,6 +213,29 @@ export function SkillDetail() {
       ok: true,
     });
     setShowDetails(true);
+  };
+
+  const handleCancelJob = async () => {
+    const targetJobId = actionJob?.job_id ?? activeJobId;
+    if (!targetJobId) {
+      return;
+    }
+
+    setActionMessage(null);
+    const cancelledJob = await cancelJobMutation.mutateAsync({ jobId: targetJobId }).catch((e: Error) => {
+      setActionMessage({ text: e.message, ok: false });
+      return null;
+    });
+
+    if (!cancelledJob) {
+      return;
+    }
+
+    setActionMessage({
+      text: `${actionKind === 'test' ? 'Test' : 'Scan'} job cancelled`,
+      ok: false,
+    });
+    queryClient.invalidateQueries({ queryKey: ['action-job-items', targetJobId] });
   };
 
   const renderActionJobRow = (item: ActionJobItem, job: ActionJobSummary) => {
@@ -279,6 +313,19 @@ export function SkillDetail() {
         <div className={`mb-2 px-4 py-3 rounded-md text-sm flex items-center gap-2 ${actionMessage.ok ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
           {actionMessage.ok ? <CheckCircle className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
           {actionMessage.text}
+          {actionJob && (
+            <>
+              {(actionJob.status === 'queued' || actionJob.status === 'running') && (
+                <button
+                  className="text-xs underline opacity-70 hover:opacity-100 flex items-center gap-1"
+                  onClick={() => void handleCancelJob()}
+                  disabled={cancelJobMutation.isPending}
+                >
+                  {cancelJobMutation.isPending ? 'Cancelling...' : 'Cancel job'}
+                </button>
+              )}
+            </>
+          )}
           {actionJob && (
             <button
               className="ml-auto text-xs underline opacity-70 hover:opacity-100 flex items-center gap-1"
