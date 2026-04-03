@@ -190,7 +190,7 @@ class SkillRevisionRecord:
 class GovernanceDB:
     """SQLite database for skill governance"""
 
-    SCHEMA_VERSION = "1.1.0"
+    SCHEMA_VERSION = "1.2.0"
     SKILL_MUTABLE_FIELDS = {
         "name",
         "author_name",
@@ -230,6 +230,14 @@ class GovernanceDB:
         cursor = conn.cursor()
         cursor.execute(f"PRAGMA table_info({table})")
         return {row["name"] for row in cursor.fetchall()}
+
+    def _decode_json_field(self, raw_value: Optional[str], default: Any) -> Any:
+        if raw_value in (None, ""):
+            return default
+        try:
+            return json.loads(raw_value)
+        except (TypeError, json.JSONDecodeError):
+            return default
 
     def _ensure_column(self, conn: sqlite3.Connection, table: str, definition: str) -> None:
         column_name = definition.split()[0]
@@ -713,6 +721,46 @@ class GovernanceDB:
             """)
             self._ensure_column(conn, "audit_log", "revision_id TEXT")
 
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS action_jobs (
+                    job_id TEXT PRIMARY KEY,
+                    job_type TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    requested_by TEXT NOT NULL,
+                    selection_mode TEXT NOT NULL,
+                    max_attempts INTEGER NOT NULL DEFAULT 2,
+                    queued_at TEXT NOT NULL,
+                    started_at TEXT,
+                    completed_at TEXT,
+                    error_code TEXT,
+                    error_message TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                )
+            """)
+
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS action_job_items (
+                    item_id TEXT PRIMARY KEY,
+                    job_id TEXT NOT NULL,
+                    skill_id TEXT NOT NULL,
+                    target_revision_id TEXT,
+                    action_type TEXT NOT NULL,
+                    status TEXT NOT NULL,
+                    attempt_number INTEGER NOT NULL,
+                    max_attempts INTEGER NOT NULL,
+                    started_at TEXT,
+                    completed_at TEXT,
+                    result_json TEXT,
+                    error_code TEXT,
+                    error_message TEXT,
+                    retry_of_item_id TEXT,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL,
+                    FOREIGN KEY (job_id) REFERENCES action_jobs(job_id)
+                )
+            """)
+
             # Create indexes
             cursor.execute("CREATE INDEX IF NOT EXISTS idx_skills_name ON skills(name)")
             cursor.execute(
@@ -744,6 +792,18 @@ class GovernanceDB:
             )
             cursor.execute(
                 "CREATE INDEX IF NOT EXISTS idx_audit_time ON audit_log(timestamp)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_action_jobs_status ON action_jobs(status)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_action_jobs_queued_at ON action_jobs(queued_at)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_action_job_items_job ON action_job_items(job_id)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_action_job_items_status ON action_job_items(job_id, status)"
             )
 
             # Check schema version
@@ -1316,6 +1376,170 @@ class GovernanceDB:
             )
 
             return [dict(row) for row in cursor.fetchall()]
+
+    # ============ Durable Action Jobs ============
+
+    def create_action_job(self, job: Dict[str, Any], items: List[Dict[str, Any]]) -> None:
+        """Persist an async governance action job and its items."""
+        now = datetime.now().isoformat()
+
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                INSERT INTO action_jobs (
+                    job_id, job_type, status, requested_by, selection_mode,
+                    max_attempts, queued_at, started_at, completed_at,
+                    error_code, error_message, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    job["job_id"],
+                    job["job_type"],
+                    job["status"],
+                    job["requested_by"],
+                    job["selection_mode"],
+                    job["max_attempts"],
+                    job["queued_at"],
+                    job.get("started_at"),
+                    job.get("completed_at"),
+                    job.get("error_code"),
+                    job.get("error_message"),
+                    job.get("created_at", now),
+                    job.get("updated_at", now),
+                ),
+            )
+
+            for item in items:
+                cursor.execute(
+                    """
+                    INSERT INTO action_job_items (
+                        item_id, job_id, skill_id, target_revision_id, action_type,
+                        status, attempt_number, max_attempts, started_at, completed_at,
+                        result_json, error_code, error_message, retry_of_item_id,
+                        created_at, updated_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        item["item_id"],
+                        item["job_id"],
+                        item["skill_id"],
+                        item.get("target_revision_id"),
+                        item["action_type"],
+                        item["status"],
+                        item["attempt_number"],
+                        item["max_attempts"],
+                        item.get("started_at"),
+                        item.get("completed_at"),
+                        json.dumps(item.get("result")) if item.get("result") is not None else None,
+                        item.get("error_code"),
+                        item.get("error_message"),
+                        item.get("retry_of_item_id"),
+                        item.get("created_at", now),
+                        item.get("updated_at", now),
+                    ),
+                )
+
+    def get_action_job(self, job_id: str) -> Optional[Dict[str, Any]]:
+        """Fetch a persisted action job by ID."""
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM action_jobs WHERE job_id = ?", (job_id,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
+
+    def list_action_jobs(
+        self,
+        *,
+        statuses: Optional[List[str]] = None,
+        limit: int = 100,
+    ) -> List[Dict[str, Any]]:
+        """List persisted action jobs, optionally filtered by status."""
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            query = "SELECT * FROM action_jobs"
+            params: List[Any] = []
+
+            if statuses:
+                placeholders = ", ".join("?" for _ in statuses)
+                query += f" WHERE status IN ({placeholders})"
+                params.extend(statuses)
+
+            query += " ORDER BY queued_at DESC LIMIT ?"
+            params.append(limit)
+            cursor.execute(query, params)
+            return [dict(row) for row in cursor.fetchall()]
+
+    def get_action_job_items(self, job_id: str) -> List[Dict[str, Any]]:
+        """Fetch persisted action job items for a job."""
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT * FROM action_job_items
+                WHERE job_id = ?
+                ORDER BY created_at ASC, item_id ASC
+                """,
+                (job_id,),
+            )
+            items = []
+            for row in cursor.fetchall():
+                item = dict(row)
+                item["result"] = self._decode_json_field(item.pop("result_json", None), None)
+                items.append(item)
+            return items
+
+    def update_action_job(self, job_id: str, **updates) -> bool:
+        """Update mutable state for a persisted action job."""
+        allowed = {
+            "status",
+            "started_at",
+            "completed_at",
+            "error_code",
+            "error_message",
+        }
+        invalid = sorted(set(updates) - allowed)
+        if invalid:
+            raise ValueError("Unsupported action job fields: " + ", ".join(invalid))
+        if not updates:
+            return False
+
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            updates["updated_at"] = datetime.now().isoformat()
+            set_clause = ", ".join(f"{field} = ?" for field in updates)
+            values = list(updates.values()) + [job_id]
+            cursor.execute(f"UPDATE action_jobs SET {set_clause} WHERE job_id = ?", values)
+            return cursor.rowcount > 0
+
+    def update_action_job_item(self, item_id: str, **updates) -> bool:
+        """Update mutable state for a persisted action job item."""
+        allowed = {
+            "status",
+            "started_at",
+            "completed_at",
+            "result",
+            "error_code",
+            "error_message",
+        }
+        invalid = sorted(set(updates) - allowed)
+        if invalid:
+            raise ValueError("Unsupported action job item fields: " + ", ".join(invalid))
+        if not updates:
+            return False
+
+        db_updates = dict(updates)
+        if "result" in db_updates:
+            result = db_updates.pop("result")
+            db_updates["result_json"] = json.dumps(result) if result is not None else None
+
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            db_updates["updated_at"] = datetime.now().isoformat()
+            set_clause = ", ".join(f"{field} = ?" for field in db_updates)
+            values = list(db_updates.values()) + [item_id]
+            cursor.execute(f"UPDATE action_job_items SET {set_clause} WHERE item_id = ?", values)
+            return cursor.rowcount > 0
 
     # ============ Approval Workflow ============
 

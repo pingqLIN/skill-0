@@ -1,28 +1,83 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { ReviewCard } from '@/components/cards/ReviewCard';
 import { usePendingReviews, useApproveSkill, useRejectSkill } from '@/api/reviews';
+import {
+  useActionJob,
+  useActionJobItems,
+  useEnqueueScanJob,
+  useEnqueueTestJob,
+  useRetryActionJobFailures,
+} from '@/api/skills';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  RotateCcw,
+  Shield,
+  TestTube,
+  XCircle,
+} from 'lucide-react';
+import type { ActionJobItem, ActionJobSummary } from '@/api/types';
 
 type FilterType = 'all' | 'safe' | 'risky';
+type ActionKind = 'scan' | 'test' | null;
 
 interface Feedback {
   message: string;
   type: 'success' | 'error';
 }
 
+const riskColors: Record<string, string> = {
+  safe: 'bg-green-100 text-green-800',
+  low: 'bg-yellow-100 text-yellow-800',
+  medium: 'bg-orange-100 text-orange-800',
+  high: 'bg-red-100 text-red-800',
+  critical: 'bg-red-200 text-red-900',
+  blocked: 'bg-gray-100 text-gray-800',
+};
+
+const actionJobStatusColors: Record<string, string> = {
+  queued: 'bg-blue-100 text-blue-800',
+  running: 'bg-indigo-100 text-indigo-800',
+  completed: 'bg-green-100 text-green-800',
+  completed_with_failures: 'bg-amber-100 text-amber-800',
+  failed: 'bg-red-100 text-red-800',
+  cancelled: 'bg-gray-100 text-gray-800',
+};
+
+const NON_RETRIABLE_ERROR_CODES = new Set([
+  'PATH_NOT_FOUND',
+  'SOURCE_PATH_MISSING',
+  'SOURCE_PATH_NOT_ALLOWED',
+  'INSTALLED_PATH_MISSING',
+  'INSTALLED_PATH_NOT_ALLOWED',
+]);
+
 export function ReviewQueue() {
+  const queryClient = useQueryClient();
   const [filter, setFilter] = useState<FilterType>('all');
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [isBulkApproving, setIsBulkApproving] = useState(false);
+  const [activeJobId, setActiveJobId] = useState('');
+  const [actionKind, setActionKind] = useState<ActionKind>(null);
+  const [showJobDetails, setShowJobDetails] = useState(false);
   const { data: skills, isLoading } = usePendingReviews();
   const approveMutation = useApproveSkill();
   const rejectMutation = useRejectSkill();
+  const scanJobMutation = useEnqueueScanJob();
+  const testJobMutation = useEnqueueTestJob();
+  const retryFailuresMutation = useRetryActionJobFailures();
+  const { data: actionJob } = useActionJob(activeJobId);
+  const { data: actionJobItems = [] } = useActionJobItems(activeJobId);
 
-  const safeSkills = skills?.filter(s => ['safe', 'low'].includes(s.risk_level)) || [];
-  const riskySkills = skills?.filter(s => ['medium', 'high', 'critical'].includes(s.risk_level)) || [];
+  const safeSkills = skills?.filter((skill) => ['safe', 'low'].includes(skill.risk_level)) || [];
+  const riskySkills = skills?.filter((skill) => ['medium', 'high', 'critical'].includes(skill.risk_level)) || [];
   const filteredSkills =
     filter === 'safe'
       ? safeSkills
@@ -32,25 +87,69 @@ export function ReviewQueue() {
 
   const safeCount = safeSkills.length;
   const riskyCount = riskySkills.length;
+  const pendingCount = skills?.length || 0;
+
+  useEffect(() => {
+    if (!actionJob || !actionKind) {
+      return;
+    }
+
+    const kindLabel = actionKind === 'test' ? 'Test' : 'Scan';
+    const completedCount = actionJob.summary.succeeded + actionJob.summary.failed + actionJob.summary.skipped;
+
+    if (actionJob.status === 'queued') {
+      setFeedback({ message: `${kindLabel} job queued`, type: 'success' });
+      return;
+    }
+
+    if (actionJob.status === 'running') {
+      setFeedback({
+        message: `${kindLabel} job running - ${completedCount}/${actionJob.summary.total} completed`,
+        type: 'success',
+      });
+      return;
+    }
+
+    queryClient.invalidateQueries({ queryKey: ['reviews'] });
+    queryClient.invalidateQueries({ queryKey: ['skills'] });
+    queryClient.invalidateQueries({ queryKey: ['stats'] });
+
+    if (actionJob.status === 'completed') {
+      setFeedback({
+        message: `${kindLabel} job complete - ${actionJob.summary.succeeded}/${actionJob.summary.total} succeeded`,
+        type: 'success',
+      });
+      return;
+    }
+
+    const failureMessage = actionJob.error_message ?? `${kindLabel} job finished with failures`;
+    setFeedback({ message: failureMessage, type: 'error' });
+  }, [actionJob, actionKind, queryClient]);
 
   const handleApprove = (skillId: string, reason: string) => {
-    approveMutation.mutate({ skillId, reason }, {
-      onSuccess: (data) => setFeedback({ message: `Skill ${data.skill_id}: ${data.status}`, type: 'success' }),
-      onError: (err: unknown) => {
-        const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-        setFeedback({ message: detail || 'Approve failed', type: 'error' });
-      },
-    });
+    approveMutation.mutate(
+      { skillId, reason },
+      {
+        onSuccess: (data) => setFeedback({ message: `Skill ${data.skill_id}: ${data.status}`, type: 'success' }),
+        onError: (err: unknown) => {
+          const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+          setFeedback({ message: detail || 'Approve failed', type: 'error' });
+        },
+      }
+    );
   };
 
   const handleReject = (skillId: string, reason: string) => {
-    rejectMutation.mutate({ skillId, reason }, {
-      onSuccess: (data) => setFeedback({ message: `Skill ${data.skill_id}: ${data.status}`, type: 'success' }),
-      onError: (err: unknown) => {
-        const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
-        setFeedback({ message: detail || 'Reject failed', type: 'error' });
-      },
-    });
+    rejectMutation.mutate(
+      { skillId, reason },
+      {
+        onSuccess: (data) => setFeedback({ message: `Skill ${data.skill_id}: ${data.status}`, type: 'success' }),
+        onError: (err: unknown) => {
+          const detail = (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
+          setFeedback({ message: detail || 'Reject failed', type: 'error' });
+        },
+      }
+    );
   };
 
   const handleBulkApproveSafe = async () => {
@@ -93,6 +192,115 @@ export function ReviewQueue() {
     }
   };
 
+  const handleBatchAction = async (kind: Exclude<ActionKind, null>) => {
+    if (!skills || skills.length === 0) {
+      return;
+    }
+
+    setFeedback(null);
+    setActionKind(kind);
+    setActiveJobId('');
+    setShowJobDetails(false);
+
+    const queueJob = kind === 'scan' ? scanJobMutation : testJobMutation;
+    const job = await queueJob.mutateAsync({
+      skill_ids: skills.map((skill) => skill.skill_id),
+    }).catch((error: Error) => {
+      setFeedback({ message: error.message, type: 'error' });
+      return null;
+    });
+
+    if (!job) {
+      return;
+    }
+
+    setActiveJobId(job.job_id);
+    setFeedback({
+      message: `${kind === 'scan' ? 'Scan' : 'Test'} job queued`,
+      type: 'success',
+    });
+  };
+
+  const retriableFailedItems = actionJobItems.filter((item) =>
+    item.status === 'failed' &&
+    item.attempt_number < item.max_attempts &&
+    item.error_code !== null &&
+    !NON_RETRIABLE_ERROR_CODES.has(item.error_code)
+  );
+
+  const handleRetryFailures = async () => {
+    const targetJobId = actionJob?.job_id ?? activeJobId;
+    if (!targetJobId || retriableFailedItems.length === 0) {
+      return;
+    }
+
+    setFeedback(null);
+    const retryJob = await retryFailuresMutation.mutateAsync({ jobId: targetJobId }).catch((error: Error) => {
+      setFeedback({ message: error.message, type: 'error' });
+      return null;
+    });
+
+    if (!retryJob) {
+      return;
+    }
+
+    setActiveJobId(retryJob.job_id);
+    setShowJobDetails(true);
+    setFeedback({
+      message: `${actionKind === 'test' ? 'Test' : 'Scan'} retry job queued`,
+      type: 'success',
+    });
+  };
+
+  const activeActionPending =
+    isBulkApproving ||
+    approveMutation.isPending ||
+    rejectMutation.isPending ||
+    scanJobMutation.isPending ||
+    testJobMutation.isPending ||
+    retryFailuresMutation.isPending ||
+    actionJob?.status === 'queued' ||
+    actionJob?.status === 'running';
+
+  const renderActionJobRow = (item: ActionJobItem, job: ActionJobSummary) => {
+    const row = item.result ?? {};
+    return (
+      <TableRow key={item.item_id}>
+        <TableCell className="font-mono text-xs">{item.skill_id}</TableCell>
+        <TableCell>
+          <Badge className={actionJobStatusColors[item.status] ?? 'bg-gray-100 text-gray-800'}>
+            {item.status}
+          </Badge>
+        </TableCell>
+        <TableCell>{item.attempt_number}/{item.max_attempts}</TableCell>
+        {job.job_type === 'scan_batch' && (
+          <>
+            <TableCell>
+              <Badge className={riskColors[String(row.risk_level)] ?? 'bg-gray-100 text-gray-800'}>
+                {String(row.risk_level ?? '-')}
+              </Badge>
+            </TableCell>
+            <TableCell>{row.risk_score !== undefined ? String(row.risk_score) : '-'}</TableCell>
+          </>
+        )}
+        {job.job_type === 'test_batch' && (
+          <>
+            <TableCell>{typeof row.overall_score === 'number' ? `${Math.round(row.overall_score * 100)}%` : '-'}</TableCell>
+            <TableCell>
+              {row.passed === true ? (
+                <CheckCircle className="h-4 w-4 text-green-600" />
+              ) : row.passed === false ? (
+                <XCircle className="h-4 w-4 text-red-600" />
+              ) : (
+                '-'
+              )}
+            </TableCell>
+          </>
+        )}
+      </TableRow>
+    );
+  };
+
   if (isLoading) {
     return (
       <PageLayout>
@@ -105,36 +313,182 @@ export function ReviewQueue() {
 
   return (
     <PageLayout>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Review Queue</h1>
-        {safeCount > 0 && (
-          <Button
-            variant="outline"
-            onClick={handleBulkApproveSafe}
-            disabled={isBulkApproving || approveMutation.isPending}
-          >
-            <CheckCircle className="h-4 w-4 mr-2" />
-            {isBulkApproving ? `Approving ${safeCount}...` : `Bulk Approve Safe (${safeCount})`}
-          </Button>
-        )}
+      <div className="flex flex-col gap-4 mb-6 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Review Queue</h1>
+          <p className="text-sm text-muted-foreground">
+            Process pending skills, then fan out async scan and test jobs when the queue is stable.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {pendingCount > 0 && (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => void handleBatchAction('scan')}
+                disabled={activeActionPending}
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                {scanJobMutation.isPending || (actionKind === 'scan' && (actionJob?.status === 'queued' || actionJob?.status === 'running'))
+                  ? 'Scanning pending...'
+                  : `Scan Pending (${pendingCount})`}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => void handleBatchAction('test')}
+                disabled={activeActionPending}
+              >
+                <TestTube className="h-4 w-4 mr-2" />
+                {testJobMutation.isPending || (actionKind === 'test' && (actionJob?.status === 'queued' || actionJob?.status === 'running'))
+                  ? 'Testing pending...'
+                  : `Test Pending (${pendingCount})`}
+              </Button>
+            </>
+          )}
+          {safeCount > 0 && (
+            <Button
+              variant="outline"
+              onClick={handleBulkApproveSafe}
+              disabled={activeActionPending}
+            >
+              <CheckCircle className="h-4 w-4 mr-2" />
+              {isBulkApproving ? `Approving ${safeCount}...` : `Bulk Approve Safe (${safeCount})`}
+            </Button>
+          )}
+        </div>
       </div>
 
-      {/* Backend response feedback */}
       {feedback && (
-        <div className={`mb-4 px-4 py-3 rounded-lg text-sm flex justify-between items-center ${feedback.type === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>
+        <div
+          className={`mb-4 px-4 py-3 rounded-lg text-sm flex justify-between items-center ${
+            feedback.type === 'success'
+              ? 'bg-green-50 text-green-800 border border-green-200'
+              : 'bg-red-50 text-red-800 border border-red-200'
+          }`}
+        >
           <span>{feedback.message}</span>
-          <button onClick={() => setFeedback(null)} aria-label="Dismiss feedback message" className="ml-4 font-bold">×</button>
+          <div className="ml-4 flex items-center gap-3">
+            {actionJob && (
+              <button
+                onClick={() => setShowJobDetails((value) => !value)}
+                className="text-xs underline inline-flex items-center gap-1"
+              >
+                {showJobDetails ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                {showJobDetails ? 'Hide details' : 'Show details'}
+              </button>
+            )}
+            <button
+              onClick={() => setFeedback(null)}
+              aria-label="Dismiss feedback message"
+              className="font-bold"
+            >
+              ×
+            </button>
+          </div>
         </div>
       )}
 
-      {/* Filter Tabs */}
+      {actionJob && showJobDetails && (
+        <Card className="mb-6 border-slate-200">
+          <CardHeader className="py-3">
+            <CardTitle className="text-sm flex items-center gap-2">
+              {actionKind === 'test' ? <TestTube className="h-4 w-4" /> : <Shield className="h-4 w-4" />}
+              {actionKind === 'test' ? 'Test' : 'Scan'} Job
+              <Badge className={actionJobStatusColors[actionJob.status] ?? 'bg-gray-100 text-gray-800'}>
+                {actionJob.status}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="py-3 space-y-3 text-sm">
+            <div className="flex flex-wrap gap-4 text-muted-foreground">
+              <span>
+                Job ID: <strong className="font-mono">{actionJob.job_id}</strong>
+              </span>
+              <span>
+                Total: <strong>{actionJob.summary.total}</strong>
+              </span>
+              <span>
+                Succeeded: <strong>{actionJob.summary.succeeded}</strong>
+              </span>
+              <span>
+                Failed: <strong>{actionJob.summary.failed}</strong>
+              </span>
+            </div>
+
+            {actionJobItems.length > 0 && (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Skill ID</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Attempt</TableHead>
+                    {actionJob.job_type === 'scan_batch' && (
+                      <>
+                        <TableHead>Risk Level</TableHead>
+                        <TableHead>Risk Score</TableHead>
+                      </>
+                    )}
+                    {actionJob.job_type === 'test_batch' && (
+                      <>
+                        <TableHead>Score</TableHead>
+                        <TableHead>Passed</TableHead>
+                      </>
+                    )}
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {actionJobItems.map((item) => renderActionJobRow(item, actionJob))}
+                </TableBody>
+              </Table>
+            )}
+
+            {(actionJob.error_code || actionJob.error_message || actionJobItems.some((item) => item.error_code || item.error_message)) && (
+              <div className="rounded-md bg-red-50 border border-red-200 p-3 text-sm space-y-1">
+                {actionJob.error_code && (
+                  <div>
+                    <span className="font-medium">Job error code:</span> {actionJob.error_code}
+                  </div>
+                )}
+                {actionJob.error_message && (
+                  <div>
+                    <span className="font-medium">Job message:</span> {actionJob.error_message}
+                  </div>
+                )}
+                {actionJobItems
+                  .filter((item) => item.error_code || item.error_message)
+                  .map((item) => (
+                    <div key={item.item_id}>
+                      <span className="font-medium">{item.skill_id}:</span> {item.error_message ?? item.error_code}
+                    </div>
+                  ))}
+                {retriableFailedItems.length > 0 && (
+                  <div className="pt-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => void handleRetryFailures()}
+                      disabled={retryFailuresMutation.isPending}
+                    >
+                      <RotateCcw className="h-4 w-4 mr-2" />
+                      {retryFailuresMutation.isPending
+                        ? 'Retrying failed items...'
+                        : `Retry Failed Items (${retriableFailedItems.length})`}
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       <div className="flex gap-2 mb-6">
         <Button
           variant={filter === 'all' ? 'default' : 'outline'}
           size="sm"
           onClick={() => setFilter('all')}
         >
-          All ({skills?.length || 0})
+          All ({pendingCount})
         </Button>
         <Button
           variant={filter === 'safe' ? 'default' : 'outline'}
@@ -153,7 +507,6 @@ export function ReviewQueue() {
         </Button>
       </div>
 
-      {/* Review Cards */}
       {filteredSkills.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
@@ -164,20 +517,19 @@ export function ReviewQueue() {
         </Card>
       ) : (
         <div className="space-y-4">
-          {filteredSkills.map(skill => (
+          {filteredSkills.map((skill) => (
             <ReviewCard
               key={skill.skill_id}
               skill={skill}
               onApprove={handleApprove}
               onReject={handleReject}
-              isApproving={approveMutation.isPending || isBulkApproving}
-              isRejecting={rejectMutation.isPending || isBulkApproving}
+              isApproving={activeActionPending}
+              isRejecting={activeActionPending}
             />
           ))}
         </div>
       )}
 
-      {/* Summary */}
       {skills && skills.length > 0 && (
         <Card className="mt-6">
           <CardHeader>

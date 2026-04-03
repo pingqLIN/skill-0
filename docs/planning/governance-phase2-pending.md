@@ -2,7 +2,9 @@
 
 **建立日期**：2026-02-24  
 **分支**：`copilot/add-action-readiness-check`  
-**狀態**：P0 + P2 完成；P1 待後續
+**狀態**：P0 + P1 durable MVP + P2 完成；後續為 hardening
+
+Status note (`2026-04-03`): 本文件原本記錄的是 P1 尚未開始時的待辦清單。現在 async batch scan/test、retry、DB-backed job persistence、以及 restart recovery 已落地；下列內容應視為歷史背景與後續 hardening 參考，而不是現況快照。
 
 ---
 
@@ -37,16 +39,16 @@
 
 ---
 
-## 三、未實作（P1，尚未開始）
+## 三、後續 hardening（原 P1 後續）
 
-### P1-4 批次 scan/test 非同步化（背景工作）
-- 目前批次仍為同步執行，大量技能時可能 timeout
-- **需要**：enqueue + worker 模式；API 先回 `job_id`，前端輪詢 job status
-- **估計工時**：2–3 天
+### P1-H1 Worker coordination / duplicate execution protection
+- 目前 durable job state 已進 DB，但仍是單 API instance 內的 daemon thread runner
+- **需要**：worker lease / claim discipline，避免多個 active instance 重複執行同一 job item
+- **估計工時**：1–2 天
 
-### P1-5 Retry 機制
-- 目前失敗的 item 無法重試
-- **需要**：支援 failed skill 的單技能重試或 job 級重試
+### P1-H2 Retry / cancellation / telemetry 補強
+- 目前已支援 manual retry，但尚未有 automated retry backoff、cancel semantics、與更完整的 job telemetry
+- **需要**：更明確的 worker policy、metrics、與操作觀測面
 - **估計工時**：1 天
 
 ---
@@ -65,7 +67,7 @@
 | 里程碑 | 內容 | 狀態 |
 |--------|------|------|
 | M1（3–4 天） | P0 完成 | ✅ 完成並驗證 |
-| M2（5–7 天） | P1 完成（非同步 + retry） | ⬜ 未開始 |
+| M2（5–7 天） | P1 durable MVP（非同步 + retry + DB persistence + recovery） | ✅ 已落地 |
 | M3（2–3 天） | P2 完成（UX 優化） | ✅ 完成並驗證 |
 
 ---
