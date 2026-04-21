@@ -1,5 +1,10 @@
 # Skill-0 Current Execution Plan
 
+Status note:
+- This is a historical execution snapshot from the `2026-03-19` recovery round.
+- Its completion claims and next-step advice were specific to that checkpoint and are no longer the current repo baseline.
+- Use [executable-dev-plan-2026-03-31.zh-TW.md](<repo-root>/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md) for the live execution entrypoint.
+
 Updated: `2026-03-19`
 
 ## Current state

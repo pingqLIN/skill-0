@@ -13,6 +13,7 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SHARED_DOC_MODEL = "docs/shared-documentation-model.md"
 SHARED_DOC_README = "docs/shared/README.md"
+SHARED_SESSION_RULES = "docs/shared/04-cross-repo-session-rules.md"
 STATUS_MARKER = "Implementation status:"
 SHARED_SOURCE_DOCS = [
     "docs/shared/README.md",
@@ -20,6 +21,19 @@ SHARED_SOURCE_DOCS = [
     "docs/shared/02-mode-and-equivalence-contract.md",
     "docs/shared/03-shared-terminology.md",
     "docs/shared/04-cross-repo-session-rules.md",
+]
+MODEL_BOUNDARY_MARKERS = [
+    "1. `skill-0` owns the source documents",
+    "2. shared source files live in `docs/shared/`",
+    "3. `skill-0-GUI` mirrors selected files into its own `docs/shared/`",
+]
+README_BOUNDARY_MARKERS = [
+    "The mirrored copies should be treated as vendored contract documents, not independently authored files.",
+]
+SESSION_RULE_BOUNDARY_MARKERS = [
+    "3. `docs/shared/` in `skill-0` is the cross-repo documentation source of truth",
+    "4. `skill-0-GUI/docs/shared/` contains mirrored copies of selected contract documents",
+    "- mirrored docs in `skill-0-GUI/docs/shared/` are not independently authored",
 ]
 
 
@@ -54,6 +68,7 @@ def main() -> int:
 
     model_text = _read_text(SHARED_DOC_MODEL)
     readme_text = _read_text(SHARED_DOC_README)
+    session_rules_text = _read_text(SHARED_SESSION_RULES)
 
     for path_str in SHARED_SOURCE_DOCS:
         if path_str not in model_text:
@@ -61,6 +76,18 @@ def main() -> int:
         basename = Path(path_str).name
         if basename not in readme_text:
             errors.append(f"{SHARED_DOC_README} must mention {basename}.")
+
+    for marker in MODEL_BOUNDARY_MARKERS:
+        if marker not in model_text:
+            errors.append(f"{SHARED_DOC_MODEL} must keep the ownership boundary marker: {marker}")
+
+    for marker in README_BOUNDARY_MARKERS:
+        if marker not in readme_text:
+            errors.append(f"{SHARED_DOC_README} must keep the ownership boundary marker: {marker}")
+
+    for marker in SESSION_RULE_BOUNDARY_MARKERS:
+        if marker not in session_rules_text:
+            errors.append(f"{SHARED_SESSION_RULES} must keep the provenance boundary marker: {marker}")
 
     if errors:
         print("Shared docs check failed:")

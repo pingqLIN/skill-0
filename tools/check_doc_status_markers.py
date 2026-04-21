@@ -13,9 +13,14 @@ import sys
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 ARCHIVAL_DOCS = {
+    "reference.md": "historical schema reference note",
+    "docs/final-development-phase-plan-2026-03-23.md": "historical final-phase plan note",
+    "docs/implementation-summary.md": "historical implementation-summary note",
+    "docs/planning/current-execution-plan-2026-03-19.md": "historical execution-plan note",
     "docs/planning/plan.md": "historical planning note",
     "docs/planning/plan-20-skills.md": "historical expansion note",
     "docs/planning/yolo-dev-plan.md": "historical YOLO note",
+    "docs/project-progress-report-2026-03-23.md": "historical project-progress note",
 }
 
 AUTHORITY_INDEX = "docs/document-authority-index-2026-03-27.md"

@@ -64,6 +64,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Checkout skill-0-GUI mirror repo
+        uses: actions/checkout@v6
+        with:
+          repository: <owner>/skill-0-GUI
+          path: external/skill-0-GUI
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
@@ -74,6 +80,9 @@ jobs:
 
       - name: Validate shared-doc source set
         run: python tools/check_shared_docs.py
+
+      - name: Validate shared-doc mirrored copies
+        run: python tools/check_shared_docs_mirror.py --gui-root external/skill-0-GUI --require-gui-root
 
   compile-check:
     runs-on: ubuntu-latest

@@ -5,6 +5,41 @@ Status note:
 - It should be treated as gated backlog, not as the current execution baseline for the `v2.4.0` contract/governance work.
 - Current sequencing and gates are maintained in [executable-dev-plan-2026-03-31.zh-TW.md](<repo-root>/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md).
 
+## 啟動條件（現行 gate）
+
+此文件目前不是可直接執行的工作單，而是 **需滿足 gate 才可重新啟動** 的 backlog。
+
+只有在以下條件全部成立時，才應重啟 20-skills 擴展：
+
+1. `CP-02` durable governance baseline 已完成，且 async `scan/test` / retry / cancel flow 有回歸保護。
+2. `CP-03` runtime hardening baseline 已完成，且 search / proxy / error semantics 不再是主要不確定來源。
+3. `CP-04` 文件與 CI 對齊已到位，包含：
+   - historical/current authority 邊界清楚
+   - `docs/shared/` source set drift gate 已啟用
+   - `skill-0-GUI/docs/shared/` mirrored docs drift check 已可執行
+4. `CP-05` 舊計畫與新基線語境已收斂，不再把早期 `v2.0` 擴張計畫誤當現行主線。
+5. 當前 repo 驗證基線為綠燈：
+   - `python tools/validate_skill_schema.py parsed`
+   - `python -m pytest tests skill-0-dashboard/apps/api/tests -q`
+   - `cd skill-0-dashboard/apps/web && npm test && npm run build`
+6. 擴展來源需重新盤點，確認候選 skill：
+   - 仍可取得
+   - 未與現有 corpus 重複
+   - 仍符合當前 contract / governance 目標
+
+## 啟動後執行規則
+
+當上述 gate 成立後，20-skills 擴展應以「重新盤點後的 staged batch」方式啟動，而不是直接照抄本文件中的舊清單一次性展開。
+
+至少需要先補出以下前置輸出：
+
+1. 新版候選 skill 清單與來源可用性檢查
+2. 與現有 `parsed/` / `converted-skills/` corpus 的去重結果
+3. 本輪擴展的成功定義：
+   - 要驗證的是 `v2.4.x` canonical baseline
+   - 不是回到早期 `v2.0` parser 擴張語境
+4. 預計分幾個 batch 執行，而不是單次 20 個一起落地
+
 ## 📋 目標
 - 從 GitHub awesome-claude-skills 倉庫選取 20 個不同類型的 skills
 - 擴大測試集合（當前 11 個 → 31 個）

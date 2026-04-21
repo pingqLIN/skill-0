@@ -1,6 +1,6 @@
 # Skill-0 Document Authority Index
 
-Updated: `2026-03-27`
+Updated: `2026-04-21`
 Purpose: `separate live authority from historical and conceptual documents`
 
 ## Authoritative Current Baseline
@@ -25,6 +25,7 @@ Purpose: `separate live authority from historical and conceptual documents`
 
 - [reference.md](<repo-root>/reference.md)
 - [implementation-summary.md](<repo-root>/docs/implementation-summary.md)
+- [current-execution-plan-2026-03-19.md](<repo-root>/docs/planning/current-execution-plan-2026-03-19.md)
 - [plan.md](<repo-root>/docs/planning/plan.md)
 - [plan-20-skills.md](<repo-root>/docs/planning/plan-20-skills.md)
 - [yolo-dev-plan.md](<repo-root>/docs/planning/yolo-dev-plan.md)
