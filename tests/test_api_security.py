@@ -1,8 +1,12 @@
 """Unit tests for API security and rate-limit configuration helpers."""
 
+import sqlite3
 from types import SimpleNamespace
 
 import pytest
+from fastapi.testclient import TestClient
+
+import api.main as api_module
 
 from api.main import (
     _is_local_origin,
@@ -140,3 +144,24 @@ def test_extract_client_ip_falls_back_to_peer_on_invalid_forwarded_value(monkeyp
     )
 
     assert _extract_client_ip(request) == "127.0.0.1"
+
+
+def test_health_endpoint_does_not_initialize_search_engine(monkeypatch, tmp_path):
+    db_path = tmp_path / "skills.db"
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("CREATE TABLE skills (id INTEGER PRIMARY KEY, name TEXT NOT NULL)")
+        conn.execute("INSERT INTO skills (name) VALUES ('fixture-skill')")
+        conn.commit()
+
+    monkeypatch.setattr(api_module, "DB_PATH", str(db_path))
+
+    def _unexpected_engine_call():
+        raise AssertionError("/health 不應初始化 search engine")
+
+    monkeypatch.setattr(api_module, "get_search_engine", _unexpected_engine_call)
+
+    client = TestClient(api_module.app)
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    assert response.json()["total_skills"] == 1

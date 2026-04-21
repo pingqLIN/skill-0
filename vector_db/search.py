@@ -27,8 +27,18 @@ class SemanticSearch:
             db_path: 向量資料庫路徑
             model_name: embedding 模型名稱
         """
-        self.embedder = SkillEmbedder(model_name)
-        self.store = VectorStore(db_path, dimension=self.embedder.dimension)
+        self.model_name = model_name
+        self.dimension = SkillEmbedder.DEFAULT_DIMENSION
+        self._embedder: Optional[SkillEmbedder] = None
+        self.store = VectorStore(db_path, dimension=self.dimension)
+
+    @property
+    def embedder(self) -> SkillEmbedder:
+        """延遲初始化 embedder，避免純讀取路徑碰到模型載入。"""
+        if self._embedder is None:
+            self._embedder = SkillEmbedder(self.model_name)
+            self.dimension = self._embedder.dimension
+        return self._embedder
         
     def index_skills(self, parsed_dir: Union[str, Path], show_progress: bool = True) -> int:
         """
@@ -161,8 +171,8 @@ class SemanticSearch:
     def get_statistics(self) -> Dict:
         """取得搜尋引擎統計"""
         stats = self.store.get_statistics()
-        stats['embedding_dimension'] = self.embedder.dimension
-        stats['model_name'] = 'all-MiniLM-L6-v2'
+        stats['embedding_dimension'] = self.dimension
+        stats['model_name'] = self.model_name
         return stats
     
     def close(self):

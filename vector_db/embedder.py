@@ -57,6 +57,8 @@ def _resolve_device() -> str:
 
 class SkillEmbedder:
     """將 skill JSON 轉換為語義向量"""
+
+    DEFAULT_DIMENSION = 384
     
     def __init__(self, model_name: str = 'all-MiniLM-L6-v2'):
         """
@@ -70,7 +72,23 @@ class SkillEmbedder:
 
         device = _resolve_device()
         self.device = device
-        self.model = SentenceTransformer(model_name, device=device)
+        self.model_name = model_name
+
+        try:
+            self.model = SentenceTransformer(
+                model_name,
+                device=device,
+                local_files_only=True,
+            )
+            logger.info("從本機 Hugging Face cache 載入 embedding 模型: %s", model_name)
+        except Exception as exc:
+            logger.warning(
+                "本機 embedding 模型 cache 不可用，改為遠端載入 %s (%s)",
+                model_name,
+                exc,
+            )
+            self.model = SentenceTransformer(model_name, device=device)
+
         self.dimension = self.model.get_sentence_embedding_dimension()
         
     def skill_to_text(self, skill: Dict) -> str:

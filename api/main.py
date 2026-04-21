@@ -11,6 +11,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any, TYPE_CHECKING
 import os
 import logging
+import sqlite3
 from pathlib import Path
 import time
 import uuid
@@ -509,6 +510,13 @@ def get_search_engine() -> "SemanticSearch":
     return search_engine
 
 
+def _get_db_skill_count(db_path: str) -> int:
+    """Read total skill rows directly from SQLite without initializing the embedder."""
+    with sqlite3.connect(db_path) as conn:
+        row = conn.execute('SELECT COUNT(*) FROM skills').fetchone()
+    return int(row[0] if row else 0)
+
+
 # ==================== Models ====================
 
 class SkillResult(BaseModel):
@@ -599,17 +607,22 @@ async def root():
 
 @app.get("/health", tags=["Health"])
 async def health_check():
-    """Health check"""
+    """Cheap liveness/readiness check that does not require loading the embedding model."""
     try:
-        engine = get_search_engine()
-        stats = engine.get_statistics()
+        total_skills = _get_db_skill_count(DB_PATH)
         return {
             "status": "healthy",
             "db_path": DB_PATH,
-            "total_skills": stats['total_skills']
+            "total_skills": total_skills,
         }
-    except Exception as e:
-        raise HTTPException(status_code=503, detail=f"Service unavailable: {str(e)}")
+    except Exception as exc:
+        logger.exception(
+            "health_check_failed",
+            db_path=DB_PATH,
+            error_type=type(exc).__name__,
+            error=str(exc),
+        )
+        raise HTTPException(status_code=503, detail="Service unavailable") from exc
 
 
 class HealthDetailResponse(BaseModel):
@@ -638,24 +651,28 @@ async def health_detail():
     # Uptime since startup
     uptime_seconds = max(0.0, time.time() - _startup_time)
 
-    # Defaults (in case engine fails)
     total_skills = 0
-    embedding_model = "unknown"
+    embedding_model = "all-MiniLM-L6-v2"
     status = "healthy"
-    try:
-        engine = get_search_engine()
-        stats = engine.get_statistics()
-        if isinstance(stats, dict):
-            total_skills = int(stats.get('total_skills', 0))
-            embedding_model = stats.get('model_name', 'unknown') or 'unknown'
-        else:
+
+    if db_exists:
+        try:
+            total_skills = _get_db_skill_count(db_path)
+        except Exception:
+            status = "degraded"
             total_skills = 0
-            embedding_model = 'unknown'
-    except Exception:
-        # Degraded state if the engine cannot be queried
+    else:
         status = "degraded"
-        total_skills = 0
-        embedding_model = "unknown"
+
+    # If the search engine is already warm, surface its configured model name
+    # without forcing a model initialization from the health endpoint.
+    if search_engine is not None:
+        try:
+            stats = search_engine.get_statistics()
+            if isinstance(stats, dict):
+                embedding_model = stats.get('model_name', embedding_model) or embedding_model
+        except Exception:
+            status = "degraded"
 
     return HealthDetailResponse(
         status=status,
