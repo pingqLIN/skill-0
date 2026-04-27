@@ -1,6 +1,6 @@
 # Skill-0 Document Authority Index
 
-Updated: `2026-04-21`
+Updated: `2026-04-27`
 Purpose: `separate live authority from historical and conceptual documents`
 
 ## Authoritative Current Baseline
@@ -16,6 +16,7 @@ Purpose: `separate live authority from historical and conceptual documents`
 
 ## Review And Assessment Artifacts
 
+- [project-development-report-2026-04-27.zh-TW.md](<repo-root>/docs/project-development-report-2026-04-27.zh-TW.md)
 - [project-review-2026-03-23.md](<repo-root>/docs/project-review-2026-03-23.md)
 - [external-review-report-2026-03-23.md](<repo-root>/docs/external-review-report-2026-03-23.md)
 - [final-phase-plan-review-2026-03-23.md](<repo-root>/docs/final-phase-plan-review-2026-03-23.md)

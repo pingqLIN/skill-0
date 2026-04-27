@@ -33,6 +33,7 @@ env/
 # IDE
 .vscode/
 .idea/
+.codex
 *.swp
 *.swo
 *~
