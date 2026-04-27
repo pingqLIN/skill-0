@@ -67,7 +67,7 @@ jobs:
       - name: Checkout skill-0-GUI mirror repo
         uses: actions/checkout@v6
         with:
-          repository: <owner>/skill-0-GUI
+          repository: ${{ github.repository_owner }}/skill-0-GUI
           path: external/skill-0-GUI
 
       - name: Set up Python

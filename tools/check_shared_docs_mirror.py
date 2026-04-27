@@ -23,8 +23,6 @@ BANNER_MARKERS = (
 )
 DEFAULT_GUI_ROOT_CANDIDATES = [
     REPO_ROOT.parent / "skill-0-GUI",
-    Path("<skill-0-gui-root>"),
-    Path("<skill-0-gui-root>"),
 ]
 
 

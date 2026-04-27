@@ -34,7 +34,7 @@ DETECTION_STANDARDS = [
     },
     {
         "name": "skill-0 Governance Spec",
-        "url": "https://github.com/<owner>/skill-0/blob/main/governance/GOVERNANCE.md",
+        "url": "https://github.com/OWNER/skill-0/blob/main/governance/GOVERNANCE.md",
         "description": "Project-specific security rules (SEC001-SEC009)",
     },
 ]

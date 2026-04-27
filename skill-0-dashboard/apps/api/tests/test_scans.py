@@ -114,7 +114,7 @@ def test_export_scan_html(client, auth_header, mock_service):
     assert "<!DOCTYPE html>" in response.text
     assert "Security Scan Report" in response.text
     assert "Test Skill" in response.text
-    assert "https://github.com/<owner>/skill-0/blob/main/governance/GOVERNANCE.md" in response.text
+    assert "https://github.com/OWNER/skill-0/blob/main/governance/GOVERNANCE.md" in response.text
     assert 'rel="noopener noreferrer"' in response.text
 
 

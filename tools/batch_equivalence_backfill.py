@@ -10,6 +10,7 @@ into the governance database. Legacy storage/API aliases still use
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
 
 from governance_db import GovernanceDB
@@ -17,7 +18,9 @@ from skill_tester import SkillFidelityTester
 
 
 DEFAULT_DB = Path(__file__).parent.parent / "governance" / "db" / "governance.db"
-INSTRUCTIONS_DIR = Path(r"<awesome-copilot-instructions-root>")
+INSTRUCTIONS_DIR = Path(
+    os.environ.get("SKILL0_SOURCE_INSTRUCTIONS", "external/awesome-copilot/instructions")
+)
 CONVERTED_DIR = Path(__file__).parent.parent / "converted-skills"
 
 

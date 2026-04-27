@@ -63,7 +63,11 @@ htmlcov/
 *.bak
 *.old
 *.tmp
+*.db
 backups/*.db
+/skills.db
+/governance/db/*.db
+/backups/*.db
 
 # Diagnostic files (files starting with ##, using character class to avoid comment interpretation)
 [#][#]*

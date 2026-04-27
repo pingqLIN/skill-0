@@ -12,6 +12,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import shutil
 import subprocess
 from datetime import datetime
@@ -21,7 +22,7 @@ from governance_db import GovernanceDB
 
 
 DEFAULT_DB = Path(__file__).parent.parent / "governance" / "db" / "governance.db"
-SOURCE_ROOT = Path(r"<awesome-copilot-root>")
+SOURCE_ROOT = Path(os.environ.get("SKILL0_AWESOME_COPILOT_ROOT", "external/awesome-copilot"))
 INSTRUCTIONS_DIR = SOURCE_ROOT / "instructions"
 CONVERTED_DIR = Path(__file__).parent.parent / "converted-skills"
 

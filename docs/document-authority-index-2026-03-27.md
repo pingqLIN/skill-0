@@ -77,4 +77,4 @@ Use these documents first when making current project decisions:
 
 - If two documents conflict, prefer `Start Here` and `Current Snapshot` first, then `Authoritative Current Baseline`.
 - If a document is listed under `Historical Context Only`, treat its body claims as archival unless reconfirmed in current code or current-baseline docs.
-- Older absolute paths such as `<repo-root>` are archival unless repeated in the current snapshot; the current repo root is `<repo-root>`.
+- Historical local absolute paths have been redacted; use `<repo-root>` as the portable repository-root placeholder.

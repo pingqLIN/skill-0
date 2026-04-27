@@ -1,6 +1,6 @@
 # Skill-0 Development Conversation Log
 **Date:** 2026-01-23  
-**User:** Project Maintainer  
+**User:** Project Maintainer
 **Topic:** MCP Skill Decomposition Parser 開發
 
 ---

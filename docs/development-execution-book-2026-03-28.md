@@ -132,7 +132,7 @@ Observed results:
    - Affected surfaces include dashboard stats, review queue, skills list, and audit log.
    - Next action: add explicit `isError` UI states and query-failure tests.
 
-2. Current repo docs still contain many absolute `local absolute paths` links in historical review/report material.
+2. Current repo docs previously contained local absolute path links in historical review/report material; public copies should use repo-relative links or placeholders.
    - Next action: convert current-facing docs and authority indices to portable relative links.
 
 ### Medium

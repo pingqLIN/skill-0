@@ -9,11 +9,14 @@ Falls back to parsing "Triggers on:" from description, else "**/*".
 from __future__ import annotations
 
 import argparse
+import os
 import re
 from pathlib import Path
 
 
-SOURCE_INSTRUCTIONS = Path(r"<awesome-copilot-instructions-root>")
+SOURCE_INSTRUCTIONS = Path(
+    os.environ.get("SKILL0_SOURCE_INSTRUCTIONS", "external/awesome-copilot/instructions")
+)
 CONVERTED_DIR = Path(__file__).parent.parent / "converted-skills"
 
 

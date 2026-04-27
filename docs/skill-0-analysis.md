@@ -1,7 +1,7 @@
 # Skill-0 專案分析報告
 
 > 分析日期：2026-01-26  
-> 專案來源：https://github.com/<owner>/skill-0  
+> 專案來源：https://github.com/<owner>/skill-0
 > 分析者：GitHub Copilot CLI
 
 ---

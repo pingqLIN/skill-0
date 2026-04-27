@@ -12,7 +12,7 @@
     "parsed_by": "parse-v2-advanced"
   },
   "original_definition": {
-    "source": "<repo-root>\\temp_input\\document-skills-pdf.md",
+    "source": "<repo-root>/temp_input/document-skills-pdf.md",
     "skill_name": "pdf",
     "skill_description": "Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms. When Claude needs to fill in a PDF form or programmatically process, generate, or analyze PDF documents at scale."
   },
