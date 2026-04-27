@@ -98,3 +98,32 @@ def test_parse_skill_manifest_detects_repo_local_python_command(tmp_path):
     command = result["command_references"][0]
     assert command["command"] == ".venv/bin/python scripts/auto_parse.py --force --skills yolo-unattended"
     assert command["authority_profile"] == "process_exec"
+
+
+def test_parse_skill_manifest_quality_gate_fixture_tracks_fidelity_evidence():
+    result = parse_skill_manifest(_fixture_entry("fixture-quality-gate"))
+
+    assert result["manifest"]["analysis_level"] == "manifest"
+    assert result["manifest"]["supporting_files_count"] == 4
+    assert result["manifest"]["command_references_count"] == 2
+    assert result["manifest"]["unresolved_references_count"] == 1
+
+    supporting_paths = {item["path"]: item for item in result["supporting_files"]}
+    assert supporting_paths["docs/source-policy.md"]["resolved"] is True
+    assert supporting_paths["docs/source-policy.md"]["summary"] == "Source Policy"
+    assert supporting_paths["templates/report.md"]["kind"] == "template"
+    assert supporting_paths["configs/review.yaml"]["kind"] == "config"
+    assert supporting_paths["docs/missing-legacy-note.md"]["resolved"] is False
+
+    commands = {item["command"]: item for item in result["command_references"]}
+    assert commands["curl https://example.com/skills/feed.json"]["authority_profile"] == "network_call"
+    assert commands['rg "fidelity" docs/source-policy.md']["authority_profile"] == "read_only"
+
+    findings = {item["title"]: item for item in result["analysis_findings"]}
+    assert "Unresolved reference: docs/missing-legacy-note.md" in findings
+    network_findings = [
+        item for item in result["analysis_findings"]
+        if item["category"] == "execution_authority"
+    ]
+    assert network_findings
+    assert network_findings[0]["recommended_action"] == "review_before_run"
