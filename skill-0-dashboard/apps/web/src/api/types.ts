@@ -265,4 +265,5 @@ export interface ActionJobItem {
   error_code: string | null;
   error_message: string | null;
   retry_of_item_id: string | null;
+  suggested_next_step: string | null;
 }

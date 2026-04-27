@@ -108,3 +108,4 @@ class ActionJobItem(BaseModel):
     error_code: Optional[str] = None
     error_message: Optional[str] = None
     retry_of_item_id: Optional[str] = None
+    suggested_next_step: Optional[str] = None

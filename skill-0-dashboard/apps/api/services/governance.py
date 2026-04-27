@@ -87,6 +87,30 @@ class GovernanceService:
         }
         return bool(error_code) and error_code not in non_retriable
 
+    def _suggest_action_job_item_next_step(self, item: Dict[str, Any]) -> str:
+        """Return stable operator guidance for reviewer-facing job telemetry."""
+        status = item.get("status")
+        error_code = item.get("error_code")
+        if status in {"queued", "retrying"}:
+            return "wait_for_worker"
+        if status == "running":
+            return "monitor_lease_or_cancel"
+        if status == "succeeded":
+            return "no_action"
+        if status == "cancelled":
+            return "review_cancel_trace"
+        if status == "skipped":
+            return "review_skip_reason"
+        if status == "failed":
+            if error_code in {"PATH_NOT_FOUND", "SOURCE_PATH_MISSING", "SOURCE_PATH_NOT_ALLOWED"}:
+                return "fix_source_path"
+            if error_code in {"INSTALLED_PATH_MISSING", "INSTALLED_PATH_NOT_ALLOWED"}:
+                return "fix_installed_path"
+            if self._is_retriable_error(error_code):
+                return "retry_item"
+            return "inspect_error"
+        return "inspect_status"
+
     def _compute_job_summary(self, items: List[Dict[str, Any]]) -> Dict[str, int]:
         summary = {
             "total": len(items),
@@ -135,7 +159,13 @@ class GovernanceService:
         job = self.db.get_action_job(job_id)
         if not job:
             return None
-        return self.db.get_action_job_items(job_id)
+        return [
+            {
+                **dict(item),
+                "suggested_next_step": self._suggest_action_job_item_next_step(item),
+            }
+            for item in self.db.get_action_job_items(job_id)
+        ]
 
     def _make_job_id(self, job_type: str) -> str:
         prefix = "scan" if job_type == "scan_batch" else "test"

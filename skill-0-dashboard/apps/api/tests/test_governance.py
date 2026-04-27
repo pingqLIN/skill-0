@@ -460,6 +460,14 @@ class TestGovernanceServiceActionJobs:
         assert items is not None
         assert len(items) == 1
         assert items[0]["skill_id"] == "skill_001"
+        assert items[0]["target_revision_id"] is None
+        assert items[0]["attempt_number"] == 1
+        assert items[0]["max_attempts"] == 2
+        assert items[0]["claimed_by"] is None
+        assert items[0]["lease_expires_at"] is None
+        assert items[0]["retry_of_item_id"] is None
+        assert items[0]["error_code"] is None
+        assert items[0]["suggested_next_step"] == "wait_for_worker"
 
     def test_run_action_job_marks_success_and_failure(self, tmp_path, monkeypatch):
         svc = self._make_service(tmp_path, monkeypatch)
@@ -535,6 +543,7 @@ class TestGovernanceServiceActionJobs:
         assert retry_job["selection_mode"] == "retry_item"
         assert retry_items[0]["attempt_number"] == 2
         assert retry_items[0]["retry_of_item_id"] == item["item_id"]
+        assert retry_items[0]["suggested_next_step"] == "wait_for_worker"
 
     def test_claim_next_action_job_item_is_atomic(self, tmp_path, monkeypatch):
         svc = self._make_service(tmp_path, monkeypatch)
@@ -606,6 +615,7 @@ class TestGovernanceServiceActionJobs:
         assert cancelled["cancelled_by"] == "reviewer"
         assert cancelled["cancelled_at"] is not None
         assert all(item["status"] == "cancelled" for item in items)
+        assert all(item["suggested_next_step"] == "review_cancel_trace" for item in items)
         assert svc.db.claim_next_action_job_item(job["job_id"], "worker-a", lease_seconds=60) is None
 
     def test_cancel_action_job_stops_new_claims_but_preserves_running_item(self, tmp_path, monkeypatch):

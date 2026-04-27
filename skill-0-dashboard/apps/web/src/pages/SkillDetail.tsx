@@ -254,8 +254,10 @@ export function SkillDetail() {
           </Badge>
         </TableCell>
         <TableCell>{item.attempt_number}/{item.max_attempts}</TableCell>
+        <TableCell className="font-mono text-xs">{item.retry_of_item_id ?? '-'}</TableCell>
         <TableCell className="font-mono text-xs">{item.claimed_by ?? '-'}</TableCell>
         <TableCell className="font-mono text-xs">{formatLeaseExpiry(item.lease_expires_at)}</TableCell>
+        <TableCell className="font-mono text-xs">{item.suggested_next_step ?? '-'}</TableCell>
         {job.job_type === 'scan_batch' && (
           <>
             <TableCell>
@@ -404,8 +406,10 @@ export function SkillDetail() {
                     <TableHead>Revision</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Attempt</TableHead>
+                    <TableHead>Retry Of</TableHead>
                     <TableHead>Worker</TableHead>
                     <TableHead>Lease Expires</TableHead>
+                    <TableHead>Next Step</TableHead>
                     {actionJob.job_type === 'scan_batch' && <>
                       <TableHead>Risk Level</TableHead>
                       <TableHead>Risk Score</TableHead>
