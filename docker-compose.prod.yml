@@ -13,7 +13,7 @@ services:
     environment:
       SKILL0_ENV: production
       SKILL0_ENABLE_DOCS: "false"
-      CORS_ORIGINS: ""
+      CORS_ORIGINS: ${CORS_ORIGINS:?Set CORS_ORIGINS to the production origin list}
       SKILL0_DB_PATH: /app/data/skills.db
     volumes:
       - skill0-skills-db:/app/data
@@ -32,7 +32,7 @@ services:
     environment:
       SKILL0_ENV: production
       SKILL0_ENABLE_DOCS: "false"
-      CORS_ORIGINS: ""
+      CORS_ORIGINS: ${CORS_ORIGINS:?Set CORS_ORIGINS to the production origin list}
       SKILL0_TOOLS_PATH: /app/tools
       SKILL0_GOVERNANCE_DB_PATH: /app/governance/db/governance.db
     volumes:

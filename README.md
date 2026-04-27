@@ -111,7 +111,7 @@ skill-0/
 ├── governance/                        # Governance system
 │   └── db/governance.db              # Skill approval workflow DB
 ├── schema/                            # JSON Schema v2.4
-├── parsed/                            # Parsed skill examples (195 checked-in JSON files)
+├── parsed/                            # Parsed skill examples (196 checked-in JSON files)
 ├── tools/                             # Analysis & governance tools
 ├── scripts/                           # Maintenance scripts
 ├── tests/                             # Test suites and fixtures
@@ -159,7 +159,7 @@ These values are for local development only. Production must replace them and th
 
 ## Testing
 
-The project includes a comprehensive regression suite with 178 Python tests plus 18 frontend smoke tests:
+The project includes a comprehensive regression suite with 219 Python tests plus 26 frontend smoke tests:
 
 ```bash
 # Run the full Python regression suite (core API + dashboard API)
@@ -189,7 +189,7 @@ cd skill-0-dashboard/apps/web && npm run build:ci
 - ✅ JWT authentication flow (tests/integration/test_auth_flow.py)
 - ✅ Rate limiting behavior (tests/integration/test_rate_limiting.py)
 - ✅ Dashboard API — all 5 routers (skill-0-dashboard/apps/api/tests/)
-- ✅ Frontend smoke tests — 18 component tests (Vitest)
+- ✅ Frontend smoke tests — 26 component tests (Vitest)
 - ✅ Schema validation & format conversion
 - ✅ Integration workflows
 
@@ -335,7 +335,7 @@ clusters = search.cluster_skills(n_clusters=5)
 
 | Metric | Count |
 |--------|-------|
-| **Skills** | 195 |
+| **Skills** | 196 |
 | **Actions** | 2220 |
 | **Rules** | 1206 |
 | **Directives** | 1642 |

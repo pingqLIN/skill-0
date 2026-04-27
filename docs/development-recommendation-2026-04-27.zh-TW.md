@@ -81,7 +81,7 @@ Repo：`<repo-root>`
 4. CSS class suffix 僅允許固定 enum，不接受 finding payload 直接決定 class name。
 5. 新增 API regression test，斷言輸出不含 raw `<script`、`onerror=`、`javascript:`。
 6. 修正 `docker-compose.prod.yml` 不以空字串覆蓋 `.env.production.example` 的 `CORS_ORIGINS`。
-7. 以 `docker compose -f docker-compose.prod.yml config` 驗證 production compose config 可解析，且 CORS 不被空字串覆蓋。
+7. 以 `docker compose --env-file .env.production.example -f docker-compose.prod.yml config` 驗證 production compose config 可解析，且 CORS 不被空字串覆蓋。
 8. 修正 README 的 parsed/test count 與現行基線不一致問題。
 9. 修正 authority index 中 current baseline / review artifacts 的舊絕對路徑。
 10. 盤點 GitHub push warning 提到的 6 個 Dependabot vulnerabilities：列出來源、direct/transitive、safe bump 候選、需要延期時的 deferral reason。
@@ -91,7 +91,7 @@ Repo：`<repo-root>`
 ```bash
 .venv/bin/python -m pytest skill-0-dashboard/apps/api/tests tests/test_doc_checks.py -q
 .venv/bin/python tools/check_doc_status_markers.py
-docker compose -f docker-compose.prod.yml config
+docker compose --env-file .env.production.example -f docker-compose.prod.yml config
 rg -n "<repo-root>" docs/document-authority-index-2026-03-27.md README.md
 git diff --check
 ```
@@ -148,7 +148,7 @@ cd skill-0-dashboard/apps/web && npm test -- --run src/pages/ReviewQueue.test.ts
 驗收：
 
 ```bash
-docker compose -f docker-compose.prod.yml config
+docker compose --env-file .env.production.example -f docker-compose.prod.yml config
 .venv/bin/python tools/check_doc_status_markers.py
 .venv/bin/python tools/check_shared_docs.py
 .venv/bin/python tools/check_shared_docs_mirror.py --gui-root <skill-0-gui-root> --require-gui-root

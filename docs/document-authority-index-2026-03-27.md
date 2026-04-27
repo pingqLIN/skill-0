@@ -19,6 +19,7 @@ Purpose: `separate live authority from historical and conceptual documents`
 
 - [external-agent-audit-synthesis-2026-04-27.zh-TW.md](<repo-root>/docs/external-agent-audit-synthesis-2026-04-27.zh-TW.md)
 - [project-development-report-2026-04-27.zh-TW.md](<repo-root>/docs/project-development-report-2026-04-27.zh-TW.md)
+- [dependabot-vulnerability-inventory-2026-04-27.md](<repo-root>/docs/security/dependabot-vulnerability-inventory-2026-04-27.md)
 - [project-review-2026-03-23.md](<repo-root>/docs/project-review-2026-03-23.md)
 - [external-review-report-2026-03-23.md](<repo-root>/docs/external-review-report-2026-03-23.md)
 - [final-phase-plan-review-2026-03-23.md](<repo-root>/docs/final-phase-plan-review-2026-03-23.md)

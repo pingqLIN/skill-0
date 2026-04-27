@@ -115,6 +115,69 @@ def test_export_scan_html(client, auth_header, mock_service):
     assert "Security Scan Report" in response.text
     assert "Test Skill" in response.text
     assert "https://github.com/<owner>/skill-0/blob/main/governance/GOVERNANCE.md" in response.text
+    assert 'rel="noopener noreferrer"' in response.text
+
+
+def test_export_scan_html_escapes_untrusted_finding_content(client, auth_header, mock_service):
+    """HTML export must not render untrusted skill or finding content as active markup."""
+    mock_service.get_skill.return_value = {
+        "skill_id": "sk_001",
+        "name": 'Bad <script>alert("skill")</script>',
+        "status": "pending",
+        "risk_level": "high",
+        "risk_score": 80,
+        "equivalence_score": 0.1,
+        "author_name": "test",
+        "license_spdx": "MIT",
+        "source_url": "",
+        "source_type": "github",
+        "source_path": "/path/to/skill",
+        "version": "1.0.0",
+        "created_at": "2026-01-01T00:00:00",
+        "updated_at": "2026-01-01T00:00:00",
+        "security_findings": [],
+        "scan_history": [],
+        "test_history": [],
+        "audit_events": [],
+    }
+    mock_service.get_skill_scans.return_value = [
+        {
+            "scan_id": "scan_001",
+            "scanned_at": "2026-01-15T10:00:00",
+            "risk_level": "high",
+            "risk_score": 80,
+            "findings_count": 1,
+            "findings": [
+                {
+                    "rule_id": 'SEC001"><img src=x onerror=alert(1)>',
+                    "rule_name": "<script>alert('rule')</script>",
+                    "severity": "high<script>",
+                    "line_number": '1"><script>alert(2)</script>',
+                    "line_content": '<img src=x onerror=alert("line")>',
+                    "adjustment_reason": 'reason <script>alert("reason")</script>',
+                    "detection_standard": "<b>Bad Standard</b>",
+                    "standard_url": "javascript:alert(1)",
+                    "in_code_block": False,
+                    "severity_changed": True,
+                    "original_severity": '<script>alert("old")</script>',
+                }
+            ],
+            "files_scanned": 1,
+            "blocked": True,
+        }
+    ]
+    response = client.get(
+        "/api/scans/sk_001/export",
+        headers=auth_header,
+        params={"format": "html"},
+    )
+    assert response.status_code == 200
+    body = response.text
+    assert "<script" not in body.lower()
+    assert "onerror=" not in body.lower()
+    assert "javascript:" not in body.lower()
+    assert "&lt;script&gt;" in body
+    assert "severity-unknown" in body
 
 
 def test_export_scan_not_found(client, auth_header, mock_service):

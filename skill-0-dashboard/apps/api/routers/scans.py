@@ -1,7 +1,9 @@
 """Scans API router"""
 
 from datetime import datetime
+import html
 from typing import List
+from urllib.parse import urlparse
 
 from fastapi import APIRouter, Depends, Query, HTTPException
 from fastapi.responses import HTMLResponse
@@ -36,6 +38,27 @@ DETECTION_STANDARDS = [
         "description": "Project-specific security rules (SEC001-SEC009)",
     },
 ]
+
+ALLOWED_SEVERITIES = {"info", "low", "medium", "high", "critical", "unknown"}
+ALLOWED_CONTEXT_CLASSES = {"code-context", "prose-context"}
+
+
+def _html_text(value: object) -> str:
+    """Escape untrusted values for HTML text and attribute contexts."""
+    return html.escape(str(value), quote=True).replace("=", "&#x3D;")
+
+
+def _safe_severity(value: object) -> str:
+    severity = str(value or "unknown").lower()
+    return severity if severity in ALLOWED_SEVERITIES else "unknown"
+
+
+def _safe_standard_url(value: object) -> str:
+    raw = str(value or "").strip()
+    parsed = urlparse(raw)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return ""
+    return raw
 
 
 class ScanListItem(ScanSummary):
@@ -105,47 +128,51 @@ def export_skill_scan(
 
 def _generate_html_report(data: dict) -> str:
     """Generate HTML report from export data"""
-    skill_name = data["skill_name"]
+    skill_name = _html_text(data["skill_name"])
     scan = data["scan"]
     standards = data["detection_standards"]
 
     findings_html = ""
     for i, f in enumerate(scan.get("findings", []), 1):
-        severity_badge = f.get("adjusted_severity", f.get("severity", "unknown"))
+        severity_badge = _safe_severity(f.get("adjusted_severity", f.get("severity", "unknown")))
         context_badge = "code" if f.get("in_code_block") else "prose"
         context_class = "code-context" if f.get("in_code_block") else "prose-context"
+        if context_class not in ALLOWED_CONTEXT_CLASSES:
+            context_class = "prose-context"
 
         severity_change = ""
         if f.get("severity_changed"):
             severity_change = f"""
             <span class="severity-change">
-                (was {f.get("original_severity", "N/A")})
+                (was {_html_text(f.get("original_severity", "N/A"))})
             </span>
             """
 
         standard_link = ""
-        if f.get("standard_url"):
+        standard_url = _safe_standard_url(f.get("standard_url"))
+        if standard_url:
             standard_link = f"""
-            <a href="{f["standard_url"]}" target="_blank" class="standard-link">
-                {f.get("detection_standard", "Reference")}
+            <a href="{_html_text(standard_url)}" target="_blank" rel="noopener noreferrer" class="standard-link">
+                {_html_text(f.get("detection_standard", "Reference"))}
             </a>
             """
 
+        line_content = _html_text(str(f.get("line_content", ""))[:80])
         findings_html += f"""
         <div class="finding">
             <div class="finding-header">
                 <span class="finding-number">#{i}</span>
-                <span class="rule-id">{f.get("rule_id", "N/A")}</span>
-                <span class="rule-name">{f.get("rule_name", "Unknown")}</span>
+                <span class="rule-id">{_html_text(f.get("rule_id", "N/A"))}</span>
+                <span class="rule-name">{_html_text(f.get("rule_name", "Unknown"))}</span>
                 <span class="severity severity-{severity_badge}">{severity_badge}</span>
                 {severity_change}
                 <span class="context {context_class}">{context_badge}</span>
             </div>
             <div class="finding-location">
-                Line {f.get("line_number", 0)}: <code>{f.get("line_content", "")[:80]}...</code>
+                Line {_html_text(f.get("line_number", 0))}: <code>{line_content}...</code>
             </div>
             <div class="finding-reason">
-                {f.get("adjustment_reason", "")}
+                {_html_text(f.get("adjustment_reason", ""))}
             </div>
             <div class="finding-standard">
                 {standard_link}
@@ -155,10 +182,16 @@ def _generate_html_report(data: dict) -> str:
 
     standards_html = ""
     for s in standards:
+        standard_url = _safe_standard_url(s.get("url"))
+        standard_link = (
+            f'<a href="{_html_text(standard_url)}" target="_blank" rel="noopener noreferrer">{_html_text(s["name"])}</a>'
+            if standard_url
+            else _html_text(s["name"])
+        )
         standards_html += f"""
         <div class="standard">
-            <a href="{s["url"]}" target="_blank">{s["name"]}</a>
-            <p>{s["description"]}</p>
+            {standard_link}
+            <p>{_html_text(s["description"])}</p>
         </div>
         """
 
@@ -245,8 +278,8 @@ def _generate_html_report(data: dict) -> str:
     </div>
     
     <div class="export-footer">
-        <p>Exported: {data["export_date"]}</p>
-        <p>Scanner: Advanced Skill Analyzer v{scan.get("scanner_version", "2.4.0")}</p>
+        <p>Exported: {_html_text(data["export_date"])}</p>
+        <p>Scanner: Advanced Skill Analyzer v{_html_text(scan.get("scanner_version", "2.4.0"))}</p>
     </div>
 </body>
 </html>
