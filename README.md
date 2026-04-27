@@ -159,7 +159,7 @@ These values are for local development only. Production must replace them and th
 
 ## Testing
 
-The project includes a comprehensive regression suite with 219 Python tests plus 26 frontend smoke tests:
+The project includes a comprehensive regression suite with 221 Python tests plus 26 frontend smoke tests:
 
 ```bash
 # Run the full Python regression suite (core API + dashboard API)
