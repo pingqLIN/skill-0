@@ -5,6 +5,7 @@ Purpose: `separate live authority from historical and conceptual documents`
 
 ## Authoritative Current Baseline
 
+- [development-recommendation-2026-04-27.zh-TW.md](<repo-root>/docs/development-recommendation-2026-04-27.zh-TW.md)
 - [executable-dev-plan-2026-03-31.zh-TW.md](<repo-root>/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md)
 - [final-development-phase-plan-2026-03-23.md](<repo-root>/docs/final-development-phase-plan-2026-03-23.md)
 - [project-improvement-plan-2026-03-27.zh-TW.md](<repo-root>/docs/project-improvement-plan-2026-03-27.zh-TW.md)
