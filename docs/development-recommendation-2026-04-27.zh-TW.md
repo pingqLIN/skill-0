@@ -27,16 +27,20 @@ Repo：`<repo-root>`
 | 項目 | 狀態 |
 |---|---|
 | Branch | `main` |
-| Remote sync | `origin/main` 已更新到 `1ba22a5` |
+| Remote sync | `origin/main` 已更新至 8HR loop 與 dependency safe bump；最新 dependency remediation commit 為 `c4aec04` |
 | parsed corpus | `196` checked-in JSON |
 | converted-skills corpus | `164` directories |
 | schema validation | `196 passed, 0 failed` |
-| Python + dashboard API regression | `219 passed` |
+| Python + dashboard API regression | `221 passed, 61 warnings` |
 | dashboard web tests | `26 passed` |
 | dashboard web build | passed |
-| GitHub security signal | push 後回報 `6` 個 Dependabot vulnerabilities（`2 high`, `4 moderate`） |
+| GitHub security signal | local `npm audit --json` 已歸零；GitHub alert 關閉狀態需等待平台重新掃描 |
 
-本基線代表 Skill-0 已具備可執行工程骨架；但 Dependabot warning、HTML export escaping、fixture-based fidelity gate 與 release rehearsal 仍是下一階段信任門檻。
+本基線代表 Skill-0 已具備可執行工程骨架；HTML export escaping、fixture-based fidelity gate、governance telemetry 與 dependency safe bump 已完成首輪修補。下一階段信任門檻轉向 release rehearsal、backup/restore、DB identity drift 與更完整的 parser quality benchmark。
+
+### 2.1 Post-loop 狀態
+
+本文件第 5 節保留原始 8HR 分段設計，作為審查與執行追溯用。實際完成狀態以 `docs/project-development-stage-report-2026-04-27-8hr-loop.md`、`docs/security/dependabot-vulnerability-inventory-2026-04-27.md` 與 `docs/document-authority-index-2026-03-27.md` 的 current snapshot 為準。
 
 ---
 

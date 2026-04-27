@@ -3,6 +3,27 @@
 Updated: `2026-04-27`
 Purpose: `separate live authority from historical and conceptual documents`
 
+## Start Here
+
+Use these documents first when making current project decisions:
+
+1. [development-recommendation-2026-04-27.zh-TW.md](<repo-root>/docs/development-recommendation-2026-04-27.zh-TW.md) - reviewed next-stage direction and 8HR loop shape.
+2. [executable-dev-plan-2026-03-31.zh-TW.md](<repo-root>/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md) - live checkpoint execution plan, refreshed on 2026-04-27.
+3. [project-development-stage-report-2026-04-27-8hr-loop.md](<repo-root>/docs/project-development-stage-report-2026-04-27-8hr-loop.md) - latest completed development-loop evidence.
+4. [dependabot-vulnerability-inventory-2026-04-27.md](<repo-root>/docs/security/dependabot-vulnerability-inventory-2026-04-27.md) - web dependency remediation record.
+5. [skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json) - canonical schema source of truth.
+
+## Current Snapshot
+
+- Repo root: `<repo-root>`
+- Branch: `main`
+- Parsed corpus: `196` checked-in JSON files
+- Imported corpus: `164` `converted-skills/` directories
+- Schema validation baseline: `196 passed, 0 failed`
+- Python + dashboard API regression baseline: `221 passed, 61 warnings`
+- Dashboard web baseline: `26 passed`; production build passed
+- Local web dependency audit after safe bumps: `0 vulnerabilities`
+
 ## Authoritative Current Baseline
 
 - [development-recommendation-2026-04-27.zh-TW.md](<repo-root>/docs/development-recommendation-2026-04-27.zh-TW.md)
@@ -12,7 +33,6 @@ Purpose: `separate live authority from historical and conceptual documents`
 - [p0-repair-plan-2026-03-27.md](<repo-root>/docs/p0-repair-plan-2026-03-27.md)
 - [contract-decision.md](<repo-root>/docs/contract-decision.md)
 - [schema-compatibility-note.md](<repo-root>/docs/schema-compatibility-note.md)
-- [parsed-dataset-validation-report-2026-03-27.md](<repo-root>/docs/parsed-dataset-validation-report-2026-03-27.md)
 - [skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json)
 
 ## Review And Assessment Artifacts
@@ -43,6 +63,7 @@ Purpose: `separate live authority from historical and conceptual documents`
 - [p0-commit-boundaries-2026-03-27.md](<repo-root>/docs/p0-commit-boundaries-2026-03-27.md)
 - [remaining-worktree-triage-2026-03-27.md](<repo-root>/docs/remaining-worktree-triage-2026-03-27.md)
 - [remaining-worktree-triage-2026-04-02.md](<repo-root>/docs/remaining-worktree-triage-2026-04-02.md)
+- [parsed-dataset-validation-report-2026-03-27.md](<repo-root>/docs/parsed-dataset-validation-report-2026-03-27.md)
 
 ## Design And Conceptual Pressure Tests
 
@@ -54,5 +75,6 @@ Purpose: `separate live authority from historical and conceptual documents`
 
 ## Usage Rule
 
-- If two documents conflict, prefer `Authoritative Current Baseline`.
+- If two documents conflict, prefer `Start Here` and `Current Snapshot` first, then `Authoritative Current Baseline`.
 - If a document is listed under `Historical Context Only`, treat its body claims as archival unless reconfirmed in current code or current-baseline docs.
+- Older absolute paths such as `<repo-root>` are archival unless repeated in the current snapshot; the current repo root is `<repo-root>`.

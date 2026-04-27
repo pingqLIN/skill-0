@@ -1,6 +1,6 @@
 # SKILL-0 PROJECT KNOWLEDGE BASE
 
-**Updated:** 2026-03-27  
+**Updated:** 2026-04-27
 **Branch:** `main`
 
 ## Project Guidelines
@@ -44,10 +44,10 @@ skill-0/
 ├── api/                 # Core FastAPI search/auth API
 ├── vector_db/           # Embedding + sqlite-vec search engine
 ├── tools/               # Parsing, validation, governance, normalization scripts
-├── parsed/              # 195 checked-in parsed skill JSON files
+├── parsed/              # 196 checked-in parsed skill JSON files
 ├── schema/              # Canonical JSON Schema v2.4.0
 ├── governance/          # Governance DB + policy docs
-├── converted-skills/    # 163 imported external skill directories
+├── converted-skills/    # 164 imported external skill directories
 ├── skill-0-dashboard/   # Monorepo: governance API + React web UI
 ├── docs/                # Review, planning, dossier, and shared-contract docs
 └── skills.db            # SQLite + vector store

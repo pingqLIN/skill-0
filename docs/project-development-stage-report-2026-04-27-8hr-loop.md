@@ -66,7 +66,7 @@ git diff --check
 
 ## Remaining Risks
 
-1. GitHub still reports Dependabot vulnerabilities until dependency bumps land.
+1. GitHub may continue reporting Dependabot vulnerabilities until platform-side rescans close alerts; local web `npm audit --json` is `0 vulnerabilities` after dependency safe bumps.
 2. Production compose has been config-rendered, not fully started.
 3. Backup/restore and dual-DB identity drift checks are documented but not implemented.
 4. `cancelled_at/by` item-level trace is still not represented as distinct item fields; current visibility uses job-level cancellation plus item status/error message.

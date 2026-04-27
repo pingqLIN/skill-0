@@ -50,6 +50,7 @@ find converted-skills -mindepth 1 -maxdepth 1 -type d | wc -l
 .venv/bin/python tools/check_shared_docs.py
 .venv/bin/python tools/check_shared_docs_mirror.py --gui-root <skill-0-gui-root> --require-gui-root
 .venv/bin/python -m pytest tests skill-0-dashboard/apps/api/tests -q
+cd skill-0-dashboard/apps/web && npm audit --json
 npm test -- --run
 npm run build
 ```
@@ -64,7 +65,8 @@ npm run build
 | doc status markers | passed |
 | shared docs source-set check | passed |
 | shared docs GUI mirror check | passed |
-| Python + dashboard API regression | `219 passed, 60 warnings` |
+| Python + dashboard API regression | `221 passed, 61 warnings` |
+| dashboard web dependency audit | `0 vulnerabilities` |
 | dashboard web tests | `26 passed` |
 | dashboard web production build | passed |
 
@@ -88,6 +90,7 @@ npm run build
 2. `skill-0-GUI` 是否要在自己的 workflow 內獨立執行 shared docs mirror gate，仍是跨 repo governance 的下一個決策點。
 3. Runtime hardening 後續應集中在觀測性、部署假設與錯誤分類，而不是重新設計 API。
 4. Parser quality 的 ground truth / failure corpus 仍不足；在沒有 benchmark 前，不應把 fidelity 分數描述成 strict equivalence。
+5. GitHub Dependabot alert 關閉可能落後於 lockfile 修補；以 local `npm audit --json` 作為本輪 dependency remediation 的即時驗證，GitHub 端需等重新掃描確認。
 
 ---
 

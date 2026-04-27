@@ -50,7 +50,7 @@ Skill-0 的核心價值不是取代 agent runtime，而是把自然語言 skills
 | parsed corpus | `196` checked-in JSON |
 | converted-skills corpus | `164` directories |
 | schema validation | `196 passed, 0 failed` |
-| Python + dashboard API regression | `219 passed` |
+| Python + dashboard API regression | `221 passed, 61 warnings` |
 | dashboard web tests | `26 passed` |
 | production build | passed |
 
@@ -115,7 +115,7 @@ Async governance jobs 已有 durable MVP，但 reviewer/operator 仍需要更清
 
 ### P1：文件漂移仍影響外部信任
 
-README 仍有舊數字，例如 parsed/test count 與近期報告不一致。部分文件仍寫舊路徑 `<repo-root>`，但目前 repo 在 `<repo-root>`。雖然 authority index 已經降級歷史文件，但入口文件漂移仍會削弱外部 reviewer 信任。
+初次審計時，README/current docs 仍有舊數字，例如 parsed/test count 與近期報告不一致；部分文件仍寫舊路徑 `<repo-root>`，但目前 repo 在 `<repo-root>`。8HR loop 與後續文件重排已修正主要入口文件，剩餘風險集中在歷史快照被未來代理誤讀，因此 authority index 必須持續把 archival docs 與 current baseline 分開。
 
 ### P2：營運級擴展尚未完成
 
@@ -139,7 +139,7 @@ README 仍有舊數字，例如 parsed/test count 與近期報告不一致。部
 2. 加入含 `<script>`、HTML attribute injection、惡意 URL 的 API regression test。
 3. 修正 README 與 current docs 的 dataset/test count。
 4. 修正 current docs 中錯誤或過時的絕對路徑。
-5. 對 root-level historical plans 加上更醒目的 archival warning，或移入 archive。
+5. 對 root-level historical plans 加上更醒目的 archival warning，或移入 archive；不要把歷史快照改寫成現行計畫。
 
 ### Stage 2：Parser Quality Gate
 
