@@ -30,6 +30,55 @@ from fastapi.testclient import TestClient
 from api.main import API_VERSION, app, create_access_token, _rate_limit_store, search_engine as _global_engine
 
 
+def _has_skills_table(db_path: Path) -> bool:
+    if not db_path.exists() or db_path.stat().st_size == 0:
+        return False
+    import sqlite3
+
+    try:
+        with sqlite3.connect(db_path) as conn:
+            row = conn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='skills'"
+            ).fetchone()
+    except sqlite3.DatabaseError:
+        return False
+    return row is not None
+
+
+@pytest.fixture(scope="session")
+def seeded_skills_db(tmp_path_factory):
+    """Reusable seed DB for API integration tests.
+
+    Public checkouts intentionally do not track skills.db, so build a compact
+    vector DB from checked-in parsed fixtures when the local runtime DB is
+    absent.
+    """
+    repo_root = Path(__file__).parent.parent.parent
+    repo_db = repo_root / "skills.db"
+    seed_db = tmp_path_factory.mktemp("api-core-seed") / "skills.db"
+    if _has_skills_table(repo_db):
+        shutil.copyfile(repo_db, seed_db)
+        return seed_db
+
+    from vector_db.search import SemanticSearch
+
+    seed_parsed_dir = seed_db.parent / "parsed"
+    seed_parsed_dir.mkdir()
+    for parsed_file in sorted((repo_root / "parsed").glob("*.json"))[:12]:
+        shutil.copyfile(parsed_file, seed_parsed_dir / parsed_file.name)
+
+    search = SemanticSearch(db_path=seed_db)
+    try:
+        search.index_skills(seed_parsed_dir, show_progress=False)
+    finally:
+        search.close()
+    import sqlite3
+
+    with sqlite3.connect(seed_db) as conn:
+        conn.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+    return seed_db
+
+
 @pytest.fixture(autouse=True)
 def clear_rate_limits():
     """Clear rate limit store before each test"""
@@ -39,14 +88,14 @@ def clear_rate_limits():
 
 
 @pytest.fixture
-def client(tmp_path, monkeypatch):
+def client(tmp_path, monkeypatch, seeded_skills_db):
     """TestClient for the core API using an isolated DB copy."""
     # Reset the global search engine to avoid stale SQLite connections
     import api.main as api_module
 
     repo_root = Path(__file__).parent.parent.parent
     test_db_path = tmp_path / "skills.db"
-    shutil.copyfile(repo_root / "skills.db", test_db_path)
+    shutil.copyfile(seeded_skills_db, test_db_path)
 
     monkeypatch.setattr(api_module, "DB_PATH", str(test_db_path))
     monkeypatch.setattr(api_module, "PARSED_DIR", str(repo_root / "parsed"))
