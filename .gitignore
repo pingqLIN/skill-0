@@ -71,3 +71,9 @@ backups/*.db
 
 # Diagnostic files (files starting with ##, using character class to avoid comment interpretation)
 [#][#]*
+
+# Local governance resolution artifacts
+/agent-governance-resolution.json
+/agent-governance-resolution.md
+/agent-governance-resolution.json:Zone.Identifier
+/agent-governance-resolution.md:Zone.Identifier
