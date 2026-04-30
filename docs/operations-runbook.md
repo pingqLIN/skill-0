@@ -175,6 +175,20 @@ cp backups/governance_20260211_020000.db governance/db/governance.db
 # Restart the application
 ```
 
+After restore or re-index, run an identity drift report:
+
+```bash
+.venv/bin/python tools/report_db_identity_drift.py --format json
+```
+
+For public checkouts where runtime DB files are intentionally absent, use:
+
+```bash
+.venv/bin/python tools/report_db_identity_drift.py --allow-missing-db
+```
+
+Strict mode should fail if either runtime DB is missing, if vector rows reference skill IDs not present in `parsed/`, or if governance rows lack a current revision/checksum projection.
+
 ### Database Optimization
 
 Run VACUUM periodically to reclaim space (requires exclusive access):

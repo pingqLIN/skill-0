@@ -26,6 +26,27 @@
 - 避免從工具清單自下而上反推流程
 - 作為 `skill-0` 的 top-down、intent-driven meta-router
 
+### report_db_identity_drift.py - DB identity drift 報告
+
+只讀比對 `parsed/`、`skills.db`、`governance/db/governance.db` 的技能身份投影，協助 release / push 前確認 runtime DB 是否缺失、過期或與 canonical parsed corpus 不一致。
+
+```bash
+# Public checkout 或乾淨 clone：允許 runtime DB 缺失，但保留 warning
+.venv/bin/python tools/report_db_identity_drift.py --allow-missing-db
+
+# Local runtime / release rehearsal：DB 缺失或 drift 都回傳非 0 exit code
+.venv/bin/python tools/report_db_identity_drift.py
+
+# Machine-readable evidence
+.venv/bin/python tools/report_db_identity_drift.py --format json --allow-missing-db
+```
+
+**適用場景：**
+- `skills.db` / `governance.db` 已從 public tracked tree 移除後，確認 missing DB 是預期狀態還是 release blocker
+- 檢查 vector DB 的 `raw_json.meta.skill_id` 是否落後於 `parsed/`
+- 檢查 governance rows 是否缺 `current_revision_id` 或 current revision checksum
+- 在 backup/restore、re-index、release rehearsal 後產生 operator-facing evidence
+
 ### analyzer.py - 結構統計分析
 
 分析已解析的 skills，產生統計報告。

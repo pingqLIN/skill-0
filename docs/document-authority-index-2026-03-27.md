@@ -23,6 +23,7 @@ Use these documents first when making current project decisions:
 - Python + dashboard API regression baseline: `221 passed, 61 warnings`
 - Dashboard web baseline: `26 passed`; production build passed
 - Local web dependency audit after safe bumps: `0 vulnerabilities`
+- Public checkout DB identity baseline: `tools/report_db_identity_drift.py --allow-missing-db` reports `parsed=196` and warns when runtime DB files are intentionally absent.
 
 ## Authoritative Current Baseline
 
