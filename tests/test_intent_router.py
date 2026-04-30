@@ -63,4 +63,5 @@ def test_router_json_payload_is_serializable():
     assert payload["goal"] == "validate"
     assert payload["phase"] == "review"
     assert payload["primary_capability"] == "schema-and-regression-validation"
-    assert len(payload["recommended_commands"]) == 3
+    assert len(payload["recommended_commands"]) == 4
+    assert any("report_db_identity_drift.py" in command for command in payload["recommended_commands"])

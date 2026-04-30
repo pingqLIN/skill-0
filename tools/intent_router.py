@@ -226,6 +226,7 @@ def build_commands(
     if phase in {"execution", "review"}:
         commands.extend(
             [
+                ".venv/bin/python tools/report_db_identity_drift.py --allow-missing-db",
                 ".venv/bin/python -m pytest tests/test_schema_contract.py tests/test_governance_revisions.py -q",
                 ".venv/bin/python tools/evaluate.py -p parsed",
             ]
