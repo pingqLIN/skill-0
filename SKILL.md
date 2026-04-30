@@ -1,7 +1,15 @@
 # Skill-0 Tool Portal
-
+	
 > 🔧 Complete guide to skill decomposition workflow and toolchain
 
+## Management Orientation
+
+Skill-0 should not be treated as a system that starts from a skill list and assembles workflows bottom-up.
+
+Its management model is better understood as top-down and intent-driven: first decide direction from the goal, current task phase, governance constraints, and active context, then dispatch search, decomposition, comparison, and governance capabilities underneath.
+
+In that model, semantic search and skill discovery are important capability layers, but they are not the highest-level controller.
+	
 ## Quick Start
 
 ### Installation

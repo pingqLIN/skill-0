@@ -45,6 +45,8 @@ Skill-0 的第一個邏輯核心，是把技能拆成：
 - skill discovery 可以跨名稱與描述用語差異
 - 相似技能查找與聚類都可建立在同一向量基礎上
 
+但這層的角色應被視為 evidence layer，而不是最高層控制器。Skill-0 的治理取向更偏向 top-down、intent-driven orchestration：先由任務目標、當前階段與治理規則決定要走哪種路徑，再向下調用 search、comparison、parse 或 review 能力。
+
 ## 4.4 Search API Logic
 
 core API 主要分成幾種端點：

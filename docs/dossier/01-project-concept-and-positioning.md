@@ -68,6 +68,16 @@ Skill-0 的概念核心，是三元分類模型：
 - 平台層：提供 API、搜尋、dashboard、governance workflow
 - 知識層：把 skill inventory 變成 queryable asset
 
+### 1.5.1 Management Orientation
+
+在管理取向上，Skill-0 不應被理解成單純由 skill 清單自下而上拼裝流程的系統。
+
+更適合的描述是：
+
+> Skill-0 採取 top-down、intent-driven 的管理模型，先由目標、任務階段、治理限制與當前上下文決定方向，再向下調度 search、decomposition、comparison 與 governance 能力。
+
+換句話說，semantic search 與 skill discovery 在 Skill-0 裡更像底層證據層與能力層，而不是最高層的總控入口。
+
 ## 1.6 Adoption Strategy
 
 專案採取的是相對務實的 sidecar adoption 路徑，而不是強迫全面重寫。
