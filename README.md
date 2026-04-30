@@ -10,6 +10,8 @@
 
 Skill-0 is a classification system that parses AI/Chatbot Skills (especially Claude Skills and MCP Tools) into structured components. It includes **semantic search** powered by vector embeddings for intelligent skill discovery.
 
+Skill-0 now also includes a lightweight, goal-first intent router for operator workflows. Instead of starting from a raw skill list and assembling steps bottom-up, the router starts from the operator goal and optional task phase, then recommends the next Skill-0 workflow and commands.
+
 ## Compatibility with Existing Skills
 
 ### Low-risk adoption path
@@ -23,6 +25,7 @@ Skill-0 is a classification system that parses AI/Chatbot Skills (especially Cla
 - **Skill inventory and deduplication** with semantic search.
 - **Governance review** with structured checks on rules, constraints, and failure patterns.
 - **Operational handover** by turning tacit knowledge into queryable elements.
+- **Goal-first workflow routing** that helps decide whether the next step should be discovery, ingest, analysis, governance, comparison, or validation.
 
 ### Pros and trade-offs
 
@@ -112,7 +115,7 @@ skill-0/
 │   └── db/governance.db              # Skill approval workflow DB
 ├── schema/                            # JSON Schema v2.4
 ├── parsed/                            # Parsed skill examples (196 checked-in JSON files)
-├── tools/                             # Analysis & governance tools
+├── tools/                             # Routing, analysis, validation, and governance tools
 ├── scripts/                           # Maintenance scripts
 ├── tests/                             # Test suites and fixtures
 ├── docker-compose.yml                 # Development Docker setup

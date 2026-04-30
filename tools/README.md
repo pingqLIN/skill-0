@@ -1,8 +1,30 @@
 # Skill-0 分析工具
 
-本目錄包含用於分析和歸納 Skills 結構的工具。
+本目錄包含用於路由、分析、驗證與治理 Skills 結構的工具。
 
 ## 工具清單
+
+### intent_router.py - Top-down 路由入口
+
+依照目標與任務階段，先決定要走哪一條 Skill-0 工作路徑，再回推建議命令。
+
+目前版本是 table-driven 的 operator starter，目的在於先把既有 search / parse / analyze / govern / compare / validate 路徑收斂成單一入口，而不是宣稱它已經是完整策略引擎。
+
+```bash
+# 從自由文字推斷目標
+.venv/bin/python tools/intent_router.py --goal compare --phase triage --query "overlapping skills"
+
+# 明確指定治理目標
+.venv/bin/python tools/intent_router.py --goal govern --phase review
+
+# 以 JSON 輸出 machine-readable handoff
+.venv/bin/python tools/intent_router.py --goal discover --phase intake --query "document processing" --format json
+```
+
+**適用場景：**
+- 先決定現在應該 search / ingest / analyze / govern / compare / validate 哪條路徑
+- 避免從工具清單自下而上反推流程
+- 作為 `skill-0` 的 top-down、intent-driven meta-router
 
 ### analyzer.py - 結構統計分析
 

@@ -6,9 +6,9 @@
 
 Skill-0 should not be treated as a system that starts from a skill list and assembles workflows bottom-up.
 
-Its management model is better understood as top-down and intent-driven: first decide direction from the goal, current task phase, governance constraints, and active context, then dispatch search, decomposition, comparison, and governance capabilities underneath.
+Its management model is better understood as goal-first and intent-driven: first decide direction from the goal and current task phase, then dispatch search, decomposition, comparison, and governance capabilities underneath.
 
-In that model, semantic search and skill discovery are important capability layers, but they are not the highest-level controller.
+In that model, semantic search and skill discovery are important capability layers, but they are not the highest-level controller. The current `intent_router.py` is a lightweight operator starter for that direction, not yet a full policy engine.
 	
 ## Quick Start
 
@@ -16,25 +16,31 @@ In that model, semantic search and skill discovery are important capability laye
 ```bash
 git clone https://github.com/<owner>/skill-0.git
 cd skill-0
-pip install -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate
+.venv/bin/python -m pip install -r requirements-dev.txt
 ```
 
 ### First Run
 ```bash
+# Route the task from operator intent first
+.venv/bin/python tools/intent_router.py --goal discover --phase intake --query "document processing"
+
 # Index existing skills
-python -m vector_db.search --db skills.db --parsed-dir parsed index
+.venv/bin/python -m vector_db.search --db skills.db --parsed-dir parsed index
 
 # Search for skills
-python -m vector_db.search search "document processing"
+.venv/bin/python -m vector_db.search --db skills.db search "document processing"
 
 # Analyze patterns
-python tools/analyzer.py -p parsed -o analysis/report.json
+.venv/bin/python tools/analyzer.py -p parsed -o analysis/report.json
 ```
 
 ## Tool Suite Overview
 
 ```
 skill-0/tools/
+├── intent_router.py      # 🧭 Goal-first workflow routing
 ├── analyzer.py           # 📊 Statistical analysis
 ├── pattern_extractor.py  # 🔍 Pattern discovery
 ├── evaluate.py           # ✅ Coverage evaluation
