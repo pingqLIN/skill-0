@@ -11,7 +11,8 @@ Use these documents first when making current project decisions:
 2. [executable-dev-plan-2026-03-31.zh-TW.md](<repo-root>/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md) - live checkpoint execution plan, refreshed on 2026-04-27.
 3. [project-development-stage-report-2026-04-27-8hr-loop.md](<repo-root>/docs/project-development-stage-report-2026-04-27-8hr-loop.md) - latest completed development-loop evidence.
 4. [dependabot-vulnerability-inventory-2026-04-27.md](<repo-root>/docs/security/dependabot-vulnerability-inventory-2026-04-27.md) - web dependency remediation record.
-5. [skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json) - canonical schema source of truth.
+5. [pilot-adoption-guide-2026-04-30.zh-TW.md](<repo-root>/docs/pilot-adoption-guide-2026-04-30.zh-TW.md) - 30-minute pilot adoption path for reviewers/operators.
+6. [skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json) - canonical schema source of truth.
 
 ## Current Snapshot
 
@@ -42,6 +43,7 @@ Use these documents first when making current project decisions:
 - [project-development-report-2026-04-27.zh-TW.md](<repo-root>/docs/project-development-report-2026-04-27.zh-TW.md)
 - [dependabot-vulnerability-inventory-2026-04-27.md](<repo-root>/docs/security/dependabot-vulnerability-inventory-2026-04-27.md)
 - [release-rehearsal-risk-inventory-2026-04-27.md](<repo-root>/docs/release-rehearsal-risk-inventory-2026-04-27.md)
+- [pilot-adoption-guide-2026-04-30.zh-TW.md](<repo-root>/docs/pilot-adoption-guide-2026-04-30.zh-TW.md)
 - [project-development-stage-report-2026-04-27-8hr-loop.md](<repo-root>/docs/project-development-stage-report-2026-04-27-8hr-loop.md)
 - [project-review-2026-03-23.md](<repo-root>/docs/project-review-2026-03-23.md)
 - [external-review-report-2026-03-23.md](<repo-root>/docs/external-review-report-2026-03-23.md)
