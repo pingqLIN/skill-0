@@ -369,6 +369,7 @@ Comprehensive documentation is available:
 - **[docs/skill-0-vs-claude-code-simplifier.md](docs/skill-0-vs-claude-code-simplifier.md)** - Comparison with Claude Code Simplifier (EN)
 - **[docs/skill-0-vs-claude-code-simplifier.zh-TW.md](docs/skill-0-vs-claude-code-simplifier.zh-TW.md)** - 與 Claude Code Simplifier 比較 (zh-TW)
 - **[docs/shared-documentation-model.md](docs/shared-documentation-model.md)** - How shared contract docs are sourced from `skill-0` and mirrored into `skill-0-GUI`
+- **[docs/gui-governance.md](docs/gui-governance.md)** - Repository-boundary decision for governing `skill-0-GUI` as a companion repo
 
 ### Quick Start Guide
 

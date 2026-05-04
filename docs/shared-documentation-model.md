@@ -1,9 +1,9 @@
 # Shared Documentation Model For `skill-0` And `skill-0-GUI`
 
-Updated: `2026-04-21`
+Updated: `2026-05-04`
 Implementation status: `🟢 Source-of-truth model, ownership boundaries, and cross-repo mirror validation are enforced from skill-0 CI`
 
-Status note: This file defines the canonical shared-doc ownership model in `skill-0`. The source set under `docs/shared/` is live, repo-local ownership/provenance wording is now checked in CI, mirrored copies in `skill-0-GUI/docs/shared/` are checked from `skill-0` CI, and the remaining hardening question is whether `skill-0-GUI` should also enforce the same contract independently in its own workflow.
+Status note: This file defines the canonical shared-doc ownership model in `skill-0`. The source set under `docs/shared/` is live, repo-local ownership/provenance wording is checked in CI, mirrored copies in `skill-0-GUI/docs/shared/` are checked from `skill-0` CI, and `docs/gui-governance.md` records the current repository-boundary decision: `skill-0-GUI` is governed by `skill-0` contracts but remains a separate companion repository.
 
 ## Purpose
 
@@ -24,7 +24,10 @@ It is not:
 
 - a symlink-based model
 - a submodule-based model
+- a monorepo-import model
 - a "copy files manually and hope they stay aligned" model
+
+The repository governance decision is documented in `docs/gui-governance.md`. That decision keeps `skill-0-GUI` independently shippable while making `skill-0` the authority for parser contracts, schema wording, shared terminology, and cross-repository policy.
 
 ## Why this model
 
@@ -32,10 +35,11 @@ This approach is the best fit for the current project shape:
 
 - the repositories are separate GitHub repos
 - the GUI can run in standalone mode and should remain independently deployable
+- `skill-0` already contains its own dashboard monorepo under `skill-0-dashboard/`
 - Windows/WSL and GitHub hosting make symlink-heavy workflows fragile
 - most cross-repository documents are contract documents, not runtime code
 
-The goal is to share stable meaning, not to force both repositories into identical structure.
+The goal is to share stable meaning and governance, not to force both repositories into identical structure.
 
 ## What belongs in shared docs
 
@@ -119,6 +123,7 @@ Further hardening can still add:
 1. a `skill-0-GUI`-side CI self-check so mirrored-doc enforcement does not depend only on `skill-0`
 2. fixture-based strict-equivalence notes for canonical vs standalone mode language
 3. a shared version marker or manifest checksum for easier auditability
+4. a history-preserving import plan if a future decision intentionally moves `skill-0-GUI` into `skill-0`
 
 ## Summary
 

@@ -1,6 +1,6 @@
 # Skill-0 Document Authority Index
 
-Updated: `2026-04-27`
+Updated: `2026-05-04`
 Purpose: `separate live authority from historical and conceptual documents`
 
 ## Start Here
@@ -12,7 +12,8 @@ Use these documents first when making current project decisions:
 3. [project-development-stage-report-2026-04-27-8hr-loop.md](<repo-root>/docs/project-development-stage-report-2026-04-27-8hr-loop.md) - latest completed development-loop evidence.
 4. [dependabot-vulnerability-inventory-2026-04-27.md](<repo-root>/docs/security/dependabot-vulnerability-inventory-2026-04-27.md) - web dependency remediation record.
 5. [pilot-adoption-guide-2026-04-30.zh-TW.md](<repo-root>/docs/pilot-adoption-guide-2026-04-30.zh-TW.md) - 30-minute pilot adoption path for reviewers/operators.
-6. [skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json) - canonical schema source of truth.
+6. [gui-governance.md](<repo-root>/docs/gui-governance.md) - current repository-boundary decision for governing `skill-0-GUI` as a companion repo.
+7. [skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json) - canonical schema source of truth.
 
 ## Current Snapshot
 
@@ -35,6 +36,7 @@ Use these documents first when making current project decisions:
 - [p0-repair-plan-2026-03-27.md](<repo-root>/docs/p0-repair-plan-2026-03-27.md)
 - [contract-decision.md](<repo-root>/docs/contract-decision.md)
 - [schema-compatibility-note.md](<repo-root>/docs/schema-compatibility-note.md)
+- [gui-governance.md](<repo-root>/docs/gui-governance.md)
 - [skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json)
 
 ## Review And Assessment Artifacts

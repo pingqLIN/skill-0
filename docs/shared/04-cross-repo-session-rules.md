@@ -1,6 +1,6 @@
 # Cross-Repo Session Coordination Rules
 
-Updated: `2026-03-24`
+Updated: `2026-05-04`
 
 ## Purpose
 
@@ -21,6 +21,19 @@ The current relationship is:
 4. `skill-0-GUI/docs/shared/` contains mirrored copies of selected contract documents
 
 This means the repositories are separate, but they are not independent in meaning.
+
+## Governance Decision
+
+`skill-0-GUI` is a governed companion repository, not a directory that currently belongs inside the `skill-0` Git tree.
+
+The current decision is:
+
+- `skill-0` owns contracts, parser truth, schema truth, governance wording, and shared policy
+- `skill-0-GUI` owns the review studio, bridge runtime, standalone-compatible UI, and GUI verification
+- shared meaning is managed through `skill-0/docs/shared/` plus mirrored copies in `skill-0-GUI/docs/shared/`
+- repository consolidation should not happen by ad hoc file copy
+
+If a future decision imports the GUI into `skill-0`, preserve history with an explicit migration plan such as `git subtree`, and place it under a clear app boundary such as `apps/review-studio/`.
 
 ## Source Of Truth Rules
 
@@ -72,6 +85,8 @@ Open a `skill-0-GUI`-focused session for:
 - frontend tests
 - build and bundle issues
 - standalone-mode UX or deployment
+
+Do not treat a `skill-0-GUI` implementation session as permission to move GUI source into `skill-0`.
 
 ## Recommended Working Model
 
@@ -173,6 +188,7 @@ Treat the repositories as:
 
 - separate codebases
 - shared contract ecosystem
+- governed companion projects
 
 Discuss together when designing or aligning.
 Implement separately when executing.
