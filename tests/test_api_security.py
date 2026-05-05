@@ -1,6 +1,7 @@
 """Unit tests for API security and rate-limit configuration helpers."""
 
 import sqlite3
+from unittest.mock import patch
 from types import SimpleNamespace
 
 import pytest
@@ -16,6 +17,7 @@ from api.main import (
     find_production_security_issues,
     generate_request_id,
     is_production_env,
+    validate_login_credentials,
 )
 
 
@@ -65,6 +67,24 @@ def test_find_production_security_issues_detects_expected_misconfigurations():
     assert any('JWT_SECRET_KEY' in issue for issue in issues)
     assert any('CORS_ORIGINS' in issue for issue in issues)
     assert any('API_USERNAME and API_PASSWORD' in issue for issue in issues)
+
+
+def test_validate_login_credentials_uses_constant_time_comparisons(monkeypatch):
+    monkeypatch.setenv("API_USERNAME", "admin")
+    monkeypatch.setenv("API_PASSWORD", "secret")
+
+    calls = []
+
+    def fake_compare_digest(left: bytes, right: bytes) -> bool:
+        calls.append((left, right))
+        return left == right
+
+    with patch("api.main.hmac.compare_digest", side_effect=fake_compare_digest):
+        assert validate_login_credentials("wrong-admin", "wrong-secret") is False
+
+    assert len(calls) == 2
+    assert all(isinstance(left, bytes) and isinstance(right, bytes) for left, right in calls)
+    assert all(len(left) == 32 and len(right) == 32 for left, right in calls)
 
 
 def test_parse_rate_limit_valid_values():

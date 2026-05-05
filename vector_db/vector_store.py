@@ -74,17 +74,18 @@ class VectorStore:
         
         self.conn.commit()
         
-    def insert_skill(self, skill: Dict, embedding: np.ndarray) -> int:
+    def _upsert_skill(self, skill: Dict, embedding: np.ndarray) -> int:
         """
-        插入單個 skill 及其向量
-        
-        Args:
-            skill: skill 字典 (v2.0 格式)
-            embedding: 向量 (numpy array)
-            
-        Returns:
-            skill_id: 插入的 skill ID
+        Insert or update one skill and embedding without committing.
+
+        The public insert methods own transaction boundaries so a batch can
+        commit atomically instead of committing after every row.
         """
+        if embedding.shape != (self.dimension,):
+            raise ValueError(
+                f"embedding must have shape ({self.dimension},), got {embedding.shape}"
+            )
+
         filename = skill.get('_filename', 'unknown.json')
         meta = skill.get('meta', {})
         decomp = skill.get('decomposition', {})
@@ -142,8 +143,21 @@ class VectorStore:
                 (skill_id, embedding)
             )
             
-        self.conn.commit()
         return skill_id
+
+    def insert_skill(self, skill: Dict, embedding: np.ndarray) -> int:
+        """
+        插入單個 skill 及其向量
+
+        Args:
+            skill: skill 字典 (v2.0 格式)
+            embedding: 向量 (numpy array)
+
+        Returns:
+            skill_id: 插入的 skill ID
+        """
+        with self.conn:
+            return self._upsert_skill(skill, embedding)
     
     def insert_skills_batch(self, skills: List[Dict], embeddings: List[np.ndarray]) -> List[int]:
         """
@@ -156,10 +170,14 @@ class VectorStore:
         Returns:
             List[int]: 插入的 skill IDs
         """
+        if len(skills) != len(embeddings):
+            raise ValueError("skills and embeddings must have the same length")
+
         ids = []
-        for skill, emb in zip(skills, embeddings):
-            skill_id = self.insert_skill(skill, emb)
-            ids.append(skill_id)
+        with self.conn:
+            for skill, emb in zip(skills, embeddings):
+                skill_id = self._upsert_skill(skill, emb)
+                ids.append(skill_id)
         return ids
     
     def search(self, query_embedding: np.ndarray, limit: int = 5) -> List[Dict]:

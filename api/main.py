@@ -9,9 +9,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any, TYPE_CHECKING
+import hashlib
 import os
 import logging
 import sqlite3
+import hmac
 from pathlib import Path
 import time
 import uuid
@@ -488,7 +490,16 @@ def validate_login_credentials(username: str, password: str) -> bool:
             ),
         )
 
-    return username == configured_username and password == configured_password
+    username_matches = _constant_time_text_equal(username, configured_username)
+    password_matches = _constant_time_text_equal(password, configured_password)
+    return username_matches and password_matches
+
+
+def _constant_time_text_equal(value: str, expected: str) -> bool:
+    """Compare arbitrary text through fixed-length digests."""
+    value_digest = hashlib.sha256(value.encode("utf-8")).digest()
+    expected_digest = hashlib.sha256(expected.encode("utf-8")).digest()
+    return hmac.compare_digest(value_digest, expected_digest)
 
 # Global search engine (lazy initialization)
 search_engine: Optional["SemanticSearch"] = None
