@@ -238,6 +238,52 @@ Output is written to `SECURITY_SCAN_REPORT_*.md` in the project root.
 
 ## Common Operational Tasks
 
+### Test Stage Guard
+
+Run verification from the repository root:
+
+```bash
+cd /home/miles/dev2/projects/skill-0
+```
+
+Existing untracked issue-log imports, including `docs/skill-0_issue-log.*`,
+are treated as input artifacts for triage. Do not mix them into unrelated
+verification commits unless the task explicitly asks to process those files.
+
+If a test or verification command depends on a missing program, runtime binary,
+or dev dependency, stop that verification line immediately. Do not install,
+rebuild, or work around the missing dependency without confirmation.
+
+This guard applies to system and runtime tools such as:
+
+- `git`
+- `docker`
+- `node`
+- `npm`
+- `tsx`
+- `vitest`
+- `tsc`
+- `pytest`
+- `uvicorn`
+- MCP runtime or container binaries needed by the check
+
+When pausing a blocked check, report:
+
+- The missing program or dependency.
+- The exact test or verification command that is blocked.
+- The recommended install or repair command.
+- Whether the repair needs escalated approval.
+- The next verification command to run after repair.
+
+Repo-local dependencies may be used when they already exist. For example,
+the repo-local `.venv` and an existing `skill-0-dashboard/apps/web/node_modules`
+can be used directly. If project dependencies are missing, prefer a
+repo-local restore such as `npm ci` before any global or system-level install.
+If a system-level program is missing, pause and ask for confirmation first.
+If an MCP or container runtime is missing a binary, identify the runtime
+location before proposing the smallest PATH, mount, image rebuild, or container
+restart fix.
+
 ### Check System Status
 
 ```bash
