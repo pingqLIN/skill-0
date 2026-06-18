@@ -49,7 +49,7 @@ def _has_early_status_marker(path_str: str) -> bool:
 
 def _actual_shared_docs() -> list[str]:
     shared_dir = REPO_ROOT / "docs" / "shared"
-    return sorted(str(path.relative_to(REPO_ROOT)) for path in shared_dir.glob("*.md"))
+    return sorted(path.relative_to(REPO_ROOT).as_posix() for path in shared_dir.glob("*.md"))
 
 
 def main() -> int:

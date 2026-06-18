@@ -4,6 +4,7 @@ Semantic Search - 語義搜尋 API
 """
 
 import json
+import os
 from pathlib import Path
 from typing import Dict, List, Optional, Union
 import numpy as np
@@ -12,13 +13,20 @@ from .embedder import SkillEmbedder
 from .vector_store import VectorStore
 
 
+def _default_model_name() -> str:
+    local_model = Path(__file__).resolve().parent.parent / '.hf-cache' / 'all-MiniLM-L6-v2'
+    if local_model.exists():
+        return str(local_model)
+    return 'all-MiniLM-L6-v2'
+
+
 class SemanticSearch:
     """語義搜尋引擎"""
     
     def __init__(
         self,
         db_path: Union[str, Path] = 'skills.db',
-        model_name: str = 'all-MiniLM-L6-v2'
+        model_name: Optional[str] = None
     ):
         """
         初始化搜尋引擎
@@ -27,7 +35,7 @@ class SemanticSearch:
             db_path: 向量資料庫路徑
             model_name: embedding 模型名稱
         """
-        self.model_name = model_name
+        self.model_name = model_name or os.getenv('SKILL0_EMBEDDING_MODEL', _default_model_name())
         self.dimension = SkillEmbedder.DEFAULT_DIMENSION
         self._embedder: Optional[SkillEmbedder] = None
         self.store = VectorStore(db_path, dimension=self.dimension)
