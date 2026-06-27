@@ -8,13 +8,32 @@ SKILLS_DB="${SKILL0_DB_PATH:-$PROJECT_ROOT/skills.db}"
 GOVERNANCE_DB="${GOVERNANCE_DB_PATH:-$PROJECT_ROOT/governance/db/governance.db}"
 BACKUP_DIR="${BACKUP_DIR:-$PROJECT_ROOT/backups}"
 BACKUP_RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-30}"
+PYTHON_BIN="${PYTHON_BIN:-}"
 TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
 
 failures=0
 
-require_sqlite3() {
-    if ! command -v sqlite3 >/dev/null 2>&1; then
-        echo "sqlite3 command not found. Install SQLite CLI first." >&2
+find_python_bin() {
+    if [[ -n "$PYTHON_BIN" ]]; then
+        return
+    fi
+    if command -v python3 >/dev/null 2>&1; then
+        PYTHON_BIN="python3"
+        return
+    fi
+    if command -v python >/dev/null 2>&1; then
+        PYTHON_BIN="python"
+        return
+    fi
+}
+
+require_sqlite_backup_runtime() {
+    if command -v sqlite3 >/dev/null 2>&1; then
+        return
+    fi
+    find_python_bin
+    if [[ -z "$PYTHON_BIN" ]]; then
+        echo "Neither sqlite3 nor Python sqlite3 runtime was found." >&2
         exit 127
     fi
 }
@@ -38,7 +57,20 @@ backup_database() {
     fi
 
     local backup_file="${BACKUP_DIR}/${prefix}_${TIMESTAMP}.db"
-    if sqlite3 "$db_path" ".backup '${backup_file}'"; then
+    if {
+        if command -v sqlite3 >/dev/null 2>&1; then
+            sqlite3 "$db_path" ".backup '${backup_file}'"
+        else
+            "$PYTHON_BIN" - "$db_path" "$backup_file" <<'PY'
+import sqlite3
+import sys
+
+source_path, backup_path = sys.argv[1], sys.argv[2]
+with sqlite3.connect(source_path) as source, sqlite3.connect(backup_path) as backup:
+    source.backup(backup)
+PY
+        fi
+    }; then
         echo "[OK] ${label}: wrote ${backup_file}"
     else
         echo "[FAIL] ${label}: backup failed (${db_path})"
@@ -64,7 +96,7 @@ echo "Backup directory: ${BACKUP_DIR}"
 echo "Retention: ${BACKUP_RETENTION_DAYS} day(s)"
 echo ""
 
-require_sqlite3
+require_sqlite_backup_runtime
 validate_retention_days
 mkdir -p "$BACKUP_DIR"
 

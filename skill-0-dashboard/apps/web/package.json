@@ -19,11 +19,11 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
     "@tanstack/react-query": "^5.90.21",
-    "axios": "^1.13.5",
+    "axios": "^1.18.0",
     "lucide-react": "^0.577.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.13.1",
+    "react-router-dom": "^7.18.0",
     "recharts": "^3.7.0"
   },
   "devDependencies": {
@@ -35,7 +35,7 @@
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
     "@types/testing-library__jest-dom": "^5.14.9",
-    "@vitejs/plugin-react": "^5.1.1",
+    "@vitejs/plugin-react": "^5.2.0",
     "autoprefixer": "^10.4.27",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -50,7 +50,14 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.2",
-    "vite": "^7.2.4",
-    "vitest": "^4.0.18"
+    "vite": "^7.3.5",
+    "vitest": "^4.1.9"
+  },
+  "overrides": {
+    "@babel/core": "^7.29.7",
+    "brace-expansion": "^5.0.6",
+    "esbuild": "^0.28.1",
+    "form-data": "^4.0.6",
+    "undici": "^7.28.0"
   }
 }

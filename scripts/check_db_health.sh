@@ -8,12 +8,48 @@ SKILLS_DB="${SKILL0_DB_PATH:-$PROJECT_ROOT/skills.db}"
 GOVERNANCE_DB="${GOVERNANCE_DB_PATH:-$PROJECT_ROOT/governance/db/governance.db}"
 BACKUP_DIR="${BACKUP_DIR:-$PROJECT_ROOT/backups}"
 MAX_BACKUP_AGE_DAYS="${MAX_BACKUP_AGE_DAYS:-2}"
+PYTHON_BIN="${PYTHON_BIN:-}"
 
 failures=0
+
+find_python_bin() {
+    if [[ -n "$PYTHON_BIN" ]]; then
+        return
+    fi
+    if command -v python3 >/dev/null 2>&1; then
+        PYTHON_BIN="python3"
+        return
+    fi
+    if command -v python >/dev/null 2>&1; then
+        PYTHON_BIN="python"
+        return
+    fi
+}
 
 file_mtime_epoch() {
     local file_path="$1"
     stat -c %Y "$file_path" 2>/dev/null || stat -f %m "$file_path" 2>/dev/null
+}
+
+sqlite_journal_mode() {
+    local db_path="$1"
+    if command -v sqlite3 >/dev/null 2>&1; then
+        sqlite3 "$db_path" "PRAGMA journal_mode;"
+        return
+    fi
+    find_python_bin
+    if [[ -z "$PYTHON_BIN" ]]; then
+        echo ""
+        return 127
+    fi
+    "$PYTHON_BIN" - "$db_path" <<'PY'
+import sqlite3
+import sys
+
+with sqlite3.connect(sys.argv[1]) as conn:
+    row = conn.execute("PRAGMA journal_mode;").fetchone()
+    print(row[0] if row else "")
+PY
 }
 
 check_wal_mode() {
@@ -27,7 +63,7 @@ check_wal_mode() {
     fi
 
     local mode
-    mode="$(sqlite3 "$db_path" "PRAGMA journal_mode;" | tr -d '\r\n' || true)"
+    mode="$(sqlite_journal_mode "$db_path" | tr -d '\r\n' || true)"
     if [[ "$mode" == "wal" ]]; then
         echo "[OK] ${db_name}: WAL mode is enabled"
     else
