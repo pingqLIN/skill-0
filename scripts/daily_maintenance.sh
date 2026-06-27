@@ -4,7 +4,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-PYTHON_BIN="${PYTHON_BIN:-python3}"
+PYTHON_BIN="${PYTHON_BIN:-}"
 RUN_SECURITY_SCAN="${RUN_SECURITY_SCAN:-1}"
 SECURITY_SCAN_LIMIT="${SECURITY_SCAN_LIMIT:-}"
 SECURITY_SCAN_FORCE="${SECURITY_SCAN_FORCE:-0}"
@@ -24,6 +24,27 @@ run_step() {
     fi
     echo ""
 }
+
+find_python_bin() {
+    if [[ -n "$PYTHON_BIN" ]]; then
+        return
+    fi
+    if command -v python3 >/dev/null 2>&1; then
+        PYTHON_BIN="python3"
+        return
+    fi
+    if command -v python >/dev/null 2>&1; then
+        PYTHON_BIN="python"
+        return
+    fi
+}
+
+find_python_bin
+
+if [[ -z "$PYTHON_BIN" ]]; then
+    echo "[FAIL] Python is not available; please install python3 or python."
+    exit 1
+fi
 
 build_security_scan_cmd() {
     local cmd=("$PYTHON_BIN" "$PROJECT_ROOT/tools/batch_security_scan.py" "--db" "$SECURITY_DB_PATH")
