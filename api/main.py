@@ -23,6 +23,7 @@ from urllib.parse import urlparse
 
 import structlog
 from api.logging_config import setup_logging
+from api.routers.runs_v4 import router as runs_v4_router
 
 # 初始化結構化日誌
 _log_format = os.getenv("SKILL0_LOG_FORMAT", "json").lower()
@@ -948,6 +949,11 @@ async def login(
 async def get_current_user(user: dict = Depends(require_auth)):
     """Get current authenticated user info"""
     return {"username": user.get("sub"), "exp": user.get("exp")}
+
+# ==================== Runtime Governance v4 Endpoints ====================
+
+app.include_router(runs_v4_router, dependencies=[Depends(require_auth)])
+
 
 
 # ==================== Startup ====================
