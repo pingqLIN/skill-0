@@ -1,0 +1,35 @@
+{
+  "projection_version": "1.0.0",
+  "skill_ref": {
+    "name": "Contact Sync",
+    "version": "2.4.0"
+  },
+  "generated_at": "2026-07-12T12:00:00Z",
+  "source_event_watermark": 148,
+  "counts": {
+    "succeeded": 120,
+    "failed": 8,
+    "compensated": 7,
+    "recovery_failed": 1
+  },
+  "sample_size": 128,
+  "success_rate": 0.9375,
+  "confidence": 0.91,
+  "known_failure_patterns": [
+    "remote API timeout",
+    "approval expired before execution"
+  ],
+  "element_refs": [
+    "a_001",
+    "a_002",
+    "r_001",
+    "d_001"
+  ],
+  "provenance": [
+    {
+      "kind": "runtime_event_ledger",
+      "ref": "runtime.db#events<=148",
+      "version": "4.0.0"
+    }
+  ]
+}

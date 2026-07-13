@@ -1,0 +1,61 @@
+{
+  "schema_version": "4.0.0",
+  "skill_ref": {
+    "name": "Repository Cleanup",
+    "version": "2.4.0"
+  },
+  "action_bindings": [
+    {
+      "action_id": "a_010",
+      "adapter": {
+        "kind": "test",
+        "target": "delete_branch"
+      },
+      "effect": {
+        "classification": "destructive_write",
+        "resource_kind": "git",
+        "resource_name": "repository",
+        "operation": "delete_branch",
+        "primary_idempotency_key_template": "branch-delete:{input.branch}:{run_id}",
+        "resource_lock_key_template": "repository-branch:{input.branch}"
+      },
+      "risk": {
+        "level": "high",
+        "approval_required": true,
+        "data_sensitivity": "internal"
+      },
+      "compensation": {
+        "strategy": "manual_approval",
+        "approval_policy": "governance.destructive_git",
+        "review_payload_schema": {
+          "type": "object",
+          "required": [
+            "branch",
+            "head_sha"
+          ]
+        }
+      },
+      "role": "primary"
+    }
+  ],
+  "governance": {
+    "default_decision": "require_approval",
+    "rule_policy_bindings": [
+      {
+        "rule_id": "r_010",
+        "decision": "require_approval",
+        "evaluator": "git.branch_not_protected",
+        "priority": 10
+      }
+    ]
+  },
+  "directive_manifest": {
+    "include": [
+      "d_010"
+    ],
+    "token_budget": 800
+  },
+  "feature_flags": {
+    "real_execution": false
+  }
+}

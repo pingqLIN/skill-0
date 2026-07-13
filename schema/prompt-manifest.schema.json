@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skill-0.local/schema/prompt-manifest.schema.json",
+  "title": "SKILL-0 Auditable Prompt Manifest",
+  "description": "Records included and pruned ARD elements. It is an audit artifact, not an authorization decision.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_version",
+    "run_id",
+    "skill_ref",
+    "included",
+    "excluded",
+    "token_budget",
+    "created_at"
+  ],
+  "properties": {
+    "manifest_version": {
+      "const": "1.0.0"
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "skill_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "included": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/included"
+      }
+    },
+    "excluded": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/excluded"
+      }
+    },
+    "token_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target",
+        "actual",
+        "estimator"
+      ],
+      "properties": {
+        "target": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "actual": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "estimator": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "contract_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "policy_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "elementId": {
+      "type": "string",
+      "pattern": "^(?:a_[0-9]{3}(?:_[a-z0-9]+)*|r_[0-9]{3}|d_[0-9]{3})$"
+    },
+    "included": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "reason",
+        "tokens"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/elementId"
+        },
+        "kind": {
+          "enum": [
+            "action",
+            "rule",
+            "directive"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tokens": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "excluded": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "reason",
+        "risk"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/elementId"
+        },
+        "kind": {
+          "enum": [
+            "action",
+            "rule",
+            "directive"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk": {
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "4.0.0",
+  "skill_ref": {
+    "name": "PDF Reader",
+    "version": "2.4.0"
+  },
+  "action_bindings": [
+    {
+      "action_id": "a_001",
+      "adapter": {
+        "kind": "test",
+        "target": "read_pdf"
+      },
+      "effect": {
+        "classification": "read_only",
+        "resource_kind": "filesystem",
+        "resource_name": "input.pdf",
+        "operation": "read"
+      },
+      "risk": {
+        "level": "low",
+        "approval_required": false,
+        "data_sensitivity": "internal"
+      },
+      "validation": {
+        "precondition_rule_ids": [
+          "r_001"
+        ],
+        "postcondition_rule_ids": []
+      },
+      "compensation": {
+        "strategy": "none"
+      },
+      "role": "primary"
+    }
+  ],
+  "governance": {
+    "default_decision": "deny",
+    "rule_policy_bindings": [
+      {
+        "rule_id": "r_001",
+        "decision": "allow",
+        "evaluator": "file.exists",
+        "priority": 100
+      }
+    ]
+  },
+  "directive_manifest": {
+    "include": [
+      "d_001"
+    ],
+    "exclude": [],
+    "token_budget": 1200
+  },
+  "evidence_policy": {
+    "projection_version": "1.0.0",
+    "minimum_sample_size": 10,
+    "require_human_review_for_promotion": true,
+    "retention_days": 365
+  },
+  "feature_flags": {
+    "real_execution": false
+  }
+}

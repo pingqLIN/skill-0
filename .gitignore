@@ -64,6 +64,10 @@ htmlcov/
 *.old
 *.tmp
 *.db
+*.db-journal
+*.db-wal
+*.db-shm
+runtime*.jsonl
 backups/*.db
 /skills.db
 /governance/db/*.db
@@ -77,3 +81,6 @@ backups/*.db
 /agent-governance-resolution.md
 /agent-governance-resolution.json:Zone.Identifier
 /agent-governance-resolution.md:Zone.Identifier
+
+# Local audit outputs
+/audit/

@@ -1,0 +1,107 @@
+{
+  "schema_version": "4.0.0",
+  "skill_ref": {
+    "name": "Contact Sync",
+    "version": "2.4.0"
+  },
+  "action_bindings": [
+    {
+      "action_id": "a_001",
+      "adapter": {
+        "kind": "test",
+        "target": "create_contact",
+        "timeout_ms": 30000
+      },
+      "effect": {
+        "classification": "bounded_write",
+        "resource_kind": "external_api",
+        "resource_name": "contacts",
+        "operation": "create",
+        "external_id_pointer": "/outputs/id",
+        "commit_marker_pointer": "/outputs/id",
+        "primary_idempotency_key_template": "contact-create:{input.customer_id}:{run_id}"
+      },
+      "risk": {
+        "level": "medium",
+        "approval_required": false,
+        "data_sensitivity": "confidential"
+      },
+      "validation": {
+        "precondition_rule_ids": [
+          "r_001"
+        ],
+        "postcondition_rule_ids": [
+          "r_002"
+        ]
+      },
+      "compensation": {
+        "strategy": "auto_rollback",
+        "action_id": "a_002",
+        "idempotent": true,
+        "idempotency_key_template": "contact-delete:{external_resource_id}",
+        "parameters_mapping": {
+          "contact_id": "/outputs/id"
+        },
+        "acceptable_errors": [
+          "HTTP_404"
+        ],
+        "max_retries": 3
+      },
+      "role": "primary"
+    },
+    {
+      "action_id": "a_002",
+      "adapter": {
+        "kind": "test",
+        "target": "delete_contact"
+      },
+      "effect": {
+        "classification": "bounded_write",
+        "resource_kind": "external_api",
+        "resource_name": "contacts",
+        "operation": "delete",
+        "primary_idempotency_key_template": "contact-delete:{input.contact_id}",
+        "resource_lock_key_template": "contact:{input.contact_id}"
+      },
+      "risk": {
+        "level": "medium",
+        "approval_required": false,
+        "data_sensitivity": "confidential"
+      },
+      "compensation": {
+        "strategy": "human_intervention",
+        "escalation_queue": "runtime-recovery",
+        "operator_instructions": "Restore the contact manually if deletion produced a partial state."
+      },
+      "role": "compensation"
+    }
+  ],
+  "governance": {
+    "default_decision": "deny",
+    "rule_policy_bindings": [
+      {
+        "rule_id": "r_001",
+        "decision": "allow",
+        "evaluator": "contact.input_valid",
+        "priority": 100
+      },
+      {
+        "rule_id": "r_002",
+        "decision": "classify",
+        "evaluator": "contact.output_valid",
+        "priority": 100
+      }
+    ]
+  },
+  "directive_manifest": {
+    "include": [
+      "d_001",
+      "d_002"
+    ],
+    "exclude": [],
+    "token_budget": 1800
+  },
+  "feature_flags": {
+    "real_execution": false
+  }
+}

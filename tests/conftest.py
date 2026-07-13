@@ -1,12 +1,15 @@
 """Shared test fixtures for Skill-0 API tests."""
 
+import json
 import os
 import sys
+from pathlib import Path
 
 import pytest
 
 # Ensure project root is on sys.path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
 # Set test environment variables BEFORE importing app
 # api/main.py calls enforce_production_security_configuration() at module level,
@@ -19,3 +22,16 @@ os.environ["API_USERNAME"] = "testadmin"
 os.environ["API_PASSWORD"] = "testpass123"
 os.environ["API_RATE_LIMIT"] = "1000/minute"
 os.environ["AUTH_RATE_LIMIT"] = "100/minute"
+
+
+@pytest.fixture
+def root() -> Path:
+    return ROOT
+
+
+@pytest.fixture
+def read_json():
+    def _read(relative: str):
+        return json.loads((ROOT / relative).read_text(encoding="utf-8"))
+
+    return _read

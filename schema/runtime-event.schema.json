@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skill-0.local/schema/runtime-event.schema.json",
+  "title": "SKILL-0 Runtime Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "run_id",
+    "sequence",
+    "event_type",
+    "occurred_at",
+    "skill_name",
+    "skill_version",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "4.0.0"
+    },
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "event_type": {
+      "enum": [
+        "run_created",
+        "plan_created",
+        "preflight_passed",
+        "policy_allowed",
+        "policy_denied",
+        "approval_required",
+        "approval_granted",
+        "action_prepared",
+        "action_started",
+        "action_succeeded",
+        "action_failed",
+        "action_outcome_unknown",
+        "validation_succeeded",
+        "validation_failed",
+        "compensation_queued",
+        "compensation_started",
+        "compensation_retry_scheduled",
+        "compensation_succeeded",
+        "compensation_failed",
+        "reconciliation_required",
+        "run_succeeded",
+        "run_failed",
+        "run_compensated",
+        "run_recovery_failed",
+        "run_suspended",
+        "run_cancelled"
+      ]
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "skill_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skill_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^a_[0-9]{3}(?:_[a-z0-9]+)*$"
+    },
+    "idempotency_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "external_resource_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  }
+}

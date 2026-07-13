@@ -1,0 +1,11 @@
+# Merge manually into the repository's current pyproject.toml after Phase 0.
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["runtime"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 85
