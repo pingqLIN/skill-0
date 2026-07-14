@@ -1,0 +1,62 @@
+{
+  "contract_version": "1.0.0",
+  "proposal_id": "proposal_alpha_update_001",
+  "operation": "update",
+  "target": {
+    "skill_id": "claude__skill__sample_skill",
+    "base_revision_id": "rev_alpha_001",
+    "base_revision_checksum": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "candidate": {
+    "proposed_skill_id": "claude__skill__sample_skill",
+    "artifact_ref": "proposal://proposal_alpha_update_001/SKILL.md",
+    "artifact_checksum": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "patch_ref": "proposal://proposal_alpha_update_001/change.patch"
+  },
+  "supporting_trajectories": [
+    {
+      "trajectory_id": "traj_alpha_task_001",
+      "task_id": "task_alpha_001",
+      "observed_at": "2026-07-15T00:05:00Z"
+    }
+  ],
+  "retrieval_context": [
+    {
+      "skill_id": "claude__skill__sample_skill",
+      "revision_id": "rev_alpha_001",
+      "rank": 1,
+      "retriever": "dense",
+      "score": 0.91
+    }
+  ],
+  "curator": {
+    "curator_id": "fixture-offline-curator",
+    "mode": "offline_llm",
+    "model_id": "fixture-model",
+    "config_checksum": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "rationale_summary": "Clarify revision validation steps using the observed failure-resistant workflow.",
+  "confidence": 0.82,
+  "validations": {
+    "schema": {
+      "status": "pass"
+    },
+    "ard": {
+      "status": "pass"
+    },
+    "duplicate": {
+      "status": "pass"
+    },
+    "conflict": {
+      "status": "pass"
+    },
+    "provenance": {
+      "status": "pass"
+    }
+  },
+  "governance": {
+    "state": "pending_review",
+    "submitted_at": "2026-07-15T00:10:00Z"
+  },
+  "created_at": "2026-07-15T00:09:00Z"
+}

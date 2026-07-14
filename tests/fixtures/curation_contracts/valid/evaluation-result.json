@@ -1,0 +1,87 @@
+{
+  "contract_version": "1.0.0",
+  "evaluation_id": "eval_alpha_update_001",
+  "proposal_id": "proposal_alpha_update_001",
+  "protocol": {
+    "protocol_id": "fixture-temporal-comparison",
+    "version": "1.0.0",
+    "executor_id": "fixture-executor",
+    "retrieval": {
+      "mode": "dense",
+      "top_k": 5,
+      "config_checksum": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+    },
+    "started_at": "2026-07-15T01:00:00Z",
+    "completed_at": "2026-07-15T01:30:00Z"
+  },
+  "task_group": {
+    "group_id": "group_alpha",
+    "split": "temporal_holdout",
+    "tasks": [
+      {
+        "task_id": "task_alpha_002",
+        "position": 1,
+        "role": "holdout",
+        "family": "skill-governance"
+      },
+      {
+        "task_id": "task_alpha_003",
+        "position": 2,
+        "role": "holdout",
+        "family": "skill-governance"
+      }
+    ]
+  },
+  "snapshots": {
+    "baseline": {
+      "snapshot_id": "snapshot_alpha_baseline",
+      "checksum": "1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "candidate": {
+      "snapshot_id": "snapshot_alpha_candidate",
+      "checksum": "2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  },
+  "metrics": {
+    "baseline": {
+      "task_count": 2,
+      "success_rate": 0.5,
+      "average_steps": 8,
+      "average_tokens": 1200,
+      "average_latency_ms": 4200,
+      "error_count": 1
+    },
+    "candidate": {
+      "task_count": 2,
+      "success_rate": 1,
+      "average_steps": 5,
+      "average_tokens": 900,
+      "average_latency_ms": 3600,
+      "error_count": 0
+    },
+    "delta": {
+      "success_rate": 0.5,
+      "average_steps": -3,
+      "average_tokens": -300,
+      "average_latency_ms": -600
+    }
+  },
+  "curation_metrics": {
+    "proposal_accepted": true,
+    "invalid_operation_count": 0,
+    "duplicate_count": 0,
+    "conflict_count": 0,
+    "repository_token_delta": 140
+  },
+  "temporal_holdout": {
+    "curator_cutoff_at": "2026-07-15T00:10:00Z",
+    "first_evaluation_task_at": "2026-07-15T01:00:00Z",
+    "leakage_detected": false
+  },
+  "provenance": {
+    "source": "test_fixture",
+    "source_ref": "tests/fixtures/curation_contracts/valid/evaluation-result.json",
+    "content_checksum": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "created_at": "2026-07-15T01:31:00Z"
+}

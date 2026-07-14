@@ -1,0 +1,383 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-parser.pingqlin.dev/schema/curation/v1/execution-trajectory.schema.json",
+  "title": "Skill-0 Execution Trajectory Contract",
+  "description": "A redacted, provenance-bound execution summary for offline skill curation.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "trajectory_id",
+    "task",
+    "executor",
+    "run",
+    "steps",
+    "retrieved_skills",
+    "redaction",
+    "provenance"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "1.0.0"
+    },
+    "trajectory_id": {
+      "type": "string",
+      "pattern": "^traj_[A-Za-z0-9][A-Za-z0-9._-]{5,127}$"
+    },
+    "task": {
+      "$ref": "#/definitions/task"
+    },
+    "executor": {
+      "$ref": "#/definitions/executor"
+    },
+    "run": {
+      "$ref": "#/definitions/run"
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/step"
+      }
+    },
+    "retrieved_skills": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/retrieved_skill"
+      }
+    },
+    "redaction": {
+      "$ref": "#/definitions/redaction"
+    },
+    "provenance": {
+      "$ref": "#/definitions/provenance"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "checksum": {
+      "type": "string",
+      "pattern": "^(sha256:)?[a-f0-9]{64}$"
+    },
+    "task": {
+      "type": "object",
+      "required": [
+        "task_id",
+        "family",
+        "attributes"
+      ],
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "group_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "family": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "uniqueItems": true
+        },
+        "input_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      },
+      "additionalProperties": false
+    },
+    "executor": {
+      "type": "object",
+      "required": [
+        "executor_id",
+        "config_checksum"
+      ],
+      "properties": {
+        "executor_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "config_checksum": {
+          "$ref": "#/definitions/checksum"
+        }
+      },
+      "additionalProperties": false
+    },
+    "correctness": {
+      "type": "object",
+      "required": [
+        "value",
+        "source"
+      ],
+      "properties": {
+        "value": {
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          ]
+        },
+        "source": {
+          "type": "string",
+          "enum": [
+            "environment",
+            "executor_self_judge",
+            "judge_model",
+            "human"
+          ]
+        },
+        "judge_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "feedback_summary": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      },
+      "additionalProperties": false
+    },
+    "run": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "started_at",
+        "completed_at",
+        "terminal_status",
+        "correctness"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "terminal_status": {
+          "type": "string",
+          "enum": [
+            "success",
+            "failure",
+            "partial",
+            "cancelled"
+          ]
+        },
+        "correctness": {
+          "$ref": "#/definitions/correctness"
+        }
+      },
+      "additionalProperties": false
+    },
+    "step": {
+      "type": "object",
+      "required": [
+        "index",
+        "timestamp",
+        "action_summary"
+      ],
+      "properties": {
+        "index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "observation_summary": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "action_summary": {
+          "type": "object",
+          "required": [
+            "kind",
+            "name"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "enum": [
+                "reasoning",
+                "tool_call",
+                "environment_action",
+                "response"
+              ]
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "tool_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "arguments_summary": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "additionalProperties": false
+        },
+        "outcome_summary": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      },
+      "additionalProperties": false
+    },
+    "retrieved_skill": {
+      "type": "object",
+      "required": [
+        "skill_id",
+        "revision_id",
+        "rank",
+        "retriever"
+      ],
+      "properties": {
+        "skill_id": {
+          "type": "string",
+          "pattern": "^(claude|mcp)__[a-z_]+__[a-z_]+$"
+        },
+        "revision_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "score": {
+          "type": "number"
+        },
+        "retriever": {
+          "type": "string",
+          "enum": [
+            "bm25",
+            "dense",
+            "hybrid",
+            "manual"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "redaction": {
+      "type": "object",
+      "required": [
+        "status",
+        "policy_version",
+        "applied_at",
+        "removed_fields",
+        "retention_class"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "redacted",
+            "quarantined"
+          ]
+        },
+        "policy_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "applied_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "removed_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "uniqueItems": true
+        },
+        "retention_class": {
+          "type": "string",
+          "enum": [
+            "ephemeral",
+            "evaluation",
+            "audit"
+          ]
+        },
+        "raw_content_ref": {
+          "type": "string",
+          "pattern": "^quarantine://[A-Za-z0-9._/-]+$",
+          "maxLength": 512
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source",
+        "ingested_at",
+        "content_checksum"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": [
+            "executor_import",
+            "manual_import",
+            "test_fixture"
+          ]
+        },
+        "source_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "ingested_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "content_checksum": {
+          "$ref": "#/definitions/checksum"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

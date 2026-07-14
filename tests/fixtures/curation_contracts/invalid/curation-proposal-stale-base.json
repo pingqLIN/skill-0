@@ -1,0 +1,52 @@
+{
+  "contract_version": "1.0.0",
+  "proposal_id": "proposal_stale_base_001",
+  "operation": "update",
+  "target": {
+    "skill_id": "claude__skill__sample_skill",
+    "base_revision_id": "rev_old_001",
+    "base_revision_checksum": "4444444444444444444444444444444444444444444444444444444444444444"
+  },
+  "candidate": {
+    "proposed_skill_id": "claude__skill__sample_skill",
+    "artifact_ref": "proposal://proposal_stale_base_001/SKILL.md",
+    "artifact_checksum": "5555555555555555555555555555555555555555555555555555555555555555"
+  },
+  "supporting_trajectories": [
+    {
+      "trajectory_id": "traj_alpha_task_001",
+      "task_id": "task_alpha_001",
+      "observed_at": "2026-07-15T00:05:00Z"
+    }
+  ],
+  "retrieval_context": [],
+  "curator": {
+    "curator_id": "fixture-offline-curator",
+    "mode": "offline_llm",
+    "config_checksum": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "rationale_summary": "This proposal targets a revision that is no longer current.",
+  "confidence": 0.7,
+  "validations": {
+    "schema": {
+      "status": "pass"
+    },
+    "ard": {
+      "status": "pass"
+    },
+    "duplicate": {
+      "status": "pass"
+    },
+    "conflict": {
+      "status": "pass"
+    },
+    "provenance": {
+      "status": "pass"
+    }
+  },
+  "governance": {
+    "state": "pending_review",
+    "submitted_at": "2026-07-15T00:10:00Z"
+  },
+  "created_at": "2026-07-15T00:09:00Z"
+}

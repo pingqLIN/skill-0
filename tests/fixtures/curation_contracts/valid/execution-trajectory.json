@@ -1,0 +1,77 @@
+{
+  "contract_version": "1.0.0",
+  "trajectory_id": "traj_alpha_task_001",
+  "task": {
+    "task_id": "task_alpha_001",
+    "group_id": "group_alpha",
+    "family": "skill-governance",
+    "attributes": [
+      "schema validation",
+      "revision safety"
+    ],
+    "input_ref": "fixture://tasks/task_alpha_001"
+  },
+  "executor": {
+    "executor_id": "fixture-executor",
+    "model_id": "fixture-model",
+    "config_checksum": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "run": {
+    "run_id": "run_alpha_001",
+    "started_at": "2026-07-15T00:00:00Z",
+    "completed_at": "2026-07-15T00:05:00Z",
+    "terminal_status": "success",
+    "correctness": {
+      "value": true,
+      "source": "environment",
+      "feedback_summary": "The fixture task completed successfully."
+    }
+  },
+  "steps": [
+    {
+      "index": 1,
+      "timestamp": "2026-07-15T00:01:00Z",
+      "observation_summary": "A candidate skill revision was available for validation.",
+      "action_summary": {
+        "kind": "tool_call",
+        "name": "validate_skill_schema",
+        "tool_id": "skill0-schema-validator",
+        "arguments_summary": "Validated the candidate fixture by artifact reference."
+      },
+      "outcome_summary": "Schema validation passed."
+    },
+    {
+      "index": 2,
+      "timestamp": "2026-07-15T00:04:00Z",
+      "action_summary": {
+        "kind": "response",
+        "name": "report_result"
+      },
+      "outcome_summary": "The revision-safe recommendation was returned."
+    }
+  ],
+  "retrieved_skills": [
+    {
+      "skill_id": "claude__skill__sample_skill",
+      "revision_id": "rev_alpha_001",
+      "rank": 1,
+      "score": 0.91,
+      "retriever": "dense"
+    }
+  ],
+  "redaction": {
+    "status": "redacted",
+    "policy_version": "curation-redaction-v1",
+    "applied_at": "2026-07-15T00:06:00Z",
+    "removed_fields": [
+      "$.request.headers.authorization"
+    ],
+    "retention_class": "evaluation"
+  },
+  "provenance": {
+    "source": "test_fixture",
+    "source_ref": "tests/fixtures/curation_contracts/valid/execution-trajectory.json",
+    "ingested_at": "2026-07-15T00:07:00Z",
+    "content_checksum": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+}

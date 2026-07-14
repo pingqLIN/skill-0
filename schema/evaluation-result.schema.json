@@ -1,0 +1,379 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-parser.pingqlin.dev/schema/curation/v1/evaluation-result.schema.json",
+  "title": "Skill-0 Curation Evaluation Result Contract",
+  "description": "A temporal-holdout comparison of baseline and curated SkillRepo snapshots.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "evaluation_id",
+    "proposal_id",
+    "protocol",
+    "task_group",
+    "snapshots",
+    "metrics",
+    "curation_metrics",
+    "temporal_holdout",
+    "provenance",
+    "created_at"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "1.0.0"
+    },
+    "evaluation_id": {
+      "type": "string",
+      "pattern": "^eval_[A-Za-z0-9][A-Za-z0-9._-]{5,127}$"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^proposal_[A-Za-z0-9][A-Za-z0-9._-]{5,127}$"
+    },
+    "protocol": {
+      "$ref": "#/definitions/protocol"
+    },
+    "task_group": {
+      "$ref": "#/definitions/task_group"
+    },
+    "snapshots": {
+      "$ref": "#/definitions/snapshots"
+    },
+    "metrics": {
+      "$ref": "#/definitions/metrics"
+    },
+    "curation_metrics": {
+      "$ref": "#/definitions/curation_metrics"
+    },
+    "temporal_holdout": {
+      "$ref": "#/definitions/temporal_holdout"
+    },
+    "provenance": {
+      "$ref": "#/definitions/provenance"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "checksum": {
+      "type": "string",
+      "pattern": "^(sha256:)?[a-f0-9]{64}$"
+    },
+    "retrieval": {
+      "type": "object",
+      "required": [
+        "mode",
+        "top_k",
+        "config_checksum"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "bm25",
+            "dense",
+            "hybrid",
+            "manual"
+          ]
+        },
+        "top_k": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "config_checksum": {
+          "$ref": "#/definitions/checksum"
+        }
+      },
+      "additionalProperties": false
+    },
+    "protocol": {
+      "type": "object",
+      "required": [
+        "protocol_id",
+        "version",
+        "executor_id",
+        "retrieval",
+        "started_at",
+        "completed_at"
+      ],
+      "properties": {
+        "protocol_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "executor_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "retrieval": {
+          "$ref": "#/definitions/retrieval"
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "task": {
+      "type": "object",
+      "required": [
+        "task_id",
+        "position",
+        "role"
+      ],
+      "properties": {
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "role": {
+          "const": "holdout"
+        },
+        "family": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        }
+      },
+      "additionalProperties": false
+    },
+    "task_group": {
+      "type": "object",
+      "required": [
+        "group_id",
+        "split",
+        "tasks"
+      ],
+      "properties": {
+        "group_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "split": {
+          "const": "temporal_holdout"
+        },
+        "tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/task"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "snapshot": {
+      "type": "object",
+      "required": [
+        "snapshot_id",
+        "checksum"
+      ],
+      "properties": {
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "checksum": {
+          "$ref": "#/definitions/checksum"
+        }
+      },
+      "additionalProperties": false
+    },
+    "snapshots": {
+      "type": "object",
+      "required": [
+        "baseline",
+        "candidate"
+      ],
+      "properties": {
+        "baseline": {
+          "$ref": "#/definitions/snapshot"
+        },
+        "candidate": {
+          "$ref": "#/definitions/snapshot"
+        }
+      },
+      "additionalProperties": false
+    },
+    "metric_set": {
+      "type": "object",
+      "required": [
+        "task_count",
+        "success_rate"
+      ],
+      "properties": {
+        "task_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "success_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "average_steps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "average_tokens": {
+          "type": "number",
+          "minimum": 0
+        },
+        "average_latency_ms": {
+          "type": "number",
+          "minimum": 0
+        },
+        "error_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "metric_delta": {
+      "type": "object",
+      "required": [
+        "success_rate"
+      ],
+      "properties": {
+        "success_rate": {
+          "type": "number",
+          "minimum": -1,
+          "maximum": 1
+        },
+        "average_steps": {
+          "type": "number"
+        },
+        "average_tokens": {
+          "type": "number"
+        },
+        "average_latency_ms": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "metrics": {
+      "type": "object",
+      "required": [
+        "baseline",
+        "candidate",
+        "delta"
+      ],
+      "properties": {
+        "baseline": {
+          "$ref": "#/definitions/metric_set"
+        },
+        "candidate": {
+          "$ref": "#/definitions/metric_set"
+        },
+        "delta": {
+          "$ref": "#/definitions/metric_delta"
+        }
+      },
+      "additionalProperties": false
+    },
+    "curation_metrics": {
+      "type": "object",
+      "required": [
+        "proposal_accepted",
+        "invalid_operation_count",
+        "duplicate_count",
+        "conflict_count",
+        "repository_token_delta"
+      ],
+      "properties": {
+        "proposal_accepted": {
+          "type": "boolean"
+        },
+        "invalid_operation_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicate_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "conflict_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "repository_token_delta": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "temporal_holdout": {
+      "type": "object",
+      "required": [
+        "curator_cutoff_at",
+        "first_evaluation_task_at",
+        "leakage_detected"
+      ],
+      "properties": {
+        "curator_cutoff_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "first_evaluation_task_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "leakage_detected": {
+          "const": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "source",
+        "content_checksum"
+      ],
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": [
+            "evaluation_harness",
+            "manual_evaluation",
+            "test_fixture"
+          ]
+        },
+        "source_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "content_checksum": {
+          "$ref": "#/definitions/checksum"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,425 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://skill-parser.pingqlin.dev/schema/curation/v1/curation-proposal.schema.json",
+  "title": "Skill-0 Curation Proposal Contract",
+  "description": "A human-gated insert, update, or delete proposal for a Skill-0 skill revision.",
+  "version": "1.0.0",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "proposal_id",
+    "operation",
+    "supporting_trajectories",
+    "retrieval_context",
+    "curator",
+    "rationale_summary",
+    "confidence",
+    "validations",
+    "governance",
+    "created_at"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "1.0.0"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^proposal_[A-Za-z0-9][A-Za-z0-9._-]{5,127}$"
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "insert",
+        "update",
+        "delete"
+      ]
+    },
+    "target": {
+      "$ref": "#/definitions/target"
+    },
+    "candidate": {
+      "$ref": "#/definitions/candidate"
+    },
+    "supporting_trajectories": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/trajectory_ref"
+      }
+    },
+    "retrieval_context": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/skill_ref"
+      }
+    },
+    "curator": {
+      "$ref": "#/definitions/curator"
+    },
+    "rationale_summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "validations": {
+      "$ref": "#/definitions/validations"
+    },
+    "governance": {
+      "$ref": "#/definitions/governance"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "insert"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "candidate"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "update"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "target",
+          "candidate"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "operation": {
+            "const": "delete"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "target"
+        ],
+        "not": {
+          "required": [
+            "candidate"
+          ]
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "checksum": {
+      "type": "string",
+      "pattern": "^(sha256:)?[a-f0-9]{64}$"
+    },
+    "skill_id": {
+      "type": "string",
+      "pattern": "^(claude|mcp)__[a-z_]+__[a-z_]+$"
+    },
+    "target": {
+      "type": "object",
+      "required": [
+        "skill_id",
+        "base_revision_id",
+        "base_revision_checksum"
+      ],
+      "properties": {
+        "skill_id": {
+          "$ref": "#/definitions/skill_id"
+        },
+        "base_revision_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "base_revision_checksum": {
+          "$ref": "#/definitions/checksum"
+        }
+      },
+      "additionalProperties": false
+    },
+    "candidate": {
+      "type": "object",
+      "required": [
+        "proposed_skill_id",
+        "artifact_ref",
+        "artifact_checksum"
+      ],
+      "properties": {
+        "proposed_skill_id": {
+          "$ref": "#/definitions/skill_id"
+        },
+        "artifact_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "artifact_checksum": {
+          "$ref": "#/definitions/checksum"
+        },
+        "patch_ref": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        }
+      },
+      "additionalProperties": false
+    },
+    "trajectory_ref": {
+      "type": "object",
+      "required": [
+        "trajectory_id",
+        "task_id",
+        "observed_at"
+      ],
+      "properties": {
+        "trajectory_id": {
+          "type": "string",
+          "pattern": "^traj_[A-Za-z0-9][A-Za-z0-9._-]{5,127}$"
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "observed_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "skill_ref": {
+      "type": "object",
+      "required": [
+        "skill_id",
+        "revision_id",
+        "rank",
+        "retriever"
+      ],
+      "properties": {
+        "skill_id": {
+          "$ref": "#/definitions/skill_id"
+        },
+        "revision_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "rank": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "retriever": {
+          "type": "string",
+          "enum": [
+            "bm25",
+            "dense",
+            "hybrid",
+            "manual"
+          ]
+        },
+        "score": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "curator": {
+      "type": "object",
+      "required": [
+        "curator_id",
+        "mode",
+        "config_checksum"
+      ],
+      "properties": {
+        "curator_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "offline_llm",
+            "manual",
+            "rule_based"
+          ]
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "config_checksum": {
+          "$ref": "#/definitions/checksum"
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_result": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "pass",
+            "warn",
+            "fail",
+            "not_run"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "maxLength": 1000
+        }
+      },
+      "additionalProperties": false
+    },
+    "validations": {
+      "type": "object",
+      "required": [
+        "schema",
+        "ard",
+        "duplicate",
+        "conflict",
+        "provenance"
+      ],
+      "properties": {
+        "schema": {
+          "$ref": "#/definitions/validation_result"
+        },
+        "ard": {
+          "$ref": "#/definitions/validation_result"
+        },
+        "duplicate": {
+          "$ref": "#/definitions/validation_result"
+        },
+        "conflict": {
+          "$ref": "#/definitions/validation_result"
+        },
+        "provenance": {
+          "$ref": "#/definitions/validation_result"
+        }
+      },
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "required": [
+        "actor",
+        "decided_at",
+        "reason"
+      ],
+      "properties": {
+        "actor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        },
+        "decided_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "resulting_revision_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      },
+      "additionalProperties": false
+    },
+    "governance": {
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "pending_review",
+            "approved",
+            "rejected",
+            "superseded"
+          ]
+        },
+        "submitted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "decision": {
+          "$ref": "#/definitions/decision"
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "enum": [
+                  "approved",
+                  "rejected"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "decision"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "approved"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "decision": {
+                "required": [
+                  "resulting_revision_id"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
