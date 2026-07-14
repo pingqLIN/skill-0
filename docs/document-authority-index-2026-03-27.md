@@ -1,22 +1,23 @@
 # Skill-0 Document Authority Index
 
-Updated: `2026-05-04`
+Updated: `2026-07-15`
 Purpose: `separate live authority from historical and conceptual documents`
 
 ## Start Here
 
 Use these documents first when making current project decisions:
 
-1. [governance-hardening-and-unitext-alignment-plan-2026-06-19.zh-TW.md](<repo-root>/docs/planning/governance-hardening-and-unitext-alignment-plan-2026-06-19.zh-TW.md) - current follow-up plan with local verification evidence, dependency/security drift, production compose dry-run drift, and UniText alignment boundary.
-2. [development-recommendation-2026-04-27.zh-TW.md](<repo-root>/docs/development-recommendation-2026-04-27.zh-TW.md) - reviewed next-stage direction and 8HR loop shape.
-3. [executable-dev-plan-2026-03-31.zh-TW.md](<repo-root>/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md) - live checkpoint execution plan, refreshed on 2026-04-27.
-4. [project-development-stage-report-2026-04-27-8hr-loop.md](<repo-root>/docs/project-development-stage-report-2026-04-27-8hr-loop.md) - latest completed development-loop evidence.
-5. [dependabot-vulnerability-inventory-2026-04-27.md](<repo-root>/docs/security/dependabot-vulnerability-inventory-2026-04-27.md) - web dependency remediation record.
-6. [pilot-adoption-guide-2026-04-30.zh-TW.md](<repo-root>/docs/pilot-adoption-guide-2026-04-30.zh-TW.md) - 30-minute pilot adoption path for reviewers/operators.
-7. [gui-governance.md](<repo-root>/docs/gui-governance.md) - current repository-boundary decision for governing `skill-0-GUI` as a companion repo.
-8. [skill-0-unitext-alignment.md](<repo-root>/docs/skill-0-unitext-alignment.md) - current Skill-0 / UniText integration boundary and no-runtime-mutation contract.
-9. [backup-restore-identity-rehearsal-2026-06-19.md](<repo-root>/docs/backup-restore-identity-rehearsal-2026-06-19.md) - latest backup/restore script syntax evidence and public-checkout DB identity warning baseline.
-10. [skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json) - canonical schema source of truth.
+1. [skillos-curation-development-plan.md](<repo-root>/docs/planning/skillos-curation-development-plan.md) - current SkillOS paper alignment, product naming, scoped curation MVP, and ARDE v4 disposition. The `.zh-tw.md` companion is the Traditional Chinese reading version.
+2. [governance-hardening-and-unitext-alignment-plan-2026-06-19.zh-TW.md](<repo-root>/docs/planning/governance-hardening-and-unitext-alignment-plan-2026-06-19.zh-TW.md) - current follow-up plan with local verification evidence, dependency/security drift, production compose dry-run drift, and UniText alignment boundary.
+3. [development-recommendation-2026-04-27.zh-TW.md](<repo-root>/docs/development-recommendation-2026-04-27.zh-TW.md) - reviewed next-stage direction and 8HR loop shape.
+4. [executable-dev-plan-2026-03-31.zh-TW.md](<repo-root>/docs/planning/executable-dev-plan-2026-03-31.zh-TW.md) - live checkpoint execution plan, refreshed on 2026-04-27.
+5. [project-development-stage-report-2026-04-27-8hr-loop.md](<repo-root>/docs/project-development-stage-report-2026-04-27-8hr-loop.md) - latest completed development-loop evidence.
+6. [dependabot-vulnerability-inventory-2026-04-27.md](<repo-root>/docs/security/dependabot-vulnerability-inventory-2026-04-27.md) - web dependency remediation record.
+7. [pilot-adoption-guide-2026-04-30.zh-TW.md](<repo-root>/docs/pilot-adoption-guide-2026-04-30.zh-TW.md) - 30-minute pilot adoption path for reviewers/operators.
+8. [gui-governance.md](<repo-root>/docs/gui-governance.md) - current repository-boundary decision for governing `skill-0-GUI` as a companion repo.
+9. [skill-0-unitext-alignment.md](<repo-root>/docs/skill-0-unitext-alignment.md) - current Skill-0 / UniText integration boundary and no-runtime-mutation contract.
+10. [backup-restore-identity-rehearsal-2026-06-19.md](<repo-root>/docs/backup-restore-identity-rehearsal-2026-06-19.md) - latest backup/restore script syntax evidence and public-checkout DB identity warning baseline.
+11. [skill-decomposition.schema.json](<repo-root>/schema/skill-decomposition.schema.json) - canonical schema source of truth.
 
 ## Current Snapshot
 
@@ -36,6 +37,7 @@ Use these documents first when making current project decisions:
 
 ## Authoritative Current Baseline
 
+- [skillos-curation-development-plan.md](<repo-root>/docs/planning/skillos-curation-development-plan.md)
 - [development-recommendation-2026-04-27.zh-TW.md](<repo-root>/docs/development-recommendation-2026-04-27.zh-TW.md)
 - [governance-hardening-and-unitext-alignment-plan-2026-06-19.zh-TW.md](<repo-root>/docs/planning/governance-hardening-and-unitext-alignment-plan-2026-06-19.zh-TW.md)
 - [skill-0-unitext-alignment.md](<repo-root>/docs/skill-0-unitext-alignment.md)

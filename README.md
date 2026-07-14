@@ -366,6 +366,8 @@ Comprehensive documentation is available:
 - **[examples.md](examples.md)** - 7 detailed skill examples across different domains
 - **[AGENTS.md](AGENTS.md)** - Guidelines for AI agents working on this project
 - **[scripts/helper.py](scripts/helper.py)** - Helper utilities for validation, conversion, and testing
+- **[docs/planning/skillos-curation-development-plan.md](docs/planning/skillos-curation-development-plan.md)** - Current SkillOS paper alignment and curation development plan (authoritative)
+- **[docs/planning/skillos-curation-development-plan.zh-tw.md](docs/planning/skillos-curation-development-plan.zh-tw.md)** - SkillOS 論文對齊與技能策展開發計畫（繁體中文）
 - **[docs/skill-0-vs-claude-code-simplifier.md](docs/skill-0-vs-claude-code-simplifier.md)** - Comparison with Claude Code Simplifier (EN)
 - **[docs/skill-0-vs-claude-code-simplifier.zh-TW.md](docs/skill-0-vs-claude-code-simplifier.zh-TW.md)** - 與 Claude Code Simplifier 比較 (zh-TW)
 - **[docs/shared-documentation-model.md](docs/shared-documentation-model.md)** - How shared contract docs are sourced from `skill-0` and mirrored into `skill-0-GUI`
