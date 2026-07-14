@@ -1,7 +1,7 @@
 # Skill-0 SkillOS Curation Development Plan
 
 - Date: `2026-07-15`
-- Status: `Current development plan / planning gate complete / implementation not started`
+- Status: `Current development plan / P1 contract foundation complete / P2 not started`
 - Authority: `This non-suffixed English document is authoritative; the .zh-tw.md file is its human-readable companion.`
 - Workspace: `<repo-root>`
 - Branch: `codex/skillos-curation-mvp`
@@ -178,6 +178,20 @@ Deliverables:
 
 Gate: legacy parsed skills remain unchanged and all new contract tests pass.
 
+Implementation record (`2026-07-15`):
+
+- Completed in commit `015b0e6` with three Draft-07 contracts under `schema/`,
+  positive and negative fixtures under `tests/fixtures/curation_contracts/`, and
+  semantic validation helpers in `tools/curation_contract.py`.
+- The helper enforces redaction, ordered trajectory steps and retrieval ranks,
+  operation/base-revision consistency, temporal holdout separation, approved
+  validation state, and evaluation snapshot/delta consistency.
+- P1 verification passed: the contract-focused tests, the full core regression
+  (`184 passed`), and Flake8 `7.3.0` using the P1 fatal-error selection
+  (`E9,F63,F7,F82`, result `0`).
+- No files under `parsed/`, governance databases, APIs, runtime execution paths,
+  or Curator generation paths were changed. P2 remains a separate review gate.
+
 ### P2: Offline, human-gated Curator
 
 Deliverables:
@@ -294,11 +308,11 @@ private data, and runtime exposure remain explicit approval checkpoints.
 
 ## 12. Immediate Next Development Slice
 
-After this plan is approved, start P1 only:
+P1 is complete. The next reviewable slice is P2 only:
 
-1. inspect existing schema helper and fixture conventions;
-2. write contract tests before implementation;
-3. add the three schemas without changing `parsed/*.json`;
-4. add validation helpers and redaction checks;
-5. run focused schema, revision-governance, and documentation tests;
-6. stop for review before building the Curator.
+1. define the offline Curator input/output boundary around the P1 contracts;
+2. add a deterministic prompt and configuration manifest;
+3. generate proposal artifacts without a canonical SkillRepo write path;
+4. fail closed on invalid operations, stale revisions, or redaction failures;
+5. add focused proposal-generation tests without external private-data calls;
+6. stop for review before connecting proposal persistence or governance promotion.

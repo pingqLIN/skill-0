@@ -1,7 +1,7 @@
 # Skill-0 SkillOS 技能策展開發計畫
 
 - 日期：`2026-07-15`
-- 狀態：`現行開發計畫 / 規劃閘門完成 / 尚未開始程式實作`
+- 狀態：`現行開發計畫 / P1 契約基礎完成 / P2 尚未開始`
 - 文件權威：`無語系後綴的英文版為權威文件；本文件為繁體中文閱讀版。`
 - 工作區：`<repo-root>`
 - 分支：`codex/skillos-curation-mvp`
@@ -162,6 +162,19 @@ redaction 規則；temporal holdout 與 stale-base-revision 負面 fixtures。
 
 閘門：既有 parsed skills 不變，全部新增契約測試通過。
 
+實作紀錄（`2026-07-15`）：
+
+- 已於 commit `015b0e6` 完成：`schema/` 下三份 Draft-07 契約、
+  `tests/fixtures/curation_contracts/` 下的正反例 fixtures，以及
+  `tools/curation_contract.py` 的語意驗證 helper。
+- Helper 會檢查 redaction、trajectory step 與 retrieval rank 順序、operation/base
+  revision 一致性、temporal holdout 隔離、approved validation state，以及
+  evaluation snapshot/delta 一致性。
+- P1 驗證通過：契約 focused tests、完整 core regression（`184 passed`），以及
+  Flake8 `7.3.0` 的 P1 fatal-error 選項（`E9,F63,F7,F82`，結果 `0`）。
+- 未修改 `parsed/`、governance database、API、runtime execution path 或 Curator
+  generation path。P2 仍是獨立 review gate。
+
 ### P2：離線、人工審核 Curator
 
 交付：接收 trajectory 與 retrieved skills 的 CLI 或 service function；結構化
@@ -260,11 +273,11 @@ exposure 都保留為明確 approval checkpoint。
 
 ## 12. 下一個立即開發切片
 
-本計畫核准後只開始 P1：
+P1 已完成。下一個可審查切片僅限 P2：
 
-1. 檢查既有 Schema helper 與 fixture 慣例；
-2. 先寫 contract tests；
-3. 新增三份 Schema，不修改 `parsed/*.json`；
-4. 新增 validation helper 與 redaction checks；
-5. 執行 Schema、revision governance、documentation focused tests；
-6. 建立 Curator 前先停下審查。
+1. 以 P1 契約定義 offline Curator 的 input/output boundary；
+2. 新增可重現的 prompt 與 configuration manifest；
+3. 只產生 proposal artifact，不提供 canonical SkillRepo write path；
+4. 遇到無效操作、stale revision 或 redaction failure 時 fail closed；
+5. 新增 proposal generation focused tests，不把私人資料送往外部服務；
+6. 串接 proposal persistence 或 governance promotion 前先停下審查。
