@@ -1,7 +1,7 @@
 # Skill-0 SkillOS Curation Development Plan
 
 - Date: `2026-07-15`
-- Status: `Current development plan / P1 contract foundation complete / P2 not started`
+- Status: `Current development plan / P2 offline Curator complete / P3 not started`
 - Authority: `This non-suffixed English document is authoritative; the .zh-tw.md file is its human-readable companion.`
 - Workspace: `<repo-root>`
 - Branch: `codex/skillos-curation-mvp`
@@ -203,6 +203,21 @@ Deliverables:
 
 Gate: invalid operations fail closed and proposal generation cannot bypass governance.
 
+Implementation record (`2026-07-16`):
+
+- Added a two-step `prepare`/`propose` boundary in `curation/offline_curator.py`
+  and `tools/offline_curator.py`; it performs no network or model-provider calls.
+- Added pinned prompt/config resources plus Draft-07 skill-context and decision
+  contracts. Prompt packages and decisions are checksum-bound and deterministic.
+- Insert, update, and delete operations emit only `draft` proposals. Candidate
+  content, stale target revisions, package tampering, and repo-local output paths
+  outside ignored `output/curation/` fail closed.
+- Added English and Traditional Chinese operator documentation. P2 does not
+  persist proposals, call governance, create revisions, or write a SkillRepo.
+- Verification passed: `50` focused tests, Flake8 fatal checks (`0`), Python
+  compile checks, and the full core plus dashboard API regression
+  (`279 passed`).
+
 ### P3: Revision governance integration
 
 Deliverables:
@@ -308,11 +323,12 @@ private data, and runtime exposure remain explicit approval checkpoints.
 
 ## 12. Immediate Next Development Slice
 
-P1 is complete. The next reviewable slice is P2 only:
+P2 is complete. Stop before P3 until the P2 proposal-only boundary is reviewed.
+The next separately approved slice would be P3 only:
 
-1. define the offline Curator input/output boundary around the P1 contracts;
-2. add a deterministic prompt and configuration manifest;
-3. generate proposal artifacts without a canonical SkillRepo write path;
-4. fail closed on invalid operations, stale revisions, or redaction failures;
-5. add focused proposal-generation tests without external private-data calls;
-6. stop for review before connecting proposal persistence or governance promotion.
+1. define proposal persistence and append-only audit records;
+2. add approve, reject, and supersede transitions;
+3. preserve proposal and revision provenance without mutating approved artifacts;
+4. recheck optimistic concurrency at promotion time;
+5. create revisions only after all required validations and human approval pass;
+6. stop before retrieval-baseline work in P4.

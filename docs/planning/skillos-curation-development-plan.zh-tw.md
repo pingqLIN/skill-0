@@ -1,7 +1,7 @@
 # Skill-0 SkillOS 技能策展開發計畫
 
 - 日期：`2026-07-15`
-- 狀態：`現行開發計畫 / P1 契約基礎完成 / P2 尚未開始`
+- 狀態：`現行開發計畫 / P2 Offline Curator 完成 / P3 尚未開始`
 - 文件權威：`無語系後綴的英文版為權威文件；本文件為繁體中文閱讀版。`
 - 工作區：`<repo-root>`
 - 分支：`codex/skillos-curation-mvp`
@@ -183,6 +183,20 @@ proposal，不提供正式 repository write path。
 
 閘門：無效操作 fail closed，proposal generation 無法繞過 governance。
 
+實作紀錄（`2026-07-16`）：
+
+- 已在 `curation/offline_curator.py` 與 `tools/offline_curator.py` 建立兩階段
+  `prepare`/`propose` 邊界；不會呼叫網路或 model provider。
+- 已新增固定 prompt/config resource，以及 Draft-07 skill-context、decision 契約。
+  Prompt package 與 decision 以 checksum 綁定並保持 deterministic。
+- Insert、update、delete 只會產生 `draft` proposal。Candidate 敏感內容、stale
+  target revision、package tampering，以及 ignored `output/curation/` 以外的
+  repository-local output path 都會 fail closed。
+- 已新增英文與繁中 operator 文件。P2 不保存 proposal、不呼叫 governance、
+  不建立 revision，也不寫入 SkillRepo。
+- 驗證通過：`50` 個 focused tests、Flake8 fatal checks（`0`）、Python compile，
+  以及 core 加 dashboard API 完整 regression（`279 passed`）。
+
 ### P3：Revision governance integration
 
 交付：proposal persistence 與 audit event；approve/reject/supersede；核准的
@@ -273,11 +287,12 @@ exposure 都保留為明確 approval checkpoint。
 
 ## 12. 下一個立即開發切片
 
-P1 已完成。下一個可審查切片僅限 P2：
+P2 已完成。在 P2 proposal-only boundary 完成審查前停止，不進入 P3。下一個需
+另行核准的切片僅限 P3：
 
-1. 以 P1 契約定義 offline Curator 的 input/output boundary；
-2. 新增可重現的 prompt 與 configuration manifest；
-3. 只產生 proposal artifact，不提供 canonical SkillRepo write path；
-4. 遇到無效操作、stale revision 或 redaction failure 時 fail closed；
-5. 新增 proposal generation focused tests，不把私人資料送往外部服務；
-6. 串接 proposal persistence 或 governance promotion 前先停下審查。
+1. 定義 proposal persistence 與 append-only audit record；
+2. 新增 approve、reject、supersede transition；
+3. 保留 proposal/revision provenance，不原地修改 approved artifact；
+4. Promotion 時重新執行 optimistic concurrency 檢查；
+5. 只有必要 validations 與人工 approval 全部通過後才建立 revision；
+6. 進入 P4 retrieval baseline 前再次停止。

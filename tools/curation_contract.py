@@ -20,6 +20,8 @@ CONTRACT_SCHEMA_PATHS = {
     "trajectory": REPO_ROOT / "schema" / "execution-trajectory.schema.json",
     "proposal": REPO_ROOT / "schema" / "curation-proposal.schema.json",
     "evaluation": REPO_ROOT / "schema" / "evaluation-result.schema.json",
+    "curator_context": REPO_ROOT / "schema" / "offline-curator-context.schema.json",
+    "curator_decision": REPO_ROOT / "schema" / "offline-curator-decision.schema.json",
 }
 
 _SENSITIVE_KEYS = {

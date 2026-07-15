@@ -1,0 +1,25 @@
+{
+  "contract_version": "1.0.0",
+  "snapshot_id": "curctx_alpha_001",
+  "captured_at": "2026-07-15T00:08:00Z",
+  "skills": [
+    {
+      "skill_id": "claude__skill__sample_skill",
+      "revision_id": "rev_alpha_001",
+      "revision_checksum": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "artifact_ref": "fixture://skills/sample-skill/rev_alpha_001/SKILL.md",
+      "summary": "Validate a candidate skill revision before governance review.",
+      "ard_summary": {
+        "actions": [
+          "Validate a skill artifact"
+        ],
+        "rules": [
+          "Reject stale base revisions"
+        ],
+        "directives": [
+          "Report validation findings without mutating the source"
+        ]
+      }
+    }
+  ]
+}

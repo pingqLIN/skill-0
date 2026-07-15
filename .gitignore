@@ -68,6 +68,7 @@ backups/*.db
 /skills.db
 /governance/db/*.db
 /backups/*.db
+/output/curation/
 
 # Diagnostic files (files starting with ##, using character class to avoid comment interpretation)
 [#][#]*

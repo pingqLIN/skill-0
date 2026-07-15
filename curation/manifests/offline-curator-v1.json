@@ -1,0 +1,25 @@
+{
+  "manifest_version": "1.0.0",
+  "curator_id": "skill0-offline-curator-v1",
+  "mode": "offline_llm",
+  "prompt_template": "curation/prompts/offline-curator-v1.md",
+  "prompt_template_sha256": "6fc8545d4d0dc39d5cba48122c7515e0efe3af076907cc590cc6953e3001b348",
+  "context_schema": "schema/offline-curator-context.schema.json",
+  "decision_schema": "schema/offline-curator-decision.schema.json",
+  "proposal_schema": "schema/curation-proposal.schema.json",
+  "allowed_operations": [
+    "insert",
+    "update",
+    "delete"
+  ],
+  "fail_closed_checks": [
+    "trajectory_contract",
+    "redaction",
+    "retrieval_context_alignment",
+    "prompt_package_binding",
+    "candidate_artifact_checksum",
+    "current_revision",
+    "proposal_contract"
+  ],
+  "output_mode": "dry_proposal_only"
+}
