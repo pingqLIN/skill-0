@@ -10,6 +10,9 @@ from runtime.rules import ContextRuleEvaluator
 from runtime.validators import RuntimeContractValidationError
 
 
+TEST_BINDING_KEY = "skill0-test-runtime-binding-key-0123456789"
+
+
 class DryRunAdapter:
     supports_dry_run = True
 
@@ -73,7 +76,10 @@ def test_orchestrator_records_attested_preflight(tmp_path, read_json):
     contract = read_json("examples/runtime-contract.read-only.json")
     with RuntimeLedger(tmp_path / "runtime.db") as ledger:
         result = RuntimeOrchestrator(
-            ledger, DryRunAdapter(), ContextRuleEvaluator()
+            ledger,
+            DryRunAdapter(),
+            ContextRuleEvaluator(),
+            binding_key=TEST_BINDING_KEY,
         ).run(
             contract,
             skill_document_for(contract),
@@ -97,7 +103,10 @@ def test_orchestrator_fails_closed_when_rule_result_is_missing(tmp_path, read_js
     with RuntimeLedger(tmp_path / "runtime.db") as ledger:
         with pytest.raises(RuntimeContractValidationError, match="no boolean dry-run result"):
             RuntimeOrchestrator(
-                ledger, DryRunAdapter(), ContextRuleEvaluator()
+                ledger,
+                DryRunAdapter(),
+                ContextRuleEvaluator(),
+                binding_key=TEST_BINDING_KEY,
             ).run(contract, skill_document_for(contract), parameters={}, context={})
         count = ledger.connection.execute("SELECT COUNT(*) FROM runtime_runs").fetchone()[0]
         assert count == 0
@@ -110,7 +119,10 @@ def test_orchestrator_rejects_cross_reference_drift(tmp_path, read_json):
     with RuntimeLedger(tmp_path / "runtime.db") as ledger:
         with pytest.raises(RuntimeContractValidationError, match="Unknown Action reference"):
             RuntimeOrchestrator(
-                ledger, DryRunAdapter(), ContextRuleEvaluator()
+                ledger,
+                DryRunAdapter(),
+                ContextRuleEvaluator(),
+                binding_key=TEST_BINDING_KEY,
             ).run(
                 contract,
                 skill,
@@ -126,7 +138,10 @@ def test_orchestrator_rejects_skill_identity_mismatch(tmp_path, read_json):
     with RuntimeLedger(tmp_path / "runtime.db") as ledger:
         with pytest.raises(RuntimeContractValidationError, match="skill_ref.name"):
             RuntimeOrchestrator(
-                ledger, DryRunAdapter(), ContextRuleEvaluator()
+                ledger,
+                DryRunAdapter(),
+                ContextRuleEvaluator(),
+                binding_key=TEST_BINDING_KEY,
             ).run(
                 contract,
                 skill,

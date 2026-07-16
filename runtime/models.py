@@ -35,6 +35,8 @@ class RuntimeEventType(StrEnum):
     POLICY_DENIED = "policy_denied"
     APPROVAL_REQUIRED = "approval_required"
     APPROVAL_GRANTED = "approval_granted"
+    APPROVAL_REJECTED = "approval_rejected"
+    RUN_RESUME_STARTED = "run_resume_started"
     ACTION_PREPARED = "action_prepared"
     ACTION_STARTED = "action_started"
     ACTION_SUCCEEDED = "action_succeeded"
@@ -53,6 +55,7 @@ class RuntimeEventType(StrEnum):
     RUN_COMPENSATED = "run_compensated"
     RUN_RECOVERY_FAILED = "run_recovery_failed"
     RUN_SUSPENDED = "run_suspended"
+    MANUAL_RECOVERY_CONFIRMED = "manual_recovery_confirmed"
     RUN_CANCELLED = "run_cancelled"
 
 

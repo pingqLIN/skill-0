@@ -54,15 +54,32 @@ class RecoveryCoordinator:
                 )
             return RunStatus.RECONCILIATION_REQUIRED
 
+        unfinished_resume = self.ledger.get_unfinished_resume(run_id)
+        if unfinished_resume is not None:
+            self._event(
+                run_id,
+                skill,
+                RuntimeEventType.RECONCILIATION_REQUIRED,
+                action_id=unfinished_resume.action_id,
+                payload={
+                    "reason": "resume attempt ended without a durable runtime outcome",
+                    "reason_code": "RESUME_ATTEMPT_INCOMPLETE",
+                    "hitl_item_id": unfinished_resume.payload.get("hitl_item_id"),
+                },
+            )
+            return RunStatus.RECONCILIATION_REQUIRED
+
         candidates = list(self.ledger.iter_recovery_candidates(run_id))
         if not candidates:
-            # All previously queued automatic compensations may already be done.
-            has_compensable_action = any(
+            # All automatic compensations and action-scoped manual recoveries
+            # may already be closed.
+            has_recovery_effect = any(
                 event.event_type == RuntimeEventType.ACTION_SUCCEEDED
-                and event.payload.get("compensation", {}).get("strategy") == "auto_rollback"
+                and event.payload.get("compensation", {}).get("strategy")
+                in {"auto_rollback", "manual_approval", "human_intervention"}
                 for event in self.ledger.list_events(run_id)
             )
-            if has_compensable_action:
+            if has_recovery_effect:
                 if not self.ledger.has_event(run_id, RuntimeEventType.RUN_COMPENSATED):
                     self._event(run_id, skill, RuntimeEventType.RUN_COMPENSATED, payload={"already_complete": True})
                 return RunStatus.COMPENSATED
@@ -90,6 +107,11 @@ class RecoveryCoordinator:
                         "strategy": strategy,
                         "approval_policy": comp.get("approval_policy"),
                         "escalation_queue": comp.get("escalation_queue"),
+                        "hitl_kind": "recovery_confirmation",
+                        "hitl_request_summary": {
+                            "strategy": strategy,
+                            "reason_code": "MANUAL_RECOVERY_CONFIRMATION_REQUIRED",
+                        },
                     },
                 )
                 return RunStatus.HITL_REQUIRED

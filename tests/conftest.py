@@ -22,6 +22,10 @@ os.environ["API_USERNAME"] = "testadmin"
 os.environ["API_PASSWORD"] = "testpass123"
 os.environ["API_RATE_LIMIT"] = "1000/minute"
 os.environ["AUTH_RATE_LIMIT"] = "100/minute"
+os.environ["SKILL0_RUNTIME_BINDING_KEY"] = (
+    "skill0-test-runtime-binding-key-0123456789"
+)
+os.environ["SKILL0_RUNTIME_DECISION_ACTORS"] = "testadmin,reviewer-1"
 
 
 @pytest.fixture

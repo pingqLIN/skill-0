@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 
@@ -139,6 +140,41 @@ def test_runtime_run_and_events_use_configured_database_path(tmp_path, monkeypat
     ]
 
 
+def test_runtime_events_use_payload_allowlist_and_redact_operation_keys(
+    tmp_path, monkeypatch
+):
+    database = tmp_path / "runtime.db"
+    with RuntimeLedger(database) as ledger:
+        run_id = ledger.create_run(skill_name="demo", skill_version="1")
+        ledger.append_event(
+            RuntimeEvent(
+                run_id=run_id,
+                event_type=RuntimeEventType.ACTION_STARTED,
+                skill_name="demo",
+                skill_version="1",
+                action_id="a_001",
+                idempotency_key="secret-operation-key",
+                payload={
+                    "dry_run": True,
+                    "reason": "private operator note",
+                    "authorization": "Bearer secret-token",
+                },
+            )
+        )
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    response = TestClient(api_module.app).get(
+        f"/api/runs/{run_id}/events", headers=_auth_headers()
+    )
+    assert response.status_code == 200
+    serialized = json.dumps(response.json())
+    assert "private operator note" not in serialized
+    assert "secret-operation-key" not in serialized
+    assert "secret-token" not in serialized
+    started = response.json()[-1]
+    assert started["payload"] == {"dry_run": True}
+    assert started["idempotency_key_present"] is True
+
+
 def test_runtime_run_missing_from_configured_database_returns_404(tmp_path, monkeypatch):
     database = tmp_path / "runtime.db"
     monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
@@ -263,6 +299,29 @@ def test_create_runtime_run_is_dry_run_only(tmp_path, monkeypatch, read_json):
         "/api/runs", json=payload, headers=_auth_headers()
     )
     assert response.status_code == 422
+
+
+def test_create_runtime_run_rejects_placeholder_or_reused_binding_key(
+    tmp_path, monkeypatch, read_json
+):
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(tmp_path / "runtime.db"))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    payload = _create_payload(read_json, parsed_dir)
+    client = TestClient(api_module.app)
+
+    monkeypatch.setenv(
+        "SKILL0_RUNTIME_BINDING_KEY",
+        "CHANGE_ME_TO_AN_INDEPENDENT_RUNTIME_SECRET",
+    )
+    placeholder = client.post("/api/runs", json=payload, headers=_auth_headers())
+    assert placeholder.status_code == 503
+
+    monkeypatch.setenv(
+        "SKILL0_RUNTIME_BINDING_KEY", os.environ["JWT_SECRET_KEY"]
+    )
+    reused = client.post("/api/runs", json=payload, headers=_auth_headers())
+    assert reused.status_code == 503
 
 
 def test_create_runtime_run_executes_deterministic_simulation(
@@ -416,3 +475,372 @@ def test_secret_recovery_mapping_is_not_persisted(tmp_path, monkeypatch, read_js
     )
     serialized = json.dumps(response.json())
     assert "do-not-store" not in serialized
+
+
+def _create_manual_hitl(client, headers, read_json, parsed_dir):
+    payload = _create_payload(
+        read_json, parsed_dir, "examples/runtime-contract.manual-approval.json"
+    )
+    payload["parameters"] = {"branch": "old"}
+    response = client.post("/api/runs", json=payload, headers=headers)
+    assert response.status_code == 201
+    assert response.json()["status"] == "awaiting_approval"
+    assert response.json()["hitl_item_id"]
+    return payload, response.json()
+
+
+def test_hitl_queue_is_publicly_minimized_and_bound_to_run(
+    tmp_path, monkeypatch, read_json
+):
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    client = TestClient(api_module.app)
+    headers = _auth_headers()
+    payload, created = _create_manual_hitl(client, headers, read_json, parsed_dir)
+
+    response = client.get(
+        f"/api/runs/hitl/items?run_id={created['run_id']}", headers=headers
+    )
+    assert response.status_code == 200
+    assert len(response.json()) == 1
+    item = response.json()[0]
+    assert item["item_id"] == created["hitl_item_id"]
+    assert item["action_id"] == "a_010"
+    assert item["status"] == "pending"
+    assert "basis_digest" not in item
+    serialized = json.dumps(item)
+    assert payload["parameters"]["branch"] not in serialized
+    assert "hmac-sha256" not in serialized
+
+
+def test_hitl_decision_uses_jwt_actor_and_does_not_execute_action(
+    tmp_path, monkeypatch, read_json
+):
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    client = TestClient(api_module.app)
+    reviewer_headers = {
+        "Authorization": f"Bearer {api_module.create_access_token({'sub': 'reviewer-1'})}"
+    }
+    _, created = _create_manual_hitl(
+        client, reviewer_headers, read_json, parsed_dir
+    )
+
+    rejected_shape = client.post(
+        f"/api/runs/hitl/items/{created['hitl_item_id']}/decision",
+        json={"decision": "approve", "reason_code": "REVIEWED", "actor": "forged"},
+        headers=reviewer_headers,
+    )
+    assert rejected_shape.status_code == 422
+
+    response = client.post(
+        f"/api/runs/hitl/items/{created['hitl_item_id']}/decision",
+        json={"decision": "approve", "reason_code": "REVIEWED"},
+        headers=reviewer_headers,
+    )
+    assert response.status_code == 200
+    assert response.json()["status"] == "approved"
+
+    with RuntimeLedger(database) as ledger:
+        decisions = ledger.list_hitl_decisions(created["hitl_item_id"])
+        assert decisions[0]["actor"] == "reviewer-1"
+        assert ledger.count_events(
+            created["run_id"], RuntimeEventType.ACTION_STARTED
+        ) == 0
+        assert ledger.get_run(created["run_id"])["status"] == "ready"
+
+
+def test_hitl_decision_authorization_fails_closed(
+    tmp_path, monkeypatch, read_json
+):
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    client = TestClient(api_module.app)
+    headers = _auth_headers()
+    _, created = _create_manual_hitl(client, headers, read_json, parsed_dir)
+    endpoint = f"/api/runs/hitl/items/{created['hitl_item_id']}/decision"
+    unauthorized_headers = {
+        "Authorization": f"Bearer {api_module.create_access_token({'sub': 'intruder'})}"
+    }
+    forbidden = client.post(
+        endpoint,
+        json={"decision": "approve", "reason_code": "REVIEWED"},
+        headers=unauthorized_headers,
+    )
+    assert forbidden.status_code == 403
+
+    monkeypatch.delenv("SKILL0_RUNTIME_DECISION_ACTORS")
+    unconfigured = client.post(
+        endpoint,
+        json={"decision": "approve", "reason_code": "REVIEWED"},
+        headers=headers,
+    )
+    assert unconfigured.status_code == 503
+    with RuntimeLedger(database) as ledger:
+        assert ledger.get_hitl_item(created["hitl_item_id"])["status"] == "pending"
+        assert ledger.list_hitl_decisions(created["hitl_item_id"]) == []
+
+
+def test_approved_hitl_item_resumes_same_run_once(
+    tmp_path, monkeypatch, read_json
+):
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    client = TestClient(api_module.app)
+    headers = _auth_headers()
+    payload, created = _create_manual_hitl(client, headers, read_json, parsed_dir)
+    item_id = created["hitl_item_id"]
+    decision = client.post(
+        f"/api/runs/hitl/items/{item_id}/decision",
+        json={"decision": "approve", "reason_code": "CHANGE_REVIEWED"},
+        headers=headers,
+    )
+    assert decision.status_code == 200
+
+    resumed = client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": payload["runtime_contract"],
+            "parameters": payload["parameters"],
+        },
+        headers=headers,
+    )
+    assert resumed.status_code == 200
+    assert resumed.json()["run_id"] == created["run_id"]
+    assert resumed.json()["status"] == "succeeded"
+    assert resumed.json()["hitl_item_id"] is None
+
+    replay = client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": payload["runtime_contract"],
+            "parameters": payload["parameters"],
+        },
+        headers=headers,
+    )
+    assert replay.status_code == 409
+
+
+def test_hitl_resume_rejects_changed_inputs_or_contract(
+    tmp_path, monkeypatch, read_json
+):
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    client = TestClient(api_module.app)
+    headers = _auth_headers()
+    payload, created = _create_manual_hitl(client, headers, read_json, parsed_dir)
+    item_id = created["hitl_item_id"]
+    assert client.post(
+        f"/api/runs/hitl/items/{item_id}/decision",
+        json={"decision": "approve", "reason_code": "REVIEWED"},
+        headers=headers,
+    ).status_code == 200
+
+    changed_inputs = client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": payload["runtime_contract"],
+            "parameters": {"branch": "different"},
+        },
+        headers=headers,
+    )
+    assert changed_inputs.status_code == 409
+    assert "basis" in changed_inputs.json()["detail"]
+
+    changed_contract = json.loads(json.dumps(payload["runtime_contract"]))
+    changed_contract["directive_manifest"]["token_budget"] += 1
+    contract_response = client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": changed_contract,
+            "parameters": payload["parameters"],
+        },
+        headers=headers,
+    )
+    assert contract_response.status_code == 409
+
+    skill_path = parsed_dir / "runtime-api-skill.json"
+    changed_skill = json.loads(skill_path.read_text(encoding="utf-8"))
+    changed_skill["meta"]["description"] = "changed after approval"
+    skill_path.write_text(json.dumps(changed_skill), encoding="utf-8")
+    skill_response = client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": payload["runtime_contract"],
+            "parameters": payload["parameters"],
+        },
+        headers=headers,
+    )
+    assert skill_response.status_code == 409
+    with RuntimeLedger(database) as ledger:
+        assert ledger.get_run(created["run_id"])["status"] == "ready"
+        assert ledger.count_events(
+            created["run_id"], RuntimeEventType.ACTION_STARTED
+        ) == 0
+
+
+def test_hitl_resume_rejects_binding_key_rotation_without_consuming_claim(
+    tmp_path, monkeypatch, read_json
+):
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    original_key = "skill0-test-runtime-binding-key-0123456789"
+    monkeypatch.setenv("SKILL0_RUNTIME_BINDING_KEY", original_key)
+    client = TestClient(api_module.app)
+    headers = _auth_headers()
+    payload, created = _create_manual_hitl(client, headers, read_json, parsed_dir)
+    item_id = created["hitl_item_id"]
+    assert client.post(
+        f"/api/runs/hitl/items/{item_id}/decision",
+        json={"decision": "approve", "reason_code": "REVIEWED"},
+        headers=headers,
+    ).status_code == 200
+
+    monkeypatch.setenv(
+        "SKILL0_RUNTIME_BINDING_KEY",
+        "rotated-test-runtime-binding-key-9876543210",
+    )
+    rotated = client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": payload["runtime_contract"],
+            "parameters": payload["parameters"],
+        },
+        headers=headers,
+    )
+    assert rotated.status_code == 409
+
+    monkeypatch.setenv("SKILL0_RUNTIME_BINDING_KEY", original_key)
+    resumed = client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": payload["runtime_contract"],
+            "parameters": payload["parameters"],
+        },
+        headers=headers,
+    )
+    assert resumed.status_code == 200
+    assert resumed.json()["status"] == "succeeded"
+
+
+def test_hitl_rejection_is_final_and_decision_replay_conflicts(
+    tmp_path, monkeypatch, read_json
+):
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    client = TestClient(api_module.app)
+    headers = _auth_headers()
+    payload, created = _create_manual_hitl(client, headers, read_json, parsed_dir)
+    item_id = created["hitl_item_id"]
+    endpoint = f"/api/runs/hitl/items/{item_id}/decision"
+    first = client.post(
+        endpoint,
+        json={"decision": "reject", "reason_code": "RISK_NOT_ACCEPTED"},
+        headers=headers,
+    )
+    second = client.post(
+        endpoint,
+        json={"decision": "approve", "reason_code": "REVIEWED"},
+        headers=headers,
+    )
+    assert first.status_code == 200
+    assert first.json()["status"] == "rejected"
+    assert second.status_code == 409
+    resume = client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": payload["runtime_contract"],
+            "parameters": payload["parameters"],
+        },
+        headers=headers,
+    )
+    assert resume.status_code == 409
+    with RuntimeLedger(database) as ledger:
+        assert ledger.get_run(created["run_id"])["status"] == "denied"
+        assert len(ledger.list_hitl_decisions(item_id)) == 1
+
+
+def test_manual_recovery_requires_confirmation_and_auto_recovery_executes(
+    tmp_path, monkeypatch, read_json
+):
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    client = TestClient(api_module.app)
+    headers = _auth_headers()
+    payload, created = _create_manual_hitl(client, headers, read_json, parsed_dir)
+    item_id = created["hitl_item_id"]
+    assert client.post(
+        f"/api/runs/hitl/items/{item_id}/decision",
+        json={"decision": "approve", "reason_code": "REVIEWED"},
+        headers=headers,
+    ).status_code == 200
+    assert client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": payload["runtime_contract"],
+            "parameters": payload["parameters"],
+        },
+        headers=headers,
+    ).json()["status"] == "succeeded"
+
+    recovery = client.post(
+        f"/api/runs/{created['run_id']}/recover", json={}, headers=headers
+    )
+    assert recovery.status_code == 200
+    assert recovery.json()["status"] == "hitl_required"
+    recovery_item = recovery.json()["hitl_item_id"]
+    assert recovery_item
+    invalid = client.post(
+        f"/api/runs/hitl/items/{recovery_item}/decision",
+        json={"decision": "approve", "reason_code": "REVIEWED"},
+        headers=headers,
+    )
+    assert invalid.status_code == 409
+    confirmed = client.post(
+        f"/api/runs/hitl/items/{recovery_item}/decision",
+        json={"decision": "confirm_recovered", "reason_code": "RECOVERY_VERIFIED"},
+        headers=headers,
+    )
+    assert confirmed.status_code == 200
+    assert confirmed.json()["status"] == "confirmed"
+    with RuntimeLedger(database) as ledger:
+        assert ledger.get_run(created["run_id"])["status"] == "recovery_pending"
+    finalized = client.post(
+        f"/api/runs/{created['run_id']}/recover", json={}, headers=headers
+    )
+    assert finalized.status_code == 200
+    assert finalized.json()["status"] == "compensated"
+
+    auto_payload = _create_payload(
+        read_json, parsed_dir, "examples/runtime-contract.auto-rollback.json"
+    )
+    auto_payload["parameters"] = {"customer_id": "42"}
+    auto_created = client.post("/api/runs", json=auto_payload, headers=headers)
+    assert auto_created.status_code == 201
+    auto_recovery = client.post(
+        f"/api/runs/{auto_created.json()['run_id']}/recover",
+        json={},
+        headers=headers,
+    )
+    assert auto_recovery.status_code == 200
+    assert auto_recovery.json() == {
+        "run_id": auto_created.json()["run_id"],
+        "status": "compensated",
+        "hitl_item_id": None,
+    }

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hmac
 from typing import Any, Protocol
 
 from .ledger import RuntimeLedger
@@ -38,19 +39,72 @@ class RuntimeExecutor:
         preflight: dict[str, Any] | None = None,
         rule_evaluator: RuleEvaluator | None = None,
         rule_bindings: dict[str, str] | None = None,
+        existing_run_id: str | None = None,
+        execution_basis_digest: str | None = None,
+        resume_item_id: str | None = None,
     ) -> RunResult:
         context = dict(context or {})
         skill = contract["skill_ref"]
-        run_id = self.ledger.create_run(skill_name=skill["name"], skill_version=skill["version"])
+        resuming = False
+        if existing_run_id is None:
+            run_id = self.ledger.create_run(
+                skill_name=skill["name"], skill_version=skill["version"]
+            )
+        else:
+            existing = self.ledger.get_run(existing_run_id)
+            if existing["status"] not in {
+                RunStatus.CREATED.value,
+                RunStatus.READY.value,
+            }:
+                raise ValueError("runtime run is not ready to resume")
+            if (
+                existing["skill_name"] != skill["name"]
+                or existing["skill_version"] != skill["version"]
+            ):
+                raise ValueError("runtime resume skill identity mismatch")
+            run_id = existing_run_id
+            resuming = existing["status"] == RunStatus.READY.value
+            basis = self.ledger.get_execution_basis(run_id)
+            # Orchestrator-created runs never trust approval hints supplied in
+            # a caller context. Only durable HITL decisions can grant actions.
+            context.pop("approved_action_ids", None)
+            if resuming:
+                if execution_basis_digest is None or not hmac.compare_digest(
+                    basis["execution_digest"], execution_basis_digest
+                ):
+                    raise ValueError("runtime resume execution basis is not attested")
+                if resume_item_id is None:
+                    raise ValueError("runtime resume item is required")
+                self.ledger.claim_hitl_resume(
+                    item_id=resume_item_id,
+                    run_id=run_id,
+                    basis_digest=execution_basis_digest,
+                )
+                approved_items = [
+                    item
+                    for item in self.ledger.list_hitl_items(
+                        status="approved", run_id=run_id
+                    )
+                    if item["kind"] == "action_approval"
+                ]
+                if not approved_items or any(
+                    item["basis_digest"] != basis["execution_digest"]
+                    for item in approved_items
+                ):
+                    raise ValueError("runtime resume lacks a bound approval")
+                context["approved_action_ids"] = sorted(
+                    {item["action_id"] for item in approved_items}
+                )
         primary_bindings = [
             binding for binding in contract["action_bindings"] if binding.get("role", "primary") == "primary"
         ]
-        self._event(
-            run_id,
-            skill,
-            RuntimeEventType.PLAN_CREATED,
-            payload={"dry_run": dry_run, "action_count": len(primary_bindings)},
-        )
+        if not resuming:
+            self._event(
+                run_id,
+                skill,
+                RuntimeEventType.PLAN_CREATED,
+                payload={"dry_run": dry_run, "action_count": len(primary_bindings)},
+            )
         required_attestations = {
             "schema_validated",
             "skill_schema_validated",
@@ -61,12 +115,13 @@ class RuntimeExecutor:
             reason = "runtime preflight was not truthfully attested"
             self._event(run_id, skill, RuntimeEventType.POLICY_DENIED, payload={"reason": reason})
             return RunResult(run_id, RunStatus.DENIED, reason=reason)
-        self._event(
-            run_id,
-            skill,
-            RuntimeEventType.PREFLIGHT_PASSED,
-            payload={"contract_schema_version": contract["schema_version"], **preflight},
-        )
+        if not resuming:
+            self._event(
+                run_id,
+                skill,
+                RuntimeEventType.PREFLIGHT_PASSED,
+                payload={"contract_schema_version": contract["schema_version"], **preflight},
+            )
 
         if not primary_bindings:
             reason = "runtime contract contains no primary actions"
@@ -86,8 +141,16 @@ class RuntimeExecutor:
         outputs: dict[str, Any] = {}
         validated_postconditions: list[str] = []
         rule_bindings = dict(rule_bindings or {})
+        completed_action_ids = {
+            event.action_id
+            for event in self.ledger.list_events(run_id)
+            if event.event_type == RuntimeEventType.ACTION_SUCCEEDED
+            and event.action_id is not None
+        }
         for binding in primary_bindings:
             action_id = binding["action_id"]
+            if action_id in completed_action_ids:
+                continue
             decision = self.policy.evaluate(binding, context)
             if decision.outcome == "deny":
                 self._event(
@@ -104,7 +167,21 @@ class RuntimeExecutor:
                     skill,
                     RuntimeEventType.APPROVAL_REQUIRED,
                     action_id=action_id,
-                    payload={"reason": decision.reason, **decision.metadata},
+                    payload={
+                        "reason": decision.reason,
+                        **decision.metadata,
+                        "hitl_kind": "action_approval",
+                        "hitl_request_summary": {
+                            "effect_classification": binding["effect"]["classification"],
+                            "resource_kind": binding["effect"]["resource_kind"],
+                            "operation": binding["effect"]["operation"],
+                            "risk_level": binding["risk"]["level"],
+                            "approval_required": binding["risk"].get(
+                                "approval_required", False
+                            ),
+                            "compensation_strategy": binding["compensation"]["strategy"],
+                        },
+                    },
                 )
                 return RunResult(run_id, RunStatus.AWAITING_APPROVAL, reason=decision.reason)
 

@@ -69,6 +69,32 @@ def test_find_production_security_issues_detects_expected_misconfigurations():
     assert any('API_USERNAME and API_PASSWORD' in issue for issue in issues)
 
 
+def test_production_security_rejects_runtime_placeholders_and_accepts_independent_key():
+    base = {
+        "env_value": "production",
+        "cors_origins": ["https://app.example.com"],
+        "jwt_secret_key": "production-jwt-secret-key-0123456789",
+        "default_jwt_secret_key": "dev-secret-change-in-production",
+        "configured_username": "admin",
+        "configured_password": "strong-password",
+        "validate_runtime": True,
+    }
+    issues = find_production_security_issues(
+        **base,
+        runtime_binding_key="CHANGE_ME_TO_AN_INDEPENDENT_RUNTIME_SECRET",
+        runtime_decision_actors="CHANGE_ME_APPROVER_SUBJECTS",
+    )
+    assert len(issues) == 2
+    assert any("SKILL0_RUNTIME_BINDING_KEY" in issue for issue in issues)
+    assert any("SKILL0_RUNTIME_DECISION_ACTORS" in issue for issue in issues)
+
+    assert find_production_security_issues(
+        **base,
+        runtime_binding_key="independent-runtime-secret-key-9876543210",
+        runtime_decision_actors="runtime-reviewer",
+    ) == []
+
+
 def test_validate_login_credentials_uses_constant_time_comparisons(monkeypatch):
     monkeypatch.setenv("API_USERNAME", "admin")
     monkeypatch.setenv("API_PASSWORD", "secret")

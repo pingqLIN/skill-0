@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import hashlib
+import hmac
+import json
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +23,26 @@ def _rule_bindings(contract: dict[str, Any]) -> dict[str, str]:
         binding["rule_id"]: binding["evaluator"]
         for binding in contract.get("governance", {}).get("rule_policy_bindings", [])
     }
+
+
+def canonical_digest(value: object) -> str:
+    encoded = json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return f"sha256:{hashlib.sha256(encoded).hexdigest()}"
+
+
+def keyed_digest(value: object, *, key: str) -> str:
+    encoded = json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return f"hmac-sha256:{hmac.new(key.encode('utf-8'), encoded, hashlib.sha256).hexdigest()}"
 
 
 def _validate_skill_identity(skill_document: dict[str, Any], contract: dict[str, Any]) -> None:
@@ -47,6 +70,7 @@ class RuntimeOrchestrator:
         adapter: ActionAdapter,
         rule_evaluator: RuleEvaluator,
         *,
+        binding_key: str,
         policy: PolicyEngine | None = None,
         schema_path: str | Path = DEFAULT_RUNTIME_SCHEMA_PATH,
         skill_schema_path: str | Path = DEFAULT_SKILL_SCHEMA_PATH,
@@ -54,6 +78,9 @@ class RuntimeOrchestrator:
         self.ledger = ledger
         self.adapter = adapter
         self.rule_evaluator = rule_evaluator
+        if len(binding_key) < 32:
+            raise ValueError("runtime binding key must contain at least 32 characters")
+        self.binding_key = binding_key
         self.policy = policy
         self.schema_path = Path(schema_path)
         self.skill_schema_path = Path(skill_schema_path)
@@ -66,6 +93,8 @@ class RuntimeOrchestrator:
         parameters: dict[str, Any],
         context: dict[str, Any] | None = None,
         dry_run: bool = True,
+        existing_run_id: str | None = None,
+        resume_item_id: str | None = None,
     ) -> RunResult:
         validate_schema(contract, load_json(self.schema_path))
         validate_schema(skill_document, load_json(self.skill_schema_path))
@@ -111,19 +140,55 @@ class RuntimeOrchestrator:
             if not passed:
                 raise RuntimeContractValidationError(f"precondition Rule {rule_id} failed")
 
+        preflight = {
+            "schema_validated": True,
+            "skill_schema_validated": True,
+            "cross_references_validated": True,
+            "skill_identity_validated": True,
+            "precondition_rule_ids": sorted(set(precondition_ids)),
+        }
+        basis = {
+            "skill_id": str(skill_document["meta"]["skill_id"]),
+            "skill_source_digest": canonical_digest(skill_document),
+            "contract_digest": canonical_digest(contract),
+            "input_digest": keyed_digest(parameters, key=self.binding_key),
+            "preflight_digest": canonical_digest(preflight),
+            "dry_run": dry_run,
+        }
+        basis["execution_digest"] = keyed_digest(
+            {
+                **basis,
+                "action_ids": [
+                    binding["action_id"] for binding in contract["action_bindings"]
+                ],
+            },
+            key=self.binding_key,
+        )
+        if existing_run_id is None:
+            existing_run_id = self.ledger.create_run(
+                skill_name=contract["skill_ref"]["name"],
+                skill_version=contract["skill_ref"]["version"],
+                execution_basis=basis,
+            )
+        else:
+            stored_basis = self.ledger.get_execution_basis(existing_run_id)
+            if not hmac.compare_digest(
+                stored_basis["execution_digest"], basis["execution_digest"]
+            ):
+                raise RuntimeContractValidationError(
+                    "runtime resume execution basis does not match"
+                )
+
         executor = RuntimeExecutor(self.ledger, self.adapter, policy=self.policy)
         return executor.run(
             contract,
             parameters=parameters,
             context=context,
             dry_run=dry_run,
-            preflight={
-                "schema_validated": True,
-                "skill_schema_validated": True,
-                "cross_references_validated": True,
-                "skill_identity_validated": True,
-                "precondition_rule_ids": sorted(set(precondition_ids)),
-            },
+            preflight=preflight,
             rule_evaluator=self.rule_evaluator,
             rule_bindings=bindings,
+            existing_run_id=existing_run_id,
+            execution_basis_digest=str(basis["execution_digest"]),
+            resume_item_id=resume_item_id,
         )

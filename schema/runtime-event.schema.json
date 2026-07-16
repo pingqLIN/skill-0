@@ -40,6 +40,8 @@
         "policy_denied",
         "approval_required",
         "approval_granted",
+        "approval_rejected",
+        "run_resume_started",
         "action_prepared",
         "action_started",
         "action_succeeded",
@@ -58,6 +60,7 @@
         "run_compensated",
         "run_recovery_failed",
         "run_suspended",
+        "manual_recovery_confirmed",
         "run_cancelled"
       ]
     },

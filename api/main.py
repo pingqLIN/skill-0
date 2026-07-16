@@ -23,7 +23,12 @@ from urllib.parse import urlparse
 
 import structlog
 from api.logging_config import setup_logging
-from api.routers.runs_v4 import router as runs_v4_router
+from api.routers.runs_v4 import (
+    RUNTIME_BINDING_KEY_ENV,
+    RUNTIME_DECISION_ACTORS_ENV,
+    router as runs_v4_router,
+    runtime_binding_key_configuration_issue,
+)
 
 # 初始化結構化日誌
 _log_format = os.getenv("SKILL0_LOG_FORMAT", "json").lower()
@@ -104,6 +109,9 @@ def find_production_security_issues(
     default_jwt_secret_key: str,
     configured_username: Optional[str],
     configured_password: Optional[str],
+    runtime_binding_key: Optional[str] = None,
+    runtime_decision_actors: Optional[str] = None,
+    validate_runtime: bool = False,
 ) -> List[str]:
     """Enumerate production security misconfigurations."""
     if not is_production_env(env_value):
@@ -125,6 +133,26 @@ def find_production_security_issues(
             'API_USERNAME and API_PASSWORD must both be configured in production'
         )
 
+    if validate_runtime:
+        runtime_issue = runtime_binding_key_configuration_issue(
+            runtime_binding_key,
+            jwt_secret_key=jwt_secret_key,
+        )
+        if runtime_issue is not None:
+            issues.append(runtime_issue)
+        decision_actors = {
+            actor.strip()
+            for actor in (runtime_decision_actors or '').split(',')
+            if actor.strip()
+        }
+        if not decision_actors or any(
+            actor.lower().startswith(("change_me", "change-me"))
+            for actor in decision_actors
+        ):
+            issues.append(
+                'SKILL0_RUNTIME_DECISION_ACTORS must name explicit approver subjects'
+            )
+
     return issues
 
 
@@ -137,6 +165,9 @@ def enforce_production_security_configuration() -> None:
         default_jwt_secret_key=DEFAULT_JWT_SECRET_KEY,
         configured_username=os.getenv(API_USERNAME_ENV),
         configured_password=os.getenv(API_PASSWORD_ENV),
+        runtime_binding_key=os.getenv(RUNTIME_BINDING_KEY_ENV),
+        runtime_decision_actors=os.getenv(RUNTIME_DECISION_ACTORS_ENV),
+        validate_runtime=True,
     )
     if issues:
         raise RuntimeError(
@@ -463,11 +494,16 @@ def decode_access_token(token: str) -> dict:
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
-async def require_auth(credentials: HTTPAuthorizationCredentials = Depends(security)):
+async def require_auth(
+    request: Request,
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+):
     """Dependency that requires valid JWT for protected endpoints"""
     if credentials is None:
         raise HTTPException(status_code=401, detail="Authentication required")
-    return decode_access_token(credentials.credentials)
+    principal = decode_access_token(credentials.credentials)
+    request.state.auth_user = principal
+    return principal
 
 
 def validate_login_credentials(username: str, password: str) -> bool:
