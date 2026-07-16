@@ -7,10 +7,29 @@ RUN mkdir -p /app/.cache /app/data /app/runtime-data /app/governance/db /app/boo
 
 # Install dependencies
 COPY requirements-api.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch && \
-    pip install --no-cache-dir -r requirements-api.txt && \
+RUN --mount=type=secret,id=build_ca,required=false \
+    set -eu; \
+    ca_path="/usr/local/share/ca-certificates/skill0-build-ca.crt"; \
+    ca_installed=0; \
+    cleanup_ca() { \
+        if [ "$ca_installed" = "1" ]; then \
+            rm -f "$ca_path"; \
+            update-ca-certificates --fresh >/dev/null; \
+        fi; \
+    }; \
+    trap cleanup_ca EXIT; \
+    if [ -s /run/secrets/build_ca ]; then \
+        cp /run/secrets/build_ca "$ca_path"; \
+        update-ca-certificates >/dev/null; \
+        ca_installed=1; \
+    fi; \
+    pip install --no-cache-dir --upgrade pip; \
+    pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch; \
+    pip install --no-cache-dir -r requirements-api.txt; \
     pip install --no-cache-dir "setuptools>=78.1.1,<82" "filelock>=3.20.3"
+
+COPY requirements-runtime.txt .
+RUN pip install --no-cache-dir -r requirements-runtime.txt
 
 # Copy application code
 COPY api/ ./api/
@@ -18,7 +37,7 @@ COPY runtime/ ./runtime/
 COPY vector_db/ ./vector_db/
 COPY parsed/ ./parsed/
 COPY schema/ ./schema/
-COPY skills.db ./bootstrap/skills.db
+RUN python -c "from vector_db.vector_store import VectorStore; VectorStore('/app/bootstrap/skills.db').close()"
 COPY scripts/docker-entrypoint-api.sh /usr/local/bin/docker-entrypoint-api.sh
 COPY scripts/runtime_doctor.py ./scripts/runtime_doctor.py
 

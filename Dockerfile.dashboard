@@ -10,6 +10,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY skill-0-dashboard/apps/api/ ./api/
 # Copy governance data accessed by the service
 COPY tools/ ./tools/
+COPY runtime/digest.py ./runtime/digest.py
+COPY parsed/ ./parsed/
 COPY governance/ ./governance/
 
 # Non-root user

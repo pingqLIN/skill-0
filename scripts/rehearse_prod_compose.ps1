@@ -2,17 +2,60 @@ param(
     [string]$ProjectName = "skill0-rehearsal",
     [int]$ApiPort = 18080,
     [int]$WebPort = 13080,
+    [string]$BuildCaFile = "",
     [switch]$KeepRunning
 )
 
 $ErrorActionPreference = "Stop"
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
-$envFile = Join-Path $env:TEMP "$ProjectName.env"
+$envFile = Join-Path $env:TEMP "$ProjectName-$PID.env"
+$buildOverrideFile = Join-Path $env:TEMP "$ProjectName-$PID.build-ca.yml"
+$composeFiles = @("-f", (Join-Path $repoRoot "docker-compose.prod.yml"))
+
+function Assert-LocalPortAvailable {
+    param([Parameter(Mandatory = $true)][int]$Port)
+
+    $listener = [System.Net.Sockets.TcpListener]::new(
+        [System.Net.IPAddress]::Loopback,
+        $Port
+    )
+    try {
+        $listener.Start()
+    }
+    catch {
+        throw "Local port $Port is already in use; choose another -ApiPort or -WebPort value"
+    }
+    finally {
+        $listener.Stop()
+    }
+}
+
+Assert-LocalPortAvailable -Port $ApiPort
+Assert-LocalPortAvailable -Port $WebPort
+
+if ($BuildCaFile) {
+    $resolvedCaFile = (Resolve-Path -LiteralPath $BuildCaFile).Path
+    $composeCaPath = $resolvedCaFile -replace '\\', '/'
+    @"
+services:
+  api:
+    build:
+      secrets:
+        - build_ca
+secrets:
+  build_ca:
+    file: "$composeCaPath"
+"@ | Set-Content -LiteralPath $buildOverrideFile -NoNewline -Encoding utf8
+    $composeFiles += @("-f", $buildOverrideFile)
+}
 
 function Invoke-Compose {
-    param([Parameter(ValueFromRemainingArguments = $true)][string[]]$Args)
-    docker compose --env-file $envFile -f (Join-Path $repoRoot "docker-compose.prod.yml") -p $ProjectName @Args
+    param([Parameter(Mandatory = $true)][string[]]$ComposeArgs)
+    & docker compose --env-file $envFile @composeFiles -p $ProjectName @ComposeArgs
+    if ($LASTEXITCODE -ne 0) {
+        throw "docker compose $($ComposeArgs -join ' ') failed with exit code $LASTEXITCODE"
+    }
 }
 
 function Wait-Http {
@@ -58,21 +101,23 @@ SKILL0_LOG_LEVEL=WARNING
 SKILL0_LOG_FORMAT=json
 "@ | Set-Content -LiteralPath $envFile -NoNewline -Encoding utf8
 
+$rehearsalPassed = $false
+
 try {
     Write-Host "[STEP] Compose config"
-    Invoke-Compose config | Out-Null
+    Invoke-Compose -ComposeArgs @("config") | Out-Null
 
     Write-Host "[STEP] Build production compose images"
-    Invoke-Compose build
+    Invoke-Compose -ComposeArgs @("build")
 
     Write-Host "[STEP] Initialize disposable governance volume"
-    Invoke-Compose run --rm --no-deps dashboard python -c 'from tools.governance_db import GovernanceDB; GovernanceDB("/app/governance/db/governance.db")'
+    Invoke-Compose -ComposeArgs @("run", "--rm", "--no-deps", "dashboard", "python", "-c", 'from tools.governance_db import GovernanceDB; GovernanceDB("/app/governance/db/governance.db")')
 
     Write-Host "[STEP] Start production compose stack"
-    Invoke-Compose up -d
+    Invoke-Compose -ComposeArgs @("up", "--detach")
 
     Write-Host "[STEP] Service status"
-    Invoke-Compose ps
+    Invoke-Compose -ComposeArgs @("ps")
 
     Write-Host "[STEP] API health"
     Wait-Http -Uri "http://127.0.0.1:$ApiPort/health"
@@ -81,39 +126,43 @@ try {
     Wait-Http -Uri "http://127.0.0.1:$WebPort/"
 
     Write-Host "[STEP] Runtime production doctor"
-    Invoke-Compose exec -T api python /app/scripts/runtime_doctor.py --production --json
+    Invoke-Compose -ComposeArgs @("exec", "-T", "api", "python", "/app/scripts/runtime_doctor.py", "--production", "--json")
 
     Write-Host "[STEP] Create Runtime persistence sentinel"
     $sentinelCreate = 'from api.routers.runs_v4 import get_runtime_db_path,get_runtime_hitl_ttl_seconds,get_runtime_journal_mode; from runtime.ledger import RuntimeLedger; ledger=RuntimeLedger(get_runtime_db_path(),journal_mode=get_runtime_journal_mode(),hitl_ttl_seconds=get_runtime_hitl_ttl_seconds()); run_id=ledger.create_run(skill_name="runtime-rehearsal-sentinel",skill_version="1"); ledger.close(); print(run_id)'
-    $sentinelRunId = ((Invoke-Compose exec -T api python -c $sentinelCreate | Select-Object -Last 1) -as [string]).Trim()
+    $sentinelRunId = ((Invoke-Compose -ComposeArgs @("exec", "-T", "api", "python", "-c", $sentinelCreate) | Select-Object -Last 1) -as [string]).Trim()
     if (-not $sentinelRunId) { throw "Runtime persistence sentinel was not created" }
 
     Write-Host "[STEP] Named-volume DB presence"
     $volumeCheck = 'from pathlib import Path; paths=[Path("/skills/skills.db"), Path("/governance/governance.db"), Path("/runtime/runtime.db")]; [print(f"{p}: exists={p.exists()} size={p.stat().st_size if p.exists() else 0}") for p in paths]; raise SystemExit(0 if all(p.exists() and p.stat().st_size > 0 for p in paths) else 1)'
     docker run --rm -v "${ProjectName}_skill0-skills-db:/skills:ro" -v "${ProjectName}_skill0-governance-db:/governance:ro" -v "${ProjectName}_skill0-runtime-db:/runtime:ro" python:3.12-slim python -c $volumeCheck
+    if ($LASTEXITCODE -ne 0) { throw "Named-volume DB presence check failed" }
 
     Write-Host "[STEP] Three-store online backup and restore verification"
-    $storageCheck = 'import sqlite3,sys,tempfile; from pathlib import Path; sentinel=sys.argv[1]; sources={"skills":Path("/skills/skills.db"),"governance":Path("/governance/governance.db"),"runtime":Path("/runtime/runtime.db")}; root=Path(tempfile.mkdtemp()); [(sqlite3.connect(str(src)).backup(sqlite3.connect(str(root/f"{name}.backup.db")))) for name,src in sources.items()]; [(sqlite3.connect(str(root/f"{name}.backup.db")).backup(sqlite3.connect(str(root/f"{name}.restored.db")))) for name in sources]; checks={name:sqlite3.connect(str(root/f"{name}.restored.db")).execute("PRAGMA quick_check").fetchone()[0] for name in sources}; restored=sqlite3.connect(str(root/"runtime.restored.db")); sentinel_ok=restored.execute("SELECT COUNT(*) FROM runtime_runs WHERE run_id=? AND skill_name=?",(sentinel,"runtime-rehearsal-sentinel")).fetchone()[0]==1; restored.close(); print({"quick_check":checks,"sentinel_ok":sentinel_ok}); raise SystemExit(0 if all(value=="ok" for value in checks.values()) and sentinel_ok else 1)'
-    docker run --rm -v "${ProjectName}_skill0-skills-db:/skills:ro" -v "${ProjectName}_skill0-governance-db:/governance:ro" -v "${ProjectName}_skill0-runtime-db:/runtime:ro" python:3.12-slim python -c $storageCheck $sentinelRunId
+    $storageCheck = 'import sqlite3,sys,tempfile; from pathlib import Path; sentinel=sys.argv[1]; sources={"skills":Path("/skills/skills.db"),"governance":Path("/governance/governance.db"),"runtime":Path("/runtime/runtime.db")}; root=Path(tempfile.mkdtemp()); open_source=lambda src: sqlite3.connect(f"file:{src}?mode=ro",uri=True); [(open_source(src).backup(sqlite3.connect(str(root/f"{name}.backup.db")))) for name,src in sources.items()]; [(sqlite3.connect(str(root/f"{name}.backup.db")).backup(sqlite3.connect(str(root/f"{name}.restored.db")))) for name in sources]; checks={name:sqlite3.connect(str(root/f"{name}.restored.db")).execute("PRAGMA quick_check").fetchone()[0] for name in sources}; restored=sqlite3.connect(str(root/"runtime.restored.db")); sentinel_ok=restored.execute("SELECT COUNT(*) FROM runtime_runs WHERE run_id=? AND skill_name=?",(sentinel,"runtime-rehearsal-sentinel")).fetchone()[0]==1; restored.close(); print({"quick_check":checks,"sentinel_ok":sentinel_ok}); raise SystemExit(0 if all(value=="ok" for value in checks.values()) and sentinel_ok else 1)'
+    docker run --rm -v "${ProjectName}_skill0-skills-db:/skills" -v "${ProjectName}_skill0-governance-db:/governance" -v "${ProjectName}_skill0-runtime-db:/runtime" python:3.12-slim python -c $storageCheck $sentinelRunId
+    if ($LASTEXITCODE -ne 0) { throw "Three-store backup/restore check failed" }
 
     Write-Host "[STEP] API restart persistence"
-    Invoke-Compose restart api
+    Invoke-Compose -ComposeArgs @("restart", "api")
     Wait-Http -Uri "http://127.0.0.1:$ApiPort/health"
-    Invoke-Compose exec -T api python /app/scripts/runtime_doctor.py --production --json
+    Invoke-Compose -ComposeArgs @("exec", "-T", "api", "python", "/app/scripts/runtime_doctor.py", "--production", "--json")
     $sentinelCheck = 'import sqlite3,sys; run_id=sys.argv[1]; connection=sqlite3.connect("/app/runtime-data/runtime.db"); found=connection.execute("SELECT COUNT(*) FROM runtime_runs WHERE run_id=? AND skill_name=?",(run_id,"runtime-rehearsal-sentinel")).fetchone()[0]; connection.close(); print(f"runtime_sentinel_after_restart={found}"); raise SystemExit(0 if found==1 else 1)'
-    Invoke-Compose exec -T api python -c $sentinelCheck $sentinelRunId
+    Invoke-Compose -ComposeArgs @("exec", "-T", "api", "python", "-c", $sentinelCheck, $sentinelRunId)
 
     Write-Host "[OK] Production compose rehearsal passed."
+    $rehearsalPassed = $true
 }
 finally {
-    if (-not $KeepRunning) {
+    if (-not $KeepRunning -or -not $rehearsalPassed) {
         Write-Host "[STEP] Cleanup compose stack and volumes"
         try {
-            Invoke-Compose down --volumes --remove-orphans
+            Invoke-Compose -ComposeArgs @("down", "--volumes", "--remove-orphans")
         }
         catch {
             Write-Warning "Cleanup failed: $_"
         }
     }
     Remove-Item -LiteralPath $envFile -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $buildOverrideFile -Force -ErrorAction SilentlyContinue
 }

@@ -129,6 +129,27 @@ def test_production_compose_persists_runtime_and_reads_governance_db():
     assert "SKILL0_RUNTIME_ALLOW_INITIALIZE: ${SKILL0_RUNTIME_ALLOW_INITIALIZE:-false}" in compose
     assert "dashboard:\n        condition: service_healthy" in compose
 
+    dockerfile = (ROOT / "Dockerfile.api").read_text(encoding="utf-8")
+    assert "--mount=type=secret,id=build_ca,required=false" in dockerfile
+    assert "--trusted-host" not in dockerfile
+    assert "rm -f \"$ca_path\"" in dockerfile
+    assert "COPY requirements-runtime.txt ." in dockerfile
+    assert "pip install --no-cache-dir -r requirements-runtime.txt" in dockerfile
+    assert "COPY skills.db" not in dockerfile
+    assert "VectorStore('/app/bootstrap/skills.db').close()" in dockerfile
+
+    runtime_requirements = (ROOT / "requirements-runtime.txt").read_text(
+        encoding="utf-8"
+    )
+    assert "jsonschema>=4.23,<5" in runtime_requirements
+
+    dashboard_dockerfile = (ROOT / "Dockerfile.dashboard").read_text(
+        encoding="utf-8"
+    )
+    assert "COPY runtime/digest.py ./runtime/digest.py" in dashboard_dockerfile
+    assert "COPY parsed/ ./parsed/" in dashboard_dockerfile
+    assert "COPY runtime/ ./runtime/" not in dashboard_dockerfile
+
 
 def test_maintenance_scripts_cover_all_three_databases():
     backup = (ROOT / "scripts" / "backup_db.sh").read_text(encoding="utf-8")
@@ -146,11 +167,22 @@ def test_maintenance_scripts_cover_all_three_databases():
     )
     assert "skill0-runtime-db:/runtime:ro" in rehearsal
     assert "Three-store online backup and restore verification" in rehearsal
+    assert '?mode=ro",uri=True' in rehearsal
+    assert 'skill0-runtime-db:/runtime" python:3.12-slim python -c $storageCheck' in rehearsal
     assert "Runtime production doctor" in rehearsal
     assert "API restart persistence" in rehearsal
     assert "runtime-rehearsal-sentinel" in rehearsal
     assert "sentinel_ok" in rehearsal
     assert "runtime_sentinel_after_restart" in rehearsal
+    assert "BuildCaFile" in rehearsal
+    assert "build_ca" in rehearsal
+    assert "failed with exit code" in rehearsal
+    assert "$rehearsalPassed = $false" in rehearsal
+    assert "if (-not $KeepRunning -or -not $rehearsalPassed)" in rehearsal
+    assert 'Invoke-Compose -ComposeArgs @("up", "--detach")' in rehearsal
+    assert "Assert-LocalPortAvailable -Port $ApiPort" in rehearsal
+    assert "Assert-LocalPortAvailable -Port $WebPort" in rehearsal
+    assert '"$ProjectName-$PID.env"' in rehearsal
 
     entrypoint = (ROOT / "scripts" / "docker-entrypoint-api.sh").read_text(
         encoding="utf-8"
