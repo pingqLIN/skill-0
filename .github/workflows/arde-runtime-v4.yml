@@ -5,10 +5,12 @@ on:
     paths:
       - "runtime/**"
       - "schema/*runtime*"
+      - "schema/runtime-run-evidence.schema.json"
       - "schema/evidence-summary.schema.json"
       - "tests/test_v4_schema.py"
       - "tests/test_runtime_*.py"
       - "tests/test_evidence_projection.py"
+      - "scripts/runtime_evidence.py"
       - ".github/workflows/arde-runtime-v4.yml"
   workflow_dispatch:
 
@@ -42,6 +44,7 @@ jobs:
           tests/test_runtime_policy.py
           tests/test_runtime_recovery.py
           tests/test_evidence_projection.py
+          tests/test_runtime_evidence_cli.py
           -q -p no:cacheprovider
       - name: Run repository regression suite
         run: python -m pytest tests/ -q -p no:cacheprovider

@@ -4,7 +4,7 @@ This package is additive and dry-run-first. It does not replace the existing
 parser, registry, semantic search, governance dashboard, or framework runtime.
 """
 
-from .evidence import build_evidence_summary
+from .evidence import build_evidence_summary, build_run_evidence
 from .executor import RuntimeExecutor
 from .ledger import RuntimeLedger
 from .models import ActionResult, RunResult, RunStatus, RuntimeEvent, RuntimeEventType
@@ -26,4 +26,5 @@ __all__ = [
     "RuleEvaluationError",
     "UnavailableRuleEvaluator",
     "build_evidence_summary",
+    "build_run_evidence",
 ]

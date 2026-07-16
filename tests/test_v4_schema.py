@@ -47,6 +47,10 @@ def test_supporting_schema_fixtures_validate(read_json):
     pairs = [
         ("schema/runtime-event.schema.json", "examples/runtime-event.valid.json"),
         ("schema/evidence-summary.schema.json", "examples/evidence-summary.valid.json"),
+        (
+            "schema/runtime-run-evidence.schema.json",
+            "examples/runtime-run-evidence.valid.json",
+        ),
         ("schema/prompt-manifest.schema.json", "examples/prompt-manifest.valid.json"),
     ]
     for schema_name, fixture_name in pairs:

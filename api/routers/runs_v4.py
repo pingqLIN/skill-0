@@ -4,19 +4,25 @@ from __future__ import annotations
 import json
 import os
 from pathlib import Path
+import sqlite3
 from typing import Any, Iterator, Literal
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
+from runtime.evidence import build_run_evidence
 from runtime.executor import ActionResult
 from runtime.ledger import RuntimeLedger
 from runtime.orchestrator import RuntimeOrchestrator
 from runtime.rules import UnavailableRuleEvaluator
-from runtime.validators import RuntimeContractValidationError
+from runtime.validators import RuntimeContractValidationError, load_json, validate_schema
 
 RUNTIME_DB_PATH_ENV = "SKILL0_RUNTIME_DB_PATH"
 DEFAULT_RUNTIME_DB_PATH = Path("governance/db/runtime.db")
+EVIDENCE_SCHEMA_PATH = Path(__file__).resolve().parents[2] / "schema" / "evidence-summary.schema.json"
+RUN_EVIDENCE_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[2] / "schema" / "runtime-run-evidence.schema.json"
+)
 
 router = APIRouter(prefix="/api/runs", tags=["runtime-v4"])
 
@@ -69,6 +75,17 @@ def get_runtime_db_path() -> Path:
 def get_runtime_ledger() -> Iterator[RuntimeLedger]:
     with RuntimeLedger(get_runtime_db_path()) as ledger:
         yield ledger
+
+
+def get_runtime_reader() -> Iterator[RuntimeLedger]:
+    path = get_runtime_db_path()
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="Run not found")
+    try:
+        with RuntimeLedger(path, read_only=True) as ledger:
+            yield ledger
+    except sqlite3.DatabaseError as exc:
+        raise HTTPException(status_code=500, detail="Runtime ledger unavailable") from exc
 
 
 def get_parsed_dir() -> Path:
@@ -145,8 +162,25 @@ def create_run(
     )
 
 
+@router.get("/{run_id}/evidence")
+def get_evidence(
+    run_id: str,
+    ledger: RuntimeLedger = Depends(get_runtime_reader),
+) -> dict[str, object]:
+    try:
+        run = ledger.get_run(run_id)
+        summary = build_run_evidence(ledger.list_events(run_id), run=run)
+        validate_schema(summary, load_json(EVIDENCE_SCHEMA_PATH))
+        validate_schema(summary, load_json(RUN_EVIDENCE_SCHEMA_PATH))
+        return summary
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Run not found") from exc
+    except (sqlite3.DatabaseError, RuntimeContractValidationError, ValueError) as exc:
+        raise HTTPException(status_code=500, detail="Runtime Evidence unavailable") from exc
+
+
 @router.get("/{run_id}")
-def get_run(run_id: str, ledger: RuntimeLedger = Depends(get_runtime_ledger)) -> dict[str, object]:
+def get_run(run_id: str, ledger: RuntimeLedger = Depends(get_runtime_reader)) -> dict[str, object]:
     try:
         return ledger.get_run(run_id)
     except KeyError as exc:
@@ -156,7 +190,7 @@ def get_run(run_id: str, ledger: RuntimeLedger = Depends(get_runtime_ledger)) ->
 @router.get("/{run_id}/events")
 def get_events(
     run_id: str,
-    ledger: RuntimeLedger = Depends(get_runtime_ledger),
+    ledger: RuntimeLedger = Depends(get_runtime_reader),
 ) -> list[dict[str, object]]:
     try:
         ledger.get_run(run_id)

@@ -10,20 +10,24 @@
     "succeeded": 120,
     "failed": 8,
     "compensated": 7,
-    "recovery_failed": 1
+    "recovery_failed": 1,
+    "awaiting_approval": 3,
+    "hitl_required": 2,
+    "reconciliation_required": 1,
+    "recovery_pending": 0,
+    "denied": 4,
+    "cancelled": 2
   },
-  "sample_size": 128,
-  "success_rate": 0.9375,
-  "confidence": 0.91,
+  "sample_size": 136,
+  "success_rate": 0.8823529411764706,
+  "confidence": 1.0,
   "known_failure_patterns": [
-    "remote API timeout",
-    "approval expired before execution"
+    "run_failed:REMOTE_API_TIMEOUT",
+    "run_suspended:APPROVAL_EXPIRED"
   ],
   "element_refs": [
     "a_001",
-    "a_002",
-    "r_001",
-    "d_001"
+    "a_002"
   ],
   "provenance": [
     {

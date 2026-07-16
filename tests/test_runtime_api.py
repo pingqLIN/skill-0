@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 
 from fastapi.testclient import TestClient
 
@@ -146,6 +148,81 @@ def test_runtime_run_missing_from_configured_database_returns_404(tmp_path, monk
 
     assert response.status_code == 404
     assert response.json()["detail"] == "Run not found"
+
+
+def test_runtime_evidence_requires_authentication(tmp_path, monkeypatch):
+    database = tmp_path / "runtime.db"
+    run_id = _create_runtime_run(database)
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    response = TestClient(api_module.app).get(f"/api/runs/{run_id}/evidence")
+    assert response.status_code == 401
+
+
+def test_runtime_evidence_is_deterministic_and_schema_valid(
+    tmp_path, monkeypatch, root
+):
+    database = tmp_path / "runtime.db"
+    with RuntimeLedger(database) as ledger:
+        run_id = ledger.create_run(skill_name="demo", skill_version="1")
+        ledger.append_event(
+            RuntimeEvent(
+                run_id=run_id,
+                event_type=RuntimeEventType.RUN_FAILED,
+                skill_name="demo",
+                skill_version="1",
+                action_id="a_001",
+                payload={"reason": "private failure detail"},
+            )
+        )
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    before = database.read_bytes()
+    client = TestClient(api_module.app)
+    first = client.get(f"/api/runs/{run_id}/evidence", headers=_auth_headers())
+    second = client.get(f"/api/runs/{run_id}/evidence", headers=_auth_headers())
+    assert first.status_code == 200
+    assert first.json() == second.json()
+    assert first.json()["run_ref"] == {"run_id": run_id, "status": "failed"}
+    assert first.json()["event_count"] == 2
+    assert first.json()["last_event_type"] == "run_failed"
+    assert "private failure detail" not in first.text
+    assert database.read_bytes() == before
+    cli = subprocess.run(
+        [
+            sys.executable,
+            str(root / "scripts" / "runtime_evidence.py"),
+            "--db",
+            str(database),
+            "--run-id",
+            run_id,
+        ],
+        cwd=root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    assert json.loads(cli.stdout) == first.json()
+
+
+def test_runtime_evidence_missing_run_returns_404(tmp_path, monkeypatch):
+    database = tmp_path / "runtime.db"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    response = TestClient(api_module.app).get(
+        "/api/runs/missing/evidence", headers=_auth_headers()
+    )
+    assert response.status_code == 404
+    assert not database.exists()
+
+
+def test_runtime_evidence_corrupt_ledger_returns_generic_error(tmp_path, monkeypatch):
+    database = tmp_path / "runtime.db"
+    database.write_bytes(b"not-a-sqlite-database secret-value")
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    response = TestClient(api_module.app).get(
+        "/api/runs/anything/evidence", headers=_auth_headers()
+    )
+    assert response.status_code == 500
+    assert response.json()["detail"] == "Runtime Evidence unavailable"
+    assert "secret-value" not in response.text
 
 
 def test_runtime_runs_inherit_baseline_api_rate_limit(tmp_path, monkeypatch):

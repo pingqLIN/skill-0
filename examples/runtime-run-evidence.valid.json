@@ -1,0 +1,41 @@
+{
+  "projection_version": "1.0.0",
+  "skill_ref": {
+    "name": "Contact Sync",
+    "version": "2.4.0"
+  },
+  "run_ref": {
+    "run_id": "run-example-001",
+    "status": "succeeded"
+  },
+  "event_count": 4,
+  "last_event_type": "run_succeeded",
+  "generated_at": "2026-07-12T12:00:00Z",
+  "source_event_watermark": 4,
+  "counts": {
+    "succeeded": 1,
+    "failed": 0,
+    "compensated": 0,
+    "recovery_failed": 0,
+    "awaiting_approval": 0,
+    "hitl_required": 0,
+    "reconciliation_required": 0,
+    "recovery_pending": 0,
+    "denied": 0,
+    "cancelled": 0
+  },
+  "sample_size": 1,
+  "success_rate": 1.0,
+  "confidence": 1.0,
+  "known_failure_patterns": [],
+  "element_refs": [
+    "a_001"
+  ],
+  "provenance": [
+    {
+      "kind": "runtime_event_ledger",
+      "ref": "append-only SQLite ledger#events=4",
+      "version": "4.0.0"
+    }
+  ]
+}

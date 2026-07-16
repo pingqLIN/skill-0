@@ -106,3 +106,78 @@ def test_sql_migration_is_idempotent_and_enforces_append_only(tmp_path):
             connection.execute("DELETE FROM runtime_events WHERE event_id='event-1'")
     finally:
         connection.close()
+
+
+def test_read_only_ledger_does_not_create_or_mutate_database(tmp_path):
+    missing = tmp_path / "missing.db"
+    with pytest.raises(FileNotFoundError):
+        RuntimeLedger(missing, read_only=True)
+    assert not missing.exists()
+
+    database = tmp_path / "runtime.db"
+    with RuntimeLedger(database) as ledger:
+        run_id = ledger.create_run(skill_name="demo", skill_version="1")
+    before = database.read_bytes()
+    with RuntimeLedger(database, read_only=True) as reader:
+        assert reader.get_run(run_id)["run_id"] == run_id
+    assert database.read_bytes() == before
+
+
+def test_ledger_rejects_event_identity_drift_and_duplicate_terminal(tmp_path):
+    with RuntimeLedger(tmp_path / "runtime.db") as ledger:
+        run_id = ledger.create_run(skill_name="demo", skill_version="1")
+        with pytest.raises(ValueError, match="skill identity"):
+            ledger.append_event(
+                RuntimeEvent(
+                    run_id=run_id,
+                    event_type=RuntimeEventType.RUN_FAILED,
+                    skill_name="different",
+                    skill_version="1",
+                )
+            )
+        event = RuntimeEvent(
+            run_id=run_id,
+            event_type=RuntimeEventType.RUN_FAILED,
+            skill_name="demo",
+            skill_version="1",
+        )
+        ledger.append_event(event)
+        with pytest.raises(ValueError, match="invalid after outcome"):
+            ledger.append_event(
+                RuntimeEvent(
+                    run_id=run_id,
+                    event_type=RuntimeEventType.RUN_FAILED,
+                    skill_name="demo",
+                    skill_version="1",
+                )
+            )
+
+
+def test_ledger_rejects_general_events_after_outcome_and_final_terminal(tmp_path):
+    with RuntimeLedger(tmp_path / "runtime.db") as ledger:
+        run_id = ledger.create_run(skill_name="demo", skill_version="1")
+        ledger.append_event(
+            RuntimeEvent(
+                run_id=run_id,
+                event_type=RuntimeEventType.RUN_FAILED,
+                skill_name="demo",
+                skill_version="1",
+            )
+        )
+        ledger.append_event(
+            RuntimeEvent(
+                run_id=run_id,
+                event_type=RuntimeEventType.RUN_CANCELLED,
+                skill_name="demo",
+                skill_version="1",
+            )
+        )
+        with pytest.raises(ValueError, match="after final terminal"):
+            ledger.append_event(
+                RuntimeEvent(
+                    run_id=run_id,
+                    event_type=RuntimeEventType.PLAN_CREATED,
+                    skill_name="demo",
+                    skill_version="1",
+                )
+            )

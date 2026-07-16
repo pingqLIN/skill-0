@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Iterable
 from uuid import uuid4
@@ -37,6 +38,57 @@ _STATUS_BY_EVENT: dict[RuntimeEventType, RunStatus] = {
     RuntimeEventType.RUN_CANCELLED: RunStatus.CANCELLED,
 }
 
+_UNIQUE_TERMINAL_EVENTS = {
+    RuntimeEventType.RUN_SUCCEEDED,
+    RuntimeEventType.RUN_FAILED,
+    RuntimeEventType.RUN_COMPENSATED,
+    RuntimeEventType.RUN_RECOVERY_FAILED,
+    RuntimeEventType.RUN_CANCELLED,
+}
+
+_OUTCOME_EVENTS = {
+    RuntimeEventType.RUN_SUCCEEDED,
+    RuntimeEventType.RUN_FAILED,
+}
+_FINAL_TERMINAL_EVENTS = {
+    RuntimeEventType.RUN_COMPENSATED,
+    RuntimeEventType.RUN_CANCELLED,
+}
+_ALLOWED_AFTER_OUTCOME = {
+    RuntimeEventType.COMPENSATION_QUEUED,
+    RuntimeEventType.COMPENSATION_STARTED,
+    RuntimeEventType.COMPENSATION_RETRY_SCHEDULED,
+    RuntimeEventType.COMPENSATION_SUCCEEDED,
+    RuntimeEventType.COMPENSATION_FAILED,
+    RuntimeEventType.RECONCILIATION_REQUIRED,
+    RuntimeEventType.APPROVAL_REQUIRED,
+    RuntimeEventType.APPROVAL_GRANTED,
+    RuntimeEventType.RUN_COMPENSATED,
+    RuntimeEventType.RUN_RECOVERY_FAILED,
+    RuntimeEventType.RUN_SUSPENDED,
+    RuntimeEventType.RUN_CANCELLED,
+}
+
+
+def projected_status_for_event(event_type: RuntimeEventType) -> RunStatus | None:
+    return _STATUS_BY_EVENT.get(event_type)
+
+
+def validate_event_type_sequence(event_types: Iterable[RuntimeEventType]) -> None:
+    outcome: RuntimeEventType | None = None
+    final_terminal: RuntimeEventType | None = None
+    for event_type in event_types:
+        if final_terminal is not None:
+            raise ValueError(f"event appended after final terminal {final_terminal.value}")
+        if outcome is not None and event_type not in _ALLOWED_AFTER_OUTCOME:
+            raise ValueError(f"event {event_type.value} is invalid after outcome {outcome.value}")
+        if event_type in _OUTCOME_EVENTS:
+            if outcome is not None:
+                raise ValueError("multiple runtime outcome events are not allowed")
+            outcome = event_type
+        if event_type in _FINAL_TERMINAL_EVENTS:
+            final_terminal = event_type
+
 
 class RuntimeLedger:
     """SQLite-backed append-only event ledger.
@@ -46,18 +98,43 @@ class RuntimeLedger:
     version and backup/recovery procedure.
     """
 
-    def __init__(self, path: str | Path, *, journal_mode: str = "DELETE") -> None:
+    def __init__(
+        self,
+        path: str | Path,
+        *,
+        journal_mode: str = "DELETE",
+        read_only: bool = False,
+    ) -> None:
         mode = journal_mode.upper()
         if mode not in {"DELETE", "WAL"}:
             raise ValueError("journal_mode must be DELETE or WAL")
         self.path = Path(path)
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        self.connection = sqlite3.connect(self.path, timeout=30.0, isolation_level=None)
+        self.read_only = read_only
+        if read_only:
+            if not self.path.exists():
+                raise FileNotFoundError(self.path)
+            uri = f"{self.path.resolve().as_uri()}?mode=ro"
+            self.connection = sqlite3.connect(
+                uri,
+                uri=True,
+                timeout=30.0,
+                isolation_level=None,
+            )
+        else:
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            self.connection = sqlite3.connect(
+                self.path,
+                timeout=30.0,
+                isolation_level=None,
+            )
         self.connection.row_factory = sqlite3.Row
         self.connection.execute("PRAGMA foreign_keys=ON")
-        self.connection.execute("PRAGMA synchronous=FULL")
-        self.connection.execute(f"PRAGMA journal_mode={mode}")
-        self._migrate()
+        if read_only:
+            self.connection.execute("PRAGMA query_only=ON")
+        else:
+            self.connection.execute("PRAGMA synchronous=FULL")
+            self.connection.execute(f"PRAGMA journal_mode={mode}")
+            self._migrate()
 
     @property
     def sqlite_version(self) -> str:
@@ -282,9 +359,35 @@ class RuntimeLedger:
             raise
 
     def _append_event_in_transaction(self, cur: sqlite3.Cursor, event: RuntimeEvent) -> RuntimeEvent:
-        run = cur.execute("SELECT run_id FROM runtime_runs WHERE run_id=?", (event.run_id,)).fetchone()
+        run = cur.execute(
+            "SELECT run_id, skill_name, skill_version FROM runtime_runs WHERE run_id=?",
+            (event.run_id,),
+        ).fetchone()
         if run is None:
             raise KeyError(f"Unknown run_id: {event.run_id}")
+        if event.skill_name != run["skill_name"] or event.skill_version != run["skill_version"]:
+            raise ValueError("runtime event skill identity does not match its run")
+        if event.schema_version != "4.0.0":
+            raise ValueError("unsupported runtime event schema version")
+        try:
+            datetime.fromisoformat(event.occurred_at.replace("Z", "+00:00"))
+        except ValueError as exc:
+            raise ValueError("invalid runtime event timestamp") from exc
+        existing_event_types = [
+            RuntimeEventType(row[0])
+            for row in cur.execute(
+                "SELECT event_type FROM runtime_events WHERE run_id=? ORDER BY sequence",
+                (event.run_id,),
+            ).fetchall()
+        ]
+        validate_event_type_sequence([*existing_event_types, event.event_type])
+        if event.event_type in _UNIQUE_TERMINAL_EVENTS:
+            duplicate = cur.execute(
+                "SELECT 1 FROM runtime_events WHERE run_id=? AND event_type=? LIMIT 1",
+                (event.run_id, event.event_type.value),
+            ).fetchone()
+            if duplicate is not None:
+                raise ValueError("duplicate runtime terminal event")
         sequence = int(
             cur.execute(
                 "SELECT COALESCE(MAX(sequence), 0) + 1 FROM runtime_events WHERE run_id=?",

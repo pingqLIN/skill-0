@@ -34,6 +34,51 @@
       },
       "additionalProperties": false
     },
+    "run_ref": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "status"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "created",
+            "planned",
+            "preflight",
+            "awaiting_approval",
+            "ready",
+            "running",
+            "validating",
+            "succeeded",
+            "failed",
+            "recovery_pending",
+            "compensating",
+            "compensated",
+            "recovery_failed",
+            "reconciliation_required",
+            "hitl_required",
+            "denied",
+            "cancelled"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "event_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "last_event_type": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "generated_at": {
       "type": "string",
       "format": "date-time"
@@ -65,6 +110,30 @@
           "minimum": 0
         },
         "recovery_failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "awaiting_approval": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "hitl_required": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reconciliation_required": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "recovery_pending": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "denied": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cancelled": {
           "type": "integer",
           "minimum": 0
         }
