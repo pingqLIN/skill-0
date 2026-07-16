@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0.0",
+  "adapter": {
+    "id": "skill0.local-pdf-filesystem",
+    "version": "1.0.0",
+    "kind": "python",
+    "target": "runtime.adapters.local_pdf:LocalPdfFilesystemAdapter",
+    "artifact_path": "runtime/adapters/local_pdf.py",
+    "artifact_digest": "sha256:31c1f83ae063163d6aaf59d50846196cf10a63a93bc8e77665225422ff9e43f1"
+  },
+  "credential_profile": {
+    "mode": "none",
+    "identity": "dedicated OS process identity constrained to configured output and state roots",
+    "secret_references": [],
+    "required_capabilities": [
+      "create files in the configured output root",
+      "write adapter receipts in the configured SQLite state store",
+      "move owned artifacts into the output root .del sink"
+    ],
+    "denied_capabilities": [
+      "read or write outside configured roots",
+      "overwrite unowned files",
+      "network access",
+      "subprocess execution",
+      "secret or token access"
+    ],
+    "validation": "constructor accepts no credential and certification probes traversal plus unowned-file refusal"
+  },
+  "idempotency": {
+    "key_storage": "sha256_digest_only",
+    "same_key_same_request": "return_original_result_without_duplicate_effect",
+    "same_key_different_request": "reject_conflict",
+    "receipt_store": "SQLite operation claim plus root-local receipt marker"
+  },
+  "reconciliation": {
+    "probe": "compare the SQLite claim, receipt marker, resource identity, and content digest without retrying",
+    "statuses": ["not_found", "applied", "compensated", "diverged", "unknown"],
+    "automatic_retry_on_unknown": false
+  },
+  "compensation": {
+    "strategy": "move_to_recoverable_sink",
+    "recoverable_sink": ".del",
+    "idempotent": true,
+    "required_evidence": [
+      "original_resource_id",
+      "content_digest",
+      "quarantine_resource_id",
+      "compensation_key_digest",
+      "completed_at"
+    ]
+  },
+  "rate_limit": {
+    "algorithm": "sqlite_fixed_window",
+    "max_requests": 2,
+    "window_seconds": 60,
+    "max_concurrency": 1,
+    "state_store": "the adapter SQLite receipt store",
+    "retry_signal": "retry_after_seconds"
+  },
+  "production_approval": {
+    "default": "deny",
+    "binding": [
+      "adapter_id",
+      "adapter_version",
+      "artifact_digest",
+      "manifest_digest",
+      "certification_evidence_digest",
+      "environment",
+      "allowed_operations",
+      "expiry"
+    ],
+    "allowed_operations": [
+      {
+        "canonical_skill_id": "claude__anthropic__pdf",
+        "action_id": "a_006",
+        "resource_kind": "filesystem",
+        "operation": "create_pdf"
+      }
+    ]
+  }
+}

@@ -3,8 +3,17 @@ from __future__ import annotations
 import hmac
 from typing import Any, Protocol
 
+from .certification import ProductionAdapterApprovalGate
+from .digest import canonical_digest
 from .ledger import RuntimeLedger
-from .models import ActionResult, RunResult, RunStatus, RuntimeEvent, RuntimeEventType
+from .models import (
+    ActionResult,
+    AdapterCallRejected,
+    RunResult,
+    RunStatus,
+    RuntimeEvent,
+    RuntimeEventType,
+)
 from .policy import DefaultPolicyEngine, PolicyEngine
 from .rules import RuleEvaluationError, RuleEvaluator
 from .template import render_key_template, resolve_json_pointer, resolve_parameter_mapping
@@ -13,7 +22,14 @@ from .template import render_key_template, resolve_json_pointer, resolve_paramet
 class ActionAdapter(Protocol):
     supports_dry_run: bool
 
-    def execute(self, action_id: str, parameters: dict[str, Any], *, dry_run: bool) -> ActionResult: ...
+    def execute(
+        self,
+        action_id: str,
+        parameters: dict[str, Any],
+        *,
+        idempotency_key: str | None,
+        dry_run: bool,
+    ) -> ActionResult: ...
 
 
 class RuntimeExecutor:
@@ -24,10 +40,18 @@ class RuntimeExecutor:
     It is not a production sandbox or distributed transaction coordinator.
     """
 
-    def __init__(self, ledger: RuntimeLedger, adapter: ActionAdapter, policy: PolicyEngine | None = None) -> None:
+    def __init__(
+        self,
+        ledger: RuntimeLedger,
+        adapter: ActionAdapter,
+        policy: PolicyEngine | None = None,
+        *,
+        production_approval_gate: ProductionAdapterApprovalGate | None = None,
+    ) -> None:
         self.ledger = ledger
         self.adapter = adapter
         self.policy = policy or DefaultPolicyEngine()
+        self.production_approval_gate = production_approval_gate
 
     def run(
         self,
@@ -139,6 +163,68 @@ class RuntimeExecutor:
             self._event(run_id, skill, RuntimeEventType.POLICY_DENIED, payload={"reason": reason})
             return RunResult(run_id, RunStatus.DENIED, reason=reason)
 
+        if not dry_run:
+            try:
+                stored_basis = self.ledger.get_execution_basis(run_id)
+            except KeyError:
+                stored_basis = None
+            if (
+                stored_basis is None
+                or not execution_basis_digest
+                or not hmac.compare_digest(
+                    str(stored_basis["execution_digest"]), execution_basis_digest
+                )
+                or bool(stored_basis["dry_run"])
+            ):
+                reason = "real execution requires a matching durable execution basis"
+                self._event(
+                    run_id,
+                    skill,
+                    RuntimeEventType.POLICY_DENIED,
+                    payload={"reason": reason},
+                )
+                return RunResult(run_id, RunStatus.DENIED, reason=reason)
+            if self.production_approval_gate is None:
+                reason = "production adapter approval gate is unavailable"
+                self._event(
+                    run_id,
+                    skill,
+                    RuntimeEventType.POLICY_DENIED,
+                    payload={"reason": reason},
+                )
+                return RunResult(run_id, RunStatus.DENIED, reason=reason)
+            decision = self.production_approval_gate.evaluate(
+                self.adapter, contract["action_bindings"]
+            )
+            if not decision.allowed:
+                self._event(
+                    run_id,
+                    skill,
+                    RuntimeEventType.POLICY_DENIED,
+                    payload={"reason": decision.reason},
+                )
+                return RunResult(run_id, RunStatus.DENIED, reason=decision.reason)
+            stored_attestation = preflight.get("adapter_production_approval")
+            if (
+                not isinstance(stored_attestation, dict)
+                or canonical_digest(stored_attestation)
+                != canonical_digest(decision.attestation)
+            ):
+                reason = "production adapter approval is not bound to the execution basis"
+                self._event(
+                    run_id,
+                    skill,
+                    RuntimeEventType.POLICY_DENIED,
+                    payload={"reason": reason},
+                )
+                return RunResult(run_id, RunStatus.DENIED, reason=reason)
+            self._event(
+                run_id,
+                skill,
+                RuntimeEventType.ADAPTER_APPROVAL_VALIDATED,
+                payload=decision.attestation,
+            )
+
         outputs: dict[str, Any] = {}
         validated_postconditions: list[str] = []
         rule_bindings = dict(rule_bindings or {})
@@ -248,7 +334,43 @@ class RuntimeExecutor:
             )
 
             try:
-                result = self.adapter.execute(action_id, parameters, dry_run=dry_run)
+                result = self.adapter.execute(
+                    action_id,
+                    parameters,
+                    idempotency_key=primary_key,
+                    dry_run=dry_run,
+                )
+            except AdapterCallRejected as exc:
+                rejection_evidence: dict[str, Any] = {}
+                retry_after = exc.evidence.get("retry_after_seconds")
+                if isinstance(retry_after, (int, float)) and retry_after >= 0:
+                    rejection_evidence["retry_after_seconds"] = float(retry_after)
+                self._event(
+                    run_id,
+                    skill,
+                    RuntimeEventType.ACTION_FAILED,
+                    action_id=action_id,
+                    idempotency_key=primary_key,
+                    payload={
+                        "error_code": exc.error_code,
+                        "effect_committed": False,
+                        **rejection_evidence,
+                    },
+                )
+                self._event(
+                    run_id,
+                    skill,
+                    RuntimeEventType.RUN_FAILED,
+                    payload={
+                        "failed_action_id": action_id,
+                        "reason": exc.error_code,
+                    },
+                )
+                return RunResult(
+                    run_id,
+                    RunStatus.FAILED,
+                    reason=exc.error_code,
+                )
             except Exception as exc:  # Adapter boundary: write outcome may be unknowable.
                 if effect["classification"] != "read_only":
                     self._event(

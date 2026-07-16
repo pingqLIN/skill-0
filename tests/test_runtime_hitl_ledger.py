@@ -43,7 +43,8 @@ class RecordingAdapter:
         self.calls: list[str] = []
         self.compensation_calls: list[str] = []
 
-    def execute(self, action_id, parameters, *, dry_run):
+    def execute(self, action_id, parameters, *, idempotency_key, dry_run):
+        del idempotency_key
         assert dry_run is True
         self.calls.append(action_id)
         resource_id = f"resource-{action_id}"

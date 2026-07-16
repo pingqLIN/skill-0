@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skill-0.local/schema/adapter-certification.schema.json",
+  "title": "SKILL-0 Adapter Certification Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "adapter",
+    "credential_profile",
+    "idempotency",
+    "reconciliation",
+    "compensation",
+    "rate_limit",
+    "production_approval"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "kind", "target", "artifact_path", "artifact_digest"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9.-]+$" },
+        "version": { "type": "string", "minLength": 1 },
+        "kind": { "enum": ["python", "mcp", "openai_agents", "langgraph", "command"] },
+        "target": { "type": "string", "minLength": 1 },
+        "artifact_path": { "type": "string", "pattern": "^(?![A-Za-z]:|[/\\\\]).+" },
+        "artifact_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    },
+    "credential_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "identity", "secret_references", "required_capabilities", "denied_capabilities", "validation"],
+      "properties": {
+        "mode": { "enum": ["none", "secret_reference", "workload_identity"] },
+        "identity": { "type": "string", "minLength": 1 },
+        "secret_references": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "required_capabilities": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "denied_capabilities": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "validation": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "mode": { "const": "none" } } },
+          "then": { "properties": { "secret_references": { "maxItems": 0 } } }
+        }
+      ]
+    },
+    "idempotency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key_storage", "same_key_same_request", "same_key_different_request", "receipt_store"],
+      "properties": {
+        "key_storage": { "const": "sha256_digest_only" },
+        "same_key_same_request": { "const": "return_original_result_without_duplicate_effect" },
+        "same_key_different_request": { "const": "reject_conflict" },
+        "receipt_store": { "type": "string", "minLength": 1 }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["probe", "statuses", "automatic_retry_on_unknown"],
+      "properties": {
+        "probe": { "type": "string", "minLength": 1 },
+        "statuses": {
+          "type": "array",
+          "items": { "enum": ["not_found", "applied", "compensated", "diverged", "unknown"] },
+          "minItems": 5,
+          "uniqueItems": true
+        },
+        "automatic_retry_on_unknown": { "const": false }
+      }
+    },
+    "compensation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "recoverable_sink", "idempotent", "required_evidence"],
+      "properties": {
+        "strategy": { "const": "move_to_recoverable_sink" },
+        "recoverable_sink": { "const": ".del" },
+        "idempotent": { "const": true },
+        "required_evidence": {
+          "type": "array",
+          "items": { "enum": ["original_resource_id", "content_digest", "quarantine_resource_id", "compensation_key_digest", "completed_at"] },
+          "minItems": 5,
+          "uniqueItems": true
+        }
+      }
+    },
+    "rate_limit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "max_requests", "window_seconds", "max_concurrency", "state_store", "retry_signal"],
+      "properties": {
+        "algorithm": { "const": "sqlite_fixed_window" },
+        "max_requests": { "type": "integer", "minimum": 1 },
+        "window_seconds": { "type": "integer", "minimum": 1 },
+        "max_concurrency": { "type": "integer", "minimum": 1 },
+        "state_store": { "type": "string", "minLength": 1 },
+        "retry_signal": { "const": "retry_after_seconds" }
+      }
+    },
+    "production_approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default", "binding", "allowed_operations"],
+      "properties": {
+        "default": { "const": "deny" },
+        "binding": {
+          "type": "array",
+          "items": { "enum": ["adapter_id", "adapter_version", "artifact_digest", "manifest_digest", "certification_evidence_digest", "environment", "allowed_operations", "expiry"] },
+          "minItems": 8,
+          "uniqueItems": true
+        },
+        "allowed_operations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["canonical_skill_id", "action_id", "resource_kind", "operation"],
+            "properties": {
+              "canonical_skill_id": { "type": "string", "minLength": 1 },
+              "action_id": { "type": "string", "pattern": "^a_[0-9]{3}(?:_[a-z0-9]+)*$" },
+              "resource_kind": { "type": "string", "minLength": 1 },
+              "operation": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

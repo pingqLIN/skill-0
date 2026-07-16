@@ -7,6 +7,16 @@ from typing import Any
 from uuid import uuid4
 
 
+class AdapterCallRejected(RuntimeError):
+    """The adapter proves that a call was rejected before a new effect."""
+
+    error_code = "ADAPTER_REJECTED"
+
+    def __init__(self, message: str, *, evidence: dict[str, Any] | None = None) -> None:
+        super().__init__(message)
+        self.evidence = dict(evidence or {})
+
+
 class RunStatus(StrEnum):
     CREATED = "created"
     PLANNED = "planned"
@@ -31,6 +41,7 @@ class RuntimeEventType(StrEnum):
     RUN_CREATED = "run_created"
     PLAN_CREATED = "plan_created"
     PREFLIGHT_PASSED = "preflight_passed"
+    ADAPTER_APPROVAL_VALIDATED = "adapter_approval_validated"
     POLICY_ALLOWED = "policy_allowed"
     POLICY_DENIED = "policy_denied"
     APPROVAL_REQUIRED = "approval_required"

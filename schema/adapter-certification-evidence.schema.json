@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skill-0.local/schema/adapter-certification-evidence.schema.json",
+  "title": "SKILL-0 Adapter Certification Evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence_id", "generated_at", "adapter", "manifest_digest", "scope", "probes", "overall_status", "approval_status"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "evidence_id": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "kind", "target", "artifact_digest"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "target": { "type": "string", "minLength": 1 },
+        "artifact_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+      }
+    },
+    "manifest_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["environment", "external_credentials_used", "external_network_used", "side_effect_boundary"],
+      "properties": {
+        "environment": { "const": "isolated_local_sandbox" },
+        "external_credentials_used": { "const": false },
+        "external_network_used": { "const": false },
+        "side_effect_boundary": { "const": "temporary_directory_only" }
+      }
+    },
+    "probes": {
+      "type": "array",
+      "minItems": 7,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status", "summary", "evidence"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["passed", "failed"] },
+          "summary": { "type": "string", "minLength": 1 },
+          "evidence": { "type": "object" }
+        }
+      }
+    },
+    "overall_status": { "enum": ["passed", "failed"] },
+    "approval_status": { "const": "pending_human_approval" }
+  }
+}

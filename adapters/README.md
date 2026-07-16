@@ -14,6 +14,24 @@ Framework adapters are deliberately excluded from the P0 merge target. The core 
 - treat an exception after request submission as an unknown outcome unless the adapter can prove non-commit;
 - redact sensitive inputs/outputs before trace export.
 
+`ActionAdapter.execute()` receives the ledger-claimed primary idempotency key
+explicitly. A production adapter must not reconstruct a different key from
+parameters or ignore that claim.
+
+## Certification candidate
+
+`local-pdf-filesystem/adapter-certification.json` defines the first isolated
+candidate, `skill0.local-pdf-filesystem`. Its executable probes cover a
+credential-free least-privilege boundary, replay and conflict idempotency,
+post-commit reconciliation, recoverable `.del` compensation evidence, a
+SQLite-backed rate limit, and exact-scope production approval.
+
+Passing these probes does not activate the adapter. The public Runtime API
+continues to load only the simulation adapter and accept `dry_run=true`.
+Production execution also requires an unexpired, signed, environment-specific
+approval whose artifact, manifest, evidence, and operation digests match the
+runtime candidate.
+
 ## Integration order
 
 1. test/native adapter

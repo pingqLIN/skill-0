@@ -4,7 +4,7 @@ import copy
 
 from runtime.executor import RuntimeExecutor
 from runtime.ledger import RuntimeLedger
-from runtime.models import ActionResult, RunStatus, RuntimeEventType
+from runtime.models import ActionResult, AdapterCallRejected, RunStatus, RuntimeEventType
 from runtime.rules import ContextRuleEvaluator
 
 
@@ -42,9 +42,12 @@ class FakeAdapter:
     def __init__(self, *, raise_error: bool = False):
         self.raise_error = raise_error
         self.calls: list[tuple[str, bool]] = []
+        self.idempotency_keys: list[str | None] = []
 
-    def execute(self, action_id, parameters, *, dry_run):
+    def execute(self, action_id, parameters, *, idempotency_key, dry_run):
+        del parameters
         self.calls.append((action_id, dry_run))
+        self.idempotency_keys.append(idempotency_key)
         if self.raise_error:
             raise RuntimeError("simulated adapter failure")
         return ActionResult(
@@ -57,6 +60,19 @@ class FakeAdapter:
 
 class NoDryRunAdapter(FakeAdapter):
     supports_dry_run = False
+
+
+class RateLimitedBeforeEffect(AdapterCallRejected):
+    error_code = "RATE_LIMITED"
+
+
+class KnownPreEffectRejectionAdapter(FakeAdapter):
+    def execute(self, action_id, parameters, *, idempotency_key, dry_run):
+        del action_id, parameters, idempotency_key, dry_run
+        raise RateLimitedBeforeEffect(
+            "rate limited before dispatch",
+            evidence={"retry_after_seconds": 30.0},
+        )
 
 
 def test_read_only_dry_run_succeeds(tmp_path, read_json):
@@ -121,9 +137,10 @@ def test_real_execution_requires_explicit_feature_flag(tmp_path, read_json):
 
 
 def test_bounded_write_records_declared_compensation_mapping(tmp_path, read_json):
+    adapter = FakeAdapter()
     with RuntimeLedger(tmp_path / "ledger.db") as ledger:
         result = _run(
-            RuntimeExecutor(ledger, FakeAdapter()),
+            RuntimeExecutor(ledger, adapter),
             read_json("examples/runtime-contract.auto-rollback.json"),
             parameters={"customer_id": "42"},
         )
@@ -138,6 +155,9 @@ def test_bounded_write_records_declared_compensation_mapping(tmp_path, read_json
             "contact_id": {"$runtime_ref": "external_resource_id"}
         }
         assert "hidden" not in succeeded[0].payload["resolved_compensation_parameters"]
+        assert adapter.idempotency_keys == [
+            f"contact-create:42:{result.run_id}"
+        ]
 
 
 def test_read_adapter_exception_is_durably_recorded(tmp_path, read_json):
@@ -166,6 +186,28 @@ def test_write_adapter_exception_requires_reconciliation(tmp_path, read_json):
         assert result.status == RunStatus.RECONCILIATION_REQUIRED
         assert ledger.get_run(result.run_id)["status"] == "reconciliation_required"
         assert ledger.count_events(result.run_id, RuntimeEventType.ACTION_OUTCOME_UNKNOWN) == 1
+
+
+def test_known_pre_effect_rejection_does_not_require_reconciliation(tmp_path, read_json):
+    with RuntimeLedger(tmp_path / "ledger.db") as ledger:
+        result = _run(
+            RuntimeExecutor(ledger, KnownPreEffectRejectionAdapter()),
+            read_json("examples/runtime-contract.auto-rollback.json"),
+            parameters={"customer_id": "42"},
+        )
+        assert result.status == RunStatus.FAILED
+        assert ledger.count_events(result.run_id, RuntimeEventType.ACTION_FAILED) == 1
+        assert ledger.count_events(result.run_id, RuntimeEventType.ACTION_OUTCOME_UNKNOWN) == 0
+        failed = next(
+            event
+            for event in ledger.list_events(result.run_id)
+            if event.event_type == RuntimeEventType.ACTION_FAILED
+        )
+        assert failed.payload == {
+            "error_code": "RATE_LIMITED",
+            "effect_committed": False,
+            "retry_after_seconds": 30.0,
+        }
 
 
 def test_duplicate_primary_idempotency_key_is_rejected_across_runs(tmp_path, read_json):

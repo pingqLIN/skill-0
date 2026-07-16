@@ -84,3 +84,6 @@ backups/*.db
 
 # Local audit outputs
 /audit/
+
+# Environment-specific adapter approval records
+/governance/approvals/

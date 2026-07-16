@@ -98,9 +98,10 @@ class SimulationAdapter:
         action_id: str,
         parameters: dict[str, Any],
         *,
+        idempotency_key: str | None,
         dry_run: bool,
     ) -> ActionResult:
-        del parameters
+        del parameters, idempotency_key
         if not dry_run:
             raise RuntimeError("simulation adapter refuses real execution")
         resource_id = f"dry-run-{action_id}"

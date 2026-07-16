@@ -36,6 +36,7 @@
         "run_created",
         "plan_created",
         "preflight_passed",
+        "adapter_approval_validated",
         "policy_allowed",
         "policy_denied",
         "approval_required",

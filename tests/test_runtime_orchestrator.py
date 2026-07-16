@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 
+from runtime.certification import AdapterAdmissionDecision
 from runtime.executor import ActionResult
 from runtime.ledger import RuntimeLedger
 from runtime.models import RunStatus, RuntimeEventType
@@ -33,9 +34,35 @@ GOVERNANCE_GATE = ApprovedGovernanceGate()
 class DryRunAdapter:
     supports_dry_run = True
 
-    def execute(self, action_id, parameters, *, dry_run):
+    def execute(self, action_id, parameters, *, idempotency_key, dry_run):
+        del parameters, idempotency_key
         assert dry_run is True
         return ActionResult(True, outputs={"id": f"resource-{action_id}"})
+
+
+class RealExecutionAdapter:
+    supports_dry_run = True
+
+    def execute(self, action_id, parameters, *, idempotency_key, dry_run):
+        del parameters, idempotency_key
+        assert dry_run is False
+        return ActionResult(True, outputs={"id": f"resource-{action_id}"})
+
+
+class StaticProductionApprovalGate:
+    attestation = {
+        "approved": True,
+        "approval_id": "test-production-approval",
+        "approval_digest": "sha256:" + "c" * 64,
+    }
+
+    def evaluate(self, adapter, action_bindings):
+        del adapter, action_bindings
+        return AdapterAdmissionDecision(
+            True,
+            "test production approval",
+            self.attestation,
+        )
 
 
 def skill_document_for(contract):
@@ -169,3 +196,36 @@ def test_orchestrator_rejects_skill_identity_mismatch(tmp_path, read_json):
                 parameters={},
                 context={"rule_results": {"r_001": True}},
             )
+
+
+def test_orchestrator_binds_production_approval_to_execution_basis(tmp_path, read_json):
+    contract = read_json("examples/runtime-contract.read-only.json")
+    contract["feature_flags"] = {"real_execution": True}
+    gate = StaticProductionApprovalGate()
+    with RuntimeLedger(tmp_path / "runtime.db") as ledger:
+        result = RuntimeOrchestrator(
+            ledger,
+            RealExecutionAdapter(),
+            ContextRuleEvaluator(),
+            binding_key=TEST_BINDING_KEY,
+            governance_gate=GOVERNANCE_GATE,
+            production_approval_gate=gate,
+        ).run(
+            contract,
+            skill_document_for(contract),
+            parameters={},
+            context={"rule_results": {"r_001": True}},
+            dry_run=False,
+        )
+        assert result.status == RunStatus.SUCCEEDED
+        basis = ledger.get_execution_basis(result.run_id)
+        assert basis["dry_run"] == 0
+        assert ledger.count_events(
+            result.run_id, RuntimeEventType.ADAPTER_APPROVAL_VALIDATED
+        ) == 1
+        preflight = next(
+            event
+            for event in ledger.list_events(result.run_id)
+            if event.event_type == RuntimeEventType.PREFLIGHT_PASSED
+        )
+        assert preflight.payload["adapter_production_approval"] == gate.attestation

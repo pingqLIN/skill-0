@@ -4,6 +4,7 @@ import hmac
 from pathlib import Path
 from typing import Any
 
+from .certification import ProductionAdapterApprovalGate
 from .executor import ActionAdapter, RuntimeExecutor
 from .digest import canonical_digest, keyed_digest
 from .governance import RuntimeGovernanceGate
@@ -53,6 +54,7 @@ class RuntimeOrchestrator:
         binding_key: str,
         governance_gate: RuntimeGovernanceGate,
         policy: PolicyEngine | None = None,
+        production_approval_gate: ProductionAdapterApprovalGate | None = None,
         schema_path: str | Path = DEFAULT_RUNTIME_SCHEMA_PATH,
         skill_schema_path: str | Path = DEFAULT_SKILL_SCHEMA_PATH,
     ) -> None:
@@ -64,6 +66,7 @@ class RuntimeOrchestrator:
         self.binding_key = binding_key
         self.governance_gate = governance_gate
         self.policy = policy
+        self.production_approval_gate = production_approval_gate
         self.schema_path = Path(schema_path)
         self.skill_schema_path = Path(skill_schema_path)
 
@@ -134,6 +137,17 @@ class RuntimeOrchestrator:
             "governance_attestation": governance_attestation,
             "precondition_rule_ids": sorted(set(precondition_ids)),
         }
+        if not dry_run:
+            if self.production_approval_gate is None:
+                raise RuntimeContractValidationError(
+                    "production adapter approval gate is unavailable"
+                )
+            decision = self.production_approval_gate.evaluate(
+                self.adapter, contract["action_bindings"]
+            )
+            if not decision.allowed:
+                raise RuntimeContractValidationError(decision.reason)
+            preflight["adapter_production_approval"] = decision.attestation
         basis = {
             "skill_id": str(skill_document["meta"]["skill_id"]),
             "governance_revision_id": str(
@@ -169,7 +183,12 @@ class RuntimeOrchestrator:
                     "runtime resume execution basis does not match"
                 )
 
-        executor = RuntimeExecutor(self.ledger, self.adapter, policy=self.policy)
+        executor = RuntimeExecutor(
+            self.ledger,
+            self.adapter,
+            policy=self.policy,
+            production_approval_gate=self.production_approval_gate,
+        )
         return executor.run(
             contract,
             parameters=parameters,

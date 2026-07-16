@@ -45,7 +45,8 @@ class RecoveryAdapter:
         self.compensation_dry_runs: list[bool] = []
         self._results = list(compensation_results or [])
 
-    def execute(self, action_id, parameters, *, dry_run):
+    def execute(self, action_id, parameters, *, idempotency_key, dry_run):
+        del parameters, idempotency_key
         self.execute_calls.append(action_id)
         resource_id = f"{action_id}-resource"
         return ActionResult(
