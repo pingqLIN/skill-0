@@ -14,7 +14,7 @@ Runtime v4 turns the existing ARD/runtime contract into a truthful, dry-run-only
 | B | Deterministic event/evidence projection | Evidence schema and replay tests | `c7b7ce3` |
 | C | Durable action-scoped HITL, same-run resume, recovery/reconciliation | Concurrency, crash-gap, immutable decision tests | `ae2ec39` |
 | D | Exact current-revision governance admission and Runtime dashboard | 356 Python/API tests, 34 web tests, production build, independent reviewer | `5c8e7ee` |
-| E | Production storage, deadlines, doctor, backup/restore/restart rehearsal and release gate | 365 Python/API tests, 34 web tests, production build, Compose config, WSL three-store restore rehearsal, independent reviewer | This commit |
+| E | Production storage, deadlines, doctor, backup/restore/restart rehearsal and release gate | 365 Python/API tests, 34 web tests, production build, full three-store Compose rehearsal, independent reviewer | `1021d8e`, `c95f2b3` |
 
 ## Batch E work packages
 
@@ -28,18 +28,18 @@ Runtime v4 turns the existing ARD/runtime contract into a truthful, dry-run-only
 
 ## Release decision
 
-Runtime v4 is ready for an internal dry-run pilot when Batch E passes. It is not authorization for real external writes. A later adapter-certification batch must separately define credentials, least privilege, idempotency semantics, reconciliation probes, compensation evidence, rate limits, and per-adapter production approval.
+Runtime v4 passed operator acceptance and the controlled internal dry-run pilot on 2026-07-17. The full production image build and isolated Compose rehearsal verified service health, the production doctor, all three SQLite stores, online backup/restore, and Runtime persistence across an API restart. The final regression passed 365 Python/API tests, 34 web tests, the production web build, and all 196 canonical schema validations.
 
-The full container build/rehearsal remains an operator acceptance item because this verification environment had no reusable Skill-0 images and downloading new image/dependency layers was outside the authorized boundary. Compose rendering, script parsing, the local three-store rehearsal, and reviewer gate passed; do not represent the unrun container build as completed.
+This result is not authorization for real external writes. A later adapter-certification batch must separately define credentials, least privilege, idempotency semantics, reconciliation probes, compensation evidence, rate limits, and per-adapter production approval.
 
-## Recommended next step after Batch E
+## Internal pilot outcome and next step
 
-Run one controlled internal pilot using a single canonical skill and test adapter:
+The controlled pilot used the canonical PDF skill's `a_006` file-creation action with a test adapter and `dry_run=true`:
 
-1. Bind the exact parsed artifact to the current governance revision and approve it.
-2. Create a dry run that pauses at one action approval.
-3. Record a Dashboard decision, wait briefly, explicitly resume the same run, and inspect evidence.
-4. Repeat once with an expired approval and once with a simulated ambiguous outcome.
-5. Archive the evidence summary and operator observations; do not enable a real adapter yet.
+1. The exact parsed artifact was bound to the current governance revision and approved.
+2. The bounded-write action paused at an action-scoped approval; a Dashboard decision was recorded and the same run was explicitly resumed to `succeeded` with an 11-event evidence stream.
+3. A process-local clock advance projected a second approval as expired; the decision was rejected and no decision record was persisted.
+4. A simulated timeout after `action_started` produced `action_outcome_unknown` and `reconciliation_required` without automatic retry.
+5. Evidence and operator observations were archived locally in an ignored audit artifact. No real adapter, external credential, or external write was enabled.
 
 The next engineering proposal should be adapter certification, not broader autonomous execution.
