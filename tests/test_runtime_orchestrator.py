@@ -13,6 +13,23 @@ from runtime.validators import RuntimeContractValidationError
 TEST_BINDING_KEY = "skill0-test-runtime-binding-key-0123456789"
 
 
+class ApprovedGovernanceGate:
+    def evaluate(self, skill_document, contract):
+        return {
+            "policy": "governance.current_revision.approved",
+            "canonical_skill_id": skill_document["meta"]["skill_id"],
+            "governance_skill_id": "governance-runtime-test",
+            "revision_id": "rev-runtime-test",
+            "revision_number": 1,
+            "artifact_digest": "sha256:" + "a" * 64,
+            "approved_by": "reviewer",
+            "approved_at": "2026-07-16T00:00:00+00:00",
+        }
+
+
+GOVERNANCE_GATE = ApprovedGovernanceGate()
+
+
 class DryRunAdapter:
     supports_dry_run = True
 
@@ -80,6 +97,7 @@ def test_orchestrator_records_attested_preflight(tmp_path, read_json):
             DryRunAdapter(),
             ContextRuleEvaluator(),
             binding_key=TEST_BINDING_KEY,
+            governance_gate=GOVERNANCE_GATE,
         ).run(
             contract,
             skill_document_for(contract),
@@ -107,6 +125,7 @@ def test_orchestrator_fails_closed_when_rule_result_is_missing(tmp_path, read_js
                 DryRunAdapter(),
                 ContextRuleEvaluator(),
                 binding_key=TEST_BINDING_KEY,
+                governance_gate=GOVERNANCE_GATE,
             ).run(contract, skill_document_for(contract), parameters={}, context={})
         count = ledger.connection.execute("SELECT COUNT(*) FROM runtime_runs").fetchone()[0]
         assert count == 0
@@ -123,6 +142,7 @@ def test_orchestrator_rejects_cross_reference_drift(tmp_path, read_json):
                 DryRunAdapter(),
                 ContextRuleEvaluator(),
                 binding_key=TEST_BINDING_KEY,
+                governance_gate=GOVERNANCE_GATE,
             ).run(
                 contract,
                 skill,
@@ -142,6 +162,7 @@ def test_orchestrator_rejects_skill_identity_mismatch(tmp_path, read_json):
                 DryRunAdapter(),
                 ContextRuleEvaluator(),
                 binding_key=TEST_BINDING_KEY,
+                governance_gate=GOVERNANCE_GATE,
             ).run(
                 contract,
                 skill,

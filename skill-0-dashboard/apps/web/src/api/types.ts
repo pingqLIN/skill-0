@@ -34,6 +34,7 @@ export interface FindingsByRule {
 
 export interface SkillSummary {
   skill_id: string;
+  canonical_skill_id?: string | null;
   current_revision_id: string | null;
   revision_id: string | null;
   revision_number: number | null;
@@ -47,6 +48,7 @@ export interface SkillSummary {
   license_spdx: string;
   source_url: string;
   source_checksum: string | null;
+  artifact_digest?: string | null;
   source_type: string | null;
   version: string;
   created_at: string | null;
@@ -133,6 +135,7 @@ export interface RevisionSummary {
   source_commit: string | null;
   source_path: string;
   source_checksum: string | null;
+  artifact_digest?: string | null;
   risk_level: string;
   risk_score: number;
   fidelity_score: number | null;

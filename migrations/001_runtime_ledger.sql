@@ -62,6 +62,7 @@ CREATE INDEX IF NOT EXISTS idx_runtime_hitl_status
 CREATE TABLE IF NOT EXISTS runtime_execution_bases (
     run_id TEXT PRIMARY KEY REFERENCES runtime_runs(run_id) ON DELETE RESTRICT,
     skill_id TEXT NOT NULL,
+    governance_revision_id TEXT,
     skill_source_digest TEXT NOT NULL,
     contract_digest TEXT NOT NULL,
     input_digest TEXT NOT NULL,

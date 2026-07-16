@@ -6,10 +6,36 @@ import subprocess
 import sys
 
 from fastapi.testclient import TestClient
+import pytest
 
 import api.main as api_module
+from api.routers.runs_v4 import get_runtime_governance_gate
 from runtime.ledger import RuntimeLedger
+from runtime.governance import RuntimeGovernanceError
 from runtime.models import RuntimeEvent, RuntimeEventType
+
+
+class ApprovedGovernanceGate:
+    def evaluate(self, skill_document, contract):
+        return {
+            "policy": "governance.current_revision.approved",
+            "canonical_skill_id": skill_document["meta"]["skill_id"],
+            "governance_skill_id": "governance-runtime-api-test",
+            "revision_id": "rev-runtime-api-test",
+            "revision_number": 1,
+            "artifact_digest": "sha256:" + "c" * 64,
+            "approved_by": "reviewer",
+            "approved_at": "2026-07-16T00:00:00+00:00",
+        }
+
+
+@pytest.fixture(autouse=True)
+def approved_runtime_governance_gate():
+    api_module.app.dependency_overrides[get_runtime_governance_gate] = (
+        lambda: ApprovedGovernanceGate()
+    )
+    yield
+    api_module.app.dependency_overrides.pop(get_runtime_governance_gate, None)
 
 
 def _skill_document(contract: dict) -> dict:
@@ -331,7 +357,8 @@ def test_create_runtime_run_executes_deterministic_simulation(
     monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
     parsed_dir = tmp_path / "parsed"
     monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
-    response = TestClient(api_module.app).post(
+    client = TestClient(api_module.app)
+    response = client.post(
         "/api/runs", json=_create_payload(read_json, parsed_dir), headers=_auth_headers()
     )
     assert response.status_code == 201
@@ -342,6 +369,22 @@ def test_create_runtime_run_executes_deterministic_simulation(
         events = ledger.list_events(body["run_id"])
         assert any(event.event_type == RuntimeEventType.PREFLIGHT_PASSED for event in events)
         assert all(event.payload.get("dry_run", True) is True for event in events)
+        basis = ledger.get_execution_basis(body["run_id"])
+        assert basis["governance_revision_id"] == "rev-runtime-api-test"
+    evidence = client.get(
+        f"/api/runs/{body['run_id']}/evidence", headers=_auth_headers()
+    )
+    assert evidence.status_code == 200
+    assert evidence.json()["governance_ref"] == {
+        "policy": "governance.current_revision.approved",
+        "canonical_skill_id": "claude__skill__runtime_api_fixture",
+        "governance_skill_id": "governance-runtime-api-test",
+        "revision_id": "rev-runtime-api-test",
+        "revision_number": 1,
+        "artifact_digest": "sha256:" + "c" * 64,
+        "approved_by": "reviewer",
+        "approved_at": "2026-07-16T00:00:00+00:00",
+    }
 
 
 def test_create_runtime_run_rejects_unvalidated_rule(tmp_path, monkeypatch, read_json):
@@ -422,6 +465,76 @@ def test_create_runtime_run_requires_canonical_skill(tmp_path, monkeypatch, read
         "/api/runs", json=payload, headers=_auth_headers()
     )
     assert response.status_code == 404
+
+
+def test_create_runtime_run_requires_governance_approved_revision(
+    tmp_path, monkeypatch, read_json
+):
+    class DeniedGate:
+        def evaluate(self, skill_document, contract):
+            del skill_document, contract
+            raise RuntimeGovernanceError("GOVERNANCE_REVISION_NOT_APPROVED")
+
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    api_module.app.dependency_overrides[get_runtime_governance_gate] = DeniedGate
+    response = TestClient(api_module.app).post(
+        "/api/runs",
+        json=_create_payload(read_json, parsed_dir),
+        headers=_auth_headers(),
+    )
+    assert response.status_code == 422
+    assert response.json()["detail"] == "GOVERNANCE_REVISION_NOT_APPROVED"
+    with RuntimeLedger(database) as ledger:
+        assert ledger.connection.execute(
+            "SELECT COUNT(*) FROM runtime_runs"
+        ).fetchone()[0] == 0
+
+
+def test_hitl_resume_rechecks_governance_before_consuming_claim(
+    tmp_path, monkeypatch, read_json
+):
+    class MutableGate(ApprovedGovernanceGate):
+        denied = False
+
+        def evaluate(self, skill_document, contract):
+            if self.denied:
+                raise RuntimeGovernanceError("GOVERNANCE_REVISION_REVOKED")
+            return super().evaluate(skill_document, contract)
+
+    database = tmp_path / "runtime.db"
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(database))
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    gate = MutableGate()
+    api_module.app.dependency_overrides[get_runtime_governance_gate] = lambda: gate
+    client = TestClient(api_module.app)
+    headers = _auth_headers()
+    payload, created = _create_manual_hitl(client, headers, read_json, parsed_dir)
+    item_id = created["hitl_item_id"]
+    assert client.post(
+        f"/api/runs/hitl/items/{item_id}/decision",
+        json={"decision": "approve", "reason_code": "REVIEWED"},
+        headers=headers,
+    ).status_code == 200
+    gate.denied = True
+    response = client.post(
+        f"/api/runs/hitl/items/{item_id}/resume",
+        json={
+            "runtime_contract": payload["runtime_contract"],
+            "parameters": payload["parameters"],
+        },
+        headers=headers,
+    )
+    assert response.status_code == 409
+    assert response.json()["detail"] == "GOVERNANCE_REVISION_REVOKED"
+    with RuntimeLedger(database) as ledger:
+        assert ledger.get_run(created["run_id"])["status"] == "ready"
+        assert ledger.connection.execute(
+            "SELECT COUNT(*) FROM runtime_resume_claims"
+        ).fetchone()[0] == 0
 
 
 def test_events_redact_recovery_material(tmp_path, monkeypatch, read_json):

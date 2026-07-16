@@ -220,6 +220,7 @@ class RuntimeLedger:
             CREATE TABLE IF NOT EXISTS runtime_execution_bases (
                 run_id TEXT PRIMARY KEY REFERENCES runtime_runs(run_id) ON DELETE RESTRICT,
                 skill_id TEXT NOT NULL,
+                governance_revision_id TEXT,
                 skill_source_digest TEXT NOT NULL,
                 contract_digest TEXT NOT NULL,
                 input_digest TEXT NOT NULL,
@@ -347,6 +348,17 @@ class RuntimeLedger:
             END;
             """
         )
+        execution_basis_columns = {
+            row["name"]
+            for row in self.connection.execute(
+                "PRAGMA table_info(runtime_execution_bases)"
+            ).fetchall()
+        }
+        if "governance_revision_id" not in execution_basis_columns:
+            self.connection.execute(
+                "ALTER TABLE runtime_execution_bases "
+                "ADD COLUMN governance_revision_id TEXT"
+            )
 
     def create_run(
         self,
@@ -373,13 +385,15 @@ class RuntimeLedger:
             if execution_basis is not None:
                 cur.execute(
                     """INSERT INTO runtime_execution_bases(
-                           run_id, skill_id, skill_source_digest, contract_digest,
+                           run_id, skill_id, governance_revision_id,
+                           skill_source_digest, contract_digest,
                            input_digest, preflight_digest, execution_digest,
                            dry_run, created_at
-                       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                     (
                         rid,
                         execution_basis["skill_id"],
+                        execution_basis["governance_revision_id"],
                         execution_basis["skill_source_digest"],
                         execution_basis["contract_digest"],
                         execution_basis["input_digest"],

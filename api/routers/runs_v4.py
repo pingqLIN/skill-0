@@ -12,6 +12,10 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from runtime.evidence import build_run_evidence
 from runtime.executor import ActionResult
+from runtime.governance import (
+    RuntimeGovernanceGate,
+    SQLiteRuntimeGovernanceGate,
+)
 from runtime.ledger import RuntimeLedger
 from runtime.models import RunStatus, RuntimeEventType
 from runtime.orchestrator import RuntimeOrchestrator
@@ -22,7 +26,9 @@ from runtime.validators import RuntimeContractValidationError, load_json, valida
 RUNTIME_DB_PATH_ENV = "SKILL0_RUNTIME_DB_PATH"
 RUNTIME_BINDING_KEY_ENV = "SKILL0_RUNTIME_BINDING_KEY"
 RUNTIME_DECISION_ACTORS_ENV = "SKILL0_RUNTIME_DECISION_ACTORS"
+GOVERNANCE_DB_PATH_ENV = "SKILL0_GOVERNANCE_DB_PATH"
 DEFAULT_RUNTIME_DB_PATH = Path("governance/db/runtime.db")
+DEFAULT_GOVERNANCE_DB_PATH = Path("governance/db/governance.db")
 EVIDENCE_SCHEMA_PATH = Path(__file__).resolve().parents[2] / "schema" / "evidence-summary.schema.json"
 RUN_EVIDENCE_SCHEMA_PATH = (
     Path(__file__).resolve().parents[2] / "schema" / "runtime-run-evidence.schema.json"
@@ -175,6 +181,17 @@ def get_runtime_ledger() -> Iterator[RuntimeLedger]:
         yield ledger
 
 
+def get_runtime_governance_gate() -> RuntimeGovernanceGate:
+    return SQLiteRuntimeGovernanceGate(
+        Path(
+            os.getenv(
+                GOVERNANCE_DB_PATH_ENV,
+                str(DEFAULT_GOVERNANCE_DB_PATH),
+            )
+        )
+    )
+
+
 def get_runtime_reader() -> Iterator[RuntimeLedger]:
     path = get_runtime_db_path()
     if not path.exists():
@@ -247,6 +264,7 @@ def _response_from_result(ledger: RuntimeLedger, result: Any) -> CreateRunRespon
 def create_run(
     request: CreateRunRequest,
     ledger: RuntimeLedger = Depends(get_runtime_ledger),
+    governance_gate: RuntimeGovernanceGate = Depends(get_runtime_governance_gate),
 ) -> CreateRunResponse:
     raw_bindings = request.runtime_contract.get("action_bindings", [])
     action_bindings = raw_bindings if isinstance(raw_bindings, list) else []
@@ -274,6 +292,7 @@ def create_run(
         SimulationAdapter(),
         UnavailableRuleEvaluator(),
         binding_key=get_runtime_binding_key(),
+        governance_gate=governance_gate,
     )
     try:
         result = orchestrator.run(
@@ -349,6 +368,7 @@ def resume_hitl_run(
     item_id: str,
     request: ResumeRunRequest,
     ledger: RuntimeLedger = Depends(get_runtime_ledger),
+    governance_gate: RuntimeGovernanceGate = Depends(get_runtime_governance_gate),
 ) -> CreateRunResponse:
     try:
         item = ledger.get_hitl_item(item_id)
@@ -369,6 +389,7 @@ def resume_hitl_run(
         SimulationAdapter(),
         UnavailableRuleEvaluator(),
         binding_key=get_runtime_binding_key(),
+        governance_gate=governance_gate,
     )
     try:
         result = orchestrator.run(
@@ -459,6 +480,7 @@ def get_events(
             "skill_schema_validated",
             "cross_references_validated",
             "skill_identity_validated",
+            "governance_validated",
             "precondition_rule_ids",
             "effect_classification",
             "resource_kind",
@@ -491,6 +513,10 @@ def get_events(
             compensation.get("strategy"), str
         ):
             payload["compensation_strategy"] = compensation["strategy"]
+        governance = source_payload.get("governance_attestation")
+        if isinstance(governance, dict):
+            payload["governance_revision_id"] = governance.get("revision_id")
+            payload["governance_policy"] = governance.get("policy")
         recovery_parameters = source_payload.get("resolved_compensation_parameters")
         if isinstance(recovery_parameters, dict):
             payload["resolved_compensation_parameter_keys"] = sorted(

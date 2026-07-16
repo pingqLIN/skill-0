@@ -6,11 +6,37 @@ from fastapi import APIRouter, Depends, HTTPException
 
 from ..auth import require_auth
 from ..schemas.skill import SkillSummary
-from ..schemas.review import ReviewAction
+from ..schemas.review import ReviewAction, RuntimeBindingAction
 from ..services.governance import GovernanceService
 from ..dependencies import get_governance_service
 
 router = APIRouter()
+
+
+@router.post("/reviews/{skill_id}/runtime-bind")
+def bind_runtime_artifact(
+    skill_id: str,
+    action: RuntimeBindingAction,
+    user: dict = Depends(require_auth),
+    service: GovernanceService = Depends(get_governance_service),
+) -> dict:
+    reviewer = user.get("sub")
+    if not reviewer:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    try:
+        binding = service.bind_runtime_artifact(
+            skill_id,
+            canonical_skill_id=action.canonical_skill_id,
+            reviewer=reviewer,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    if binding is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Governance skill or canonical parsed artifact was not found",
+        )
+    return {"status": "bound", **binding, "reviewer": reviewer}
 
 
 @router.get("/reviews", response_model=List[SkillSummary])

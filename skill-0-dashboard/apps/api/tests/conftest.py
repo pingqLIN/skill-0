@@ -260,6 +260,12 @@ def mock_service():
     service.get_pending_reviews.return_value = []
     service.approve_skill.return_value = True
     service.reject_skill.return_value = True
+    service.bind_runtime_artifact.return_value = {
+        "skill_id": "sk_001",
+        "canonical_skill_id": "claude__skill__runtime_fixture",
+        "revision_id": "rev_001",
+        "artifact_digest": "sha256:" + "a" * 64,
+    }
 
     # --- scans ---
     service.list_scans.return_value = []

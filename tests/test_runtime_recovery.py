@@ -14,6 +14,7 @@ PREFLIGHT = {
     "skill_schema_validated": True,
     "cross_references_validated": True,
     "skill_identity_validated": True,
+    "governance_validated": True,
     "precondition_rule_ids": [],
 }
 

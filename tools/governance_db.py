@@ -12,6 +12,7 @@ Created: 2026-01-27
 import os
 import sys
 import json
+import re
 import sqlite3
 import uuid
 import hashlib
@@ -69,6 +70,8 @@ class SkillRecord:
     revision_id: Optional[str] = None
     revision_number: Optional[int] = None
     source_checksum: Optional[str] = None
+    canonical_skill_id: Optional[str] = None
+    artifact_digest: Optional[str] = None
 
     @classmethod
     def from_row(cls, row: sqlite3.Row) -> "SkillRecord":
@@ -113,6 +116,14 @@ class SkillRecord:
             revision_id=row["revision_id"] if "revision_id" in keys else None,
             revision_number=row["revision_number"] if "revision_number" in keys else None,
             source_checksum=row["source_checksum"] if "source_checksum" in keys else None,
+            canonical_skill_id=(
+                row["canonical_skill_id"]
+                if "canonical_skill_id" in keys
+                else None
+            ),
+            artifact_digest=(
+                row["artifact_digest"] if "artifact_digest" in keys else None
+            ),
         )
 
 
@@ -146,6 +157,7 @@ class SkillRevisionRecord:
     installed_path: Optional[str]
     installed_at: Optional[str]
     source_checksum: Optional[str]
+    artifact_digest: Optional[str]
     provenance_json: Optional[str]
     is_current: bool
     created_at: str
@@ -180,6 +192,11 @@ class SkillRevisionRecord:
             installed_path=row["installed_path"],
             installed_at=row["installed_at"],
             source_checksum=row["source_checksum"],
+            artifact_digest=(
+                row["artifact_digest"]
+                if "artifact_digest" in set(row.keys())
+                else None
+            ),
             provenance_json=row["provenance_json"],
             is_current=bool(row["is_current"]),
             created_at=row["created_at"],
@@ -190,7 +207,7 @@ class SkillRevisionRecord:
 class GovernanceDB:
     """SQLite database for skill governance"""
 
-    SCHEMA_VERSION = "1.2.0"
+    SCHEMA_VERSION = "1.3.0"
     SKILL_MUTABLE_FIELDS = {
         "name",
         "author_name",
@@ -261,6 +278,7 @@ class GovernanceDB:
         return """
             SELECT
                 s.skill_id AS skill_id,
+                s.canonical_skill_id AS canonical_skill_id,
                 s.name AS name,
                 COALESCE(sr.version, s.version) AS version,
                 COALESCE(sr.status, s.status) AS status,
@@ -298,7 +316,8 @@ class GovernanceDB:
                 s.current_revision_id AS current_revision_id,
                 sr.revision_id AS revision_id,
                 sr.revision_number AS revision_number,
-                sr.source_checksum AS source_checksum
+                sr.source_checksum AS source_checksum,
+                sr.artifact_digest AS artifact_digest
             FROM skills s
             LEFT JOIN skill_revisions sr ON sr.revision_id = s.current_revision_id
         """
@@ -331,6 +350,11 @@ class GovernanceDB:
             "equivalence_passed": row["equivalence_passed"],
             "installed_path": row["installed_path"],
             "installed_at": row["installed_at"],
+            "artifact_digest": (
+                row["artifact_digest"]
+                if "artifact_digest" in set(row.keys())
+                else None
+            ),
         }
         payload["source_checksum"] = self._compute_source_checksum(payload)
         payload["provenance_json"] = json.dumps(
@@ -393,8 +417,9 @@ class GovernanceDB:
                 equivalence_tested_at, equivalence_score, semantic_similarity, structure_similarity,
                 keyword_similarity, equivalence_passed,
                 installed_path, installed_at,
-                source_checksum, provenance_json, is_current, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                source_checksum, artifact_digest, provenance_json,
+                is_current, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 revision_id,
@@ -427,6 +452,7 @@ class GovernanceDB:
                 payload.get("installed_path"),
                 payload.get("installed_at"),
                 checksum,
+                payload.get("artifact_digest"),
                 provenance_json,
                 1 if is_current else 0,
                 payload.get("created_at", now),
@@ -615,6 +641,7 @@ class GovernanceDB:
                 )
             """)
             self._ensure_column(conn, "skills", "current_revision_id TEXT")
+            self._ensure_column(conn, "skills", "canonical_skill_id TEXT")
 
             cursor.execute("""
                 CREATE TABLE IF NOT EXISTS skill_revisions (
@@ -648,6 +675,7 @@ class GovernanceDB:
                     installed_path TEXT,
                     installed_at TEXT,
                     source_checksum TEXT,
+                    artifact_digest TEXT,
                     provenance_json TEXT,
                     is_current INTEGER DEFAULT 1,
                     created_at TEXT NOT NULL,
@@ -655,6 +683,7 @@ class GovernanceDB:
                     FOREIGN KEY (skill_id) REFERENCES skills(skill_id)
                 )
             """)
+            self._ensure_column(conn, "skill_revisions", "artifact_digest TEXT")
 
             # Security scans table
             cursor.execute("""
@@ -775,6 +804,10 @@ class GovernanceDB:
                 "CREATE INDEX IF NOT EXISTS idx_skills_status ON skills(status)"
             )
             cursor.execute(
+                "CREATE UNIQUE INDEX IF NOT EXISTS idx_skills_canonical_skill_id "
+                "ON skills(canonical_skill_id) WHERE canonical_skill_id IS NOT NULL"
+            )
+            cursor.execute(
                 "CREATE INDEX IF NOT EXISTS idx_skills_risk ON skills(risk_level)"
             )
             cursor.execute(
@@ -788,6 +821,10 @@ class GovernanceDB:
             )
             cursor.execute(
                 "CREATE INDEX IF NOT EXISTS idx_revisions_current ON skill_revisions(skill_id, is_current)"
+            )
+            cursor.execute(
+                "CREATE INDEX IF NOT EXISTS idx_revisions_artifact_digest "
+                "ON skill_revisions(artifact_digest)"
             )
             cursor.execute(
                 "CREATE INDEX IF NOT EXISTS idx_audit_skill ON audit_log(skill_id)"
@@ -1118,6 +1155,12 @@ class GovernanceDB:
 
             payload = dict(row)
             payload.update(updates)
+            # A new revision never inherits the prior parsed-artifact binding.
+            # It must be rebound explicitly before Runtime admission.
+            payload["artifact_digest"] = None
+            payload["status"] = "pending"
+            payload["approved_by"] = None
+            payload["approved_at"] = None
             payload["updated_at"] = datetime.now().isoformat()
             revision_id = self._create_revision(conn, skill_id, payload, is_current=True)
             self._log_event(
@@ -1129,6 +1172,133 @@ class GovernanceDB:
                 details={"updates": updates, "revision_id": revision_id},
             )
             return revision_id
+
+    def bind_runtime_artifact(
+        self,
+        skill_id: str,
+        *,
+        canonical_skill_id: str,
+        artifact_digest: str,
+        bound_by: str,
+    ) -> Optional[Dict[str, Any]]:
+        """Bind a pending current revision to one exact canonical parsed JSON."""
+        if not re.fullmatch(
+            r"(?:claude|mcp)__[a-z0-9_]+__[a-z0-9][a-z0-9_.-]*",
+            canonical_skill_id,
+        ):
+            raise ValueError("Invalid canonical skill ID")
+        if not re.fullmatch(r"sha256:[0-9a-f]{64}", artifact_digest):
+            raise ValueError("Invalid canonical artifact digest")
+        actor = bound_by.strip()
+        if not actor:
+            raise ValueError("Runtime artifact binding actor is required")
+
+        with self.connection() as conn:
+            cursor = conn.cursor()
+            row = cursor.execute(
+                """SELECT
+                       s.name,
+                       s.canonical_skill_id,
+                       s.current_revision_id,
+                       sr.status AS revision_status,
+                       sr.artifact_digest
+                   FROM skills s
+                   LEFT JOIN skill_revisions sr
+                     ON sr.revision_id=s.current_revision_id
+                    AND sr.skill_id=s.skill_id
+                   WHERE s.skill_id=?""",
+                (skill_id,),
+            ).fetchone()
+            if row is None or not row["current_revision_id"]:
+                return None
+            if (
+                row["canonical_skill_id"] == canonical_skill_id
+                and row["artifact_digest"] == artifact_digest
+            ):
+                return {
+                    "skill_id": skill_id,
+                    "canonical_skill_id": canonical_skill_id,
+                    "revision_id": row["current_revision_id"],
+                    "artifact_digest": artifact_digest,
+                }
+            if row["revision_status"] != "pending":
+                raise ValueError(
+                    "Runtime artifact binding requires a pending current revision"
+                )
+            if row["canonical_skill_id"] not in {None, canonical_skill_id}:
+                raise ValueError("Governance skill already has another canonical identity")
+            if row["artifact_digest"] not in {None, artifact_digest}:
+                raise ValueError("Current revision already has another artifact digest")
+
+            try:
+                cursor.execute(
+                    "UPDATE skills SET canonical_skill_id=?, updated_at=? WHERE skill_id=?",
+                    (canonical_skill_id, datetime.now().isoformat(), skill_id),
+                )
+            except sqlite3.IntegrityError as exc:
+                raise ValueError("Canonical skill ID is already bound") from exc
+            cursor.execute(
+                """UPDATE skill_revisions
+                   SET artifact_digest=?, updated_at=?
+                   WHERE revision_id=? AND skill_id=? AND status='pending'""",
+                (
+                    artifact_digest,
+                    datetime.now().isoformat(),
+                    row["current_revision_id"],
+                    skill_id,
+                ),
+            )
+            if cursor.rowcount != 1:
+                raise ValueError("Current revision changed during runtime binding")
+            self._log_event(
+                conn,
+                "runtime_bind",
+                skill_id=skill_id,
+                revision_id=row["current_revision_id"],
+                skill_name=row["name"],
+                actor=actor,
+                details={
+                    "canonical_skill_id": canonical_skill_id,
+                    "artifact_digest": artifact_digest,
+                },
+            )
+            return {
+                "skill_id": skill_id,
+                "canonical_skill_id": canonical_skill_id,
+                "revision_id": row["current_revision_id"],
+                "artifact_digest": artifact_digest,
+            }
+
+    def get_runtime_approval(
+        self,
+        *,
+        canonical_skill_id: str,
+        artifact_digest: str,
+    ) -> Optional[Dict[str, Any]]:
+        """Resolve exact current-revision Runtime approval; ignore skill projection status."""
+        with self.connection() as conn:
+            row = conn.execute(
+                """SELECT
+                       s.skill_id AS governance_skill_id,
+                       s.canonical_skill_id,
+                       sr.revision_id,
+                       sr.revision_number,
+                       sr.version,
+                       sr.status,
+                       sr.artifact_digest,
+                       sr.approved_by,
+                       sr.approved_at
+                   FROM skills s
+                   JOIN skill_revisions sr
+                     ON sr.revision_id=s.current_revision_id
+                    AND sr.skill_id=s.skill_id
+                   WHERE s.canonical_skill_id=?
+                     AND sr.artifact_digest=?
+                     AND sr.is_current=1
+                     AND sr.status='approved'""",
+                (canonical_skill_id, artifact_digest),
+            ).fetchone()
+            return dict(row) if row is not None else None
 
     # ============ Security Scans ============
 
@@ -1681,7 +1851,13 @@ class GovernanceDB:
             if row["status"] == "blocked":
                 return False  # Cannot approve blocked skills
 
-            current_revision = revision_id or row["current_revision_id"]
+            current_revision = row["current_revision_id"]
+            if not current_revision:
+                return False
+            if revision_id is not None and revision_id != current_revision:
+                return False
+            if not row["canonical_skill_id"] or not row["artifact_digest"]:
+                return False
 
             cursor.execute(
                 """

@@ -157,6 +157,53 @@
       "minimum": 0,
       "maximum": 1
     },
+    "governance_ref": {
+      "type": "object",
+      "required": [
+        "policy",
+        "canonical_skill_id",
+        "governance_skill_id",
+        "revision_id",
+        "revision_number",
+        "artifact_digest",
+        "approved_by",
+        "approved_at"
+      ],
+      "properties": {
+        "policy": {
+          "const": "governance.current_revision.approved"
+        },
+        "canonical_skill_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "governance_skill_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "artifact_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "approved_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approved_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
     "known_failure_patterns": {
       "type": "array",
       "items": {

@@ -4,7 +4,7 @@ from .stats import StatsOverview, RiskDistribution, StatusDistribution, Findings
 from .skill import SkillSummary, SkillDetail, SkillListResponse
 from .scan import SecurityFinding, ScanSummary, ScanDetail
 from .audit import AuditEvent, AuditListResponse
-from .review import ReviewAction
+from .review import ReviewAction, RuntimeBindingAction
 
 __all__ = [
     "StatsOverview",
@@ -20,4 +20,5 @@ __all__ = [
     "AuditEvent",
     "AuditListResponse",
     "ReviewAction",
+    "RuntimeBindingAction",
 ]

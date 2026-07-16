@@ -17,6 +17,23 @@ from runtime.rules import ContextRuleEvaluator
 TEST_BINDING_KEY = "skill0-test-runtime-binding-key-0123456789"
 
 
+class ApprovedGovernanceGate:
+    def evaluate(self, skill_document, contract):
+        return {
+            "policy": "governance.current_revision.approved",
+            "canonical_skill_id": skill_document["meta"]["skill_id"],
+            "governance_skill_id": "governance-runtime-hitl-test",
+            "revision_id": "rev-runtime-hitl-test",
+            "revision_number": 1,
+            "artifact_digest": "sha256:" + "b" * 64,
+            "approved_by": "reviewer",
+            "approved_at": "2026-07-16T00:00:00+00:00",
+        }
+
+
+GOVERNANCE_GATE = ApprovedGovernanceGate()
+
+
 class RecordingAdapter:
     supports_dry_run = True
 
@@ -104,6 +121,7 @@ def run_until_approval(ledger, adapter, contract, *, parameters):
         adapter,
         ContextRuleEvaluator(),
         binding_key=TEST_BINDING_KEY,
+        governance_gate=GOVERNANCE_GATE,
     ).run(
         contract,
         skill_document_for(contract),
@@ -115,6 +133,7 @@ def run_until_approval(ledger, adapter, contract, *, parameters):
 def execution_basis(tag: str) -> dict[str, object]:
     return {
         "skill_id": "claude__skill__runtime_hitl_fixture",
+        "governance_revision_id": f"revision-{tag}",
         "skill_source_digest": f"skill-{tag}",
         "contract_digest": f"contract-{tag}",
         "input_digest": f"input-{tag}",
@@ -165,6 +184,7 @@ def test_orchestrator_ignores_caller_supplied_approval_hints(tmp_path, read_json
             adapter,
             ContextRuleEvaluator(),
             binding_key=TEST_BINDING_KEY,
+            governance_gate=GOVERNANCE_GATE,
         ).run(
             contract,
             skill_document_for(contract),
@@ -327,6 +347,7 @@ def test_same_run_resume_skips_action_that_succeeded_before_approval(
             adapter,
             ContextRuleEvaluator(),
             binding_key=TEST_BINDING_KEY,
+            governance_gate=GOVERNANCE_GATE,
         )
         waiting = orchestrator.run(
             contract,
@@ -582,6 +603,7 @@ def test_manual_recovery_confirmation_closes_only_its_action(
             adapter,
             ContextRuleEvaluator(),
             binding_key=TEST_BINDING_KEY,
+            governance_gate=GOVERNANCE_GATE,
         )
         waiting = orchestrator.run(
             contract, skill, parameters=parameters, context=context

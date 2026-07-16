@@ -10,6 +10,39 @@ def test_list_pending_reviews(client, auth_header, mock_service):
     assert len(data) == 0  # mock 預設回傳空清單
 
 
+def test_bind_runtime_artifact_uses_authenticated_reviewer(
+    client, auth_header, mock_service
+):
+    response = client.post(
+        "/api/reviews/sk_001/runtime-bind",
+        headers=auth_header,
+        json={"canonical_skill_id": "claude__skill__runtime_fixture"},
+    )
+    assert response.status_code == 200
+    assert response.json()["status"] == "bound"
+    assert response.json()["reviewer"] == "testuser"
+    mock_service.bind_runtime_artifact.assert_called_once_with(
+        "sk_001",
+        canonical_skill_id="claude__skill__runtime_fixture",
+        reviewer="testuser",
+    )
+
+
+def test_bind_runtime_artifact_rejects_client_actor(
+    client, auth_header, mock_service
+):
+    response = client.post(
+        "/api/reviews/sk_001/runtime-bind",
+        headers=auth_header,
+        json={
+            "canonical_skill_id": "claude__skill__runtime_fixture",
+            "reviewer": "forged",
+        },
+    )
+    assert response.status_code == 422
+    mock_service.bind_runtime_artifact.assert_not_called()
+
+
 def test_approve_skill_success(client, auth_header, mock_service):
     """POST /api/reviews/{skill_id}/approve 成功時回傳 200 與 approved 狀態。"""
     mock_service.approve_skill.return_value = True

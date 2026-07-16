@@ -23,6 +23,11 @@ const SkillDetail = lazy(() =>
 const Security = lazy(() =>
   import('./pages/Security').then((module) => ({ default: module.Security }))
 );
+const RuntimeGovernance = lazy(() =>
+  import('./pages/RuntimeGovernance').then((module) => ({
+    default: module.RuntimeGovernance,
+  }))
+);
 
 const queryClient = new QueryClient();
 
@@ -56,6 +61,7 @@ function ProtectedRoutes() {
         <Route path="/skills" element={<SkillsList />} />
         <Route path="/skills/:skillId" element={<SkillDetail />} />
         <Route path="/review" element={<ReviewQueue />} />
+        <Route path="/runtime" element={<RuntimeGovernance />} />
         <Route path="/security" element={<Security />} />
         <Route path="/audit" element={<AuditLog />} />
         <Route path="*" element={<Navigate to="/" replace />} />

@@ -28,8 +28,10 @@ def _default_tools_dir() -> Path:
 
 TOOLS_DIR = Path(os.getenv("SKILL0_TOOLS_PATH") or _default_tools_dir())
 sys.path.insert(0, str(TOOLS_DIR))
+sys.path.insert(0, str(TOOLS_DIR.parent))
 
 from governance_db import GovernanceDB, SkillRecord
+from runtime.digest import canonical_digest
 
 
 class GovernanceService:
@@ -808,6 +810,7 @@ class GovernanceService:
 
         return {
             "skill_id": skill.skill_id,
+            "canonical_skill_id": skill.canonical_skill_id,
             "current_revision_id": skill.current_revision_id,
             "revision_id": skill.revision_id,
             "revision_number": skill.revision_number,
@@ -832,6 +835,7 @@ class GovernanceService:
             "source_url": skill.source_url or "",
             "source_commit": skill.source_commit,
             "source_checksum": skill.source_checksum,
+            "artifact_digest": skill.artifact_digest,
             "original_format": skill.original_format,
             "fetched_at": skill.fetched_at,
             "converted_at": skill.converted_at,
@@ -920,6 +924,7 @@ class GovernanceService:
                     "source_commit": r.source_commit,
                     "source_path": r.source_path or "",
                     "source_checksum": r.source_checksum,
+                    "artifact_digest": r.artifact_digest,
                     "risk_level": r.risk_level or "unknown",
                     "risk_score": r.risk_score,
                     "fidelity_score": r.equivalence_score,
@@ -967,6 +972,7 @@ class GovernanceService:
         """Convert a SkillRecord to a summary dict"""
         return {
             "skill_id": skill.skill_id,
+            "canonical_skill_id": skill.canonical_skill_id,
             "current_revision_id": skill.current_revision_id,
             "revision_id": skill.revision_id,
             "revision_number": skill.revision_number,
@@ -980,6 +986,7 @@ class GovernanceService:
             "license_spdx": skill.license_spdx,
             "source_url": skill.source_url or "",
             "source_checksum": skill.source_checksum,
+            "artifact_digest": skill.artifact_digest,
             "source_type": skill.source_type or "local",
             "version": skill.version or "1.0.0",
             "created_at": skill.created_at,
@@ -987,6 +994,35 @@ class GovernanceService:
         }
 
     # ============ Reviews ============
+
+    def bind_runtime_artifact(
+        self,
+        skill_id: str,
+        *,
+        canonical_skill_id: str,
+        reviewer: str,
+    ) -> Optional[Dict[str, Any]]:
+        parsed_dir = Path(
+            os.getenv("SKILL0_PARSED_DIR", str(TOOLS_DIR.parent / "parsed"))
+        )
+        matches: list[dict[str, Any]] = []
+        for path in sorted(parsed_dir.glob("*.json")):
+            try:
+                document = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                continue
+            if document.get("meta", {}).get("skill_id") == canonical_skill_id:
+                matches.append(document)
+        if not matches:
+            return None
+        if len(matches) > 1:
+            raise ValueError("Canonical parsed skill identity is ambiguous")
+        return self.db.bind_runtime_artifact(
+            skill_id,
+            canonical_skill_id=canonical_skill_id,
+            artifact_digest=canonical_digest(matches[0]),
+            bound_by=reviewer,
+        )
 
     def get_pending_reviews(self) -> List[Dict[str, Any]]:
         """Get all skills pending review"""

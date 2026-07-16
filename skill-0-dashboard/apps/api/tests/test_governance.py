@@ -1,5 +1,6 @@
 """Tests for the Governance Dashboard API — service and router"""
 
+import json
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -7,6 +8,7 @@ from fastapi.testclient import TestClient
 
 from apps.api.main import app
 from apps.api.dependencies import get_governance_service
+from runtime.digest import canonical_digest
 
 
 # ---------------------------------------------------------------------------
@@ -230,6 +232,39 @@ class TestTestAction:
 # ---------------------------------------------------------------------------
 # GovernanceService unit tests
 # ---------------------------------------------------------------------------
+
+
+def test_bind_runtime_artifact_hashes_exact_unique_canonical_document(
+    tmp_path, monkeypatch
+):
+    from apps.api.services.governance import GovernanceService
+
+    document = {
+        "meta": {"skill_id": "claude__skill__runtime_fixture"},
+        "decomposition": {"actions": [], "rules": [], "directives": []},
+    }
+    parsed_dir = tmp_path / "parsed"
+    parsed_dir.mkdir()
+    (parsed_dir / "runtime.json").write_text(
+        json.dumps(document), encoding="utf-8"
+    )
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    service = object.__new__(GovernanceService)
+    service.db = MagicMock()
+    service.db.bind_runtime_artifact.return_value = {"revision_id": "rev-1"}
+
+    result = service.bind_runtime_artifact(
+        "governance-skill-1",
+        canonical_skill_id="claude__skill__runtime_fixture",
+        reviewer="reviewer",
+    )
+    assert result == {"revision_id": "rev-1"}
+    service.db.bind_runtime_artifact.assert_called_once_with(
+        "governance-skill-1",
+        canonical_skill_id="claude__skill__runtime_fixture",
+        artifact_digest=canonical_digest(document),
+        bound_by="reviewer",
+    )
 
 
 class TestGovernanceServiceReadiness:

@@ -73,6 +73,10 @@ describe('App', () => {
     );
 
     await screen.findByText('Dashboard');
+    expect(screen.getByRole('link', { name: 'Runtime HITL' })).toHaveAttribute(
+      'href',
+      '/runtime'
+    );
     await waitFor(() => {
       expect(screen.queryByLabelText('Loading page')).not.toBeInTheDocument();
       expect(screen.queryByText('Loading chart...')).not.toBeInTheDocument();

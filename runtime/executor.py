@@ -110,6 +110,7 @@ class RuntimeExecutor:
             "skill_schema_validated",
             "cross_references_validated",
             "skill_identity_validated",
+            "governance_validated",
         }
         if preflight is None or not all(preflight.get(name) is True for name in required_attestations):
             reason = "runtime preflight was not truthfully attested"

@@ -10,11 +10,19 @@ from .ledger import RuntimeLedger
 from .models import ActionResult, RunResult, RunStatus, RuntimeEvent, RuntimeEventType
 from .orchestrator import RuntimeOrchestrator
 from .recovery import RecoveryCoordinator
+from .governance import (
+    RuntimeGovernanceError,
+    RuntimeGovernanceGate,
+    SQLiteRuntimeGovernanceGate,
+)
 from .rules import ContextRuleEvaluator, RuleEvaluationError, UnavailableRuleEvaluator
 
 __all__ = [
     "ActionResult",
     "RecoveryCoordinator",
+    "RuntimeGovernanceError",
+    "RuntimeGovernanceGate",
+    "SQLiteRuntimeGovernanceGate",
     "RunResult",
     "RunStatus",
     "RuntimeEvent",

@@ -94,6 +94,13 @@ def test_sql_migration_is_idempotent_and_enforces_append_only(tmp_path):
     try:
         connection.executescript(migration)
         connection.executescript(migration)
+        basis_columns = {
+            row[1]
+            for row in connection.execute(
+                "PRAGMA table_info(runtime_execution_bases)"
+            ).fetchall()
+        }
+        assert "governance_revision_id" in basis_columns
         connection.execute(
             "INSERT INTO runtime_runs(run_id, skill_name, skill_version, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
             ("run-1", "demo", "1", "created", "2026-01-01", "2026-01-01"),

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import hashlib
 import hmac
-import json
 from pathlib import Path
 from typing import Any
 
 from .executor import ActionAdapter, RuntimeExecutor
+from .digest import canonical_digest, keyed_digest
+from .governance import RuntimeGovernanceGate
 from .ledger import RuntimeLedger
 from .models import RunResult
 from .policy import PolicyEngine
@@ -23,26 +23,6 @@ def _rule_bindings(contract: dict[str, Any]) -> dict[str, str]:
         binding["rule_id"]: binding["evaluator"]
         for binding in contract.get("governance", {}).get("rule_policy_bindings", [])
     }
-
-
-def canonical_digest(value: object) -> str:
-    encoded = json.dumps(
-        value,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
-    return f"sha256:{hashlib.sha256(encoded).hexdigest()}"
-
-
-def keyed_digest(value: object, *, key: str) -> str:
-    encoded = json.dumps(
-        value,
-        ensure_ascii=False,
-        sort_keys=True,
-        separators=(",", ":"),
-    ).encode("utf-8")
-    return f"hmac-sha256:{hmac.new(key.encode('utf-8'), encoded, hashlib.sha256).hexdigest()}"
 
 
 def _validate_skill_identity(skill_document: dict[str, Any], contract: dict[str, Any]) -> None:
@@ -71,6 +51,7 @@ class RuntimeOrchestrator:
         rule_evaluator: RuleEvaluator,
         *,
         binding_key: str,
+        governance_gate: RuntimeGovernanceGate,
         policy: PolicyEngine | None = None,
         schema_path: str | Path = DEFAULT_RUNTIME_SCHEMA_PATH,
         skill_schema_path: str | Path = DEFAULT_SKILL_SCHEMA_PATH,
@@ -81,6 +62,7 @@ class RuntimeOrchestrator:
         if len(binding_key) < 32:
             raise ValueError("runtime binding key must contain at least 32 characters")
         self.binding_key = binding_key
+        self.governance_gate = governance_gate
         self.policy = policy
         self.schema_path = Path(schema_path)
         self.skill_schema_path = Path(skill_schema_path)
@@ -100,6 +82,9 @@ class RuntimeOrchestrator:
         validate_schema(skill_document, load_json(self.skill_schema_path))
         validate_cross_references(skill_document, contract)
         _validate_skill_identity(skill_document, contract)
+        governance_attestation = self.governance_gate.evaluate(
+            skill_document, contract
+        )
 
         context = dict(context or {})
         bindings = _rule_bindings(contract)
@@ -145,10 +130,15 @@ class RuntimeOrchestrator:
             "skill_schema_validated": True,
             "cross_references_validated": True,
             "skill_identity_validated": True,
+            "governance_validated": True,
+            "governance_attestation": governance_attestation,
             "precondition_rule_ids": sorted(set(precondition_ids)),
         }
         basis = {
             "skill_id": str(skill_document["meta"]["skill_id"]),
+            "governance_revision_id": str(
+                governance_attestation["revision_id"]
+            ),
             "skill_source_digest": canonical_digest(skill_document),
             "contract_digest": canonical_digest(contract),
             "input_digest": keyed_digest(parameters, key=self.binding_key),

@@ -6,6 +6,8 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from tools.governance_db import GovernanceDB
+from runtime.digest import canonical_digest
+from runtime.governance import RuntimeGovernanceError, SQLiteRuntimeGovernanceGate
 
 
 def test_create_skill_creates_current_revision(tmp_path):
@@ -66,6 +68,185 @@ def test_register_revision_switches_current_revision(tmp_path):
     assert revisions[1].is_current is False
 
 
+def _runtime_skill_document() -> dict:
+    return {
+        "meta": {
+            "skill_id": "claude__skill__runtime_governed",
+            "name": "runtime-governed",
+            "version": "1.2.0",
+        },
+        "original_definition": {"source": "converted-skills/runtime/SKILL.md"},
+        "decomposition": {"actions": [], "rules": [], "directives": []},
+    }
+
+
+def test_runtime_approval_requires_exact_current_approved_artifact(tmp_path):
+    path = tmp_path / "governance.db"
+    db = GovernanceDB(db_path=path)
+    document = _runtime_skill_document()
+    digest = canonical_digest(document)
+    skill_id = db.create_skill(
+        name="runtime-governed",
+        source_type="local",
+        source_path="converted-skills/runtime/SKILL.md",
+        version="1.2.0",
+    )
+    assert not db.approve_skill(
+        skill_id,
+        approved_by="reviewer",
+        reason="artifact binding is required",
+    )
+    binding = db.bind_runtime_artifact(
+        skill_id,
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=digest,
+        bound_by="binder",
+    )
+    assert binding is not None
+    assert db.get_runtime_approval(
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=digest,
+    ) is None
+
+    assert db.approve_skill(skill_id, approved_by="reviewer", reason="reviewed")
+    approval = db.get_runtime_approval(
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=digest,
+    )
+    assert approval is not None
+    assert approval["revision_id"] == binding["revision_id"]
+    assert approval["approved_by"] == "reviewer"
+
+    attestation = SQLiteRuntimeGovernanceGate(path).evaluate(
+        document,
+        {"skill_ref": {"name": "runtime-governed", "version": "1.2.0"}},
+    )
+    assert attestation["governance_skill_id"] == skill_id
+    assert attestation["revision_id"] == binding["revision_id"]
+    assert attestation["artifact_digest"] == digest
+
+
+def test_runtime_approval_ignores_mutable_skill_status_projection(tmp_path):
+    path = tmp_path / "governance.db"
+    db = GovernanceDB(db_path=path)
+    document = _runtime_skill_document()
+    digest = canonical_digest(document)
+    skill_id = db.create_skill(name="runtime-status", version="1.2.0")
+    db.bind_runtime_artifact(
+        skill_id,
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=digest,
+        bound_by="binder",
+    )
+    db.approve_skill(skill_id, approved_by="reviewer", reason="reviewed")
+    with db.connection() as connection:
+        connection.execute(
+            "UPDATE skills SET status='rejected' WHERE skill_id=?", (skill_id,)
+        )
+    assert db.get_runtime_approval(
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=digest,
+    ) is not None
+    assert SQLiteRuntimeGovernanceGate(path).evaluate(
+        document,
+        {"skill_ref": {"name": "runtime-governed", "version": "1.2.0"}},
+    )["revision_id"]
+
+
+def test_runtime_approval_rejects_drift_and_new_revision_requires_rebinding(tmp_path):
+    path = tmp_path / "governance.db"
+    db = GovernanceDB(db_path=path)
+    document = _runtime_skill_document()
+    digest = canonical_digest(document)
+    skill_id = db.create_skill(name="runtime-drift", version="1.2.0")
+    db.bind_runtime_artifact(
+        skill_id,
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=digest,
+        bound_by="binder",
+    )
+    db.approve_skill(skill_id, approved_by="reviewer", reason="reviewed")
+
+    changed = dict(document)
+    changed["meta"] = {**document["meta"], "description": "changed"}
+    with pytest.raises(RuntimeGovernanceError, match="ARTIFACT_DIGEST_MISMATCH"):
+        SQLiteRuntimeGovernanceGate(path).evaluate(
+            changed,
+            {"skill_ref": {"name": "runtime-governed", "version": "1.2.0"}},
+        )
+
+    new_revision = db.register_revision(skill_id, version="2.0.0")
+    assert new_revision is not None
+    current = db.get_current_revision(skill_id)
+    assert current is not None
+    assert current.status == "pending"
+    assert current.artifact_digest is None
+    assert db.get_runtime_approval(
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=digest,
+    ) is None
+
+
+def test_runtime_binding_rejects_identity_reuse_or_approved_revision_mutation(tmp_path):
+    db = GovernanceDB(db_path=tmp_path / "governance.db")
+    document = _runtime_skill_document()
+    digest = canonical_digest(document)
+    first = db.create_skill(name="runtime-one", version="1.2.0")
+    second = db.create_skill(name="runtime-two", version="1.2.0")
+    db.bind_runtime_artifact(
+        first,
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=digest,
+        bound_by="binder",
+    )
+    with pytest.raises(ValueError, match="already bound"):
+        db.bind_runtime_artifact(
+            second,
+            canonical_skill_id=document["meta"]["skill_id"],
+            artifact_digest=digest,
+            bound_by="binder",
+        )
+    db.approve_skill(first, approved_by="reviewer", reason="reviewed")
+    with pytest.raises(ValueError, match="pending current revision"):
+        db.bind_runtime_artifact(
+            first,
+            canonical_skill_id=document["meta"]["skill_id"],
+            artifact_digest="sha256:" + "f" * 64,
+            bound_by="binder",
+        )
+
+
+def test_approval_rejects_non_current_revision_id(tmp_path):
+    db = GovernanceDB(db_path=tmp_path / "governance.db")
+    skill_id = db.create_skill(name="runtime-current-only", version="1.0.0")
+    previous = db.get_current_revision(skill_id)
+    assert previous is not None
+
+    db.register_revision(skill_id, version="1.2.0")
+    current = db.get_current_revision(skill_id)
+    assert current is not None
+    document = _runtime_skill_document()
+    db.bind_runtime_artifact(
+        skill_id,
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=canonical_digest(document),
+        bound_by="binder",
+    )
+
+    assert not db.approve_skill(
+        skill_id,
+        approved_by="reviewer",
+        reason="stale revision",
+        revision_id=previous.revision_id,
+    )
+    assert db.approve_skill(
+        skill_id,
+        approved_by="reviewer",
+        reason="current revision",
+        revision_id=current.revision_id,
+    )
+
+
 def test_scan_and_approval_are_bound_to_current_revision(tmp_path):
     db = GovernanceDB(db_path=tmp_path / "governance.db")
     skill_id = db.create_skill(
@@ -95,7 +276,14 @@ def test_scan_and_approval_are_bound_to_current_revision(tmp_path):
             "blocked": False,
         },
     )
-    db.approve_skill(skill_id, approved_by="reviewer", reason="ok")
+    document = _runtime_skill_document()
+    db.bind_runtime_artifact(
+        skill_id,
+        canonical_skill_id=document["meta"]["skill_id"],
+        artifact_digest=canonical_digest(document),
+        bound_by="binder",
+    )
+    assert db.approve_skill(skill_id, approved_by="reviewer", reason="ok")
 
     scan = db.get_scan_history(skill_id, limit=1)[0]
     audit = db.get_audit_log(skill_id=skill_id, limit=10)

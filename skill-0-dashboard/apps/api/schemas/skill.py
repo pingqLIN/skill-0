@@ -33,6 +33,7 @@ class RevisionSummary(BaseModel):
     source_commit: Optional[str] = None
     source_path: str = ""
     source_checksum: Optional[str] = None
+    artifact_digest: Optional[str] = None
     risk_level: str = "unknown"
     risk_score: int = 0
     equivalence_score: Optional[float] = None
@@ -47,6 +48,7 @@ class SkillSummary(BaseModel):
     """Summary view of a skill for list display"""
 
     skill_id: str
+    canonical_skill_id: Optional[str] = None
     current_revision_id: Optional[str] = None
     revision_id: Optional[str] = None
     revision_number: Optional[int] = None
@@ -60,6 +62,7 @@ class SkillSummary(BaseModel):
     license_spdx: str
     source_url: str = ""
     source_checksum: Optional[str] = None
+    artifact_digest: Optional[str] = None
     source_type: Optional[str] = None
     version: str = "1.0.0"
     created_at: Optional[datetime] = None

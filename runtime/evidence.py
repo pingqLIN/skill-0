@@ -181,4 +181,29 @@ def build_run_evidence(
     summary["source_event_watermark"] = ordered[-1].sequence
     summary["last_event_type"] = ordered[-1].event_type.value if ordered else None
     summary["generated_at"] = ordered[-1].occurred_at
+    preflight = next(
+        (
+            event
+            for event in ordered
+            if event.event_type == RuntimeEventType.PREFLIGHT_PASSED
+        ),
+        None,
+    )
+    if preflight is not None:
+        governance = preflight.payload.get("governance_attestation")
+        if isinstance(governance, dict):
+            summary["governance_ref"] = {
+                key: governance[key]
+                for key in (
+                    "policy",
+                    "canonical_skill_id",
+                    "governance_skill_id",
+                    "revision_id",
+                    "revision_number",
+                    "artifact_digest",
+                    "approved_by",
+                    "approved_at",
+                )
+                if key in governance
+            }
     return summary
