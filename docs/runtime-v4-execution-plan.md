@@ -15,6 +15,7 @@ Runtime v4 turns the existing ARD/runtime contract into a truthful, dry-run-only
 | C | Durable action-scoped HITL, same-run resume, recovery/reconciliation | Concurrency, crash-gap, immutable decision tests | `ae2ec39` |
 | D | Exact current-revision governance admission and Runtime dashboard | 356 Python/API tests, 34 web tests, production build, independent reviewer | `5c8e7ee` |
 | E | Production storage, deadlines, doctor, backup/restore/restart rehearsal and release gate | 365 Python/API tests, 34 web tests, production build, full three-store Compose rehearsal, independent reviewer | `1021d8e`, `c95f2b3` |
+| F | Single-adapter certification contract and fail-closed production admission | Seven isolated probes plus focused Runtime regression; human production approval pending | `8e24d61` |
 
 ## Batch E work packages
 
@@ -30,7 +31,9 @@ Runtime v4 turns the existing ARD/runtime contract into a truthful, dry-run-only
 
 Runtime v4 passed operator acceptance and the controlled internal dry-run pilot on 2026-07-17. The full production image build and isolated Compose rehearsal verified service health, the production doctor, all three SQLite stores, online backup/restore, and Runtime persistence across an API restart. The final regression passed 365 Python/API tests, 34 web tests, the production web build, and all 196 canonical schema validations.
 
-This result is not authorization for real external writes. A later adapter-certification batch must separately define credentials, least privilege, idempotency semantics, reconciliation probes, compensation evidence, rate limits, and per-adapter production approval.
+This result is not authorization for real external writes. Batch F now defines those controls for the single `skill0.local-pdf-filesystem` candidate: credential-free least privilege, end-to-end idempotency-key delivery, reconciliation, recoverable compensation evidence, rate limiting, and signed per-adapter/per-environment production admission. The technical certification passes, but no human production approval has been issued.
+
+Batch F verification passes 373 Python/API tests, 34 web tests, the production web build, all 196 canonical schema validations, and seven isolated adapter probes.
 
 ## Internal pilot outcome and next step
 
@@ -42,4 +45,4 @@ The controlled pilot used the canonical PDF skill's `a_006` file-creation action
 4. A simulated timeout after `action_started` produced `action_outcome_unknown` and `reconciliation_required` without automatic retry.
 5. Evidence and operator observations were archived locally in an ignored audit artifact. No real adapter, external credential, or external write was enabled.
 
-The next engineering proposal should be adapter certification, not broader autonomous execution.
+The certification contract and isolated candidate are now implemented. See [adapter-certification.md](adapter-certification.md). The next gate is an environment-specific human approval with OS identity and ACL evidence, followed by a separately approved loader/rehearsal batch. Until then, `/api/runs` remains test-adapter-only and `dry_run=true`.
