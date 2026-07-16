@@ -1,5 +1,7 @@
 # Operations Runbook
 
+For Runtime v4, use the three-store and fail-closed procedures in [runtime-production-operations.md](runtime-production-operations.md). The older two-store examples below are retained for the search/governance baseline and must not be used alone as the Runtime v4 release gate.
+
 ## Monitoring
 
 ### Prometheus Metrics
@@ -105,18 +107,19 @@ Rotate in place for an env file (with automatic backup):
 ./scripts/rotate_jwt_secret.sh --env-file .env
 ```
 
-### WAL Mode
+### Journal Mode
 
-Both `skills.db` and `governance.db` use WAL (Write-Ahead Logging) mode for improved concurrent read performance. This is configured automatically on connection.
+Runtime v4 production explicitly requires WAL for `runtime.db`. The search and governance stores retain their existing journal mode unless an operator has separately validated and configured WAL for those stores.
 
-Verify WAL mode:
+Inspect journal modes:
 
 ```bash
 sqlite3 skills.db "PRAGMA journal_mode;"
-# Expected: wal
 
 sqlite3 governance/db/governance.db "PRAGMA journal_mode;"
-# Expected: wal
+
+sqlite3 "${SKILL0_RUNTIME_DB_PATH:?Set SKILL0_RUNTIME_DB_PATH}" "PRAGMA journal_mode;"
+# Runtime production expected: wal
 ```
 
 Or run the combined check script:
@@ -124,6 +127,8 @@ Or run the combined check script:
 ```bash
 ./scripts/check_db_health.sh
 ```
+
+Set `SKILLS_EXPECTED_JOURNAL_MODE` or `GOVERNANCE_EXPECTED_JOURNAL_MODE` when those stores have an explicit local journal contract. Runtime defaults to `RUNTIME_EXPECTED_JOURNAL_MODE=wal`.
 
 ### Automated Backups
 

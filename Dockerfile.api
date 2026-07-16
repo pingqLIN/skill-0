@@ -3,7 +3,7 @@ FROM python:3.12.13-slim@sha256:0bbd3d5f3abb2024c1b92ce69e8bdfefa17c248999827c34
 WORKDIR /app
 
 # Create persistent directories before seeding the image.
-RUN mkdir -p /app/.cache /app/data /app/bootstrap
+RUN mkdir -p /app/.cache /app/data /app/runtime-data /app/governance/db /app/bootstrap /app/scripts
 
 # Install dependencies
 COPY requirements-api.txt .
@@ -20,6 +20,7 @@ COPY parsed/ ./parsed/
 COPY schema/ ./schema/
 COPY skills.db ./bootstrap/skills.db
 COPY scripts/docker-entrypoint-api.sh /usr/local/bin/docker-entrypoint-api.sh
+COPY scripts/runtime_doctor.py ./scripts/runtime_doctor.py
 
 # Non-root user with correct permissions
 RUN adduser --disabled-password --gecos "" --no-create-home appuser && \
@@ -35,7 +36,8 @@ USER appuser
 EXPOSE 8000
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+    CMD if [ "${SKILL0_ENV:-development}" = "production" ]; then python /app/scripts/runtime_doctor.py --production >/dev/null; fi && \
+        python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
 
 ENTRYPOINT ["docker-entrypoint-api.sh"]
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]

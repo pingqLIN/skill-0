@@ -101,6 +101,13 @@ def test_sql_migration_is_idempotent_and_enforces_append_only(tmp_path):
             ).fetchall()
         }
         assert "governance_revision_id" in basis_columns
+        hitl_columns = {
+            row[1]
+            for row in connection.execute(
+                "PRAGMA table_info(runtime_hitl_items)"
+            ).fetchall()
+        }
+        assert "expires_at" in hitl_columns
         connection.execute(
             "INSERT INTO runtime_runs(run_id, skill_name, skill_version, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
             ("run-1", "demo", "1", "created", "2026-01-01", "2026-01-01"),
@@ -128,6 +135,54 @@ def test_read_only_ledger_does_not_create_or_mutate_database(tmp_path):
     with RuntimeLedger(database, read_only=True) as reader:
         assert reader.get_run(run_id)["run_id"] == run_id
     assert database.read_bytes() == before
+
+
+def test_legacy_hitl_item_migrates_to_fail_closed_expired_state(tmp_path):
+    database = tmp_path / "legacy-runtime.db"
+    with sqlite3.connect(database) as connection:
+        connection.executescript(
+            """
+            CREATE TABLE runtime_runs (
+                run_id TEXT PRIMARY KEY,
+                skill_name TEXT NOT NULL,
+                skill_version TEXT NOT NULL,
+                status TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
+            CREATE TABLE runtime_hitl_items (
+                item_id TEXT PRIMARY KEY,
+                run_id TEXT NOT NULL,
+                skill_id TEXT NOT NULL,
+                action_id TEXT NOT NULL,
+                kind TEXT NOT NULL,
+                status TEXT NOT NULL,
+                basis_digest TEXT NOT NULL,
+                request_summary_json TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
+            INSERT INTO runtime_runs VALUES (
+                'run-legacy', 'demo', '1', 'awaiting_approval',
+                '2026-01-01T00:00:00+00:00', '2026-01-01T00:00:00+00:00'
+            );
+            INSERT INTO runtime_hitl_items VALUES (
+                'item-legacy', 'run-legacy', 'claude__skill__legacy', 'a_001',
+                'action_approval', 'pending', 'basis', '{}',
+                '2026-01-01T00:00:00+00:00', '2026-01-01T00:00:00+00:00'
+            );
+            """
+        )
+
+    with RuntimeLedger(database) as ledger:
+        item = ledger.get_hitl_item("item-legacy")
+        assert item["expires_at"] is None
+        assert item["status"] == "expired"
+        with pytest.raises(sqlite3.DatabaseError, match="projection update"):
+            ledger.connection.execute(
+                "UPDATE runtime_hitl_items SET expires_at=? WHERE item_id=?",
+                ("2099-01-01T00:00:00+00:00", "item-legacy"),
+            )
 
 
 def test_ledger_rejects_event_identity_drift_and_duplicate_terminal(tmp_path):

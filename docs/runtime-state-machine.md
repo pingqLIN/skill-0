@@ -32,3 +32,4 @@ Every transition is represented by an append-only event. `runtime_runs.status` i
 - A changed canonical skill, contract, input, preflight basis, or action order cannot reuse an approval.
 - Manual recovery creates a confirmation item only when the recovery coordinator marks that boundary as confirmable. Confirmation closes only that action; the coordinator must process every remaining candidate before emitting `RUN_COMPENSATED`. Unknown external outcomes remain in `RECONCILIATION_REQUIRED` and cannot use approval as reconciliation.
 - HITL decisions and execution bases are append-only/immutable. The queue item status is a mutable query projection.
+- Each queue item has an immutable `expires_at`. Pending decisions and approved-but-unconsumed action approvals become `expired` at that deadline and cannot be decided or resumed. Legacy items without a deadline fail closed as expired.

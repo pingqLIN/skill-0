@@ -26,9 +26,12 @@ from runtime.validators import RuntimeContractValidationError, load_json, valida
 RUNTIME_DB_PATH_ENV = "SKILL0_RUNTIME_DB_PATH"
 RUNTIME_BINDING_KEY_ENV = "SKILL0_RUNTIME_BINDING_KEY"
 RUNTIME_DECISION_ACTORS_ENV = "SKILL0_RUNTIME_DECISION_ACTORS"
+RUNTIME_HITL_TTL_SECONDS_ENV = "SKILL0_RUNTIME_HITL_TTL_SECONDS"
+RUNTIME_JOURNAL_MODE_ENV = "SKILL0_RUNTIME_JOURNAL_MODE"
 GOVERNANCE_DB_PATH_ENV = "SKILL0_GOVERNANCE_DB_PATH"
 DEFAULT_RUNTIME_DB_PATH = Path("governance/db/runtime.db")
 DEFAULT_GOVERNANCE_DB_PATH = Path("governance/db/governance.db")
+DEFAULT_RUNTIME_HITL_TTL_SECONDS = 86_400
 EVIDENCE_SCHEMA_PATH = Path(__file__).resolve().parents[2] / "schema" / "evidence-summary.schema.json"
 RUN_EVIDENCE_SCHEMA_PATH = (
     Path(__file__).resolve().parents[2] / "schema" / "runtime-run-evidence.schema.json"
@@ -158,6 +161,52 @@ def runtime_binding_key_configuration_issue(
     return None
 
 
+def runtime_hitl_ttl_configuration_issue(value: str | None) -> str | None:
+    candidate = value or str(DEFAULT_RUNTIME_HITL_TTL_SECONDS)
+    try:
+        ttl_seconds = int(candidate)
+    except ValueError:
+        return "SKILL0_RUNTIME_HITL_TTL_SECONDS must be an integer"
+    if not 300 <= ttl_seconds <= 604_800:
+        return "SKILL0_RUNTIME_HITL_TTL_SECONDS must be between 300 and 604800"
+    return None
+
+
+def get_runtime_hitl_ttl_seconds() -> int:
+    value = os.getenv(
+        RUNTIME_HITL_TTL_SECONDS_ENV,
+        str(DEFAULT_RUNTIME_HITL_TTL_SECONDS),
+    )
+    issue = runtime_hitl_ttl_configuration_issue(value)
+    if issue is not None:
+        raise HTTPException(status_code=503, detail="Runtime HITL TTL is not configured")
+    return int(value)
+
+
+def runtime_journal_mode_configuration_issue(
+    value: str | None,
+    *,
+    require_wal: bool = False,
+) -> str | None:
+    mode = (value or "DELETE").upper()
+    if mode not in {"DELETE", "WAL"}:
+        return "SKILL0_RUNTIME_JOURNAL_MODE must be DELETE or WAL"
+    if require_wal and mode != "WAL":
+        return "SKILL0_RUNTIME_JOURNAL_MODE must be WAL in production"
+    return None
+
+
+def get_runtime_journal_mode() -> str:
+    value = os.getenv(RUNTIME_JOURNAL_MODE_ENV, "DELETE")
+    issue = runtime_journal_mode_configuration_issue(value)
+    if issue is not None:
+        raise HTTPException(
+            status_code=503,
+            detail="Runtime journal mode is not configured",
+        )
+    return value.upper()
+
+
 def authorize_runtime_decision_actor(actor: str) -> None:
     allowed = {
         value.strip()
@@ -177,7 +226,11 @@ def authorize_runtime_decision_actor(actor: str) -> None:
 
 
 def get_runtime_ledger() -> Iterator[RuntimeLedger]:
-    with RuntimeLedger(get_runtime_db_path()) as ledger:
+    with RuntimeLedger(
+        get_runtime_db_path(),
+        journal_mode=get_runtime_journal_mode(),
+        hitl_ttl_seconds=get_runtime_hitl_ttl_seconds(),
+    ) as ledger:
         yield ledger
 
 
@@ -197,7 +250,12 @@ def get_runtime_reader() -> Iterator[RuntimeLedger]:
     if not path.exists():
         raise HTTPException(status_code=404, detail="Run not found")
     try:
-        with RuntimeLedger(path, read_only=True) as ledger:
+        with RuntimeLedger(
+            path,
+            journal_mode=get_runtime_journal_mode(),
+            read_only=True,
+            hitl_ttl_seconds=get_runtime_hitl_ttl_seconds(),
+        ) as ledger:
             yield ledger
     except sqlite3.DatabaseError as exc:
         raise HTTPException(status_code=500, detail="Runtime ledger unavailable") from exc
@@ -235,6 +293,7 @@ def _public_hitl_item(item: dict[str, Any]) -> dict[str, Any]:
             "kind",
             "status",
             "request_summary",
+            "expires_at",
             "created_at",
             "updated_at",
         )
@@ -310,9 +369,9 @@ def create_run(
 
 @router.get("/hitl/items")
 def list_hitl_items(
-    status: Literal["pending", "approved", "rejected", "confirmed"] | None = Query(
-        default=None
-    ),
+    status: Literal[
+        "pending", "approved", "rejected", "confirmed", "expired"
+    ] | None = Query(default=None),
     run_id: str | None = Query(default=None, min_length=1),
     limit: int = Query(default=100, ge=1, le=500),
     ledger: RuntimeLedger = Depends(get_runtime_reader),

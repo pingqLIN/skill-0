@@ -26,8 +26,12 @@ from api.logging_config import setup_logging
 from api.routers.runs_v4 import (
     RUNTIME_BINDING_KEY_ENV,
     RUNTIME_DECISION_ACTORS_ENV,
+    RUNTIME_HITL_TTL_SECONDS_ENV,
+    RUNTIME_JOURNAL_MODE_ENV,
     router as runs_v4_router,
     runtime_binding_key_configuration_issue,
+    runtime_hitl_ttl_configuration_issue,
+    runtime_journal_mode_configuration_issue,
 )
 
 # 初始化結構化日誌
@@ -111,6 +115,8 @@ def find_production_security_issues(
     configured_password: Optional[str],
     runtime_binding_key: Optional[str] = None,
     runtime_decision_actors: Optional[str] = None,
+    runtime_hitl_ttl_seconds: Optional[str] = None,
+    runtime_journal_mode: Optional[str] = None,
     validate_runtime: bool = False,
 ) -> List[str]:
     """Enumerate production security misconfigurations."""
@@ -152,6 +158,15 @@ def find_production_security_issues(
             issues.append(
                 'SKILL0_RUNTIME_DECISION_ACTORS must name explicit approver subjects'
             )
+        ttl_issue = runtime_hitl_ttl_configuration_issue(runtime_hitl_ttl_seconds)
+        if ttl_issue is not None:
+            issues.append(ttl_issue)
+        journal_issue = runtime_journal_mode_configuration_issue(
+            runtime_journal_mode,
+            require_wal=True,
+        )
+        if journal_issue is not None:
+            issues.append(journal_issue)
 
     return issues
 
@@ -167,6 +182,8 @@ def enforce_production_security_configuration() -> None:
         configured_password=os.getenv(API_PASSWORD_ENV),
         runtime_binding_key=os.getenv(RUNTIME_BINDING_KEY_ENV),
         runtime_decision_actors=os.getenv(RUNTIME_DECISION_ACTORS_ENV),
+        runtime_hitl_ttl_seconds=os.getenv(RUNTIME_HITL_TTL_SECONDS_ENV),
+        runtime_journal_mode=os.getenv(RUNTIME_JOURNAL_MODE_ENV),
         validate_runtime=True,
     )
     if issues:

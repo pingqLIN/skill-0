@@ -5,7 +5,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 SKILLS_DB="${SKILL0_DB_PATH:-$PROJECT_ROOT/skills.db}"
-GOVERNANCE_DB="${GOVERNANCE_DB_PATH:-$PROJECT_ROOT/governance/db/governance.db}"
+GOVERNANCE_DB="${GOVERNANCE_DB_PATH:-${SKILL0_GOVERNANCE_DB_PATH:-$PROJECT_ROOT/governance/db/governance.db}}"
+RUNTIME_DB="${RUNTIME_DB_PATH:-${SKILL0_RUNTIME_DB_PATH:-$PROJECT_ROOT/governance/db/runtime.db}}"
 BACKUP_DIR="${BACKUP_DIR:-$PROJECT_ROOT/backups}"
 MAX_BACKUP_AGE_DAYS="${MAX_BACKUP_AGE_DAYS:-2}"
 PYTHON_BIN="${PYTHON_BIN:-}"
@@ -52,9 +53,10 @@ with sqlite3.connect(sys.argv[1]) as conn:
 PY
 }
 
-check_wal_mode() {
+check_journal_mode() {
     local db_path="$1"
     local db_name="$2"
+    local expected_mode="$3"
 
     if [[ ! -f "$db_path" ]]; then
         echo "[FAIL] ${db_name}: database not found at ${db_path}"
@@ -64,10 +66,12 @@ check_wal_mode() {
 
     local mode
     mode="$(sqlite_journal_mode "$db_path" | tr -d '\r\n' || true)"
-    if [[ "$mode" == "wal" ]]; then
-        echo "[OK] ${db_name}: WAL mode is enabled"
+    if [[ "$expected_mode" == "any" ]]; then
+        echo "[OK] ${db_name}: journal mode is '${mode:-unknown}'"
+    elif [[ "$mode" == "$expected_mode" ]]; then
+        echo "[OK] ${db_name}: journal mode is '${mode}'"
     else
-        echo "[FAIL] ${db_name}: WAL mode is '${mode:-unknown}' (expected 'wal')"
+        echo "[FAIL] ${db_name}: journal mode is '${mode:-unknown}' (expected '${expected_mode}')"
         failures=$((failures + 1))
     fi
 }
@@ -102,12 +106,14 @@ echo "=== Skill-0 DB Health Check ==="
 echo "Max backup age: ${MAX_BACKUP_AGE_DAYS} day(s)"
 echo ""
 
-check_wal_mode "$SKILLS_DB" "skills.db"
-check_wal_mode "$GOVERNANCE_DB" "governance.db"
+check_journal_mode "$SKILLS_DB" "skills.db" "${SKILLS_EXPECTED_JOURNAL_MODE:-any}"
+check_journal_mode "$GOVERNANCE_DB" "governance.db" "${GOVERNANCE_EXPECTED_JOURNAL_MODE:-any}"
+check_journal_mode "$RUNTIME_DB" "runtime.db" "${RUNTIME_EXPECTED_JOURNAL_MODE:-wal}"
 
 echo ""
 check_backup_recency "skills" "skills backup"
 check_backup_recency "governance" "governance backup"
+check_backup_recency "runtime" "runtime backup"
 
 echo ""
 if (( failures > 0 )); then

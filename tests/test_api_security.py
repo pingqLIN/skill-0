@@ -83,15 +83,21 @@ def test_production_security_rejects_runtime_placeholders_and_accepts_independen
         **base,
         runtime_binding_key="CHANGE_ME_TO_AN_INDEPENDENT_RUNTIME_SECRET",
         runtime_decision_actors="CHANGE_ME_APPROVER_SUBJECTS",
+        runtime_hitl_ttl_seconds="0",
+        runtime_journal_mode="DELETE",
     )
-    assert len(issues) == 2
+    assert len(issues) == 4
     assert any("SKILL0_RUNTIME_BINDING_KEY" in issue for issue in issues)
     assert any("SKILL0_RUNTIME_DECISION_ACTORS" in issue for issue in issues)
+    assert any("SKILL0_RUNTIME_HITL_TTL_SECONDS" in issue for issue in issues)
+    assert any("SKILL0_RUNTIME_JOURNAL_MODE" in issue for issue in issues)
 
     assert find_production_security_issues(
         **base,
         runtime_binding_key="independent-runtime-secret-key-9876543210",
         runtime_decision_actors="runtime-reviewer",
+        runtime_hitl_ttl_seconds="86400",
+        runtime_journal_mode="WAL",
     ) == []
 
 

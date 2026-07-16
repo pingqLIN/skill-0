@@ -25,6 +25,7 @@ const statuses: RuntimeHitlStatus[] = [
   'approved',
   'rejected',
   'confirmed',
+  'expired',
 ];
 
 const statusClasses: Record<RuntimeHitlStatus, string> = {
@@ -32,6 +33,7 @@ const statusClasses: Record<RuntimeHitlStatus, string> = {
   approved: 'bg-emerald-100 text-emerald-900',
   rejected: 'bg-red-100 text-red-900',
   confirmed: 'bg-blue-100 text-blue-900',
+  expired: 'bg-slate-200 text-slate-800',
 };
 
 const reasonCodes: Record<RuntimeDecision, string> = {
@@ -235,6 +237,12 @@ export function RuntimeGovernance() {
                     <div>
                       <div className="text-xs uppercase tracking-wide text-slate-500">Run</div>
                       <div className="mt-1 break-all font-mono text-xs">{item.run_id}</div>
+                    </div>
+                    <div className="sm:col-span-2">
+                      <div className="text-xs uppercase tracking-wide text-slate-500">Deadline</div>
+                      <time className="mt-1 block font-mono text-xs" dateTime={item.expires_at ?? undefined}>
+                        {item.expires_at ?? 'Legacy item expired during upgrade'}
+                      </time>
                     </div>
                   </div>
 

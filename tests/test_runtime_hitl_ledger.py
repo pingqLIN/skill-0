@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import copy
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta, timezone
 import sqlite3
 from threading import Barrier
 
 import pytest
 
+import runtime.ledger as runtime_ledger_module
 from runtime.ledger import RuntimeLedger
 from runtime.models import ActionResult, RunStatus, RuntimeEvent, RuntimeEventType
 from runtime.orchestrator import RuntimeOrchestrator
@@ -261,6 +263,81 @@ def test_action_decision_is_single_immutable_and_replay_is_rejected(
                 (item["item_id"],),
             )
 
+
+def test_pending_hitl_item_expires_and_cannot_be_decided(
+    tmp_path, read_json, monkeypatch
+):
+    contract = read_json("examples/runtime-contract.manual-approval.json")
+    with RuntimeLedger(tmp_path / "runtime.db", hitl_ttl_seconds=300) as ledger:
+        result = run_until_approval(
+            ledger,
+            RecordingAdapter(),
+            contract,
+            parameters={"branch": "old"},
+        )
+        [item] = ledger.list_hitl_items(status="pending", run_id=result.run_id)
+        expiry = datetime.fromisoformat(item["expires_at"])
+
+        class FrozenDateTime(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                instant = expiry + timedelta(seconds=1)
+                return instant if tz is None else instant.astimezone(tz)
+
+        monkeypatch.setattr(runtime_ledger_module, "datetime", FrozenDateTime)
+
+        assert ledger.get_hitl_item(item["item_id"])["status"] == "expired"
+        assert ledger.list_hitl_items(status="pending", run_id=result.run_id) == []
+        [expired] = ledger.list_hitl_items(status="expired", run_id=result.run_id)
+        assert expired["item_id"] == item["item_id"]
+        with pytest.raises(ValueError, match="expired"):
+            ledger.decide_hitl_item(
+                item_id=item["item_id"],
+                decision="approve",
+                actor="reviewer-1",
+                reason_code="REVIEWED",
+            )
+        assert ledger.list_hitl_decisions(item["item_id"]) == []
+
+
+def test_approved_hitl_item_expires_before_resume_claim(
+    tmp_path, read_json, monkeypatch
+):
+    contract = read_json("examples/runtime-contract.manual-approval.json")
+    with RuntimeLedger(tmp_path / "runtime.db", hitl_ttl_seconds=300) as ledger:
+        result = run_until_approval(
+            ledger,
+            RecordingAdapter(),
+            contract,
+            parameters={"branch": "old"},
+        )
+        [item] = ledger.list_hitl_items(status="pending", run_id=result.run_id)
+        approved = ledger.decide_hitl_item(
+            item_id=item["item_id"],
+            decision="approve",
+            actor="reviewer-1",
+            reason_code="REVIEWED",
+        )
+        expiry = datetime.fromisoformat(approved["expires_at"])
+
+        class FrozenDateTime(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                instant = expiry + timedelta(seconds=1)
+                return instant if tz is None else instant.astimezone(tz)
+
+        monkeypatch.setattr(runtime_ledger_module, "datetime", FrozenDateTime)
+
+        assert ledger.get_hitl_item(item["item_id"])["status"] == "expired"
+        with pytest.raises(ValueError, match="expired"):
+            ledger.claim_hitl_resume(
+                item_id=item["item_id"],
+                run_id=result.run_id,
+                basis_digest=item["basis_digest"],
+            )
+        assert ledger.connection.execute(
+            "SELECT COUNT(*) FROM runtime_resume_claims"
+        ).fetchone()[0] == 0
 
 def test_reject_and_confirm_project_terminal_ledger_states(tmp_path, read_json):
     contract = read_json("examples/runtime-contract.manual-approval.json")

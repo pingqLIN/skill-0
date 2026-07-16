@@ -5,7 +5,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
 SKILLS_DB="${SKILL0_DB_PATH:-$PROJECT_ROOT/skills.db}"
-GOVERNANCE_DB="${GOVERNANCE_DB_PATH:-$PROJECT_ROOT/governance/db/governance.db}"
+GOVERNANCE_DB="${GOVERNANCE_DB_PATH:-${SKILL0_GOVERNANCE_DB_PATH:-$PROJECT_ROOT/governance/db/governance.db}}"
+RUNTIME_DB="${RUNTIME_DB_PATH:-${SKILL0_RUNTIME_DB_PATH:-$PROJECT_ROOT/governance/db/runtime.db}}"
 BACKUP_DIR="${BACKUP_DIR:-$PROJECT_ROOT/backups}"
 BACKUP_RETENTION_DAYS="${BACKUP_RETENTION_DAYS:-30}"
 PYTHON_BIN="${PYTHON_BIN:-}"
@@ -102,10 +103,12 @@ mkdir -p "$BACKUP_DIR"
 
 backup_database "$SKILLS_DB" "skills" "skills.db"
 backup_database "$GOVERNANCE_DB" "governance" "governance.db"
+backup_database "$RUNTIME_DB" "runtime" "runtime.db"
 
 echo ""
 cleanup_old_backups "skills" "skills backups"
 cleanup_old_backups "governance" "governance backups"
+cleanup_old_backups "runtime" "runtime backups"
 
 echo ""
 if (( failures > 0 )); then

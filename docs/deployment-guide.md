@@ -1,5 +1,7 @@
 # Deployment Guide
 
+Runtime v4 production storage, startup ordering, backup, restore, expiry, and key rotation are governed by [runtime-production-operations.md](runtime-production-operations.md).
+
 ## Prerequisites
 
 - Python 3.12+
@@ -27,6 +29,12 @@ cp .env.production.example .env
 | `SKILL0_PARSED_DIR` | `parsed` | Directory containing parsed skill JSONs |
 | `SKILL0_ENV` | `development` | Runtime mode: `development` or `production` |
 | `SKILL0_GOVERNANCE_DB_PATH` | `governance/db/governance.db` | Path to governance database |
+| `SKILL0_RUNTIME_DB_PATH` | Local: `governance/db/runtime.db`; production: `/app/runtime-data/runtime.db` | Path to the durable Runtime event/HITL ledger |
+| `SKILL0_RUNTIME_BINDING_KEY` | - | Independent secret used to bind approvals to one execution basis |
+| `SKILL0_RUNTIME_DECISION_ACTORS` | - | Comma-separated JWT subjects allowed to decide Runtime HITL items |
+| `SKILL0_RUNTIME_HITL_TTL_SECONDS` | `86400` | Immutable deadline for new HITL items; range 300–604800 |
+| `SKILL0_RUNTIME_JOURNAL_MODE` | Local: `DELETE`; production: `WAL` | Runtime SQLite journal mode |
+| `SKILL0_RUNTIME_ALLOW_INITIALIZE` | `false` | One-boot opt-in for intentional production Runtime ledger provisioning |
 | `SKILL0_TOOLS_PATH` | `tools` | Path to tools directory |
 | `SKILL0_DEVICE` | `auto` | Embedding device: `auto`, `cpu`, or `cuda` |
 | `SKILL0_LOG_LEVEL` | `INFO` | Log level: `DEBUG`, `INFO`, `WARNING`, `ERROR` |

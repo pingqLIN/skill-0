@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import re
 import sqlite3
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 from uuid import uuid4
@@ -111,12 +111,16 @@ class RuntimeLedger:
         *,
         journal_mode: str = "DELETE",
         read_only: bool = False,
+        hitl_ttl_seconds: int = 86_400,
     ) -> None:
         mode = journal_mode.upper()
         if mode not in {"DELETE", "WAL"}:
             raise ValueError("journal_mode must be DELETE or WAL")
+        if not 300 <= hitl_ttl_seconds <= 604_800:
+            raise ValueError("HITL TTL must be between 300 and 604800 seconds")
         self.path = Path(path)
         self.read_only = read_only
+        self.hitl_ttl_seconds = hitl_ttl_seconds
         if read_only:
             if not self.path.exists():
                 raise FileNotFoundError(self.path)
@@ -157,6 +161,28 @@ class RuntimeLedger:
         self.close()
 
     def _migrate(self) -> None:
+        hitl_table_exists = self.connection.execute(
+            "SELECT 1 FROM sqlite_master "
+            "WHERE type='table' AND name='runtime_hitl_items'"
+        ).fetchone()
+        if hitl_table_exists is not None:
+            hitl_columns = {
+                row["name"]
+                for row in self.connection.execute(
+                    "PRAGMA table_info(runtime_hitl_items)"
+                ).fetchall()
+            }
+            if "expires_at" not in hitl_columns:
+                # Legacy queue items intentionally remain NULL and are treated as
+                # expired. Operators must create a fresh governed run after upgrade.
+                self.connection.execute(
+                    "ALTER TABLE runtime_hitl_items ADD COLUMN expires_at TEXT"
+                )
+            # Recreate the projection guard so upgraded databases also protect
+            # the immutable deadline column.
+            self.connection.execute(
+                "DROP TRIGGER IF EXISTS trg_runtime_hitl_items_guard_update"
+            )
         self.connection.executescript(
             """
             CREATE TABLE IF NOT EXISTS runtime_runs (
@@ -208,6 +234,7 @@ class RuntimeLedger:
                 status TEXT NOT NULL CHECK(status IN ('pending', 'approved', 'rejected', 'confirmed')),
                 basis_digest TEXT NOT NULL,
                 request_summary_json TEXT NOT NULL,
+                expires_at TEXT NOT NULL,
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL
             );
@@ -316,6 +343,7 @@ class RuntimeLedger:
                 AND NEW.kind=OLD.kind
                 AND NEW.basis_digest=OLD.basis_digest
                 AND NEW.request_summary_json=OLD.request_summary_json
+                AND NEW.expires_at IS OLD.expires_at
                 AND NEW.created_at=OLD.created_at
             )
             BEGIN
@@ -612,11 +640,13 @@ class RuntimeLedger:
         request_summary = event.payload.get("hitl_request_summary", {})
         if not isinstance(request_summary, dict):
             raise ValueError("HITL request summary must be an object")
+        expires_at = self._hitl_expires_at(event.occurred_at)
         cur.execute(
             """INSERT OR IGNORE INTO runtime_hitl_items(
                    item_id, run_id, skill_id, action_id, kind, status,
-                   basis_digest, request_summary_json, created_at, updated_at
-               ) VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?)""",
+                   basis_digest, request_summary_json, expires_at,
+                   created_at, updated_at
+               ) VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)""",
             (
                 str(uuid4()),
                 event.run_id,
@@ -625,6 +655,7 @@ class RuntimeLedger:
                 kind,
                 basis["execution_digest"],
                 json.dumps(request_summary, ensure_ascii=False, sort_keys=True),
+                expires_at,
                 event.occurred_at,
                 event.occurred_at,
             ),
@@ -674,9 +705,33 @@ class RuntimeLedger:
         return dict(row)
 
     @staticmethod
-    def _decode_hitl_item(row: sqlite3.Row) -> dict[str, Any]:
+    def _parse_timestamp(value: str) -> datetime:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+    def _hitl_expires_at(self, created_at: str) -> str:
+        return (
+            self._parse_timestamp(created_at)
+            + timedelta(seconds=self.hitl_ttl_seconds)
+        ).isoformat()
+
+    def _row_has_expired(
+        self,
+        row: sqlite3.Row,
+        *,
+        now: datetime | None = None,
+    ) -> bool:
+        if row["status"] not in {"pending", "approved"}:
+            return False
+        expires_at = row["expires_at"]
+        if not expires_at:
+            return True
+        return self._parse_timestamp(expires_at) <= (now or datetime.now(timezone.utc))
+
+    def _decode_hitl_item(self, row: sqlite3.Row) -> dict[str, Any]:
         item = dict(row)
         item["request_summary"] = json.loads(item.pop("request_summary_json"))
+        if self._row_has_expired(row):
+            item["status"] = "expired"
         return item
 
     def create_hitl_item(
@@ -692,6 +747,7 @@ class RuntimeLedger:
         if kind not in {"action_approval", "recovery_confirmation"}:
             raise ValueError("unsupported HITL item kind")
         now = datetime.now(timezone.utc).isoformat()
+        expires_at = self._hitl_expires_at(now)
         cur = self.connection.cursor()
         try:
             cur.execute("BEGIN IMMEDIATE")
@@ -743,9 +799,9 @@ class RuntimeLedger:
             cur.execute(
                 """INSERT INTO runtime_hitl_items(
                        item_id, run_id, skill_id, action_id, kind, status,
-                       basis_digest, request_summary_json,
+                       basis_digest, request_summary_json, expires_at,
                        created_at, updated_at
-                   ) VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?)""",
+                   ) VALUES (?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?, ?)""",
                 (
                     item_id,
                     run_id,
@@ -754,6 +810,7 @@ class RuntimeLedger:
                     kind,
                     basis_digest,
                     json.dumps(request_summary, ensure_ascii=False, sort_keys=True),
+                    expires_at,
                     now,
                     now,
                 ),
@@ -785,24 +842,20 @@ class RuntimeLedger:
     ) -> list[dict[str, Any]]:
         clauses: list[str] = []
         params: list[Any] = []
-        if status is not None:
-            clauses.append("status=?")
-            params.append(status)
         if run_id is not None:
             clauses.append("run_id=?")
             params.append(run_id)
         where = f" WHERE {' AND '.join(clauses)}" if clauses else ""
-        limit_sql = ""
-        if limit is not None:
-            if limit < 1:
-                raise ValueError("HITL item limit must be positive")
-            limit_sql = " LIMIT ?"
-            params.append(limit)
+        if limit is not None and limit < 1:
+            raise ValueError("HITL item limit must be positive")
         rows = self.connection.execute(
-            f"SELECT * FROM runtime_hitl_items{where} ORDER BY created_at, item_id{limit_sql}",
+            f"SELECT * FROM runtime_hitl_items{where} ORDER BY created_at, item_id",
             params,
         ).fetchall()
-        return [self._decode_hitl_item(row) for row in rows]
+        items = [self._decode_hitl_item(row) for row in rows]
+        if status is not None:
+            items = [item for item in items if item["status"] == status]
+        return items[:limit] if limit is not None else items
 
     def list_hitl_decisions(self, item_id: str) -> list[dict[str, Any]]:
         rows = self.connection.execute(
@@ -827,6 +880,8 @@ class RuntimeLedger:
             ).fetchone()
             if item is None:
                 raise KeyError(item_id)
+            if self._row_has_expired(item, now=self._parse_timestamp(now)):
+                raise ValueError("HITL item has expired")
             if (
                 item["run_id"] != run_id
                 or item["kind"] != "action_approval"
@@ -895,6 +950,8 @@ class RuntimeLedger:
             ).fetchone()
             if item is None:
                 raise KeyError(item_id)
+            if self._row_has_expired(item, now=self._parse_timestamp(now)):
+                raise ValueError("HITL item has expired")
             if item["status"] != "pending":
                 raise ValueError("HITL item is no longer pending")
             allowed = (

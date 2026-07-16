@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS runtime_hitl_items (
     status TEXT NOT NULL CHECK(status IN ('pending', 'approved', 'rejected', 'confirmed')),
     basis_digest TEXT NOT NULL,
     request_summary_json TEXT NOT NULL,
+    expires_at TEXT NOT NULL,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );
@@ -158,6 +159,7 @@ WHEN NOT (
     AND NEW.kind=OLD.kind
     AND NEW.basis_digest=OLD.basis_digest
     AND NEW.request_summary_json=OLD.request_summary_json
+    AND NEW.expires_at IS OLD.expires_at
     AND NEW.created_at=OLD.created_at
 )
 BEGIN

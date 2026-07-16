@@ -1,7 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { runtimeApi } from './client';
 
-export type RuntimeHitlStatus = 'pending' | 'approved' | 'rejected' | 'confirmed';
+export type RuntimeHitlStatus =
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+  | 'confirmed'
+  | 'expired';
 export type RuntimeHitlKind = 'action_approval' | 'recovery_confirmation';
 export type RuntimeDecision = 'approve' | 'reject' | 'confirm_recovered';
 
@@ -13,6 +18,7 @@ export interface RuntimeHitlItem {
   kind: RuntimeHitlKind;
   status: RuntimeHitlStatus;
   request_summary: Record<string, unknown>;
+  expires_at: string | null;
   created_at: string;
   updated_at: string;
 }
