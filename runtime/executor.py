@@ -5,6 +5,7 @@ from typing import Any, Protocol
 from .ledger import RuntimeLedger
 from .models import ActionResult, RunResult, RunStatus, RuntimeEvent, RuntimeEventType
 from .policy import DefaultPolicyEngine, PolicyEngine
+from .rules import RuleEvaluationError, RuleEvaluator
 from .template import render_key_template, resolve_json_pointer, resolve_parameter_mapping
 
 
@@ -34,6 +35,9 @@ class RuntimeExecutor:
         parameters: dict[str, Any],
         context: dict[str, Any] | None = None,
         dry_run: bool = True,
+        preflight: dict[str, Any] | None = None,
+        rule_evaluator: RuleEvaluator | None = None,
+        rule_bindings: dict[str, str] | None = None,
     ) -> RunResult:
         context = dict(context or {})
         skill = contract["skill_ref"]
@@ -47,11 +51,21 @@ class RuntimeExecutor:
             RuntimeEventType.PLAN_CREATED,
             payload={"dry_run": dry_run, "action_count": len(primary_bindings)},
         )
+        required_attestations = {
+            "schema_validated",
+            "skill_schema_validated",
+            "cross_references_validated",
+            "skill_identity_validated",
+        }
+        if preflight is None or not all(preflight.get(name) is True for name in required_attestations):
+            reason = "runtime preflight was not truthfully attested"
+            self._event(run_id, skill, RuntimeEventType.POLICY_DENIED, payload={"reason": reason})
+            return RunResult(run_id, RunStatus.DENIED, reason=reason)
         self._event(
             run_id,
             skill,
             RuntimeEventType.PREFLIGHT_PASSED,
-            payload={"contract_schema_version": contract["schema_version"]},
+            payload={"contract_schema_version": contract["schema_version"], **preflight},
         )
 
         if not primary_bindings:
@@ -70,6 +84,8 @@ class RuntimeExecutor:
             return RunResult(run_id, RunStatus.DENIED, reason=reason)
 
         outputs: dict[str, Any] = {}
+        validated_postconditions: list[str] = []
+        rule_bindings = dict(rule_bindings or {})
         for binding in primary_bindings:
             action_id = binding["action_id"]
             decision = self.policy.evaluate(binding, context)
@@ -236,6 +252,10 @@ class RuntimeExecutor:
                     resolved_comp_parameters = resolve_parameter_mapping(
                         compensation["parameters_mapping"], envelope
                     )
+                    resolved_comp_parameters = self._encode_recovery_parameters(
+                        resolved_comp_parameters,
+                        external_resource_id=external_resource_id,
+                    )
             except (KeyError, IndexError, TypeError, ValueError) as exc:
                 # The external action reported success but recovery metadata could
                 # not be derived. Persist the known effect before escalating.
@@ -293,21 +313,136 @@ class RuntimeExecutor:
                 external_resource_id=external_resource_id,
                 payload=payload,
             )
-            if compensation.get("strategy") == "auto_rollback":
-                self._event(
-                    run_id,
-                    skill,
-                    RuntimeEventType.COMPENSATION_QUEUED,
-                    action_id=compensation["action_id"],
-                    idempotency_key=resolved_comp_key,
-                    external_resource_id=external_resource_id,
-                    payload={"source_action_id": action_id, "dry_run": dry_run},
-                )
             outputs[action_id] = result.outputs
 
-        self._event(run_id, skill, RuntimeEventType.VALIDATION_SUCCEEDED, payload={"validated": True})
+            postcondition_ids = binding.get("validation", {}).get("postcondition_rule_ids", [])
+            for rule_id in postcondition_ids:
+                evaluator_name = rule_bindings.get(rule_id)
+                if rule_evaluator is None or evaluator_name is None:
+                    reason = f"postcondition Rule {rule_id} has no executable evaluator"
+                    self._event(
+                        run_id,
+                        skill,
+                        RuntimeEventType.VALIDATION_FAILED,
+                        action_id=action_id,
+                        payload={"rule_id": rule_id, "reason": reason},
+                    )
+                    self._event(
+                        run_id,
+                        skill,
+                        RuntimeEventType.RUN_FAILED,
+                        payload={"failed_action_id": action_id, "reason": reason},
+                    )
+                    recovery_pending = self._queue_compensation(
+                        run_id,
+                        skill,
+                        source_action_id=action_id,
+                        compensation=compensation,
+                        idempotency_key=resolved_comp_key,
+                        external_resource_id=external_resource_id,
+                        dry_run=dry_run,
+                    )
+                    status = RunStatus.RECOVERY_PENDING if recovery_pending else RunStatus.FAILED
+                    return RunResult(run_id, status, outputs=outputs, reason=reason)
+                try:
+                    passed = rule_evaluator.evaluate(
+                        rule_id,
+                        evaluator_name,
+                        phase="postcondition",
+                        parameters=parameters,
+                        outputs=outputs,
+                        context=context,
+                    )
+                except RuleEvaluationError as exc:
+                    passed = False
+                    reason = str(exc)
+                else:
+                    reason = f"postcondition Rule {rule_id} failed"
+                if not passed:
+                    self._event(
+                        run_id,
+                        skill,
+                        RuntimeEventType.VALIDATION_FAILED,
+                        action_id=action_id,
+                        payload={"rule_id": rule_id, "reason": reason},
+                    )
+                    self._event(
+                        run_id,
+                        skill,
+                        RuntimeEventType.RUN_FAILED,
+                        payload={"failed_action_id": action_id, "reason": reason},
+                    )
+                    recovery_pending = self._queue_compensation(
+                        run_id,
+                        skill,
+                        source_action_id=action_id,
+                        compensation=compensation,
+                        idempotency_key=resolved_comp_key,
+                        external_resource_id=external_resource_id,
+                        dry_run=dry_run,
+                    )
+                    status = RunStatus.RECOVERY_PENDING if recovery_pending else RunStatus.FAILED
+                    return RunResult(run_id, status, outputs=outputs, reason=reason)
+                validated_postconditions.append(rule_id)
+
+            self._queue_compensation(
+                run_id,
+                skill,
+                source_action_id=action_id,
+                compensation=compensation,
+                idempotency_key=resolved_comp_key,
+                external_resource_id=external_resource_id,
+                dry_run=dry_run,
+            )
+
+        if validated_postconditions:
+            self._event(
+                run_id,
+                skill,
+                RuntimeEventType.VALIDATION_SUCCEEDED,
+                payload={"validated_rule_ids": sorted(set(validated_postconditions))},
+            )
         self._event(run_id, skill, RuntimeEventType.RUN_SUCCEEDED, payload={"dry_run": dry_run})
         return RunResult(run_id, RunStatus.SUCCEEDED, outputs=outputs)
+
+    @staticmethod
+    def _encode_recovery_parameters(
+        parameters: dict[str, Any],
+        *,
+        external_resource_id: str | None,
+    ) -> dict[str, dict[str, str]]:
+        encoded: dict[str, dict[str, str]] = {}
+        for name, value in parameters.items():
+            if external_resource_id is None or value != external_resource_id:
+                raise ValueError(
+                    "recovery parameters may persist only external_resource_id references"
+                )
+            encoded[name] = {"$runtime_ref": "external_resource_id"}
+        return encoded
+
+    def _queue_compensation(
+        self,
+        run_id: str,
+        skill: dict[str, str],
+        *,
+        source_action_id: str,
+        compensation: dict[str, Any],
+        idempotency_key: str | None,
+        external_resource_id: str | None,
+        dry_run: bool,
+    ) -> bool:
+        if compensation.get("strategy") != "auto_rollback":
+            return False
+        self._event(
+            run_id,
+            skill,
+            RuntimeEventType.COMPENSATION_QUEUED,
+            action_id=compensation["action_id"],
+            idempotency_key=idempotency_key,
+            external_resource_id=external_resource_id,
+            payload={"source_action_id": source_action_id, "dry_run": dry_run},
+        )
+        return True
 
     def _event(
         self,

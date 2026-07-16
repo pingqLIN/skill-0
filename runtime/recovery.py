@@ -163,9 +163,19 @@ class RecoveryCoordinator:
                     return RunStatus.HITL_REQUIRED
 
                 try:
+                    encoded_parameters = source_event.payload.get(
+                        "resolved_compensation_parameters", {}
+                    )
+                    compensation_parameters: dict[str, Any] = {}
+                    for name, value in encoded_parameters.items():
+                        if value != {"$runtime_ref": "external_resource_id"}:
+                            raise ValueError("unsupported persisted recovery parameter")
+                        if source_event.external_resource_id is None:
+                            raise ValueError("external resource ID is unavailable")
+                        compensation_parameters[name] = source_event.external_resource_id
                     result = self.adapter.compensate(
                         action_id,
-                        source_event.payload.get("resolved_compensation_parameters", {}),
+                        compensation_parameters,
                         idempotency_key=key,
                         dry_run=dry_run,
                     )

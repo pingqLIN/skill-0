@@ -6,6 +6,33 @@ from runtime.executor import RuntimeExecutor
 from runtime.ledger import RuntimeLedger
 from runtime.models import ActionResult, RunStatus, RuntimeEvent, RuntimeEventType
 from runtime.recovery import RecoveryCoordinator
+from runtime.rules import ContextRuleEvaluator
+
+
+PREFLIGHT = {
+    "schema_validated": True,
+    "skill_schema_validated": True,
+    "cross_references_validated": True,
+    "skill_identity_validated": True,
+    "precondition_rule_ids": [],
+}
+
+
+def run_contract(ledger, adapter, contract, *, parameters, context=None):
+    context = dict(context or {})
+    rule_bindings = {
+        item["rule_id"]: item["evaluator"]
+        for item in contract.get("governance", {}).get("rule_policy_bindings", [])
+    }
+    context.setdefault("rule_results", {rule_id: True for rule_id in rule_bindings})
+    return RuntimeExecutor(ledger, adapter).run(
+        contract,
+        parameters=parameters,
+        context=context,
+        preflight=PREFLIGHT,
+        rule_evaluator=ContextRuleEvaluator(),
+        rule_bindings=rule_bindings,
+    )
 
 
 class RecoveryAdapter:
@@ -83,7 +110,9 @@ def test_recovery_is_idempotent_after_success_and_reopen(tmp_path, read_json):
     adapter = RecoveryAdapter()
     database = tmp_path / "ledger.db"
     with RuntimeLedger(database) as ledger:
-        run = RuntimeExecutor(ledger, adapter).run(
+        run = run_contract(
+            ledger,
+            adapter,
             read_json("examples/runtime-contract.auto-rollback.json"),
             parameters={"customer_id": "42"},
         )
@@ -99,8 +128,8 @@ def test_recovery_is_idempotent_after_success_and_reopen(tmp_path, read_json):
 def test_recovery_uses_strict_lifo_order(tmp_path, read_json):
     adapter = RecoveryAdapter()
     with RuntimeLedger(tmp_path / "ledger.db") as ledger:
-        run = RuntimeExecutor(ledger, adapter).run(
-            two_action_contract(read_json), parameters={"customer_id": "42"}
+        run = run_contract(
+            ledger, adapter, two_action_contract(read_json), parameters={"customer_id": "42"}
         )
         assert run.status == RunStatus.SUCCEEDED
         assert RecoveryCoordinator(ledger, adapter).recover(run.run_id) == RunStatus.COMPENSATED
@@ -112,7 +141,9 @@ def test_acceptable_terminal_error_counts_as_compensated(tmp_path, read_json):
         [ActionResult(False, error_code="HTTP_404", error_message="already absent")]
     )
     with RuntimeLedger(tmp_path / "ledger.db") as ledger:
-        run = RuntimeExecutor(ledger, adapter).run(
+        run = run_contract(
+            ledger,
+            adapter,
             read_json("examples/runtime-contract.auto-rollback.json"),
             parameters={"customer_id": "42"},
         )
@@ -133,7 +164,9 @@ def test_transient_failure_retries_with_same_idempotency_claim(tmp_path, read_js
         ]
     )
     with RuntimeLedger(tmp_path / "ledger.db") as ledger:
-        run = RuntimeExecutor(ledger, adapter).run(
+        run = run_contract(
+            ledger,
+            adapter,
             read_json("examples/runtime-contract.auto-rollback.json"),
             parameters={"customer_id": "42"},
         )
@@ -155,7 +188,7 @@ def test_retry_exhaustion_moves_run_to_hitl(tmp_path, read_json):
         ]
     )
     with RuntimeLedger(tmp_path / "ledger.db") as ledger:
-        run = RuntimeExecutor(ledger, adapter).run(contract, parameters={"customer_id": "42"})
+        run = run_contract(ledger, adapter, contract, parameters={"customer_id": "42"})
         assert RecoveryCoordinator(ledger, adapter).recover(run.run_id) == RunStatus.HITL_REQUIRED
         assert len(adapter.compensation_calls) == 2
         assert ledger.get_run(run.run_id)["status"] == "hitl_required"
@@ -166,7 +199,9 @@ def test_restart_after_inflight_compensation_reuses_owned_claim(tmp_path, read_j
     database = tmp_path / "ledger.db"
     adapter = RecoveryAdapter()
     with RuntimeLedger(database) as ledger:
-        run = RuntimeExecutor(ledger, adapter).run(
+        run = run_contract(
+            ledger,
+            adapter,
             read_json("examples/runtime-contract.auto-rollback.json"),
             parameters={"customer_id": "42"},
         )
@@ -205,7 +240,9 @@ def test_restart_after_inflight_compensation_reuses_owned_claim(tmp_path, read_j
 def test_manual_recovery_boundary_escalates(tmp_path, read_json):
     adapter = RecoveryAdapter()
     with RuntimeLedger(tmp_path / "ledger.db") as ledger:
-        run = RuntimeExecutor(ledger, adapter).run(
+        run = run_contract(
+            ledger,
+            adapter,
             read_json("examples/runtime-contract.manual-approval.json"),
             parameters={"branch": "old"},
             context={"approved_action_ids": ["a_010"]},
@@ -243,7 +280,9 @@ def test_ambiguous_started_action_requires_reconciliation(tmp_path):
 def test_recovery_dry_run_requires_adapter_attestation(tmp_path, read_json):
     execute_adapter = RecoveryAdapter()
     with RuntimeLedger(tmp_path / "ledger.db") as ledger:
-        run = RuntimeExecutor(ledger, execute_adapter).run(
+        run = run_contract(
+            ledger,
+            execute_adapter,
             read_json("examples/runtime-contract.auto-rollback.json"),
             parameters={"customer_id": "42"},
         )

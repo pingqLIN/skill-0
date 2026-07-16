@@ -38,6 +38,7 @@ jobs:
           tests/test_v4_schema.py
           tests/test_runtime_ledger.py
           tests/test_runtime_executor.py
+          tests/test_runtime_orchestrator.py
           tests/test_runtime_policy.py
           tests/test_runtime_recovery.py
           tests/test_evidence_projection.py
