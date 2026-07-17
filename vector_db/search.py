@@ -5,12 +5,29 @@ Semantic Search - 語義搜尋 API
 
 import json
 import os
+from dataclasses import dataclass
+from datetime import datetime, timezone
+import hashlib
 from pathlib import Path
+import threading
 from typing import Dict, List, Optional, Union
 import numpy as np
 
 from .embedder import SkillEmbedder
 from .vector_store import VectorStore
+from asset_registry.repositories import LegacySkillAssetRepository
+from asset_registry.search import AssetSearchResult
+
+
+REPRESENTATION_VERSION = "skill-text-v1"
+
+
+@dataclass(frozen=True)
+class IndexReport:
+    total: int
+    changed: int
+    unchanged: int
+    removed: int
 
 
 def _default_model_name() -> str:
@@ -40,6 +57,7 @@ class SemanticSearch:
         self.model_name = model_name or os.getenv('SKILL0_EMBEDDING_MODEL', _default_model_name())
         self.dimension = SkillEmbedder.DEFAULT_DIMENSION
         self._embedder: Optional[SkillEmbedder] = None
+        self._operation_lock = threading.RLock()
         self.store = VectorStore(
             db_path,
             dimension=self.dimension,
@@ -53,6 +71,29 @@ class SemanticSearch:
             self._embedder = SkillEmbedder(self.model_name)
             self.dimension = self._embedder.dimension
         return self._embedder
+
+    def _embedding_identity(self) -> tuple[str, str]:
+        model_path = Path(self.model_name)
+        model_id = model_path.name if model_path.exists() else self.model_name
+        configured_version = os.getenv("SKILL0_EMBEDDING_MODEL_VERSION")
+        if configured_version:
+            return model_id, configured_version
+        if model_path.is_dir():
+            digest = hashlib.sha256()
+            matched = False
+            for name in (
+                "modules.json",
+                "config.json",
+                "config_sentence_transformers.json",
+            ):
+                candidate = model_path / name
+                if candidate.is_file():
+                    digest.update(name.encode("utf-8"))
+                    digest.update(candidate.read_bytes())
+                    matched = True
+            if matched:
+                return model_id, "sha256:" + digest.hexdigest()
+        return model_id, "unversioned"
         
     def index_skills(self, parsed_dir: Union[str, Path], show_progress: bool = True) -> int:
         """
@@ -79,6 +120,102 @@ class SemanticSearch:
         
         print(f"✓ Indexed {len(skills)} skills")
         return len(skills)
+
+    def index_assets(
+        self,
+        parsed_dir: Union[str, Path],
+        *,
+        representation_version: str = REPRESENTATION_VERSION,
+        show_progress: bool = True,
+    ) -> IndexReport:
+        """Incrementally reconcile Skill-backed Asset projections."""
+
+        if not self.store.has_asset_index_state():
+            raise RuntimeError("asset_index_state migration is required")
+        repository = LegacySkillAssetRepository(Path(parsed_dir))
+        revisions = repository.list_revisions()
+        model_id, model_version = self._embedding_identity()
+        existing = {
+            (
+                row["asset_id"], row["revision_id"], row["representation_version"],
+                row["embedding_model_id"], row["embedding_model_version"],
+                row["content_hash"], row["source_path"],
+            )
+            for row in self.store.get_index_state()
+        }
+        changed = []
+        active_sources = {item.source_path.as_posix() for item in revisions}
+        existing_sources = {item[-1] for item in existing}
+        for revision in revisions:
+            identity = (
+                revision.asset_id,
+                revision.revision_id,
+                representation_version,
+                model_id,
+                model_version,
+                revision.content_hash,
+                revision.source_path.as_posix(),
+            )
+            if identity not in existing:
+                changed.append(revision)
+
+        skills = []
+        states = []
+        for revision in changed:
+            skill = dict(revision.payload)
+            skill["_filename"] = revision.source_path.as_posix()
+            skills.append(skill)
+            states.append(
+                {
+                    "asset_id": revision.asset_id,
+                    "revision_id": revision.revision_id,
+                    "representation_version": representation_version,
+                    "embedding_model_id": model_id,
+                    "embedding_model_version": model_version,
+                    "content_hash": revision.content_hash,
+                    "source_path": revision.source_path.as_posix(),
+                    "indexed_at": datetime.now(timezone.utc).isoformat(),
+                }
+            )
+
+        with self._operation_lock:
+            embeddings = (
+                self.embedder.embed_skills(skills, show_progress=show_progress)
+                if skills
+                else []
+            )
+            self.store.reconcile_assets_batch(
+                skills,
+                embeddings,
+                states,
+                active_source_paths=active_sources,
+            )
+        return IndexReport(
+            total=len(revisions),
+            changed=len(changed),
+            unchanged=len(revisions) - len(changed),
+            removed=len(existing_sources - active_sources),
+        )
+
+    def search_assets(
+        self,
+        query: str,
+        *,
+        asset_types: tuple[str, ...] = ("skill",),
+        limit: int = 5,
+    ) -> List[AssetSearchResult]:
+        if "skill" not in asset_types:
+            return []
+        with self._operation_lock:
+            query_embedding = self.embedder.embed_query(query)
+            results = self.store.search_assets(query_embedding, limit=limit)
+        return [
+            AssetSearchResult(
+                **row,
+                similarity=1.0 / (1.0 + row["distance"]),
+            )
+            for row in results
+        ]
     
     def search(self, query: str, limit: int = 5) -> List[Dict]:
         """
@@ -91,8 +228,9 @@ class SemanticSearch:
         Returns:
             List[Dict]: 匹配的 skills (含相似度分數)
         """
-        query_embedding = self.embedder.embed_query(query)
-        results = self.store.search(query_embedding, limit=limit)
+        with self._operation_lock:
+            query_embedding = self.embedder.embed_query(query)
+            results = self.store.search(query_embedding, limit=limit)
         
         # 轉換 distance 為 similarity (0-1)
         for r in results:

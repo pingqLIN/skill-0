@@ -55,6 +55,8 @@ class VectorStore:
         sqlite_vec.load(self.conn)
         self.conn.enable_load_extension(False)
         self.conn.row_factory = sqlite3.Row
+        self.conn.execute("PRAGMA foreign_keys=ON")
+        self.conn.execute("PRAGMA busy_timeout=2000")
         if initialize_schema:
             self._init_schema()
         else:
@@ -228,7 +230,7 @@ class VectorStore:
             SELECT 
                 s.id, s.name, s.filename, s.description, s.category,
                 s.action_count, s.rule_count, s.directive_count,
-                s.raw_json, e.distance
+                e.distance
             FROM skill_embeddings e
             JOIN skills s ON e.rowid = s.id
             WHERE e.embedding MATCH ? AND k = ?
@@ -241,7 +243,7 @@ class VectorStore:
         """按類別搜尋 skills"""
         results = self.conn.execute('''
             SELECT id, name, filename, description, category,
-                   action_count, rule_count, directive_count, raw_json
+                   action_count, rule_count, directive_count
             FROM skills
             WHERE category = ?
             LIMIT ?
@@ -253,13 +255,97 @@ class VectorStore:
         """取得所有 skills 的基本資訊"""
         results = self.conn.execute('''
             SELECT id, name, filename, description, category, version,
-                   action_count, rule_count, directive_count, raw_json,
+                   action_count, rule_count, directive_count,
                    created_at
             FROM skills
             ORDER BY name
         ''').fetchall()
         
         return [dict(r) for r in results]
+
+    def search_assets(
+        self, query_embedding: np.ndarray, limit: int = 5
+    ) -> List[Dict]:
+        """Search only revision-identified Asset projections."""
+
+        results = self.conn.execute('''
+            SELECT
+                state.asset_id, state.revision_id, 'skill' AS asset_type,
+                s.name, s.description, state.source_path, e.distance
+            FROM skill_embeddings e
+            JOIN skills s ON e.rowid = s.id
+            JOIN asset_index_state state ON state.vector_row_id = e.rowid
+            WHERE e.embedding MATCH ? AND k = ?
+            ORDER BY e.distance
+        ''', (query_embedding, limit)).fetchall()
+        return [dict(row) for row in results]
+
+    def get_index_state(self) -> List[Dict]:
+        rows = self.conn.execute(
+            "SELECT * FROM asset_index_state ORDER BY source_path"
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def has_asset_index_state(self) -> bool:
+        return self.conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='asset_index_state'"
+        ).fetchone() is not None
+
+    def reconcile_assets_batch(
+        self,
+        skills: List[Dict],
+        embeddings: List[np.ndarray],
+        states: List[Dict],
+        *,
+        active_source_paths: set[str],
+    ) -> List[int]:
+        """Atomically replace changed projections and prune removed sources."""
+
+        if not (len(skills) == len(embeddings) == len(states)):
+            raise ValueError("skills, embeddings, and states must have the same length")
+        ids: List[int] = []
+        with self.conn:
+            existing_sources = {
+                row[0]
+                for row in self.conn.execute(
+                    "SELECT source_path FROM asset_index_state"
+                )
+            }
+            removed_sources = existing_sources - active_source_paths
+            for source_path in removed_sources:
+                row = self.conn.execute(
+                    "SELECT skill_row_id FROM asset_index_state WHERE source_path = ?",
+                    (source_path,),
+                ).fetchone()
+                if row:
+                    self.conn.execute(
+                        "DELETE FROM skill_embeddings WHERE rowid = ?", (row[0],)
+                    )
+                    self.conn.execute("DELETE FROM skills WHERE id = ?", (row[0],))
+
+            for skill, embedding, state in zip(skills, embeddings, states):
+                skill_id = self._upsert_skill(skill, embedding)
+                self.conn.execute(
+                    "DELETE FROM asset_index_state WHERE skill_row_id = ? OR source_path = ?",
+                    (skill_id, state["source_path"]),
+                )
+                self.conn.execute(
+                    """
+                    INSERT INTO asset_index_state(
+                        asset_id, revision_id, representation_version,
+                        embedding_model_id, embedding_model_version, content_hash,
+                        skill_row_id, vector_row_id, source_path, indexed_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        state["asset_id"], state["revision_id"],
+                        state["representation_version"], state["embedding_model_id"],
+                        state["embedding_model_version"], state["content_hash"],
+                        skill_id, skill_id, state["source_path"], state["indexed_at"],
+                    ),
+                )
+                ids.append(skill_id)
+        return ids
     
     def get_skill_by_id(self, skill_id: int, include_json: bool = False) -> Optional[Dict]:
         """根據 ID 取得 skill"""

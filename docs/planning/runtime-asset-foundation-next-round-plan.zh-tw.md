@@ -363,3 +363,9 @@ P0-A contracts
   migrations、classified contention，以及通過 integrity check 的 backup/restore。
   未 migrate 任何 operator database；focused storage 與 Core API verification
   為 `48 passed`。
+- `P0-D` 已於 `2026-07-17` 完成：同步 search/index 工作改由 two-worker、
+  four-queue bounded executor offload；saturation 會快速失敗，caller cancellation
+  不會提前釋放 capacity。Search/list hot paths 不再讀 raw payload，並由
+  revision/model/representation identity 驅動 atomic incremental reconciliation。
+  第二次 unchanged run 的 embedding 數為零；drift、removal 與 injected-failure
+  fixtures 均通過。Focused search/index/API verification 為 `66 passed`。

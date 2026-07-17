@@ -18,6 +18,7 @@ from .repositories import (
     SkillParserAdapter,
     StaleSourceSnapshotError,
 )
+from .search import AssetSearchResult, BoundedSearchExecutor, SearchOverloadedError
 
 __all__ = [
     "AssetContractError",
@@ -35,4 +36,7 @@ __all__ = [
     "SkillParserAdapter",
     "SnapshotDiagnostic",
     "StaleSourceSnapshotError",
+    "AssetSearchResult",
+    "BoundedSearchExecutor",
+    "SearchOverloadedError",
 ]

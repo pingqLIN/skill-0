@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any, TYPE_CHECKING
+import atexit
 import hashlib
 import os
 import logging
@@ -22,6 +23,7 @@ from contextvars import ContextVar
 from urllib.parse import urlparse
 
 import structlog
+from asset_registry.search import BoundedSearchExecutor, SearchOverloadedError
 from api.logging_config import setup_logging
 from api.routers.runs_v4 import (
     RUNTIME_BINDING_KEY_ENV,
@@ -557,6 +559,8 @@ def _constant_time_text_equal(value: str, expected: str) -> bool:
 
 # Global search engine (lazy initialization)
 search_engine: Optional["SemanticSearch"] = None
+search_executor = BoundedSearchExecutor(max_workers=2, queue_capacity=4)
+atexit.register(search_executor.shutdown)
 
 
 def _load_semantic_search_class():
@@ -581,6 +585,47 @@ def _get_db_skill_count(db_path: str) -> int:
     with sqlite3.connect(f"file:{resolved.as_posix()}?mode=ro", uri=True) as conn:
         row = conn.execute('SELECT COUNT(*) FROM skills').fetchone()
     return int(row[0] if row else 0)
+
+
+def _search_sync(query: str, limit: int):
+    return get_search_engine().search(query, limit=limit)
+
+
+def _similar_sync(skill_name: str, limit: int):
+    return get_search_engine().find_similar(skill_name, limit=limit)
+
+
+def _cluster_sync(n_clusters: int):
+    return get_search_engine().cluster_skills(n_clusters=n_clusters)
+
+
+def _stats_sync():
+    return get_search_engine().get_statistics()
+
+
+def _list_skills_sync():
+    return get_search_engine().store.get_all_skills()
+
+
+def _skill_by_id_sync(skill_id: int, include_json: bool):
+    return get_search_engine().store.get_skill_by_id(
+        skill_id, include_json=include_json
+    )
+
+
+def _index_sync(parsed_dir: str) -> int:
+    engine = get_search_engine()
+    if engine.store.has_asset_index_state():
+        return engine.index_assets(parsed_dir, show_progress=False).changed
+    return engine.index_skills(parsed_dir, show_progress=False)
+
+
+def _search_overloaded(exc: SearchOverloadedError) -> HTTPException:
+    return HTTPException(
+        status_code=429,
+        detail={"code": exc.code, "message": "Search capacity is exhausted"},
+        headers={"Retry-After": "1"},
+    )
 
 
 # ==================== Models ====================
@@ -762,8 +807,9 @@ async def search_skills(request: SearchRequest):
     start = time.time()
     
     try:
-        engine = get_search_engine()
-        results = engine.search(request.query, limit=request.limit)
+        results = await search_executor.run(_search_sync, request.query, request.limit)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
     except Exception as exc:
         raise _search_service_unavailable("/api/search", exc) from exc
     
@@ -790,8 +836,9 @@ async def search_skills_get(
     start = time.time()
     
     try:
-        engine = get_search_engine()
-        results = engine.search(q, limit=limit)
+        results = await search_executor.run(_search_sync, q, limit)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
     except Exception as exc:
         raise _search_service_unavailable("/api/search", exc) from exc
     
@@ -815,8 +862,11 @@ async def find_similar_skills(request: SimilarRequest):
     start = time.time()
     
     try:
-        engine = get_search_engine()
-        results = engine.find_similar(request.skill_name, limit=request.limit)
+        results = await search_executor.run(
+            _similar_sync, request.skill_name, request.limit
+        )
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
     except Exception as exc:
         raise _search_service_unavailable("/api/similar", exc) from exc
     
@@ -844,8 +894,9 @@ async def find_similar_skills_get(
     start = time.time()
     
     try:
-        engine = get_search_engine()
-        results = engine.find_similar(skill_name, limit=limit)
+        results = await search_executor.run(_similar_sync, skill_name, limit)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
     except Exception as exc:
         raise _search_service_unavailable("/api/similar", exc) from exc
     
@@ -872,8 +923,9 @@ async def cluster_skills(
     Automatically group all skills using K-Means clustering.
     """
     try:
-        engine = get_search_engine()
-        clusters = engine.cluster_skills(n_clusters=n)
+        clusters = await search_executor.run(_cluster_sync, n)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
     except Exception as exc:
         raise _search_service_unavailable("/api/cluster", exc) from exc
     
@@ -894,8 +946,10 @@ async def cluster_skills(
 @app.get("/api/stats", response_model=StatsResponse, tags=["Info"])
 async def get_statistics():
     """Get database statistics"""
-    engine = get_search_engine()
-    stats = engine.get_statistics()
+    try:
+        stats = await search_executor.run(_stats_sync)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
     
     return StatsResponse(**stats)
 
@@ -906,8 +960,10 @@ async def list_all_skills(
     per_page: int = Query(20, ge=1, le=100)
 ):
     """List all Skills (paginated)"""
-    engine = get_search_engine()
-    all_skills = engine.store.get_all_skills()
+    try:
+        all_skills = await search_executor.run(_list_skills_sync)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
     
     # Pagination
     start = (page - 1) * per_page
@@ -929,8 +985,10 @@ async def get_skill_by_id(
     include_json: bool = Query(False, description="Include original JSON")
 ):
     """Get Skill details by ID"""
-    engine = get_search_engine()
-    skill = engine.store.get_skill_by_id(skill_id, include_json=include_json)
+    try:
+        skill = await search_executor.run(_skill_by_id_sync, skill_id, include_json)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
     
     if not skill:
         raise HTTPException(status_code=404, detail=f"Skill with ID {skill_id} not found")
@@ -947,11 +1005,10 @@ async def index_skills(request: IndexRequest, _user: dict = Depends(require_auth
     """
     start = time.time()
     
-    engine = get_search_engine()
-    
-    # Clear and re-index
-    engine.store.clear()
-    count = engine.index_skills(request.parsed_dir, show_progress=False)
+    try:
+        count = await search_executor.run(_index_sync, request.parsed_dir)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
     
     elapsed = time.time() - start
     

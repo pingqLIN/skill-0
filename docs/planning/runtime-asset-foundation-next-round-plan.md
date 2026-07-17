@@ -431,3 +431,10 @@ Any failed batch acceptance criterion blocks every downstream batch. Stop furthe
   checksum-aware migrations, classified contention, and integrity-checked
   backup/restore were added. No operator database was migrated. Focused storage
   and Core API verification passed (`48 passed`).
+- `P0-D` completed on `2026-07-17`: synchronous search/index work is offloaded
+  through a two-worker/four-queue bounded executor, saturation fails fast without
+  releasing capacity on caller cancellation, search/list hot paths omit raw
+  payloads, and revision/model/representation identity drives atomic incremental
+  reconciliation. Unchanged second runs embed zero items; drift, removal, and
+  injected-failure fixtures passed. Focused search/index/API verification passed
+  (`66 passed`).
