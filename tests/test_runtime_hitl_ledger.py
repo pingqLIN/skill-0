@@ -20,10 +20,10 @@ TEST_BINDING_KEY = "skill0-test-runtime-binding-key-0123456789"
 
 
 class ApprovedGovernanceGate:
-    def evaluate(self, skill_document, contract):
+    def evaluate(self, skill_document, contract, *, canonical_asset_id=None):
         return {
             "policy": "governance.current_revision.approved",
-            "canonical_skill_id": skill_document["meta"]["skill_id"],
+            "canonical_skill_id": canonical_asset_id or skill_document["meta"]["skill_id"],
             "governance_skill_id": "governance-runtime-hitl-test",
             "revision_id": "rev-runtime-hitl-test",
             "revision_number": 1,

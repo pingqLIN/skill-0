@@ -11,6 +11,7 @@ from asset_registry.contracts import (
     AssetContractError,
     asset_envelope_to_skill,
     canonical_content_digest,
+    collision_asset_id,
     skill_document_to_asset_envelope,
     validate_asset_envelope,
 )
@@ -73,6 +74,28 @@ def test_asset_id_drift_fails_closed(read_json):
     envelope["asset_id"] = "claude__skill__other"
     with pytest.raises(AssetContractError, match="asset_id"):
         validate_asset_envelope(envelope)
+
+
+def test_collision_identity_is_deterministic_and_payload_lossless(root):
+    skill = json.loads(
+        (root / "parsed/java-11-to-java-17-upgrade-skill.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    asset_id = collision_asset_id(skill)
+    envelope = skill_document_to_asset_envelope(
+        skill,
+        source_path="java-11-to-java-17-upgrade-skill.json",
+        source_digest="sha256:" + "a" * 64,
+        asset_id=asset_id,
+        identity_strategy="source_name_disambiguation",
+    )
+    assert asset_id == "claude__skill__java_11_to_java_17_upgrade"
+    assert envelope["identity"]["legacy_skill_id"] == (
+        "claude__skill__java_to_java_upgrade"
+    )
+    assert asset_envelope_to_skill(envelope) == skill
+    assert envelope["revision_id"] == f"asset-revision:{canonical_content_digest(skill)}"
 
 
 def test_revision_namespace_confusion_fails_closed(read_json):

@@ -22,6 +22,8 @@ class RuntimeGovernanceGate(Protocol):
         self,
         skill_document: dict[str, Any],
         contract: dict[str, Any],
+        *,
+        canonical_asset_id: str | None = None,
     ) -> dict[str, Any]: ...
 
 
@@ -35,10 +37,14 @@ class SQLiteRuntimeGovernanceGate:
         self,
         skill_document: dict[str, Any],
         contract: dict[str, Any],
+        *,
+        canonical_asset_id: str | None = None,
     ) -> dict[str, Any]:
         if not self.path.exists():
             raise RuntimeGovernanceError("GOVERNANCE_DB_UNAVAILABLE")
-        canonical_skill_id = str(skill_document.get("meta", {}).get("skill_id", ""))
+        canonical_skill_id = str(
+            canonical_asset_id or skill_document.get("meta", {}).get("skill_id", "")
+        )
         if not canonical_skill_id:
             raise RuntimeGovernanceError("GOVERNANCE_SKILL_ID_MISSING")
         artifact_digest = canonical_digest(skill_document)

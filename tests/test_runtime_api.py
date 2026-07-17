@@ -16,10 +16,10 @@ from runtime.models import RuntimeEvent, RuntimeEventType
 
 
 class ApprovedGovernanceGate:
-    def evaluate(self, skill_document, contract):
+    def evaluate(self, skill_document, contract, *, canonical_asset_id=None):
         return {
             "policy": "governance.current_revision.approved",
-            "canonical_skill_id": skill_document["meta"]["skill_id"],
+            "canonical_skill_id": canonical_asset_id or skill_document["meta"]["skill_id"],
             "governance_skill_id": "governance-runtime-api-test",
             "revision_id": "rev-runtime-api-test",
             "revision_number": 1,
@@ -509,7 +509,7 @@ def test_create_runtime_run_requires_governance_approved_revision(
     tmp_path, monkeypatch, read_json
 ):
     class DeniedGate:
-        def evaluate(self, skill_document, contract):
+        def evaluate(self, skill_document, contract, *, canonical_asset_id=None):
             del skill_document, contract
             raise RuntimeGovernanceError("GOVERNANCE_REVISION_NOT_APPROVED")
 
@@ -537,10 +537,14 @@ def test_hitl_resume_rechecks_governance_before_consuming_claim(
     class MutableGate(ApprovedGovernanceGate):
         denied = False
 
-        def evaluate(self, skill_document, contract):
+        def evaluate(self, skill_document, contract, *, canonical_asset_id=None):
             if self.denied:
                 raise RuntimeGovernanceError("GOVERNANCE_REVISION_REVOKED")
-            return super().evaluate(skill_document, contract)
+            return super().evaluate(
+                skill_document,
+                contract,
+                canonical_asset_id=canonical_asset_id,
+            )
 
     database = tmp_path / "runtime.db"
     parsed_dir = tmp_path / "parsed"

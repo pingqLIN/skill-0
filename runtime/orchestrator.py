@@ -75,6 +75,7 @@ class RuntimeOrchestrator:
         contract: dict[str, Any],
         skill_document: dict[str, Any],
         *,
+        asset_id: str | None = None,
         parameters: dict[str, Any],
         context: dict[str, Any] | None = None,
         dry_run: bool = True,
@@ -85,8 +86,11 @@ class RuntimeOrchestrator:
         validate_schema(skill_document, load_json(self.skill_schema_path))
         validate_cross_references(skill_document, contract)
         _validate_skill_identity(skill_document, contract)
+        resolved_asset_id = asset_id or str(skill_document["meta"]["skill_id"])
         governance_attestation = self.governance_gate.evaluate(
-            skill_document, contract
+            skill_document,
+            contract,
+            canonical_asset_id=resolved_asset_id,
         )
 
         context = dict(context or {})
@@ -149,7 +153,7 @@ class RuntimeOrchestrator:
                 raise RuntimeContractValidationError(decision.reason)
             preflight["adapter_production_approval"] = decision.attestation
         basis = {
-            "skill_id": str(skill_document["meta"]["skill_id"]),
+            "skill_id": resolved_asset_id,
             "governance_revision_id": str(
                 governance_attestation["revision_id"]
             ),

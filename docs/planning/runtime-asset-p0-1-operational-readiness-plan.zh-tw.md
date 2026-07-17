@@ -1,0 +1,38 @@
+# Runtime Asset P0.1 操作就緒計畫
+
+- 狀態：**執行中**
+- 日期：`2026-07-18`
+- 權威邊界：Runtime v4 維持 dry-run only；P0 contract 保持 additive
+- 英文權威版本：[`runtime-asset-p0-1-operational-readiness-plan.md`](runtime-asset-p0-1-operational-readiness-plan.md)
+
+## 目標
+
+在不捏造 Governance approval 的前提下，補齊已驗證 P0 與可用本機 derived
+Index 之間的操作缺口。Public checkout 沒有 operator authority DB；根目錄的
+`skills.db` 與 `governance.db` 都只是無關的 sample DB。
+
+## 批次
+
+1. **P0.1-A identity：**依三份 Java upgrade payload 的明確來源 identity 產生
+   唯一 canonical Asset IDs，同時保留共用 ambiguous legacy alias 與原始 payload。
+2. **P0.1-B maintenance tooling：**加入 Index preflight、migration preview、
+   verified backup、apply、incremental index、第二次 no-op 與 doctor evidence。
+3. **P0.1-C rehearsal：**先對 disposable copy 演練；備份與驗證通過後才建立
+   可重建的 local Index。
+4. **P0.1-D acceptance：**執行 contract、compatibility、migration、search、
+   Runtime、schema、文件與完整 regression gates。
+
+## Authority 邊界
+
+`governance/db/governance.db` 是唯一 operator Governance path。P0.1 不會複製
+根目錄 sample DB、不會合成 binding，也不會為了 doctor 變綠而批准 revisions。
+因此 identity 與 Index projection 健康時，本機 doctor 仍可能是
+`authority-missing`。只有 approved Governance fixture，或完成真實 review 的
+operator store，才要求 `healthy`／exit 0。
+
+## Rollback
+
+任何 operator Index mutation 前都必須建立並驗證 SQLite backup。舊 target
+只有在確認它是 derived Index 且已保留後才能替換。Rollback 必須在 writers
+停止時還原 verified backup，不能原地 drop tables。Governance 與 Runtime store
+都不執行 migration。

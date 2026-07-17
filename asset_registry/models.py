@@ -16,6 +16,8 @@ class AssetRevision:
     source_digest: str
     source_path: Path
     payload: dict[str, Any]
+    legacy_skill_id: str
+    identity_strategy: str
 
 
 @dataclass(frozen=True)

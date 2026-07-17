@@ -19,7 +19,14 @@ document and Actions, Rules, and Directives remain the decomposition ontology.
 
 Identity is deterministic:
 
-- P0 Skill `asset_id` is the exact canonical `meta.skill_id`;
+- a unique P0 Skill keeps `asset_id == meta.skill_id`;
+- when multiple payloads share one legacy `meta.skill_id`, the repository may
+  derive canonical Asset IDs only from each explicit
+  `original_definition.skill_name`, normalized inside the existing provider and
+  scope namespace;
+- the shared `meta.skill_id` remains an ambiguous legacy alias: revision listing
+  may return every canonical target, while single-detail and Runtime lookup fail
+  closed rather than choosing one;
 - `content_hash` is `runtime.digest.canonical_digest(payload)`, the same stable
   JSON digest implementation used by Runtime governance;
 - Asset `revision_id` is `asset-revision:<content_hash>`, deliberately distinct
@@ -40,6 +47,14 @@ Mapping a canonical Skill into an envelope and back must be lossless. Envelope
 v1 introduces no data migration, changes no existing Skill schema, and does not
 authorize execution. Governance approval of the exact current revision and
 artifact digest remains the Runtime admission authority.
+
+The optional `identity` object records `legacy_skill_id` and either
+`legacy_exact` or `source_name_disambiguation`. Disambiguation never rewrites
+the embedded payload, so content and source digests and Asset revision identity
+remain stable. Missing, invalid, or still-colliding source identity remains a
+canonical ambiguity and fails closed. `provenance.canonical_asset_id` records
+the Runtime/Governance identity; the older `canonical_skill_id` provenance field
+remains the embedded payload identity for compatibility.
 
 ## Failure behavior
 

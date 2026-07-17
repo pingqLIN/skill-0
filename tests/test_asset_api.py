@@ -111,6 +111,24 @@ def test_asset_search_uses_generic_projection(monkeypatch):
     assert "payload" not in response.json()["results"][0]
 
 
+def test_checked_in_legacy_alias_lists_canonical_revisions(root, monkeypatch):
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(root / "parsed"))
+    client = TestClient(api_module.app)
+    response = client.get(
+        "/api/assets/claude__skill__java_to_java_upgrade/revisions"
+    )
+    assert response.status_code == 200
+    assert {item["asset_id"] for item in response.json()} == {
+        "claude__skill__java_11_to_java_17_upgrade",
+        "claude__skill__java_17_to_java_21_upgrade",
+        "claude__skill__java_21_to_java_25_upgrade",
+    }
+    assert (
+        client.get("/api/assets/claude__skill__java_to_java_upgrade").status_code
+        == 409
+    )
+
+
 def test_authenticated_reload_recovers_stale_snapshot_atomically(tmp_path, monkeypatch):
     parsed = tmp_path / "parsed"
     parsed.mkdir()

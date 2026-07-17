@@ -41,7 +41,19 @@
       "required": ["source_path", "canonical_skill_id"],
       "properties": {
         "source_path": { "type": "string", "minLength": 1 },
-        "canonical_skill_id": { "type": "string", "minLength": 1 }
+        "canonical_skill_id": { "type": "string", "minLength": 1 },
+        "canonical_asset_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "legacy_skill_id"],
+      "properties": {
+        "strategy": {
+          "enum": ["legacy_exact", "source_name_disambiguation"]
+        },
+        "legacy_skill_id": { "type": "string", "minLength": 1 }
       }
     },
     "lifecycle": {

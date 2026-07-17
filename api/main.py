@@ -754,6 +754,7 @@ class AssetReloadResponse(BaseModel):
     snapshot_id: str
     revision_count: int
     ambiguous_asset_ids: list[str]
+    ambiguous_legacy_aliases: list[str]
 
 
 def _revision_response(revision, *, include_payload: bool) -> AssetRevisionResponse:
@@ -888,6 +889,7 @@ async def reload_assets(_user: dict = Depends(require_auth)):
         snapshot_id=repository.snapshot_id,
         revision_count=len(revisions),
         ambiguous_asset_ids=list(repository.ambiguous_asset_ids),
+        ambiguous_legacy_aliases=list(repository.ambiguous_legacy_aliases),
     )
 
 

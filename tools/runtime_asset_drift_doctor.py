@@ -197,6 +197,7 @@ def build_doctor_report(
         "pending_projection": [],
         "stale_index_identity": [],
         "duplicate_canonical_identity": [],
+        "ambiguous_legacy_alias": [],
         "model_version_drift": [],
         "authority_missing": [],
         "migration_status": [],
@@ -223,6 +224,9 @@ def build_doctor_report(
 
     findings["duplicate_canonical_identity"] = list(
         repository.ambiguous_asset_ids
+    )
+    findings["ambiguous_legacy_alias"] = list(
+        repository.ambiguous_legacy_aliases
     )
     index_findings, index_count = _index_findings(index_db, revisions)
     for key, values in index_findings.items():

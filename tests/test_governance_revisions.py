@@ -126,6 +126,32 @@ def test_runtime_approval_requires_exact_current_approved_artifact(tmp_path):
     assert attestation["artifact_digest"] == digest
 
 
+def test_runtime_governance_uses_resolved_asset_id_without_rewriting_payload(tmp_path):
+    path = tmp_path / "governance.db"
+    db = GovernanceDB(db_path=path)
+    document = _runtime_skill_document()
+    legacy_skill_id = document["meta"]["skill_id"]
+    canonical_asset_id = "claude__skill__runtime_governed_v2"
+    digest = canonical_digest(document)
+    skill_id = db.create_skill(name="runtime-governed", version="1.2.0")
+    db.bind_runtime_artifact(
+        skill_id,
+        canonical_skill_id=canonical_asset_id,
+        artifact_digest=digest,
+        bound_by="binder",
+    )
+    assert db.approve_skill(skill_id, approved_by="reviewer", reason="reviewed")
+
+    attestation = SQLiteRuntimeGovernanceGate(path).evaluate(
+        document,
+        {"skill_ref": {"name": "runtime-governed", "version": "1.2.0"}},
+        canonical_asset_id=canonical_asset_id,
+    )
+    assert document["meta"]["skill_id"] == legacy_skill_id
+    assert attestation["canonical_skill_id"] == canonical_asset_id
+    assert attestation["artifact_digest"] == digest
+
+
 def test_runtime_approval_ignores_mutable_skill_status_projection(tmp_path):
     path = tmp_path / "governance.db"
     db = GovernanceDB(db_path=path)

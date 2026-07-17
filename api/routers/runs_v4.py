@@ -311,9 +311,9 @@ def reload_asset_repository() -> AssetRepository:
 
 def load_canonical_skill(
     skill_id: str, repository: AssetRepository
-) -> dict[str, Any]:
+):
     try:
-        return repository.get_revision(skill_id).payload
+        return repository.get_revision(skill_id)
     except AssetNotFoundError as exc:
         raise HTTPException(status_code=404, detail="Canonical skill not found") from exc
     except AssetIdentityAmbiguousError as exc:
@@ -391,7 +391,8 @@ def create_run(
             detail="Batch A accepts only test adapters for deterministic dry-run execution",
         )
 
-    skill_document = load_canonical_skill(request.skill_id, asset_repository)
+    asset_revision = load_canonical_skill(request.skill_id, asset_repository)
+    skill_document = asset_revision.payload
     orchestrator = RuntimeOrchestrator(
         ledger,
         SimulationAdapter(),
@@ -403,6 +404,7 @@ def create_run(
         result = orchestrator.run(
             request.runtime_contract,
             skill_document,
+            asset_id=asset_revision.asset_id,
             parameters=request.parameters,
             context={},
             dry_run=True,
@@ -489,7 +491,8 @@ def resume_hitl_run(
     if item["basis_digest"] != basis["execution_digest"]:
         raise HTTPException(status_code=409, detail="HITL item basis does not match run")
 
-    skill_document = load_canonical_skill(item["skill_id"], asset_repository)
+    asset_revision = load_canonical_skill(item["skill_id"], asset_repository)
+    skill_document = asset_revision.payload
     orchestrator = RuntimeOrchestrator(
         ledger,
         SimulationAdapter(),
@@ -501,6 +504,7 @@ def resume_hitl_run(
         result = orchestrator.run(
             request.runtime_contract,
             skill_document,
+            asset_id=asset_revision.asset_id,
             parameters=request.parameters,
             context={},
             dry_run=True,

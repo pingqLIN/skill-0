@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import re
 from typing import Any, Mapping
 
 from runtime.digest import canonical_digest
@@ -11,6 +12,9 @@ from runtime.digest import canonical_digest
 ASSET_SCHEMA_VERSION = "1.0.0"
 SUPPORTED_ASSET_TYPE = "skill"
 SHA256_PREFIX = "sha256:"
+ASSET_ID_PATTERN = re.compile(
+    r"^(?:claude|mcp)__[a-z0-9_]+__[a-z0-9][a-z0-9_]*$"
+)
 
 
 class AssetContractError(ValueError):
@@ -21,6 +25,25 @@ def canonical_content_digest(document: Mapping[str, Any]) -> str:
     """Use the exact digest implementation that Runtime governance authorizes."""
 
     return canonical_digest(document)
+
+
+def collision_asset_id(skill_document: Mapping[str, Any]) -> str:
+    """Derive a stable Asset ID only from explicit source identity metadata."""
+
+    meta = skill_document.get("meta")
+    original = skill_document.get("original_definition")
+    if not isinstance(meta, Mapping) or not isinstance(original, Mapping):
+        raise AssetContractError("collision identity requires original_definition")
+    legacy_skill_id = _require_non_empty_string(meta, "skill_id")
+    parts = legacy_skill_id.split("__", 2)
+    if len(parts) != 3:
+        raise AssetContractError("legacy skill_id cannot provide Asset namespace")
+    source_name = _require_non_empty_string(original, "skill_name").lower()
+    slug = re.sub(r"[^a-z0-9]+", "_", source_name).strip("_")
+    candidate = f"{parts[0]}__{parts[1]}__{slug}"
+    if not ASSET_ID_PATTERN.fullmatch(candidate):
+        raise AssetContractError("source identity cannot produce a valid asset_id")
+    return candidate
 
 
 def _require_non_empty_string(container: Mapping[str, Any], key: str) -> str:
@@ -35,6 +58,8 @@ def skill_document_to_asset_envelope(
     *,
     source_path: str,
     source_digest: str,
+    asset_id: str | None = None,
+    identity_strategy: str = "legacy_exact",
 ) -> dict[str, Any]:
     """Map one canonical Skill document to a deterministic Asset envelope.
 
@@ -58,9 +83,19 @@ def skill_document_to_asset_envelope(
 
     payload = deepcopy(dict(skill_document))
     content_hash = canonical_content_digest(payload)
+    resolved_asset_id = asset_id or canonical_skill_id
+    if identity_strategy == "legacy_exact":
+        if resolved_asset_id != canonical_skill_id:
+            raise AssetContractError("legacy_exact identity must preserve skill_id")
+    elif identity_strategy == "source_name_disambiguation":
+        if resolved_asset_id != collision_asset_id(skill_document):
+            raise AssetContractError("asset_id does not match source identity")
+    else:
+        raise AssetContractError("unsupported identity strategy")
+
     envelope = {
         "schema_version": ASSET_SCHEMA_VERSION,
-        "asset_id": canonical_skill_id,
+        "asset_id": resolved_asset_id,
         "revision_id": f"asset-revision:{content_hash}",
         "asset_type": SUPPORTED_ASSET_TYPE,
         "name": name,
@@ -73,6 +108,11 @@ def skill_document_to_asset_envelope(
         "provenance": {
             "source_path": source_path,
             "canonical_skill_id": canonical_skill_id,
+            "canonical_asset_id": resolved_asset_id,
+        },
+        "identity": {
+            "strategy": identity_strategy,
+            "legacy_skill_id": canonical_skill_id,
         },
         "lifecycle": {"status": "active"},
     }
@@ -96,9 +136,25 @@ def validate_asset_envelope(envelope: Mapping[str, Any]) -> None:
     if not isinstance(meta, Mapping):
         raise AssetContractError("payload.meta must be an object")
     canonical_skill_id = _require_non_empty_string(meta, "skill_id")
-    expected_asset_id = canonical_skill_id
+    identity = envelope.get("identity")
+    if identity is None:
+        identity = {
+            "strategy": "legacy_exact",
+            "legacy_skill_id": canonical_skill_id,
+        }
+    if not isinstance(identity, Mapping):
+        raise AssetContractError("identity must be an object")
+    if identity.get("legacy_skill_id") != canonical_skill_id:
+        raise AssetContractError("identity legacy_skill_id does not match payload")
+    strategy = identity.get("strategy")
+    if strategy == "legacy_exact":
+        expected_asset_id = canonical_skill_id
+    elif strategy == "source_name_disambiguation":
+        expected_asset_id = collision_asset_id(payload)
+    else:
+        raise AssetContractError("unsupported identity strategy")
     if envelope.get("asset_id") != expected_asset_id:
-        raise AssetContractError("asset_id does not match payload.meta.skill_id")
+        raise AssetContractError("asset_id does not match identity strategy")
 
     expected_hash = canonical_content_digest(payload)
     if envelope.get("content_hash") != expected_hash:
@@ -107,6 +163,9 @@ def validate_asset_envelope(envelope: Mapping[str, Any]) -> None:
         raise AssetContractError("revision_id does not match content_hash")
     if provenance.get("canonical_skill_id") != canonical_skill_id:
         raise AssetContractError("provenance canonical_skill_id does not match payload")
+    canonical_asset_id = provenance.get("canonical_asset_id")
+    if canonical_asset_id is not None and canonical_asset_id != envelope.get("asset_id"):
+        raise AssetContractError("provenance canonical_asset_id does not match asset_id")
     _require_non_empty_string(provenance, "source_path")
 
 

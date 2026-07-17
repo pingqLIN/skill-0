@@ -12,11 +12,12 @@ Read in this order:
 
 1. [`../README.md`](../README.md) — product scope and supported Runtime v4 boundary.
 2. [`planning/runtime-asset-foundation-next-round-plan.md`](planning/runtime-asset-foundation-next-round-plan.md) — active P0 Runtime Asset execution authority and scope gates.
-3. [`../ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) — compact frozen Runtime v4 state and branch handoff.
-4. [`closeout/FINAL_REPORT.md`](closeout/FINAL_REPORT.md) — Runtime v4 release decision, exact verification, and rollback.
-5. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
-6. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
-7. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level Runtime v4 acceptance evidence.
+3. [`planning/runtime-asset-p0-1-operational-readiness-plan.md`](planning/runtime-asset-p0-1-operational-readiness-plan.md) — active P0.1 identity and operator-readiness work.
+4. [`../ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) — compact frozen Runtime v4 state and branch handoff.
+5. [`closeout/FINAL_REPORT.md`](closeout/FINAL_REPORT.md) — Runtime v4 release decision, exact verification, and rollback.
+6. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
+7. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
+8. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level Runtime v4 acceptance evidence.
 
 The non-suffixed English operations documents are authoritative. Existing `.zh-tw.md` companions are human-readable translations.
 
