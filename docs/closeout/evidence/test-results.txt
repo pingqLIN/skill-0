@@ -17,3 +17,13 @@ C2 fix cycle 1: coverage gate configuration
 PASS exit=0 | focused workflow regression: 1 passed in 0.14s
 PASS exit=0 | corrected coverage gate: 374 passed, 65 warnings; 81.92%, required 75%
 Production change: .github/workflows/ci.yml now measures api and Dashboard API served surfaces.
+
+C3 production rehearsal completion
+PASS exit=0 | runtime production contract tests: 6 passed
+PASS exit=0 | one-host Compose rehearsal: clean doctor, governed dry-run succeeded, deterministic evidence, three-store restore, restart, cleanup
+
+C4 documentation authority
+PASS exit=0 | document status markers
+PASS exit=0 | shared docs check: 5 sources
+PASS exit=0 | document contract tests: 8 passed
+PASS exit=0 | git diff --check

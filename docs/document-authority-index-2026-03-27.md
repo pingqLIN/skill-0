@@ -1,5 +1,7 @@
 # Skill-0 Document Authority Index
 
+> **Historical index.** This dated inventory is retained for traceability and is not a current execution authority. Use [`docs/README.md`](README.md) and [`ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) for the frozen Runtime v4 closeout state.
+
 Updated: `2026-07-16`
 Purpose: `separate live authority from historical and conceptual documents`
 

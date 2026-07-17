@@ -14,3 +14,26 @@ PASS exit=0 | compose config with CORS_ORIGINS=https://closeout.invalid
 
 Initial Docker failure classification: ENVIRONMENT_BLOCKER, cleared by starting the installed runtime.
 Compose precondition is fail-closed production behavior, not a source defect.
+
+Runtime v4 C3 production rehearsal
+FAIL exit=1 | initial requested port 18080 was in use; no Compose resource created
+PASS exit=0 | original rehearsal on ports 28080/23080 proved images, health, three stores, backup/restore, and restart; acceptance remained incomplete because initialize stayed enabled and no governed API run was executed
+PASS exit=0 | PowerShell syntax parse after cycle 3 fix
+PASS exit=0 | tests/test_runtime_production.py: 6 passed
+PASS exit=0 | final rehearsal project skill0-v4-closeout-rehearsal on ports 28080/23080
+  - dashboard, Core API, and web healthy
+  - initialization disabled before final doctor
+  - doctor healthy with errors=[] and warnings=[]
+  - governance approval seeded for canonical a11y artifact
+  - governed Runtime dry-run succeeded
+  - run, events, and Evidence API reads succeeded
+  - two Evidence payloads were byte-identical
+  - private rehearsal material absent from events and Evidence
+  - skills/governance/runtime stores existed and passed SQLite quick_check
+  - isolated three-store backup/restore preserved Runtime sentinel
+  - API restart preserved Runtime sentinel with initialization disabled
+  - disposable containers, volumes, network, and temp env were removed
+
+Runtime run: b7a11826-396f-44ee-8cd0-4cdc8aea8ad5
+Evidence HTTP-payload SHA-256: f830b05e515653562fac5cd8b7909d2c8cbfdfd9a5cd637bb319a32d49e7fb7c
+Backup artifact: disposable in-container matching three-store set; intentionally removed after isolated restore verification

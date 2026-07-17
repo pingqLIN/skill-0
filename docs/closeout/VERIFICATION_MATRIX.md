@@ -22,6 +22,17 @@ Recorded: `2026-07-17T10:11:55+08:00`
 | Docker Dashboard image | `docker build -f Dockerfile.dashboard -t skill-0-dashboard:closeout .` | 0 | PASS | — | `evidence/docker-results.txt` |
 | Docker Web image | `docker build -f Dockerfile.web -t skill-0-web:closeout .` | 0 | PASS | — | `evidence/docker-results.txt` |
 | Compose config | `$env:CORS_ORIGINS='https://closeout.invalid'; docker compose -f docker-compose.prod.yml config` | 0 | PASS | required env precondition recorded | `evidence/docker-results.txt` |
+| Production rehearsal | `pwsh -NoProfile -File scripts/rehearse_prod_compose.ps1 -ProjectName skill0-v4-closeout-rehearsal -ApiPort 28080 -WebPort 23080` | 0 | PASS | — | `evidence/docker-results.txt` |
+| Three-store doctor | rehearsal `runtime_doctor.py --production --json` | 0 | PASS; healthy, no errors/warnings | — | `evidence/runtime-doctor.json` |
+| Governed dry-run | authenticated `POST /api/runs` | 0 | PASS; `succeeded` | — | `evidence/runtime-evidence.json` |
+| Deterministic evidence | two authenticated `GET /api/runs/{id}/evidence` reads | 0 | PASS; byte-identical | — | `evidence/runtime-evidence.json` |
+| Three-store backup/restore | rehearsal online backup, isolated restore, `quick_check` and sentinel | 0 | PASS | — | `evidence/docker-results.txt` |
+| Restart with initialize disabled | API restart, doctor, Runtime sentinel | 0 | PASS | — | `evidence/runtime-doctor.json`, `evidence/docker-results.txt` |
+| Rehearsal cleanup | project-labelled container/volume/network and temp-env query | 0 | PASS; no residue | — | `evidence/docker-results.txt` |
+| Document authority markers | `python tools/check_doc_status_markers.py` | 0 | PASS | — | `evidence/test-results.txt` |
+| Shared document contract | `python tools/check_shared_docs.py` | 0 | PASS | — | `evidence/test-results.txt` |
+| Document contract tests | `python -m pytest tests/test_doc_checks.py -q` | 0 | PASS; 8 tests | — | `evidence/test-results.txt` |
+| Diff hygiene | `git diff --check` | 0 | PASS | — | `evidence/test-results.txt` |
 
 ## C1 classification
 
@@ -48,4 +59,10 @@ Recorded: `2026-07-17T10:11:55+08:00`
 
 - Cycle 1, coverage configuration: `RESOLVED`. The gate again measures the served Core and Dashboard API surfaces, matching the historical 75% gate intent. A workflow regression test prevents `tools` and `vector_db` from being silently added back to this denominator. The affected full gate passed at 81.92% with 374 tests.
 - Cycle 2, frontend effect lint: `RESOLVED`. Job feedback is derived from React Query snapshots; effects now only invalidate external query state. Focused tests passed 8/8, the frontend gate passed 34/34, lint passed, and `build:ci` passed.
-- No `CORE_BLOCKER` remains after two fix cycles.
+- Cycle 3, production rehearsal completeness: `RESOLVED`. The existing script now disables initialization before the release doctor, executes an authenticated governed dry-run, verifies public run/events/evidence reads, compares two evidence reads byte-for-byte, and rejects private rehearsal material in public projections.
+- No `CORE_BLOCKER` remains after three fix cycles.
+
+## C3 and C4 gate decisions
+
+- `C3 PASS`: the one-host rehearsal completed a governed dry-run, deterministic public evidence reads, three-store backup/restore, initialization-disabled restart, clean doctor, and residue cleanup.
+- `C4 PASS`: `docs/README.md` is the current authority map; closeout context, limitations, and deferred work have one canonical location; stale execution documents are explicitly historical.

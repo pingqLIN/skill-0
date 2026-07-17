@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "governance_db": {
+      "exists": true,
+      "journal_mode": "delete",
+      "path": "/app/governance/db/governance.db",
+      "quick_check": "ok"
+    },
+    "parsed": {
+      "json_count": 196,
+      "path": "/app/parsed"
+    },
+    "runtime_db": {
+      "exists": true,
+      "journal_mode": "wal",
+      "path": "/app/runtime-data/runtime.db",
+      "quick_check": "ok"
+    },
+    "skills_db": {
+      "exists": true,
+      "journal_mode": "delete",
+      "path": "/app/data/skills.db",
+      "quick_check": "ok"
+    }
+  },
+  "errors": [],
+  "status": "healthy",
+  "warnings": []
+}

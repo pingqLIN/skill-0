@@ -44,3 +44,13 @@
 2026-07-17T10:26:00+08:00 | npm run lint | exit=0 | PASS; 0 errors
 2026-07-17T10:26:00+08:00 | npm test | exit=0 | PASS; 6 files, 34 tests
 2026-07-17T10:26:00+08:00 | npm run build:ci | exit=0 | PASS; TypeScript, Vite, bundle guard
+2026-07-17T10:28:00+08:00 | pwsh -NoProfile -File scripts/rehearse_prod_compose.ps1 -ProjectName skill0-v4-closeout-rehearsal -ApiPort 18080 -WebPort 13080 | exit=1 | ENVIRONMENT_BLOCKER; port 18080 in use before resource creation
+2026-07-17T10:29:00+08:00 | pwsh -NoProfile -File scripts/rehearse_prod_compose.ps1 -ProjectName skill0-v4-closeout-rehearsal -ApiPort 28080 -WebPort 23080 | exit=0 | baseline script completed, but initialize=true warning and missing governed API run kept C3 gate open
+2026-07-17T10:31:00+08:00 | PowerShell scriptblock parse scripts/rehearse_prod_compose.ps1 | exit=0 | syntax OK
+2026-07-17T10:31:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests/test_runtime_production.py -q -p no:cacheprovider | exit=0 | 6 passed
+2026-07-17T10:32:00+08:00 | pwsh -NoProfile -File scripts/rehearse_prod_compose.ps1 -ProjectName skill0-v4-closeout-rehearsal -ApiPort 28080 -WebPort 23080 | exit=0 | PASS; doctor/dry-run/evidence/three-store restore/restart/cleanup
+2026-07-17T10:34:00+08:00 | docker project-labelled resource query and temp env query | exit=0 | no rehearsal residue
+2026-07-17T10:41:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe tools/check_doc_status_markers.py | exit=0 | PASS; C4 authority markers
+2026-07-17T10:41:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe tools/check_shared_docs.py | exit=0 | PASS; 5 shared sources
+2026-07-17T10:41:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests/test_doc_checks.py -q | exit=0 | PASS; 8 tests
+2026-07-17T10:41:00+08:00 | git diff --check | exit=0 | PASS

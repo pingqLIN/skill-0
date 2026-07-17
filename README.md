@@ -12,6 +12,12 @@ Skill-0 is a classification system that parses AI/Chatbot Skills (especially Cla
 
 Skill-0 now also includes a lightweight, goal-first intent router for operator workflows. Instead of starting from a raw skill list and assembling steps bottom-up, the router starts from the operator goal and optional task phase, then recommends the next Skill-0 workflow and commands.
 
+### Runtime v4 pilot boundary
+
+The governed Runtime v4 pilot is **dry-run only**. Its supported deployment is one host running Docker Compose with three independent SQLite stores (`skills.db`, `governance.db`, and `runtime.db`). It does not execute real actions, provide a non-dry-run adapter, or support multi-node/HA operation. Process-local rate limiting is suitable only for this single-instance boundary. The separately governed `skill-0-GUI` mirror is not part of the Core Runtime release gate.
+
+For current release state and evidence, start with [docs/README.md](docs/README.md), [ai-context-export/CURRENT_STATE.md](ai-context-export/CURRENT_STATE.md), and [docs/closeout/FINAL_REPORT.md](docs/closeout/FINAL_REPORT.md).
+
 ## Compatibility with Existing Skills
 
 ### Low-risk adoption path
@@ -162,7 +168,7 @@ These values are for local development only. Production must replace them and th
 
 ## Testing
 
-The project includes a comprehensive regression suite with 221 Python tests plus 26 frontend smoke tests:
+The project includes Python and frontend regression suites. Current verified counts and exact commands are recorded in [docs/closeout/VERIFICATION_MATRIX.md](docs/closeout/VERIFICATION_MATRIX.md), avoiding stale hard-coded totals here:
 
 ```bash
 # Run the full Python regression suite (core API + dashboard API)
@@ -192,7 +198,7 @@ cd skill-0-dashboard/apps/web && npm run build:ci
 - ✅ JWT authentication flow (tests/integration/test_auth_flow.py)
 - ✅ Rate limiting behavior (tests/integration/test_rate_limiting.py)
 - ✅ Dashboard API — all 5 routers (skill-0-dashboard/apps/api/tests/)
-- ✅ Frontend smoke tests — 26 component tests (Vitest)
+- ✅ Frontend component tests (Vitest)
 - ✅ Schema validation & format conversion
 - ✅ Integration workflows
 
@@ -360,6 +366,9 @@ Stable characteristics:
 
 Comprehensive documentation is available:
 
+- **[docs/README.md](docs/README.md)** - Current document authority map and release entry points
+- **[ai-context-export/CURRENT_STATE.md](ai-context-export/CURRENT_STATE.md)** - Compact machine handoff for the frozen Runtime v4 pilot
+- **[docs/closeout/FINAL_REPORT.md](docs/closeout/FINAL_REPORT.md)** - Runtime v4 closeout decision and acceptance evidence
 - **[CLAUDE.md](CLAUDE.md)** - Best practices for Claude AI integration and skill decomposition
 - **[SKILL.md](SKILL.md)** - Complete tool portal and workflow guide
 - **[reference.md](reference.md)** - Schema reference and format specifications

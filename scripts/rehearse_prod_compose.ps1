@@ -125,8 +125,87 @@ try {
     Write-Host "[STEP] Web health"
     Wait-Http -Uri "http://127.0.0.1:$WebPort/"
 
+    Write-Host "[STEP] Disable Runtime initialization and recreate Core API"
+    $envContent = Get-Content -Raw -LiteralPath $envFile
+    $envContent = $envContent.Replace(
+        "SKILL0_RUNTIME_ALLOW_INITIALIZE=true",
+        "SKILL0_RUNTIME_ALLOW_INITIALIZE=false"
+    )
+    Set-Content -LiteralPath $envFile -Value $envContent -NoNewline -Encoding utf8
+    Invoke-Compose -ComposeArgs @("up", "--detach", "--force-recreate", "api")
+    Wait-Http -Uri "http://127.0.0.1:$ApiPort/health"
+
     Write-Host "[STEP] Runtime production doctor"
     Invoke-Compose -ComposeArgs @("exec", "-T", "api", "python", "/app/scripts/runtime_doctor.py", "--production", "--json")
+
+    Write-Host "[STEP] Governed Runtime dry-run and deterministic Evidence"
+    $governanceSeed = 'import json; from pathlib import Path; from runtime.digest import canonical_digest; from tools.governance_db import GovernanceDB; document=json.loads(Path("/app/parsed/a11y-skill.json").read_text(encoding="utf-8")); database=GovernanceDB("/app/governance/db/governance.db"); skill_id=database.create_skill(name=document["meta"]["name"],source_type="local",source_path="parsed/a11y-skill.json",version="2.4.0"); database.bind_runtime_artifact(skill_id,canonical_skill_id=document["meta"]["skill_id"],artifact_digest=canonical_digest(document),bound_by="rehearsal-binder"); approved=database.approve_skill(skill_id,approved_by="rehearsal-reviewer",reason="closeout rehearsal"); print(f"governance_runtime_approval={int(approved)}"); raise SystemExit(0 if approved else 1)'
+    Invoke-Compose -ComposeArgs @("exec", "-T", "dashboard", "python", "-c", $governanceSeed)
+
+    $authBody = @{
+        username = "rehearsal-admin"
+        password = "rehearsal-password-0123456789"
+    } | ConvertTo-Json -Compress
+    $tokenResponse = Invoke-RestMethod `
+        -Method Post `
+        -Uri "http://127.0.0.1:$ApiPort/api/auth/token" `
+        -ContentType "application/json" `
+        -Body $authBody
+    $authHeaders = @{ Authorization = "Bearer $($tokenResponse.access_token)" }
+
+    $contract = Get-Content -Raw -LiteralPath (Join-Path $repoRoot "examples/runtime-contract.read-only.json") | ConvertFrom-Json
+    $contract.skill_ref.name = "a11y"
+    $contract.skill_ref.version = "2.4.0"
+    $contract.action_bindings[0].validation.precondition_rule_ids = @()
+    $runBody = @{
+        skill_id = "claude__skill__a_y"
+        runtime_contract = $contract
+        parameters = @{}
+        dry_run = $true
+    } | ConvertTo-Json -Depth 100 -Compress
+    $runtimeRun = Invoke-RestMethod `
+        -Method Post `
+        -Uri "http://127.0.0.1:$ApiPort/api/runs" `
+        -Headers $authHeaders `
+        -ContentType "application/json" `
+        -Body $runBody
+    if ($runtimeRun.status -ne "succeeded") {
+        throw "Governed Runtime dry-run did not succeed: $($runtimeRun.status)"
+    }
+
+    $runRead = Invoke-RestMethod `
+        -Uri "http://127.0.0.1:$ApiPort/api/runs/$($runtimeRun.run_id)" `
+        -Headers $authHeaders
+    $eventsRead = Invoke-WebRequest -UseBasicParsing `
+        -Uri "http://127.0.0.1:$ApiPort/api/runs/$($runtimeRun.run_id)/events" `
+        -Headers $authHeaders
+    $firstEvidence = Invoke-WebRequest -UseBasicParsing `
+        -Uri "http://127.0.0.1:$ApiPort/api/runs/$($runtimeRun.run_id)/evidence" `
+        -Headers $authHeaders
+    $secondEvidence = Invoke-WebRequest -UseBasicParsing `
+        -Uri "http://127.0.0.1:$ApiPort/api/runs/$($runtimeRun.run_id)/evidence" `
+        -Headers $authHeaders
+    if ($runRead.status -ne "succeeded" -or $firstEvidence.Content -cne $secondEvidence.Content) {
+        throw "Runtime run read or deterministic Evidence comparison failed"
+    }
+    foreach ($privateValue in @(
+        "rehearsal-password-0123456789",
+        "rehearsal-secret-key-change-me-0123456789",
+        "rehearsal-runtime-binding-key-0123456789",
+        "Bearer "
+    )) {
+        if ($firstEvidence.Content.Contains($privateValue) -or $eventsRead.Content.Contains($privateValue)) {
+            throw "Runtime public projection exposed private rehearsal material"
+        }
+    }
+    $evidenceBytes = [System.Text.Encoding]::UTF8.GetBytes($firstEvidence.Content)
+    $evidenceSha256 = [Convert]::ToHexString(
+        [System.Security.Cryptography.SHA256]::HashData($evidenceBytes)
+    ).ToLowerInvariant()
+    Write-Host "runtime_run_id=$($runtimeRun.run_id)"
+    Write-Host "runtime_run_status=$($runtimeRun.status)"
+    Write-Host "runtime_evidence_sha256=$evidenceSha256"
+    Write-Host "runtime_evidence_json=$($firstEvidence.Content)"
 
     Write-Host "[STEP] Create Runtime persistence sentinel"
     $sentinelCreate = 'from api.routers.runs_v4 import get_runtime_db_path,get_runtime_hitl_ttl_seconds,get_runtime_journal_mode; from runtime.ledger import RuntimeLedger; ledger=RuntimeLedger(get_runtime_db_path(),journal_mode=get_runtime_journal_mode(),hitl_ttl_seconds=get_runtime_hitl_ttl_seconds()); run_id=ledger.create_run(skill_name="runtime-rehearsal-sentinel",skill_version="1"); ledger.close(); print(run_id)'

@@ -170,6 +170,15 @@ def test_maintenance_scripts_cover_all_three_databases():
     assert '?mode=ro",uri=True' in rehearsal
     assert 'skill0-runtime-db:/runtime" python:3.12-slim python -c $storageCheck' in rehearsal
     assert "Runtime production doctor" in rehearsal
+    assert "Disable Runtime initialization and recreate Core API" in rehearsal
+    assert '"SKILL0_RUNTIME_ALLOW_INITIALIZE=false"' in rehearsal
+    assert '@("up", "--detach", "--force-recreate", "api")' in rehearsal
+    assert "Governed Runtime dry-run and deterministic Evidence" in rehearsal
+    assert "governance_runtime_approval" in rehearsal
+    assert 'Uri "http://127.0.0.1:$ApiPort/api/runs"' in rehearsal
+    assert "$firstEvidence.Content -cne $secondEvidence.Content" in rehearsal
+    assert "runtime_evidence_sha256=" in rehearsal
+    assert "Runtime public projection exposed private rehearsal material" in rehearsal
     assert "API restart persistence" in rehearsal
     assert "runtime-rehearsal-sentinel" in rehearsal
     assert "sentinel_ok" in rehearsal

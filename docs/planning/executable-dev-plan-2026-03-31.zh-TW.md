@@ -1,11 +1,11 @@
 # Skill-0 現階段可執行開發計畫（YOLO 模式）
 
 更新日期：`2026-04-27`
-文件狀態：`Working v0.6`
+文件狀態：`Historical / superseded`
 適用範圍：`<repo-root>`
 協作模式：主代理（全局監察/決策整合） + 子代理 5.3（文件落地/細節修編）
 
-Status note: `2026-04-27` 已完成外部代理審計統整、開發建議書審查、8HR project-development-loop、web dependency safe bump，以及文件權威入口重排；本文件目前作為後續 checkpoint 的現行執行入口，而非 2026-03-31 當下的未整理快照。
+Status note: 本文件保留作為歷史執行紀錄，不再是 current checkpoint 入口。Runtime v4 結案與後續工作僅以 [`docs/README.md`](../README.md)、[`ai-context-export/CURRENT_STATE.md`](../../ai-context-export/CURRENT_STATE.md) 與 closeout 報告為準。
 
 ---
 
