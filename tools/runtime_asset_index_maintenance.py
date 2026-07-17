@@ -189,6 +189,7 @@ def index_twice(
     accepted = doctor["state"] == "healthy"
     return {
         "accepted": accepted,
+        "allow_nonhealthy_evidence": allow_nonhealthy_evidence,
         "rehearsal_only": bool(allow_nonhealthy_evidence and not accepted),
         "stage": "completed",
         "inspection": inspection,

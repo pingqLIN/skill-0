@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from contextlib import closing
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
+import os
 from pathlib import Path
 import sqlite3
 from typing import Iterable, Literal
@@ -261,16 +263,79 @@ def backup_database(source: Path, destination: Path) -> str:
 
     if destination.exists():
         raise FileExistsError(destination)
-    with connect_sqlite(source, policy=INDEX_POLICY, mode="read_only") as source_db:
-        with sqlite3.connect(destination) as backup_db:
+    with closing(
+        connect_sqlite(source, policy=INDEX_POLICY, mode="read_only")
+    ) as source_db:
+        with closing(sqlite3.connect(destination)) as backup_db:
             source_db.backup(backup_db)
     return verify_database(destination)
 
 
 def verify_database(path: Path) -> str:
-    with connect_sqlite(path, policy=INDEX_POLICY, mode="read_only") as connection:
+    with closing(
+        connect_sqlite(path, policy=INDEX_POLICY, mode="read_only")
+    ) as connection:
         result = str(connection.execute("PRAGMA integrity_check").fetchone()[0])
         if result != "ok":
             raise MigrationError(f"backup integrity check failed: {result}")
         connection.execute("SELECT name FROM sqlite_master LIMIT 1").fetchall()
     return result
+
+
+def database_digest(path: Path) -> str:
+    """Return a stable digest for an on-disk SQLite artifact."""
+
+    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def restore_database_from_backup(
+    backup: Path,
+    target: Path,
+    staging: Path,
+    *,
+    expected_target_digest: str,
+) -> dict[str, str]:
+    """Atomically restore an existing target from a verified SQLite backup.
+
+    The caller must supply the target digest observed at its approval boundary.
+    The digest is checked both before staging and immediately before replacement,
+    preventing a restore from overwriting authority state that changed meanwhile.
+    Staging must be adjacent to the target so ``os.replace`` remains atomic.
+    """
+
+    backup = backup.resolve()
+    target = target.resolve()
+    staging = staging.resolve()
+    if len({backup, target, staging}) != 3:
+        raise ValueError("backup, target, and staging paths must be distinct")
+    if not backup.is_file():
+        raise FileNotFoundError(backup)
+    if not target.is_file():
+        raise FileNotFoundError(target)
+    if staging.exists():
+        raise FileExistsError(staging)
+    if staging.parent != target.parent:
+        raise ValueError("restore staging path must be adjacent to target")
+
+    backup_integrity = verify_database(backup)
+    target_digest_before = database_digest(target)
+    if target_digest_before != expected_target_digest:
+        raise MigrationError("restore target digest mismatch")
+
+    try:
+        staging_integrity = backup_database(backup, staging)
+        if database_digest(target) != target_digest_before:
+            raise MigrationError("restore target changed during staging")
+        os.replace(staging, target)
+    finally:
+        if staging.exists():
+            staging.unlink()
+
+    restored_integrity = verify_database(target)
+    return {
+        "backup_integrity": backup_integrity,
+        "staging_integrity": staging_integrity,
+        "target_digest_before": target_digest_before,
+        "restored_digest": database_digest(target),
+        "restored_integrity": restored_integrity,
+    }
