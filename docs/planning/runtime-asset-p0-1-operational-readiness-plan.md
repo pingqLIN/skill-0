@@ -41,3 +41,14 @@ invalid legacy target is replaced only because the Index is derived and only
 after preserving that target. Rollback restores the verified backup while
 writers are quiesced; tables are never dropped in place. Governance and Runtime
 stores are not migrated.
+
+## Execution log
+
+- `P0.1-A` completed: canonical Java Asset IDs, ambiguous legacy alias
+  compatibility, global identity-collision rejection, and canonical
+  API-to-Governance propagation passed focused review and tests.
+- `P0.1-B` completed: the operator maintenance CLI now fails before migration
+  on invalid Index schema, creates a non-overwriting verified backup, preserves
+  checksum evidence, blocks indexing before authority/canonical/unknown
+  failures, and requires a healthy post-index doctor by default. Explicit
+  non-healthy rehearsal stays machine-marked as unaccepted.

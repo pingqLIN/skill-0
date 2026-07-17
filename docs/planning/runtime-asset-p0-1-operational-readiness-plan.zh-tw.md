@@ -36,3 +36,13 @@ operator store，才要求 `healthy`／exit 0。
 只有在確認它是 derived Index 且已保留後才能替換。Rollback 必須在 writers
 停止時還原 verified backup，不能原地 drop tables。Governance 與 Runtime store
 都不執行 migration。
+
+## 執行紀錄
+
+- `P0.1-A` 已完成：Java canonical Asset IDs、ambiguous legacy alias 相容、
+  全域 identity collision 拒絕，以及 API 到 Governance 的 canonical identity
+  傳遞都已通過 focused review 與測試。
+- `P0.1-B` 已完成：operator maintenance CLI 會在無效 Index schema 上於
+  migration 前失敗、建立不覆寫且 verified 的 backup、保留 checksum evidence，
+  並在 authority／canonical／unknown failure 存在時於 indexing 前阻擋。預設只有
+  post-index doctor healthy 才成功；明確的 non-healthy rehearsal 仍標記為未接受。

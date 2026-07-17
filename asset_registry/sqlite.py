@@ -60,6 +60,10 @@ class SQLiteContentionError(MigrationError):
     pass
 
 
+class IndexSchemaError(MigrationError):
+    pass
+
+
 def connect_sqlite(
     path: Path,
     *,
@@ -132,6 +136,56 @@ def preview_migrations(
             state = "checksum_drift"
         statuses.append(MigrationStatus(migration.migration_id, migration.checksum, state))
     return tuple(statuses)
+
+
+def preflight_index_schema(
+    connection: sqlite3.Connection,
+    *,
+    expected_dimension: int = 384,
+) -> dict[str, object]:
+    """Fail before migration when the target is not an existing legacy Index."""
+
+    objects = {
+        str(row["name"]): str(row["sql"] or "")
+        for row in connection.execute(
+            "SELECT name, sql FROM sqlite_master WHERE type IN ('table', 'view')"
+        )
+    }
+    required = {"skills", "skill_embeddings"}
+    missing = sorted(required - set(objects))
+    if missing:
+        raise IndexSchemaError("index_schema_missing:" + ",".join(missing))
+    skill_columns = {
+        str(row[1]) for row in connection.execute("PRAGMA table_info(skills)")
+    }
+    required_columns = {
+        "id",
+        "name",
+        "filename",
+        "description",
+        "category",
+        "version",
+        "action_count",
+        "rule_count",
+        "directive_count",
+        "raw_json",
+    }
+    missing_columns = sorted(required_columns - skill_columns)
+    if missing_columns:
+        raise IndexSchemaError(
+            "index_skills_columns_missing:" + ",".join(missing_columns)
+        )
+    vector_sql = objects["skill_embeddings"].replace(" ", "").lower()
+    expected_vector = f"embeddingfloat[{expected_dimension}]"
+    if expected_vector not in vector_sql:
+        raise IndexSchemaError(
+            f"index_embedding_dimension_mismatch:expected={expected_dimension}"
+        )
+    return {
+        "required_objects": sorted(required),
+        "skills_columns": sorted(skill_columns),
+        "embedding_dimension": expected_dimension,
+    }
 
 
 def _statements(sql: str) -> tuple[str, ...]:

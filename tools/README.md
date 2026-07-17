@@ -47,6 +47,34 @@
 - 檢查 governance rows 是否缺 `current_revision_id` 或 current revision checksum
 - 在 backup/restore、re-index、release rehearsal 後產生 operator-facing evidence
 
+### runtime_asset_index_maintenance.py - Runtime Asset Index 維護
+
+對既有 derived Index 執行 fail-closed schema preflight、read-only migration
+preview、SQLite backup、checksum migration、兩次 incremental index 與 doctor
+evidence。它不建立或批准 Governance authority，也不接受只有 `sample` table 的
+資料庫作為 Index。
+
+```powershell
+# 唯讀預覽
+.\.venv\Scripts\python.exe tools\runtime_asset_index_maintenance.py `
+  --index-db skills.db preview
+
+# 建立 verified backup 後套用 migration
+.\.venv\Scripts\python.exe tools\runtime_asset_index_maintenance.py `
+  --index-db skills.db apply --backup backups\skills-pre-p0-1.db
+
+# 執行兩次 incremental index，第二次必須為 no-op
+.\.venv\Scripts\python.exe tools\runtime_asset_index_maintenance.py `
+  --index-db skills.db --output audit\p0-1\index-evidence.json index `
+  --parsed-dir parsed --governance-db governance\db\governance.db
+```
+
+若 embedding model 不是可雜湊的本機目錄，`index` 必須提供不可變的
+`--model-version`。Backup 路徑不得已存在，避免覆寫復原點。
+預設 `index` 只有在 doctor 為 `healthy` 時回傳成功；public checkout 若只是建立
+derived Index evidence，必須明確加上 `--allow-nonhealthy-evidence`，輸出仍會標記
+`accepted=false` 與 `rehearsal_only=true`，不得當成 operator acceptance。
+
 ### analyzer.py - 結構統計分析
 
 分析已解析的 skills，產生統計報告。
