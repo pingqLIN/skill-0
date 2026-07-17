@@ -1,0 +1,12 @@
+Runtime v4 closeout C1 frontend verification
+Recorded: 2026-07-17T10:11:55+08:00
+
+PASS exit=0 | npm ci: 431 packages installed/audited; 0 vulnerabilities
+FAIL exit=1 | npm run lint: 2 errors, 0 warnings
+  - src/pages/ReviewQueue.tsx:111 react-hooks/set-state-in-effect
+  - src/pages/SkillDetail.tsx:88 react-hooks/set-state-in-effect
+PASS exit=0 | npm test: 6 test files, 34 tests
+PASS exit=0 | npm run build:ci: TypeScript, Vite, and 350 KiB chunk guard
+
+Failure classification: CORE_BLOCKER (focused React effect lint violations)
+No frontend source was changed during C1.

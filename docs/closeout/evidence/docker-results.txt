@@ -1,0 +1,16 @@
+Runtime v4 closeout C1 Docker verification
+Recorded: 2026-07-17T10:11:55+08:00
+
+FAIL exit=1 | initial API image build: Docker Desktop Linux engine pipe absent
+PASS exit=0 | Docker Desktop startup/daemon check: server 29.6.1
+PASS exit=0 | API image build: skill-0-api:closeout
+  manifest: b93e4b61a9617b7e006f87aa713451ade9cd87ea432f4db04fd463bad48ffd7c
+PASS exit=0 | Dashboard image build: skill-0-dashboard:closeout
+  manifest: c170f6cfbd8c9a421901230c91ad9f7e9d79b9d6cf0be5147ebcf13104fa70c6
+PASS exit=0 | Web image build: skill-0-web:closeout
+  manifest: f323aa1dc8de97db40f9d7779c57872537e0191542916c84416fdd64fe8bc606
+FAIL exit=1 | compose config without CORS_ORIGINS: required variable missing
+PASS exit=0 | compose config with CORS_ORIGINS=https://closeout.invalid
+
+Initial Docker failure classification: ENVIRONMENT_BLOCKER, cleared by starting the installed runtime.
+Compose precondition is fail-closed production behavior, not a source defect.

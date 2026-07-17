@@ -1,0 +1,14 @@
+Runtime v4 closeout C1 Python verification
+Recorded: 2026-07-17T10:11:55+08:00
+
+PASS exit=0 | compileall: api runtime vector_db tools scripts dashboard API
+PASS exit=0 | document status marker check
+PASS exit=0 | shared docs source check: 5 files
+PASS exit=0 | parsed schema validation: 196 passed, 0 failed
+PASS exit=0 | Runtime-focused pytest: 71 passed in 15.86s
+PASS exit=0 | full pytest: 373 passed, 65 warnings in 83.91s
+FAIL exit=1 | coverage pytest: 373 passed, 65 warnings; total 39.99%, required 75%
+
+Coverage artifact: docs/closeout/evidence/coverage.xml
+Failure classification: CORE_BLOCKER (coverage gate configuration mismatch)
+No production source was changed during C1.

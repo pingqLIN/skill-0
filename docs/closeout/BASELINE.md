@@ -1,6 +1,6 @@
 # Runtime v4 Closeout Baseline
 
-Recorded at: `2026-07-17T10:01:10+08:00`  
+Recorded at: `2026-07-17T10:01:10+08:00`
 Risk level: `L2` (closeout evidence only; no production source changed)
 
 ## Repository
@@ -69,4 +69,3 @@ The existing repo-local venv in the primary checkout is reused from this nested 
 - Pre-existing user-owned untracked content in the primary checkout preserved.
 - Required system binaries are present.
 - No production source changed.
-

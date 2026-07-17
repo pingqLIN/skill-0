@@ -18,3 +18,21 @@
 2026-07-17T10:01:10+08:00 | docker compose version | exit=0 | v5.2.0
 2026-07-17T10:01:10+08:00 | pwsh --version | exit=0 | 7.6.3
 2026-07-17T10:01:10+08:00 | Test-NetConnection github.com -Port 443 | exit=0 | reachable=true
+2026-07-17T10:02:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m compileall api runtime vector_db tools scripts skill-0-dashboard/apps/api -q | exit=0 | PASS
+2026-07-17T10:02:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe tools/check_doc_status_markers.py | exit=0 | PASS
+2026-07-17T10:02:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe tools/check_shared_docs.py | exit=0 | PASS; 5 shared sources
+2026-07-17T10:02:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe tools/validate_skill_schema.py parsed | exit=0 | PASS; 196 passed, 0 failed
+2026-07-17T10:03:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests/test_v4_schema.py tests/test_runtime_ledger.py tests/test_runtime_executor.py tests/test_runtime_orchestrator.py tests/test_runtime_policy.py tests/test_runtime_recovery.py tests/test_evidence_projection.py tests/test_runtime_evidence_cli.py -q -p no:cacheprovider | exit=0 | 71 passed
+2026-07-17T10:04:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests skill-0-dashboard/apps/api/tests -q --timeout=120 | exit=0 | 373 passed, 65 warnings
+2026-07-17T10:06:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests skill-0-dashboard/apps/api/tests --timeout=120 --cov=api --cov=vector_db --cov=tools --cov=skill-0-dashboard/apps/api --cov-report=term-missing --cov-report=xml:docs/closeout/evidence/coverage.xml --cov-fail-under=75 | exit=1 | CORE_BLOCKER; tests pass, coverage 39.99 below 75
+2026-07-17T10:08:00+08:00 | npm ci | exit=0 | 431 packages, 0 vulnerabilities
+2026-07-17T10:08:00+08:00 | npm run lint | exit=1 | CORE_BLOCKER; 2 react-hooks/set-state-in-effect errors
+2026-07-17T10:08:00+08:00 | npm test | exit=0 | 6 files, 34 tests passed
+2026-07-17T10:09:00+08:00 | npm run build:ci | exit=0 | build and 350 KiB chunk guard passed
+2026-07-17T10:09:00+08:00 | docker build -f Dockerfile.api -t skill-0-api:closeout . | exit=1 | ENVIRONMENT_BLOCKER; Docker Desktop engine pipe absent
+2026-07-17T10:10:00+08:00 | Start-Process Docker Desktop.exe; docker info | exit=0 | approved Docker verification runtime started; server 29.6.1
+2026-07-17T10:10:00+08:00 | docker build -f Dockerfile.api -t skill-0-api:closeout . | exit=0 | image manifest b93e4b61a9617b7e006f87aa713451ade9cd87ea432f4db04fd463bad48ffd7c
+2026-07-17T10:10:00+08:00 | docker build -f Dockerfile.dashboard -t skill-0-dashboard:closeout . | exit=0 | image manifest c170f6cfbd8c9a421901230c91ad9f7e9d79b9d6cf0be5147ebcf13104fa70c6
+2026-07-17T10:10:00+08:00 | docker build -f Dockerfile.web -t skill-0-web:closeout . | exit=0 | image manifest f323aa1dc8de97db40f9d7779c57872537e0191542916c84416fdd64fe8bc606
+2026-07-17T10:11:00+08:00 | docker compose -f docker-compose.prod.yml config | exit=1 | CORS_ORIGINS required precondition absent
+2026-07-17T10:11:00+08:00 | CORS_ORIGINS=https://closeout.invalid docker compose -f docker-compose.prod.yml config | exit=0 | PASS; three services and three SQLite volumes resolved
