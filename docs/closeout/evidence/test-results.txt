@@ -27,3 +27,16 @@ PASS exit=0 | document status markers
 PASS exit=0 | shared docs check: 5 sources
 PASS exit=0 | document contract tests: 8 passed
 PASS exit=0 | git diff --check
+PASS exit=0 | final JSON artifact parse: 3 valid
+PASS exit=0 | final document artifact validation: status, shared docs, 8 tests
+
+C5 final verification on dd8725f4746a1ea4455b0569411fecba25b76ab1
+PASS exit=0 | compileall
+PASS exit=0 | document status and shared-doc checks
+PASS exit=0 | parsed schema: 196 passed, 0 failed
+PASS exit=0 | Runtime-focused pytest: 71 passed in 15.04s
+PASS exit=0 | full pytest: 374 passed, 65 warnings in 76.10s
+PASS exit=0 | served-API coverage: 374 passed, 81.92%, threshold 75%
+PASS exit=0 | scoped branch-diff secret-value pattern hits: 0
+PASS exit=0 | new or changed sensitive artifact file names: 0
+PASS exit=0 | git diff --check

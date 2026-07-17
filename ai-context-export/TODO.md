@@ -1,11 +1,8 @@
 # Current Closeout TODO
 
-Only C5 remains:
+Closeout phases C0-C5 are complete. There is no current development TODO.
 
-1. Re-run every Core verification gate on the documentation-authority commit.
-2. Re-run the production rehearsal and residue check.
-3. Perform the scoped secret/publication review.
-4. Produce `docs/closeout/FINAL_REPORT.md` and `final-report.json`.
-5. Commit the final evidence and stop without push, merge, or tag.
-
-Future features belong only in [`../docs/closeout/DEFERRED_BACKLOG.md`](../docs/closeout/DEFERRED_BACKLOG.md).
+- Do not modify production source on this branch.
+- Do not merge, tag, deploy, or push without explicit user approval.
+- Review [`../docs/closeout/FINAL_REPORT.md`](../docs/closeout/FINAL_REPORT.md) before publication.
+- Future features belong only in [`../docs/closeout/DEFERRED_BACKLOG.md`](../docs/closeout/DEFERRED_BACKLOG.md) and require a separately approved scope.

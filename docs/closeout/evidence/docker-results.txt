@@ -37,3 +37,17 @@ PASS exit=0 | final rehearsal project skill0-v4-closeout-rehearsal on ports 2808
 Runtime run: b7a11826-396f-44ee-8cd0-4cdc8aea8ad5
 Evidence HTTP-payload SHA-256: f830b05e515653562fac5cd8b7909d2c8cbfdfd9a5cd637bb319a32d49e7fb7c
 Backup artifact: disposable in-container matching three-store set; intentionally removed after isolated restore verification
+
+C5 final verification on dd8725f4746a1ea4455b0569411fecba25b76ab1
+PASS exit=0 | API image: skill-0-api:closeout-final
+PASS exit=0 | Dashboard image: skill-0-dashboard:closeout-final
+PASS exit=0 | Web image: skill-0-web:closeout-final
+PASS exit=0 | Compose config with CORS_ORIGINS=https://closeout.invalid
+PASS exit=0 | rehearsal project skill0-v4-closeout-final on ports 28081/23081
+  - doctor healthy; errors=[]; warnings=[]
+  - governed Runtime run ae7aa59b-17a6-47a2-b171-55775829fb2f succeeded
+  - Evidence reads byte-identical; HTTP-payload SHA-256 1c64ec88fc8d941bb5a856f8a2c687033608694b815096abae7ce07a75eb40b0
+  - all three SQLite quick_check results ok
+  - matching backup set restored with sentinel intact
+  - initialization-disabled restart retained sentinel and clean doctor
+  - cleanup residue: containers=0, volumes=0, networks=0, temp_env=0

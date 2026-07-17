@@ -11,6 +11,6 @@ Updated: `2026-07-17`
 - C2 Minimal Release-Blocker Fixes: `PASS` after three bounded fix cycles
 - C3 Production Rehearsal: `PASS`
 - C4 Documentation Authority and Simplification: `PASS`
-- C5 Final Verification and Release Decision: pending
+- C5 Final Verification and Release Decision: `PASS`
 
-No Core blocker remains. The three allowed fix cycles are exhausted; further production-source change requires a safety stop and boundary review. Exact command evidence is in [`../docs/closeout/VERIFICATION_MATRIX.md`](../docs/closeout/VERIFICATION_MATRIX.md).
+No Core blocker remains. All acceptance gates were rerun on verified code commit `dd8725f4746a1ea4455b0569411fecba25b76ab1`. The final evidence commit is the branch HEAD containing this file. The three allowed fix cycles are exhausted; further production-source change requires a safety stop and boundary review. Exact command evidence is in [`../docs/closeout/VERIFICATION_MATRIX.md`](../docs/closeout/VERIFICATION_MATRIX.md).

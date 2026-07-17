@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "date": "2026-07-17",
+  "repository": "pingqLIN/skill-0",
+  "source_branch": "codex/skill0-runtime-v4-next",
+  "source_commit": "81fd2a9d22cb55a9fb6079eb9b338dfeed71f990",
+  "working_branch": "codex/skill0-v4-closeout",
+  "verified_code_commit": "dd8725f4746a1ea4455b0569411fecba25b76ab1",
+  "final_commit": "SELF",
+  "release_boundary": {
+    "runtime_mode": "dry-run only",
+    "deployment": "single-host Docker Compose",
+    "stores": ["skills.db", "governance.db", "runtime.db"],
+    "real_adapters": false,
+    "multi_instance": false
+  },
+  "change_budget": {
+    "fix_cycles": 3,
+    "commits": 6,
+    "production_source_files": 4,
+    "production_additions": 192,
+    "production_deletions": 101,
+    "production_net_loc": 91,
+    "dependencies_added": 0,
+    "services_added": 0
+  },
+  "verification": {
+    "compile": {"exit": 0, "result": "PASS"},
+    "schema": {"exit": 0, "result": "196/196"},
+    "runtime_tests": {"exit": 0, "result": "71 passed"},
+    "full_python": {"exit": 0, "result": "374 passed; 65 warnings"},
+    "coverage": {"exit": 0, "result": "81.92%; threshold 75%"},
+    "frontend": {"exit": 0, "result": "lint; 34 tests; build:ci"},
+    "docker_images": {"exit": 0, "result": "3/3"},
+    "compose_config": {"exit": 0, "result": "PASS"},
+    "production_rehearsal": {"exit": 0, "result": "PASS"},
+    "doctor": {"exit": 0, "result": "healthy; errors=0; warnings=0"},
+    "governed_dry_run": {"exit": 0, "run_id": "ae7aa59b-17a6-47a2-b171-55775829fb2f", "status": "succeeded"},
+    "evidence": {"exit": 0, "byte_identical": true, "http_payload_sha256": "1c64ec88fc8d941bb5a856f8a2c687033608694b815096abae7ce07a75eb40b0"},
+    "three_store_restore": {"exit": 0, "result": "quick_check ok; sentinel preserved"},
+    "restart": {"exit": 0, "result": "initialization disabled; doctor clean; sentinel preserved"},
+    "residue": {"exit": 0, "containers": 0, "volumes": 0, "networks": 0, "temp_env": 0},
+    "secret_artifact_hygiene": {"exit": 0, "secret_pattern_hits": 0, "sensitive_file_names": 0},
+    "diff_check": {"exit": 0, "result": "PASS"}
+  },
+  "artifacts": {
+    "matrix": "docs/closeout/VERIFICATION_MATRIX.md",
+    "doctor": "docs/closeout/evidence/runtime-doctor.json",
+    "runtime_evidence": "docs/closeout/evidence/runtime-evidence.json",
+    "coverage": "docs/closeout/evidence/coverage.xml",
+    "commands": "docs/closeout/evidence/commands.log"
+  },
+  "recommended_pr_title": "closeout: freeze governed Runtime v4 dry-run pilot",
+  "recommended_tag": "runtime-v4-dry-run-pilot-2026-07-17",
+  "exact_next_command": "git push -u origin codex/skill0-v4-closeout"
+}

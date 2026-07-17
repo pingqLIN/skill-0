@@ -54,3 +54,21 @@
 2026-07-17T10:41:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe tools/check_shared_docs.py | exit=0 | PASS; 5 shared sources
 2026-07-17T10:41:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests/test_doc_checks.py -q | exit=0 | PASS; 8 tests
 2026-07-17T10:41:00+08:00 | git diff --check | exit=0 | PASS
+2026-07-17T10:42:00+08:00 | python -m compileall api runtime vector_db tools scripts skill-0-dashboard/apps/api -q | exit=0 | C5 PASS
+2026-07-17T10:42:00+08:00 | python tools/check_doc_status_markers.py | exit=0 | C5 PASS
+2026-07-17T10:42:00+08:00 | python tools/check_shared_docs.py | exit=0 | C5 PASS
+2026-07-17T10:42:00+08:00 | python tools/validate_skill_schema.py parsed | exit=0 | C5 PASS; 196/196
+2026-07-17T10:42:00+08:00 | focused Runtime pytest command | exit=0 | C5 PASS; 71 tests
+2026-07-17T10:44:00+08:00 | python -m pytest tests skill-0-dashboard/apps/api/tests -q --timeout=120 | exit=0 | C5 PASS; 374 tests, 65 warnings
+2026-07-17T10:44:00+08:00 | full pytest with served-API coverage and fail-under=75 | exit=0 | C5 PASS; 374 tests, 81.92%
+2026-07-17T10:46:00+08:00 | npm ci | exit=0 | C5 PASS; 431 packages, 0 vulnerabilities
+2026-07-17T10:46:00+08:00 | npm run lint | exit=0 | C5 PASS
+2026-07-17T10:46:00+08:00 | npm test | exit=0 | C5 PASS; 34 tests
+2026-07-17T10:46:00+08:00 | npm run build:ci | exit=0 | C5 PASS; bundle guard
+2026-07-17T10:46:00+08:00 | three docker build commands and compose config | exit=0 | C5 PASS
+2026-07-17T10:48:00+08:00 | pwsh -NoProfile -File scripts/rehearse_prod_compose.ps1 -ProjectName skill0-v4-closeout-final -ApiPort 28081 -WebPort 23081 | exit=0 | C5 PASS
+2026-07-17T10:48:00+08:00 | residue query | exit=0 | containers=0 volumes=0 networks=0 temp_env=0
+2026-07-17T10:48:00+08:00 | scoped branch diff secret/artifact scan | exit=0 | secret patterns=0 sensitive file names=0
+2026-07-17T10:48:00+08:00 | git diff --check | exit=0 | C5 PASS
+2026-07-17T10:50:00+08:00 | Python JSON parse final-report, runtime-doctor, runtime-evidence | exit=0 | 3 artifacts valid
+2026-07-17T10:50:00+08:00 | doc checks, 8 document tests, git diff --check | exit=0 | final artifact validation PASS
