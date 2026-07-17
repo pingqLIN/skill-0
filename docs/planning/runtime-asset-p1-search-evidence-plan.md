@@ -16,7 +16,8 @@ a second Asset Type, or Dashboard renaming.
 
 The benchmark must open the source Index read-only, record its SHA-256 before
 and after execution, and build a disposable SQLite backup under an ignored
-artifact directory. FTS5 tables exist only in that backup. No operator
+artifact directory. FTS5 tables exist only in a separate disposable database
+in that directory. No operator
 Governance or Runtime database is opened, and no benchmark artifact is an
 authority source.
 
@@ -42,16 +43,20 @@ integration, only if all of the following hold:
 
 1. all judgments resolve, all 196 Assets are measured, and the source Index
    hash is unchanged;
-2. hybrid overall nDCG@5 is no more than `0.01` below vector and lexical-subset
+2. a representative GO decision requires at least 80 judged queries, including
+   at least 30 lexical and 30 semantic queries. A smaller pilot may run but must
+   return `NO_GO_INSUFFICIENT_EVIDENCE` regardless of directional metrics;
+3. hybrid overall nDCG@5 is no more than `0.01` below vector and lexical-subset
    nDCG@5 improves by at least `0.05`;
-3. hybrid semantic-subset nDCG@5 is no more than `0.02` below vector and overall
+4. hybrid semantic-subset nDCG@5 is no more than `0.02` below vector and overall
    Recall@5 is no more than `0.02` below vector;
-4. hybrid p95 adds at most `25 ms` and at most `50%` over vector p95;
-5. the FTS5 artifact adds at most `25%` of the source Index size;
-6. the benchmark, focused tests, full Python regression, documentation gates,
+5. hybrid p95 adds at most `25 ms` and at most `50%` over vector p95;
+6. the FTS5 artifact adds at most `25%` of the source Index size;
+7. the benchmark, focused tests, full Python regression, documentation gates,
    and artifact/secret scans pass.
 
-Failure of any gate is **NO-GO**. A GO authorizes only a later reviewed
+Failure of any technical gate is **NO-GO**; insufficient query coverage is
+`NO_GO_INSUFFICIENT_EVIDENCE`. A GO authorizes only a later reviewed
 prototype plan; it does not authorize production DDL or API changes.
 
 ## Batches

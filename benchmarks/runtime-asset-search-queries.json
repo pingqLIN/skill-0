@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "snapshot_id": "sha256:92c9defd8f180e468e8a830773bf20a7ac0c005ebb2b2cd53df33eeb3c09c38b",
+  "judgment_policy": "2=direct target, 1=useful adjacent; benchmark metrics treat grade > 0 as relevant",
+  "queries": [
+    {"id": "L01", "subset": "lexical", "query": "upgrade Java 17 application to Java 21", "judgments": [{"source_path": "java-17-to-java-21-upgrade-skill.json", "grade": 2}]},
+    {"id": "L02", "subset": "lexical", "query": "Power BI row-level security RLS", "judgments": [{"source_path": "power-bi-security-rls-best-practices-skill.json", "grade": 2}]},
+    {"id": "L03", "subset": "lexical", "query": "PowerShell Pester 5 unit tests", "judgments": [{"source_path": "powershell-pester-5-skill.json", "grade": 2}, {"source_path": "powershell-skill.json", "grade": 1}]},
+    {"id": "L04", "subset": "lexical", "query": "Spring Boot 3 to 4 Gradle Kotlin DSL", "judgments": [{"source_path": "springboot-4-migration-skill.json", "grade": 2}, {"source_path": "springboot-skill.json", "grade": 1}]},
+    {"id": "L05", "subset": "lexical", "query": "PCF manifest XML schema", "judgments": [{"source_path": "pcf-manifest-schema-skill.json", "grade": 2}, {"source_path": "pcf-code-components-skill.json", "grade": 1}]},
+    {"id": "L06", "subset": "lexical", "query": "LangSmith execution trace debugging", "judgments": [{"source_path": "langsmith-fetch-skill.json", "grade": 2}, {"source_path": "langchain-python-skill.json", "grade": 1}]},
+    {"id": "L07", "subset": "lexical", "query": "GitHub Actions CI CD workflow", "judgments": [{"source_path": "github-actions-ci-cd-best-practices-skill.json", "grade": 2}, {"source_path": "devops-core-principles-skill.json", "grade": 1}]},
+    {"id": "L08", "subset": "lexical", "query": "ASP.NET REST API", "judgments": [{"source_path": "aspnet-rest-apis-skill.json", "grade": 2}]},
+    {"id": "L09", "subset": "lexical", "query": "Power BI DAX measures semantic model", "judgments": [{"source_path": "power-bi-dax-best-practices-skill.json", "grade": 2}, {"source_path": "power-bi-data-modeling-best-practices-skill.json", "grade": 1}]},
+    {"id": "S01", "subset": "semantic", "query": "make a website usable with keyboard navigation and screen readers", "judgments": [{"source_path": "a11y-skill.json", "grade": 2}, {"source_path": "html-css-style-color-guide-skill.json", "grade": 1}]},
+    {"id": "S02", "subset": "semantic", "query": "shrink container images and reduce their attack surface", "judgments": [{"source_path": "containerization-docker-best-practices-skill.json", "grade": 2}]},
+    {"id": "S03", "subset": "semantic", "query": "turn git commit history into customer-facing release notes", "judgments": [{"source_path": "changelog-generator-skill.json", "grade": 2}]},
+    {"id": "S04", "subset": "semantic", "query": "edit a Word file while preserving comments and tracked revisions", "judgments": [{"source_path": "docx-skill.json", "grade": 2}]},
+    {"id": "S05", "subset": "semantic", "query": "read tables from PDFs and combine selected pages", "judgments": [{"source_path": "anthropic-pdf-skill.json", "grade": 2}, {"source_path": "pdf-skill.json", "grade": 2}]},
+    {"id": "S06", "subset": "semantic", "query": "drive a real browser to verify a local web application", "judgments": [{"source_path": "webapp-testing-skill.json", "grade": 2}, {"source_path": "playwright-python-skill.json", "grade": 1}, {"source_path": "playwright-typescript-skill.json", "grade": 1}, {"source_path": "playwright-dotnet-skill.json", "grade": 1}]},
+    {"id": "S07", "subset": "semantic", "query": "build an LLM tool server in Python", "judgments": [{"source_path": "python-mcp-server-skill.json", "grade": 2}, {"source_path": "mcp-builder-skill.json", "grade": 1}]},
+    {"id": "S08", "subset": "semantic", "query": "deploy Kubernetes workloads with readiness probes and secure pod settings", "judgments": [{"source_path": "kubernetes-deployment-best-practices-skill.json", "grade": 2}, {"source_path": "kubernetes-manifests-skill.json", "grade": 2}]},
+    {"id": "S09", "subset": "semantic", "query": "create a spreadsheet with formulas formatting and charts", "judgments": [{"source_path": "xlsx-skill.json", "grade": 2}]}
+  ]
+}

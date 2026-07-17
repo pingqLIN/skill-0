@@ -15,7 +15,7 @@
 
 Benchmark 必須以 read-only 開啟 source Index，執行前後記錄 SHA-256，並在
 ignored artifact directory 建立 disposable SQLite backup。FTS5 table 只能存在
-該 backup；不得開啟 operator Governance 或 Runtime DB，也不得把 benchmark
+該目錄內另一個獨立 disposable DB；不得開啟 operator Governance 或 Runtime DB，也不得把 benchmark
 artifact 當成 authority source。
 
 ## 固定實驗
@@ -38,16 +38,20 @@ artifact 當成 authority source。
 production integration：
 
 1. 所有 judgments 都可解析、196 Assets 全數納入、source Index hash 不變；
-2. hybrid overall nDCG@5 不低於 vector 超過 `0.01`，且 lexical subset 至少提升
+2. GO decision 至少需要 80 個 judged queries，且 lexical、semantic 各至少 30；
+   較小 pilot 可以執行，但不論 directional metrics 如何，都必須回傳
+   `NO_GO_INSUFFICIENT_EVIDENCE`；
+3. hybrid overall nDCG@5 不低於 vector 超過 `0.01`，且 lexical subset 至少提升
    `0.05`；
-3. semantic subset nDCG@5 不低於 vector 超過 `0.02`，overall Recall@5 不低於
+4. semantic subset nDCG@5 不低於 vector 超過 `0.02`，overall Recall@5 不低於
    vector 超過 `0.02`；
-4. hybrid p95 相對 vector 最多增加 `25 ms` 且最多 `50%`；
-5. FTS5 artifact 增量最多是 source Index size 的 `25%`；
-6. benchmark、focused tests、完整 Python regression、文件、artifact 與 secret
+5. hybrid p95 相對 vector 最多增加 `25 ms` 且最多 `50%`；
+6. FTS5 artifact 增量最多是 source Index size 的 `25%`；
+7. benchmark、focused tests、完整 Python regression、文件、artifact 與 secret
    gates 全部通過。
 
-任何一項失敗即 **NO-GO**。GO 只授權後續另提 reviewed prototype plan，不授權
+任何 technical gate 失敗即 **NO-GO**；query coverage 不足則為
+`NO_GO_INSUFFICIENT_EVIDENCE`。GO 只授權後續另提 reviewed prototype plan，不授權
 production DDL 或 API 變更。
 
 ## 批次

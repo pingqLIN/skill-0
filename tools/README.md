@@ -76,6 +76,27 @@ evidence。它不建立或批准 Governance authority，也不接受只有 `samp
 derived Index evidence，必須明確加上 `--allow-nonhealthy-evidence`，輸出仍會標記
 `accepted=false` 與 `rehearsal_only=true`，不得當成 operator acceptance。
 
+### runtime_asset_search_benchmark.py - 離線 Hybrid Search 實證
+
+以 read-only source Index 建立 disposable vector snapshot 與獨立 FTS5 DB，對固定
+query judgments 比較 sqlite-vec、FTS5 BM25 與 RRF hybrid。執行前後會驗證 source
+Index SHA、size 與 mtime 不變；工具不修改 production schema 或 operator DB。
+
+```powershell
+.\.venv\Scripts\python.exe tools\runtime_asset_search_benchmark.py `
+  --source-index skills.db `
+  --parsed-dir parsed `
+  --queries benchmarks\runtime-asset-search-queries.json `
+  --output-dir .artifacts\p1-search\<run-id>
+```
+
+決策門檻固定於
+`docs/planning/runtime-asset-p1-search-evidence-plan.md`。Machine-readable 結果
+寫入 output directory 的 `benchmark-result.json`；任何 `GO` 都只代表可另開
+reviewed P1 prototype，不代表已核准 production FTS5。Exit `0` 只代表
+`GO_P1_PROTOTYPE`；`NO_GO` 為 `4`，`NO_GO_INSUFFICIENT_EVIDENCE` 為 `5`，
+automation 必須同時保存 JSON evidence。
+
 ### analyzer.py - 結構統計分析
 
 分析已解析的 skills，產生統計報告。
