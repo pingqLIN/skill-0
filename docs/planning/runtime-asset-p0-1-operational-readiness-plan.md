@@ -1,6 +1,6 @@
 # Runtime Asset P0.1 Operational Readiness Plan
 
-- Status: **In execution**
+- Status: **Technical acceptance complete; operator authority remains NO-GO**
 - Date: `2026-07-18`
 - Authority: Runtime v4 remains dry-run only; P0 contracts remain additive
 - Traditional Chinese companion: [`runtime-asset-p0-1-operational-readiness-plan.zh-tw.md`](runtime-asset-p0-1-operational-readiness-plan.zh-tw.md)
@@ -56,3 +56,8 @@ stores are not migrated.
   preview, verified backup, migration, restore, 196-row incremental index,
   second-run no-op, integrity, and semantic-search smoke. Local doctor remains
   truthfully authority-missing because no operator Governance DB exists.
+- `P0.1-D` completed: a test-only full-corpus acceptance fixture bound all 196
+  canonical revisions to matching approved-current Governance evidence and an
+  applied checksum migration. The read-only doctor returned `healthy`/0 with
+  196 Registry and 196 Index rows. This proves the technical acceptance path;
+  it does not create or substitute operator review decisions.

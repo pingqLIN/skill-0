@@ -74,6 +74,25 @@ revision. The local index command therefore ran only with the explicit
 This is a truthful authority boundary, not an Index failure. Strict operator
 acceptance remains blocked until genuine reviewed Governance revisions exist.
 
+## Acceptance evidence
+
+The full checked-in corpus passed a test-only end-to-end doctor fixture with:
+
+| Gate | Result |
+|---|---|
+| Registry revisions | `196` |
+| Unique canonical identities | `196`; duplicate canonical `0` |
+| Index state rows | `196`; pending/stale/model drift `0` |
+| Migration status | approved checksum recorded as `applied` |
+| Governance bindings | `196` matching approved-current revision digests |
+| Doctor | `healthy`, exit `0` |
+
+The fixture exists only in the test temporary directory and is never an
+operator authority source. The local operator-facing doctor remains
+`authority-missing`, exit `2`, because no reviewed Governance database exists.
+Accordingly, P0.1 technical acceptance is complete while operator acceptance
+is an explicit **NO-GO**.
+
 ## Rollback
 
 Quiesce Index writers, validate the selected backup, then restore the verified

@@ -55,6 +55,19 @@ sample DB、沒有合成 binding，也沒有批准任何 revision。因此 local
 這是真實 authority 邊界，不是 Index failure。只有真實 reviewed Governance
 revisions 存在後，才能通過 strict operator acceptance。
 
+## 驗收證據
+
+完整 checked-in corpus 已通過 test-only end-to-end doctor fixture：Registry
+revisions 196、唯一 canonical identities 196、Index state rows 196；pending、
+stale、duplicate canonical、model drift 與 migration checksum drift 都是 0。
+Fixture 內的 196 筆 Governance bindings 都對應相符的 approved-current revision
+digest，doctor 回傳 `healthy`／exit 0。
+
+Fixture 只存在測試暫存目錄，絕不是 operator authority source。本機面向
+operator 的 doctor 因為沒有 reviewed Governance DB，仍維持
+`authority-missing`／exit 2。因此 P0.1 技術驗收已完成，而 operator acceptance
+明確為 **NO-GO**。
+
 ## Rollback
 
 先停止 Index writers、驗證選定 backup，再還原 verified pre-migration backup；

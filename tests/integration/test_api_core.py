@@ -435,7 +435,7 @@ class TestProtectedEndpoints:
         assert resp.status_code == 401
 
     def test_index_with_auth(self, client, auth_headers):
-        """POST /api/index succeeds with valid token"""
+        """POST /api/index accepts both changed and incremental no-op runs."""
         resp = client.post(
             "/api/index",
             json={"parsed_dir": "parsed"},
@@ -443,9 +443,12 @@ class TestProtectedEndpoints:
         )
         assert resp.status_code == 200
         data = resp.json()
-        assert data["indexed_count"] > 0
+        assert isinstance(data["indexed_count"], int)
+        assert data["indexed_count"] >= 0
         assert data["elapsed_seconds"] > 0
-        assert "Successfully indexed" in data["message"]
+        assert data["message"] == (
+            f"Successfully indexed {data['indexed_count']} skills"
+        )
 
 
 # ==================== Error Handling ====================

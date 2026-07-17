@@ -1,6 +1,6 @@
 # Runtime Asset P0.1 操作就緒計畫
 
-- 狀態：**執行中**
+- 狀態：**技術驗收完成；operator authority 維持 NO-GO**
 - 日期：`2026-07-18`
 - 權威邊界：Runtime v4 維持 dry-run only；P0 contract 保持 additive
 - 英文權威版本：[`runtime-asset-p0-1-operational-readiness-plan.md`](runtime-asset-p0-1-operational-readiness-plan.md)
@@ -50,3 +50,7 @@ operator store，才要求 `healthy`／exit 0。
   backup、migration、restore、196-row incremental index、第二次 no-op、
   integrity 與 semantic-search smoke。因為沒有 operator Governance DB，本機
   doctor 仍誠實維持 authority-missing。
+- `P0.1-D` 已完成：test-only full-corpus acceptance fixture 將 196 個 canonical
+  revisions 綁定至相符的 approved-current Governance 證據與已套用的 checksum
+  migration。Read-only doctor 回傳 `healthy`／0，Registry 與 Index 都是 196
+  rows。這證明技術驗收路徑成立，但不會建立或取代 operator review decisions。
