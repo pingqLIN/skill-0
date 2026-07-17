@@ -1,6 +1,6 @@
 # Runtime Asset P1 Search Evidence Plan
 
-- Status: **Approved for offline evidence only**
+- Status: **Executed — NO_GO_INSUFFICIENT_EVIDENCE**
 - Date: `2026-07-18`
 - Decision scope: FTS5 plus sqlite-vec retrieval evidence
 - Traditional Chinese companion: [`runtime-asset-p1-search-evidence-plan.zh-tw.md`](runtime-asset-p1-search-evidence-plan.zh-tw.md)
@@ -74,3 +74,11 @@ Delete or archive the ignored disposable benchmark directory. Revert the
 research commits if the harness is not retained. No operator data rollback is
 required because the source Index is read-only and production schemas are
 unchanged.
+
+## Execution outcome
+
+The frozen 18-query pilot ran on `2026-07-18` and returned exit `5`,
+`NO_GO_INSUFFICIENT_EVIDENCE`. Directional quality and latency gates passed,
+but representative query coverage failed (`18 < 80`) and the FTS5 artifact
+ratio failed (`33.53% > 25%`). Production remains vector-only. See
+[`../reports/runtime-asset-p1-search-evidence.md`](../reports/runtime-asset-p1-search-evidence.md).

@@ -1,6 +1,6 @@
 # Runtime Asset P1 Search 實證計畫
 
-- 狀態：**僅核准離線 evidence**
+- 狀態：**已執行 — NO_GO_INSUFFICIENT_EVIDENCE**
 - 日期：`2026-07-18`
 - 決策範圍：FTS5 加 sqlite-vec retrieval evidence
 - 英文權威版本：[`runtime-asset-p1-search-evidence-plan.md`](runtime-asset-p1-search-evidence-plan.md)
@@ -65,3 +65,11 @@ production DDL 或 API 變更。
 刪除或封存 ignored disposable benchmark directory；若不保留 harness，可 revert
 research commits。Source Index 全程 read-only，production schema 未變，不需要
 operator data rollback。
+
+## 執行結果
+
+固定的 18-query pilot 已於 `2026-07-18` 執行，回傳 exit `5` 與
+`NO_GO_INSUFFICIENT_EVIDENCE`。方向性 quality 與 latency gates 通過，但
+representative query coverage 失敗（`18 < 80`），FTS5 artifact ratio 也失敗
+（`33.53% > 25%`）。Production 維持 vector-only。詳見
+[`../reports/runtime-asset-p1-search-evidence.zh-tw.md`](../reports/runtime-asset-p1-search-evidence.zh-tw.md)。

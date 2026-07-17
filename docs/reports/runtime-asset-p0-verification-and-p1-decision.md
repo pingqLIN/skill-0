@@ -113,7 +113,7 @@ prove `healthy`, `stale-derived-projection`, and `unknown` classifications.
 | Candidate | Decision | Evidence gate required to reopen |
 |---|---|---|
 | Physical DB reorganization | **NO-GO** | operator-copy migration rehearsal, restore timing, contention, size, and operating-cost measurements |
-| FTS5/hybrid ranking | **NO-GO** | representative query corpus, sqlite-vec baseline, ranking metric, fusion decision, and latency/storage benchmark |
+| FTS5/hybrid ranking | **NO-GO — pilot evidence insufficient** | 18-query pilot passed directional quality/latency but failed the 80-query coverage and 25% storage gates; see [`runtime-asset-p1-search-evidence.md`](runtime-asset-p1-search-evidence.md) |
 | Second Asset Type | **NO-GO** | accepted ground-truth corpus, parser contract, failure taxonomy, and measured fidelity |
 | Dashboard Asset rename | **NO-GO** | stable second type or measured operator need, versioned API usage evidence, and migration/rollback design |
 

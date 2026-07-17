@@ -80,7 +80,7 @@ rows 0、pending 196、duplicate identity 1，且 Governance operator DB 不存�
 | Candidate | 決策 | 重新開啟所需 evidence |
 |---|---|---|
 | 實體 DB 重整 | **NO-GO** | operator copy migration/restore rehearsal、contention、size 與 operating-cost 實測 |
-| FTS5/hybrid ranking | **NO-GO** | representative query corpus、ranking metric、fusion 決策與 latency/storage benchmark |
+| FTS5/hybrid ranking | **NO-GO — pilot evidence 不足** | 18-query pilot 的方向性 quality/latency 通過，但 80-query coverage 與 25% storage gates 失敗；詳見 [`runtime-asset-p1-search-evidence.zh-tw.md`](runtime-asset-p1-search-evidence.zh-tw.md) |
 | 第二 Asset Type | **NO-GO** | accepted ground-truth corpus、parser contract、failure taxonomy 與 fidelity 實測 |
 | Dashboard Asset 改名 | **NO-GO** | 穩定第二 type 或 operator need、API usage evidence 與 migration/rollback design |
 
