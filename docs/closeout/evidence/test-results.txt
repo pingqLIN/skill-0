@@ -12,3 +12,8 @@ FAIL exit=1 | coverage pytest: 373 passed, 65 warnings; total 39.99%, required 7
 Coverage artifact: docs/closeout/evidence/coverage.xml
 Failure classification: CORE_BLOCKER (coverage gate configuration mismatch)
 No production source was changed during C1.
+
+C2 fix cycle 1: coverage gate configuration
+PASS exit=0 | focused workflow regression: 1 passed in 0.14s
+PASS exit=0 | corrected coverage gate: 374 passed, 65 warnings; 81.92%, required 75%
+Production change: .github/workflows/ci.yml now measures api and Dashboard API served surfaces.

@@ -36,3 +36,5 @@
 2026-07-17T10:10:00+08:00 | docker build -f Dockerfile.web -t skill-0-web:closeout . | exit=0 | image manifest f323aa1dc8de97db40f9d7779c57872537e0191542916c84416fdd64fe8bc606
 2026-07-17T10:11:00+08:00 | docker compose -f docker-compose.prod.yml config | exit=1 | CORS_ORIGINS required precondition absent
 2026-07-17T10:11:00+08:00 | CORS_ORIGINS=https://closeout.invalid docker compose -f docker-compose.prod.yml config | exit=0 | PASS; three services and three SQLite volumes resolved
+2026-07-17T10:18:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests/test_doc_checks.py::test_ci_coverage_gate_measures_served_api_surfaces -q -p no:cacheprovider | exit=0 | 1 passed
+2026-07-17T10:18:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests skill-0-dashboard/apps/api/tests -q --timeout=120 --cov=api --cov=skill-0-dashboard/apps/api --cov-report=term-missing --cov-report=xml:docs/closeout/evidence/coverage.xml --cov-fail-under=75 | exit=0 | 374 passed; 81.92% coverage

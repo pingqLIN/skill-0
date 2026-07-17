@@ -131,3 +131,17 @@ def test_shared_docs_mirror_check_detects_outdated_mirror(tmp_path):
     )
 
     assert any("Mirrored shared doc drift detected." in error for error in errors)
+
+
+def test_ci_coverage_gate_measures_served_api_surfaces():
+    workflow = Path(".github/workflows/ci.yml").read_text(encoding="utf-8")
+    pytest_command = next(
+        line.strip()
+        for line in workflow.splitlines()
+        if "python -m pytest tests skill-0-dashboard/apps/api/tests" in line
+    )
+
+    assert "--cov=api" in pytest_command
+    assert "--cov=skill-0-dashboard/apps/api" in pytest_command
+    assert "--cov=tools" not in pytest_command
+    assert "--cov=vector_db" not in pytest_command

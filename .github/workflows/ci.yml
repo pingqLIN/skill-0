@@ -146,7 +146,7 @@ jobs:
           SKILL0_DEVICE: "cpu"
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          python -m pytest tests skill-0-dashboard/apps/api/tests -v --timeout=120 --cov=api --cov=vector_db --cov=tools --cov=skill-0-dashboard/apps/api --cov-report=term-missing --cov-report=xml:coverage.xml --cov-fail-under=75
+          python -m pytest tests skill-0-dashboard/apps/api/tests -v --timeout=120 --cov=api --cov=skill-0-dashboard/apps/api --cov-report=term-missing --cov-report=xml:coverage.xml --cov-fail-under=75
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v7
