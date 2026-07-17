@@ -1,0 +1,20 @@
+2026-07-17T09:56:00+08:00 | git rev-parse --show-toplevel | exit=0 | Q:/Projects/skill-0
+2026-07-17T09:56:00+08:00 | git remote -v | exit=0 | origin=https://github.com/pingqLIN/skill-0.git
+2026-07-17T09:56:00+08:00 | git status --short --branch | exit=0 | main ahead 3; pre-existing untracked audit/
+2026-07-17T09:56:00+08:00 | git worktree list --porcelain | exit=0 | source worktree located
+2026-07-17T09:58:00+08:00 | git rev-parse HEAD | exit=0 | 81fd2a9d22cb55a9fb6079eb9b338dfeed71f990
+2026-07-17T09:58:00+08:00 | git rev-parse refs/remotes/origin/codex/skill0-runtime-v4-next | exit=0 | 81fd2a9d22cb55a9fb6079eb9b338dfeed71f990
+2026-07-17T09:58:00+08:00 | git rev-list --left-right --count origin/codex/skill0-runtime-v4-next...HEAD | exit=0 | 0 0
+2026-07-17T09:58:00+08:00 | git status --short --branch | exit=0 | clean source worktree
+2026-07-17T09:58:00+08:00 | Get-FileHash -Algorithm SHA256 handoff files | exit=0 | 9/9 matched SHA256SUMS.txt
+2026-07-17T09:59:00+08:00 | git switch -c codex/skill0-v4-closeout | exit=0 | branch created at source SHA
+2026-07-17T10:01:10+08:00 | python --version | exit=0 | Python 3.14.6 system default
+2026-07-17T10:01:10+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe --version | exit=0 | Python 3.12.10
+2026-07-17T10:01:10+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pip --version | exit=0 | pip 26.1.2
+2026-07-17T10:01:10+08:00 | node --version | exit=0 | v24.14.1
+2026-07-17T10:01:10+08:00 | npm --version | exit=0 | 11.11.0
+2026-07-17T10:01:10+08:00 | git --version | exit=0 | 2.55.0.windows.2
+2026-07-17T10:01:10+08:00 | docker --version | exit=0 | 29.6.1
+2026-07-17T10:01:10+08:00 | docker compose version | exit=0 | v5.2.0
+2026-07-17T10:01:10+08:00 | pwsh --version | exit=0 | 7.6.3
+2026-07-17T10:01:10+08:00 | Test-NetConnection github.com -Port 443 | exit=0 | reachable=true
