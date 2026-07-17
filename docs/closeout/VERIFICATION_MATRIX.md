@@ -15,7 +15,7 @@ Recorded: `2026-07-17T10:11:55+08:00`
 | Full Python regression | `python -m pytest tests skill-0-dashboard/apps/api/tests -q --timeout=120` | 0 | PASS; 373 tests | 65 `NON_BLOCKING_WARNING` entries | `evidence/test-results.txt` |
 | Coverage 75 | full pytest with `--cov=api --cov=skill-0-dashboard/apps/api` | 0 | PASS; 81.92%, 374 tests | cleared in C2 cycle 1 | `evidence/coverage.xml`, `evidence/test-results.txt` |
 | Frontend dependency restore | `npm ci` | 0 | PASS; 0 vulnerabilities | — | `evidence/web-results.txt` |
-| Frontend lint | `npm run lint` | 1 | FAIL; 2 errors | `CORE_BLOCKER` | `evidence/web-results.txt` |
+| Frontend lint | `npm run lint` | 0 | PASS; 0 errors | cleared in C2 cycle 2 | `evidence/web-results.txt` |
 | Frontend tests | `npm test` | 0 | PASS; 34 tests | — | `evidence/web-results.txt` |
 | Frontend build | `npm run build:ci` | 0 | PASS; bundle guard passed | — | `evidence/web-results.txt` |
 | Docker API image | `docker build -f Dockerfile.api -t skill-0-api:closeout .` | 0 | PASS after daemon start | initial `ENVIRONMENT_BLOCKER` cleared | `evidence/docker-results.txt` |
@@ -47,4 +47,5 @@ Recorded: `2026-07-17T10:11:55+08:00`
 ## C2 remediation status
 
 - Cycle 1, coverage configuration: `RESOLVED`. The gate again measures the served Core and Dashboard API surfaces, matching the historical 75% gate intent. A workflow regression test prevents `tools` and `vector_db` from being silently added back to this denominator. The affected full gate passed at 81.92% with 374 tests.
-- Frontend lint remains the only open `CORE_BLOCKER` after cycle 1.
+- Cycle 2, frontend effect lint: `RESOLVED`. Job feedback is derived from React Query snapshots; effects now only invalidate external query state. Focused tests passed 8/8, the frontend gate passed 34/34, lint passed, and `build:ci` passed.
+- No `CORE_BLOCKER` remains after two fix cycles.

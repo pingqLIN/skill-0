@@ -68,12 +68,48 @@ function formatTelemetryValue(value: string | null | undefined) {
   return value ?? '-';
 }
 
+function getActionJobFeedback(
+  actionJob: ActionJobSummary | undefined,
+  actionKind: ActionKind,
+): Feedback | null {
+  if (!actionJob || !actionKind) {
+    return null;
+  }
+
+  const kindLabel = actionKind === 'test' ? 'Test' : 'Scan';
+  const completedCount = actionJob.summary.succeeded + actionJob.summary.failed + actionJob.summary.skipped;
+  if (actionJob.status === 'queued') {
+    const retryLabel = actionJob.selection_mode.startsWith('retry_') ? ' retry' : '';
+    return { message: `${kindLabel}${retryLabel} job queued`, type: 'success' };
+  }
+  if (actionJob.status === 'running') {
+    return {
+      message: `${kindLabel} job running - ${completedCount}/${actionJob.summary.total} completed`,
+      type: 'success',
+    };
+  }
+  if (actionJob.status === 'completed') {
+    return {
+      message: `${kindLabel} job complete - ${actionJob.summary.succeeded}/${actionJob.summary.total} succeeded`,
+      type: 'success',
+    };
+  }
+  if (actionJob.status === 'cancelled') {
+    return { message: `${kindLabel} job cancelled`, type: 'error' };
+  }
+  return {
+    message: actionJob.error_message ?? `${kindLabel} job finished with failures`,
+    type: 'error',
+  };
+}
+
 export function ReviewQueue() {
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState<FilterType>('all');
   const [feedback, setFeedback] = useState<Feedback | null>(null);
   const [isBulkApproving, setIsBulkApproving] = useState(false);
   const [activeJobId, setActiveJobId] = useState('');
+  const [dismissedJobId, setDismissedJobId] = useState('');
   const [actionKind, setActionKind] = useState<ActionKind>(null);
   const [showJobDetails, setShowJobDetails] = useState(false);
   const { data: skills, isLoading } = usePendingReviews();
@@ -98,51 +134,22 @@ export function ReviewQueue() {
   const safeCount = safeSkills.length;
   const riskyCount = riskySkills.length;
   const pendingCount = skills?.length || 0;
+  const actionJobFeedback =
+    actionJob?.job_id === dismissedJobId
+      ? null
+      : getActionJobFeedback(actionJob, actionKind);
+  const visibleFeedback =
+    feedback?.type === 'error' ? feedback : actionJobFeedback ?? feedback;
 
   useEffect(() => {
-    if (!actionJob || !actionKind) {
-      return;
-    }
-
-    const kindLabel = actionKind === 'test' ? 'Test' : 'Scan';
-    const completedCount = actionJob.summary.succeeded + actionJob.summary.failed + actionJob.summary.skipped;
-
-    if (actionJob.status === 'queued') {
-      setFeedback({ message: `${kindLabel} job queued`, type: 'success' });
-      return;
-    }
-
-    if (actionJob.status === 'running') {
-      setFeedback({
-        message: `${kindLabel} job running - ${completedCount}/${actionJob.summary.total} completed`,
-        type: 'success',
-      });
+    if (!actionJob || actionJob.status === 'queued' || actionJob.status === 'running') {
       return;
     }
 
     queryClient.invalidateQueries({ queryKey: ['reviews'] });
     queryClient.invalidateQueries({ queryKey: ['skills'] });
     queryClient.invalidateQueries({ queryKey: ['stats'] });
-
-    if (actionJob.status === 'completed') {
-      setFeedback({
-        message: `${kindLabel} job complete - ${actionJob.summary.succeeded}/${actionJob.summary.total} succeeded`,
-        type: 'success',
-      });
-      return;
-    }
-
-    if (actionJob.status === 'cancelled') {
-      setFeedback({
-        message: `${kindLabel} job cancelled`,
-        type: 'error',
-      });
-      return;
-    }
-
-    const failureMessage = actionJob.error_message ?? `${kindLabel} job finished with failures`;
-    setFeedback({ message: failureMessage, type: 'error' });
-  }, [actionJob, actionKind, queryClient]);
+  }, [actionJob, queryClient]);
 
   const handleApprove = (skillId: string, reason: string) => {
     approveMutation.mutate(
@@ -404,15 +411,15 @@ export function ReviewQueue() {
         </div>
       </div>
 
-      {feedback && (
+      {visibleFeedback && (
         <div
           className={`mb-4 px-4 py-3 rounded-lg text-sm flex justify-between items-center ${
-            feedback.type === 'success'
+            visibleFeedback.type === 'success'
               ? 'bg-green-50 text-green-800 border border-green-200'
               : 'bg-red-50 text-red-800 border border-red-200'
           }`}
         >
-          <span>{feedback.message}</span>
+          <span>{visibleFeedback.message}</span>
           <div className="ml-4 flex items-center gap-3">
             {actionJob && (
               <>
@@ -437,7 +444,10 @@ export function ReviewQueue() {
               </button>
             )}
             <button
-              onClick={() => setFeedback(null)}
+              onClick={() => {
+                setFeedback(null);
+                setDismissedJobId(actionJob?.job_id ?? '');
+              }}
               aria-label="Dismiss feedback message"
               className="font-bold"
             >

@@ -10,3 +10,13 @@ PASS exit=0 | npm run build:ci: TypeScript, Vite, and 350 KiB chunk guard
 
 Failure classification: CORE_BLOCKER (focused React effect lint violations)
 No frontend source was changed during C1.
+
+C2 fix cycle 2: React effect feedback derivation
+PASS exit=0 | initial npm run lint after source change
+FAIL exit=1 | first focused test: 6 passed, 2 failed; retry label was not preserved
+PASS exit=0 | corrected focused test: 2 files, 8 tests passed
+PASS exit=0 | npm run lint: 0 errors
+PASS exit=0 | npm test: 6 files, 34 tests passed
+PASS exit=0 | npm run build:ci: TypeScript, Vite, and bundle guard passed
+
+The first focused failure was retained and corrected inside the same defect cycle. No lint suppression was added.

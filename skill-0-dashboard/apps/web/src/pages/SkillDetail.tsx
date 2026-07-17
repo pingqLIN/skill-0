@@ -60,6 +60,51 @@ function formatTelemetryValue(value: string | null | undefined) {
   return value ?? '-';
 }
 
+function getActionJobMessage(
+  actionJob: ActionJobSummary | undefined,
+  actionJobItems: ActionJobItem[],
+  actionKind: 'scan' | 'test' | null,
+): { text: string; ok: boolean } | null {
+  if (!actionJob) {
+    return null;
+  }
+
+  const kindLabel = actionKind === 'test' ? 'Test' : 'Scan';
+  if (actionJob.status === 'queued') {
+    const retryLabel = actionJob.selection_mode.startsWith('retry_') ? ' retry' : '';
+    return { text: `${kindLabel}${retryLabel} job queued`, ok: true };
+  }
+  if (actionJob.status === 'running') {
+    const done = actionJob.summary.succeeded + actionJob.summary.failed + actionJob.summary.skipped;
+    return {
+      text: `${kindLabel} job running — ${done}/${actionJob.summary.total} completed`,
+      ok: true,
+    };
+  }
+  if (actionJob.status === 'completed' && actionKind === 'scan') {
+    const riskScore = actionJobItems[0]?.result?.risk_score;
+    return {
+      text: `Scan complete — risk score: ${riskScore !== undefined ? String(riskScore) : '-'}`,
+      ok: true,
+    };
+  }
+  if (actionJob.status === 'completed') {
+    const overallScore = actionJobItems[0]?.result?.overall_score;
+    return {
+      text: `Test complete — score: ${typeof overallScore === 'number' ? Math.round(overallScore * 100) : 0}%`,
+      ok: true,
+    };
+  }
+  if (actionJob.status === 'cancelled') {
+    return { text: `${kindLabel} job cancelled`, ok: false };
+  }
+  const failedItem = actionJobItems.find((item) => item.status === 'failed');
+  return {
+    text: failedItem?.error_message ?? actionJob.error_message ?? `${kindLabel} job failed`,
+    ok: false,
+  };
+}
+
 export function SkillDetail() {
   const { skillId } = useParams<{ skillId: string }>();
   const navigate = useNavigate();
@@ -77,66 +122,23 @@ export function SkillDetail() {
   const [showDetails, setShowDetails] = useState(false);
   const { data: actionJob } = useActionJob(activeJobId);
   const { data: actionJobItems = [] } = useActionJobItems(activeJobId);
+  const jobActionMessage = getActionJobMessage(actionJob, actionJobItems, actionKind);
+  const visibleActionMessage =
+    actionMessage?.ok === false ? actionMessage : jobActionMessage ?? actionMessage;
 
   useEffect(() => {
-    if (!skillId || !actionJob) {
+    if (
+      !skillId ||
+      !actionJob ||
+      !['completed', 'completed_with_failures', 'failed'].includes(actionJob.status)
+    ) {
       return;
     }
 
-    const kindLabel = actionKind === 'test' ? 'Test' : 'Scan';
-    if (actionJob.status === 'queued') {
-      setActionMessage({ text: `${kindLabel} job queued`, ok: true });
-      return;
-    }
-
-    if (actionJob.status === 'running') {
-      const done = actionJob.summary.succeeded + actionJob.summary.failed + actionJob.summary.skipped;
-      setActionMessage({
-        text: `${kindLabel} job running — ${done}/${actionJob.summary.total} completed`,
-        ok: true,
-      });
-      return;
-    }
-
-    if (actionJob.status === 'completed') {
-      queryClient.invalidateQueries({ queryKey: ['skill', skillId] });
-      queryClient.invalidateQueries({ queryKey: ['skill-revisions', skillId] });
-      queryClient.invalidateQueries({ queryKey: ['action-readiness', skillId] });
-      if (actionKind === 'scan') {
-        const riskScore = actionJobItems[0]?.result?.risk_score;
-        setActionMessage({
-          text: `Scan complete — risk score: ${riskScore !== undefined ? String(riskScore) : '-'}`,
-          ok: true,
-        });
-      } else {
-        const overallScore = actionJobItems[0]?.result?.overall_score;
-        setActionMessage({
-          text: `Test complete — score: ${typeof overallScore === 'number' ? Math.round(overallScore * 100) : 0}%`,
-          ok: true,
-        });
-      }
-      return;
-    }
-
-    if (actionJob.status === 'cancelled') {
-      setActionMessage({
-        text: `${kindLabel} job cancelled`,
-        ok: false,
-      });
-      return;
-    }
-
-    if (actionJob.status === 'completed_with_failures' || actionJob.status === 'failed') {
-      queryClient.invalidateQueries({ queryKey: ['skill', skillId] });
-      queryClient.invalidateQueries({ queryKey: ['skill-revisions', skillId] });
-      queryClient.invalidateQueries({ queryKey: ['action-readiness', skillId] });
-      const failedItem = actionJobItems.find((item) => item.status === 'failed');
-      setActionMessage({
-        text: failedItem?.error_message ?? actionJob.error_message ?? `${kindLabel} job failed`,
-        ok: false,
-      });
-    }
-  }, [actionJob, actionJobItems, actionKind, queryClient, skillId]);
+    queryClient.invalidateQueries({ queryKey: ['skill', skillId] });
+    queryClient.invalidateQueries({ queryKey: ['skill-revisions', skillId] });
+    queryClient.invalidateQueries({ queryKey: ['action-readiness', skillId] });
+  }, [actionJob, queryClient, skillId]);
 
   const handleScan = async () => {
     if (!skillId) return;
@@ -315,10 +317,10 @@ export function SkillDetail() {
       </div>
 
       {/* Action Feedback */}
-      {actionMessage && (
-        <div className={`mb-2 px-4 py-3 rounded-md text-sm flex items-center gap-2 ${actionMessage.ok ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
-          {actionMessage.ok ? <CheckCircle className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
-          {actionMessage.text}
+      {visibleActionMessage && (
+        <div className={`mb-2 px-4 py-3 rounded-md text-sm flex items-center gap-2 ${visibleActionMessage.ok ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+          {visibleActionMessage.ok ? <CheckCircle className="h-4 w-4 shrink-0" /> : <XCircle className="h-4 w-4 shrink-0" />}
+          {visibleActionMessage.text}
           {actionJob && (
             <>
               {(actionJob.status === 'queued' || actionJob.status === 'running') && (

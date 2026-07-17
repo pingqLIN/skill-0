@@ -38,3 +38,9 @@
 2026-07-17T10:11:00+08:00 | CORS_ORIGINS=https://closeout.invalid docker compose -f docker-compose.prod.yml config | exit=0 | PASS; three services and three SQLite volumes resolved
 2026-07-17T10:18:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests/test_doc_checks.py::test_ci_coverage_gate_measures_served_api_surfaces -q -p no:cacheprovider | exit=0 | 1 passed
 2026-07-17T10:18:00+08:00 | Q:/Projects/skill-0/.venv/Scripts/python.exe -m pytest tests skill-0-dashboard/apps/api/tests -q --timeout=120 --cov=api --cov=skill-0-dashboard/apps/api --cov-report=term-missing --cov-report=xml:docs/closeout/evidence/coverage.xml --cov-fail-under=75 | exit=0 | 374 passed; 81.92% coverage
+2026-07-17T10:24:00+08:00 | npm run lint | exit=0 | C2 cycle 2 initial lint fix passed
+2026-07-17T10:24:00+08:00 | npm test -- src/pages/ReviewQueue.test.tsx src/pages/SkillDetail.test.tsx | exit=1 | 6 passed, 2 failed; retry label regression retained
+2026-07-17T10:25:00+08:00 | npm test -- src/pages/ReviewQueue.test.tsx src/pages/SkillDetail.test.tsx | exit=0 | 8 passed
+2026-07-17T10:26:00+08:00 | npm run lint | exit=0 | PASS; 0 errors
+2026-07-17T10:26:00+08:00 | npm test | exit=0 | PASS; 6 files, 34 tests
+2026-07-17T10:26:00+08:00 | npm run build:ci | exit=0 | PASS; TypeScript, Vite, bundle guard
