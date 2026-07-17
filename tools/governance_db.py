@@ -1834,6 +1834,7 @@ class GovernanceDB:
         approved_by: str,
         reason: str = "",
         revision_id: Optional[str] = None,
+        decision_evidence: Optional[Dict[str, Any]] = None,
     ) -> bool:
         """Approve a skill for use"""
         with self.connection() as conn:
@@ -1901,7 +1902,11 @@ class GovernanceDB:
                 revision_id=current_revision,
                 skill_name=row["name"],
                 actor=approved_by,
-                details={"reason": reason, "revision_id": current_revision},
+                details={
+                    "reason": reason,
+                    "revision_id": current_revision,
+                    "decision_evidence": decision_evidence,
+                },
                 previous_state={"status": row["status"]},
                 new_state={"status": "approved"},
             )
@@ -1914,6 +1919,7 @@ class GovernanceDB:
         rejected_by: str,
         reason: str,
         revision_id: Optional[str] = None,
+        decision_evidence: Optional[Dict[str, Any]] = None,
     ) -> bool:
         """Reject a skill"""
         with self.connection() as conn:
@@ -1958,7 +1964,11 @@ class GovernanceDB:
                 revision_id=current_revision,
                 skill_name=row["name"],
                 actor=rejected_by,
-                details={"reason": reason, "revision_id": current_revision},
+                details={
+                    "reason": reason,
+                    "revision_id": current_revision,
+                    "decision_evidence": decision_evidence,
+                },
                 previous_state={"status": row["status"]},
                 new_state={"status": "rejected"},
             )

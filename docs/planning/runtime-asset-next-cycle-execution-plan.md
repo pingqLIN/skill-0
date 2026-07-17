@@ -56,8 +56,9 @@ them.
 
 - Never reuse the unrelated root `governance.db`.
 - Never write a partial authority database to `governance/db/governance.db`.
-- If the target already exists, require a verified backup and stage from that copy;
-  do not mutate the live database in place.
+- The P0.2 bootstrap refuses an existing target. Backup, restore, and replacement are
+  separate Stage 2 operator workflows; the bootstrap never mutates live authority
+  state in place.
 - A rejected or omitted Asset cannot produce a false `healthy` doctor state.
 - Canonical Asset ID is the unique Governance record name. Human display names stay
   in evidence only, avoiding the existing duplicate `pdf` names.
