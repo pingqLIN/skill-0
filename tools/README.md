@@ -66,7 +66,8 @@ evidence。它不建立或批准 Governance authority，也不接受只有 `samp
 # 執行兩次 incremental index，第二次必須為 no-op
 .\.venv\Scripts\python.exe tools\runtime_asset_index_maintenance.py `
   --index-db skills.db --output audit\p0-1\index-evidence.json index `
-  --parsed-dir parsed --governance-db governance\db\governance.db
+  --parsed-dir parsed --governance-db governance\db\governance.db `
+  --smoke-query "document processing"
 ```
 
 若 embedding model 不是可雜湊的本機目錄，`index` 必須提供不可變的

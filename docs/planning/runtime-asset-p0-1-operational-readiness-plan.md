@@ -52,3 +52,7 @@ stores are not migrated.
   checksum evidence, blocks indexing before authority/canonical/unknown
   failures, and requires a healthy post-index doctor by default. Explicit
   non-healthy rehearsal stays machine-marked as unaccepted.
+- `P0.1-C` completed: disposable and root derived Index workflows passed
+  preview, verified backup, migration, restore, 196-row incremental index,
+  second-run no-op, integrity, and semantic-search smoke. Local doctor remains
+  truthfully authority-missing because no operator Governance DB exists.

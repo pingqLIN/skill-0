@@ -28,6 +28,7 @@ The non-suffixed English operations documents are authoritative. Existing `.zh-t
 - [`shared-documentation-model.md`](shared-documentation-model.md) and [`gui-governance.md`](gui-governance.md) define the external GUI mirror boundary.
 - [`closeout/KNOWN_LIMITATIONS.md`](closeout/KNOWN_LIMITATIONS.md) and [`closeout/DEFERRED_BACKLOG.md`](closeout/DEFERRED_BACKLOG.md) separate accepted limitations from future work.
 - [`reports/runtime-asset-p0-verification-and-p1-decision.md`](reports/runtime-asset-p0-verification-and-p1-decision.md) records the verified P0 result and evidence-gated P1 NO-GO decisions.
+- [`reports/runtime-asset-p0-1-operational-readiness.md`](reports/runtime-asset-p0-1-operational-readiness.md) records canonical identity repair, guarded local Index creation, backups, and the remaining Governance authority boundary.
 
 ## Historical material
 

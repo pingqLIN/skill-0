@@ -61,6 +61,14 @@ def test_index_twice_requires_second_run_to_be_noop(root, tmp_path, monkeypatch)
             del parsed_dir, show_progress
             return IndexReport(total=0, changed=0, unchanged=0, removed=0)
 
+        def _embedding_identity(self):
+            return "fixture-model", "fixture-v1"
+
+        def search_assets(self, query, limit=5):
+            assert query == "document processing"
+            assert limit == 5
+            return []
+
     monkeypatch.setattr(
         "tools.runtime_asset_index_maintenance.SemanticSearch", FakeSearch
     )
@@ -82,6 +90,7 @@ def test_index_twice_requires_second_run_to_be_noop(root, tmp_path, monkeypatch)
         migration_dir=root / "migrations/index",
         model_version="fixture-v1",
         allow_nonhealthy_evidence=True,
+        smoke_query="document processing",
     )
     assert len(calls) == 1
     assert result["second"]["changed"] == 0
@@ -89,3 +98,11 @@ def test_index_twice_requires_second_run_to_be_noop(root, tmp_path, monkeypatch)
     assert result["accepted"] is False
     assert result["rehearsal_only"] is True
     assert result["inspection"]["integrity"] == "ok"
+    assert result["model_identity"] == {
+        "model_id": "fixture-model",
+        "model_version": "fixture-v1",
+    }
+    assert result["search_smoke"] == {
+        "query": "document processing",
+        "results": [],
+    }

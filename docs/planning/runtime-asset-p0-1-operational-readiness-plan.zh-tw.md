@@ -46,3 +46,7 @@ operator store，才要求 `healthy`／exit 0。
   migration 前失敗、建立不覆寫且 verified 的 backup、保留 checksum evidence，
   並在 authority／canonical／unknown failure 存在時於 indexing 前阻擋。預設只有
   post-index doctor healthy 才成功；明確的 non-healthy rehearsal 仍標記為未接受。
+- `P0.1-C` 已完成：disposable 與 root derived Index 都通過 preview、verified
+  backup、migration、restore、196-row incremental index、第二次 no-op、
+  integrity 與 semantic-search smoke。因為沒有 operator Governance DB，本機
+  doctor 仍誠實維持 authority-missing。

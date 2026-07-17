@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 from contextlib import contextmanager
+from dataclasses import asdict
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -130,6 +131,7 @@ def index_twice(
     model_name: str | None = None,
     model_version: str | None = None,
     allow_nonhealthy_evidence: bool = False,
+    smoke_query: str | None = None,
 ) -> dict[str, Any]:
     inspection = inspect_index(index_db, migration_dir)
     if any(item["state"] != "applied" for item in inspection["migrations"]):
@@ -169,6 +171,12 @@ def index_twice(
         ) as search:
             first = search.index_assets(parsed_dir, show_progress=False)
             second = search.index_assets(parsed_dir, show_progress=False)
+            model_id, resolved_model_version = search._embedding_identity()
+            smoke_results = (
+                [asdict(item) for item in search.search_assets(smoke_query, limit=5)]
+                if smoke_query
+                else []
+            )
     elapsed = time.perf_counter() - started
     if second.changed != 0 or second.removed != 0:
         raise RuntimeError("second_incremental_index_run_was_not_noop")
@@ -189,6 +197,14 @@ def index_twice(
         "parsed_dir": str(parsed_dir.resolve()),
         "first": vars(first),
         "second": vars(second),
+        "model_identity": {
+            "model_id": model_id,
+            "model_version": resolved_model_version,
+        },
+        "search_smoke": {
+            "query": smoke_query,
+            "results": smoke_results,
+        },
         "elapsed_seconds": elapsed,
         "doctor": doctor,
     }
@@ -227,6 +243,10 @@ def main(argv: list[str] | None = None) -> int:
     index_parser.add_argument("--model-name")
     index_parser.add_argument("--model-version")
     index_parser.add_argument(
+        "--smoke-query",
+        help="Run one read-only Asset search and include projected results in evidence",
+    )
+    index_parser.add_argument(
         "--allow-nonhealthy-evidence",
         action="store_true",
         help=(
@@ -260,6 +280,7 @@ def main(argv: list[str] | None = None) -> int:
                     model_name=args.model_name,
                     model_version=args.model_version,
                     allow_nonhealthy_evidence=args.allow_nonhealthy_evidence,
+                    smoke_query=args.smoke_query,
                 ),
             }
         _write_output(payload, args.output)
