@@ -8,6 +8,8 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 
+from asset_registry.sqlite import INDEX_POLICY, connect_sqlite
+
 try:
     import sqlite_vec
     SQLITE_VEC_AVAILABLE = True
@@ -43,20 +45,23 @@ class VectorStore:
     def _connect(self, *, initialize_schema: bool):
         """建立資料庫連線並載入 sqlite-vec 擴充"""
         if initialize_schema:
-            self.conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
+            self.conn = connect_sqlite(
+                self.db_path,
+                policy=INDEX_POLICY,
+                mode="maintenance",
+                check_same_thread=False,
+            )
         else:
-            resolved = self.db_path.resolve()
-            self.conn = sqlite3.connect(
-                f"file:{resolved.as_posix()}?mode=rw",
-                uri=True,
+            self.conn = connect_sqlite(
+                self.db_path,
+                policy=INDEX_POLICY,
+                mode="existing",
                 check_same_thread=False,
             )
         self.conn.enable_load_extension(True)
         sqlite_vec.load(self.conn)
         self.conn.enable_load_extension(False)
         self.conn.row_factory = sqlite3.Row
-        self.conn.execute("PRAGMA foreign_keys=ON")
-        self.conn.execute("PRAGMA busy_timeout=2000")
         if initialize_schema:
             self._init_schema()
         else:

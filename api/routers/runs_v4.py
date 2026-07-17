@@ -4,7 +4,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import sqlite3
-from functools import lru_cache
+from threading import RLock
 from typing import Any, Iterator, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
@@ -275,9 +275,18 @@ def get_parsed_dir() -> Path:
     return Path(os.getenv("SKILL0_PARSED_DIR", "parsed"))
 
 
-@lru_cache(maxsize=16)
+_repository_lock = RLock()
+_repositories: dict[str, LegacySkillAssetRepository] = {}
+
+
 def _repository_for_path(path: str) -> LegacySkillAssetRepository:
-    return LegacySkillAssetRepository(Path(path))
+    with _repository_lock:
+        existing = _repositories.get(path)
+    if existing is not None:
+        return existing
+    replacement = LegacySkillAssetRepository(Path(path))
+    with _repository_lock:
+        return _repositories.setdefault(path, replacement)
 
 
 def get_asset_repository() -> AssetRepository:
@@ -291,10 +300,13 @@ def get_asset_repository() -> AssetRepository:
 
 
 def reload_asset_repository() -> AssetRepository:
-    """Explicitly replace process-local snapshots after maintenance validation."""
+    """Validate off-side, then atomically replace the configured snapshot."""
 
-    _repository_for_path.cache_clear()
-    return get_asset_repository()
+    path = str(get_parsed_dir().resolve())
+    replacement = LegacySkillAssetRepository(Path(path))
+    with _repository_lock:
+        _repositories[path] = replacement
+    return replacement
 
 
 def load_canonical_skill(

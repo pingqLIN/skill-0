@@ -10,6 +10,8 @@ from datetime import datetime, timezone
 import hashlib
 from pathlib import Path
 import threading
+from contextlib import contextmanager
+from functools import wraps
 from typing import Dict, List, Optional, Union
 import numpy as np
 
@@ -20,6 +22,15 @@ from asset_registry.search import AssetSearchResult
 
 
 REPRESENTATION_VERSION = "skill-text-v1"
+
+
+def _serialized(method):
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        with self._operation_lock:
+            return method(self, *args, **kwargs)
+
+    return wrapper
 
 
 @dataclass(frozen=True)
@@ -64,6 +75,28 @@ class SemanticSearch:
             initialize_schema=initialize_schema,
         )
 
+    @contextmanager
+    def open_unit_of_work(self):
+        """Open one factory-backed Index connection while sharing model state."""
+
+        clone = object.__new__(SemanticSearch)
+        clone.model_name = self.model_name
+        clone.dimension = self.dimension
+        clone._embedder = self._embedder
+        clone._operation_lock = self._operation_lock
+        clone.store = VectorStore(
+            self.store.db_path,
+            dimension=self.store.dimension,
+            initialize_schema=False,
+        )
+        try:
+            yield clone
+            if self._embedder is None and clone._embedder is not None:
+                self._embedder = clone._embedder
+                self.dimension = clone.dimension
+        finally:
+            clone.close()
+
     @property
     def embedder(self) -> SkillEmbedder:
         """延遲初始化 embedder，避免純讀取路徑碰到模型載入。"""
@@ -81,20 +114,21 @@ class SemanticSearch:
         if model_path.is_dir():
             digest = hashlib.sha256()
             matched = False
-            for name in (
-                "modules.json",
-                "config.json",
-                "config_sentence_transformers.json",
+            for candidate in sorted(
+                (path for path in model_path.rglob("*") if path.is_file()),
+                key=lambda path: path.relative_to(model_path).as_posix(),
             ):
-                candidate = model_path / name
-                if candidate.is_file():
-                    digest.update(name.encode("utf-8"))
-                    digest.update(candidate.read_bytes())
-                    matched = True
+                relative = candidate.relative_to(model_path).as_posix()
+                digest.update(relative.encode("utf-8"))
+                with candidate.open("rb") as handle:
+                    for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+                        digest.update(chunk)
+                matched = True
             if matched:
                 return model_id, "sha256:" + digest.hexdigest()
         return model_id, "unversioned"
         
+    @_serialized
     def index_skills(self, parsed_dir: Union[str, Path], show_progress: bool = True) -> int:
         """
         索引 parsed 目錄中的所有 skills
@@ -121,6 +155,7 @@ class SemanticSearch:
         print(f"✓ Indexed {len(skills)} skills")
         return len(skills)
 
+    @_serialized
     def index_assets(
         self,
         parsed_dir: Union[str, Path],
@@ -135,6 +170,11 @@ class SemanticSearch:
         repository = LegacySkillAssetRepository(Path(parsed_dir))
         revisions = repository.list_revisions()
         model_id, model_version = self._embedding_identity()
+        if model_version == "unversioned":
+            raise RuntimeError(
+                "Incremental indexing requires SKILL0_EMBEDDING_MODEL_VERSION "
+                "or a digestible local model directory"
+            )
         existing = {
             (
                 row["asset_id"], row["revision_id"], row["representation_version"],
@@ -197,6 +237,7 @@ class SemanticSearch:
             removed=len(existing_sources - active_sources),
         )
 
+    @_serialized
     def search_assets(
         self,
         query: str,
@@ -217,6 +258,7 @@ class SemanticSearch:
             for row in results
         ]
     
+    @_serialized
     def search(self, query: str, limit: int = 5) -> List[Dict]:
         """
         語義搜尋 skills
@@ -240,6 +282,7 @@ class SemanticSearch:
             
         return results
     
+    @_serialized
     def find_similar(self, skill_name: str, limit: int = 5) -> List[Dict]:
         """
         找出與指定 skill 相似的其他 skills
@@ -279,6 +322,7 @@ class SemanticSearch:
             
         return results[:limit]
     
+    @_serialized
     def cluster_skills(self, n_clusters: int = 5) -> Dict[int, List[Dict]]:
         """
         對 skills 進行聚類分析
@@ -320,6 +364,7 @@ class SemanticSearch:
             
         return clusters
     
+    @_serialized
     def get_statistics(self) -> Dict:
         """取得搜尋引擎統計"""
         stats = self.store.get_statistics()

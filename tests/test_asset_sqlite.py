@@ -6,6 +6,7 @@ import sqlite3
 import pytest
 
 from vector_db.vector_store import VectorStore
+from vector_db.search import SemanticSearch
 
 from asset_registry.sqlite import (
     INDEX_POLICY,
@@ -96,3 +97,18 @@ def test_existing_index_mode_never_creates_missing_database(tmp_path):
     with pytest.raises(sqlite3.OperationalError):
         VectorStore(database, initialize_schema=False)
     assert not database.exists()
+
+
+def test_production_index_unit_of_work_uses_named_connection_policy(tmp_path):
+    search = SemanticSearch(tmp_path / "index.db", model_name="fixture")
+    try:
+        base_connection = search.store.conn
+        with search.open_unit_of_work() as first:
+            assert first.store.conn is not base_connection
+            assert first.store.conn.execute("PRAGMA foreign_keys").fetchone()[0] == 1
+            assert first.store.conn.execute("PRAGMA busy_timeout").fetchone()[0] == 2000
+        with search.open_unit_of_work() as second:
+            assert second.store.conn is not base_connection
+            assert second.store.conn is not first.store.conn
+    finally:
+        search.close()

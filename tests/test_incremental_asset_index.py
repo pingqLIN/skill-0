@@ -46,7 +46,8 @@ def _write_skill(path, skill_id, *, parser_version="1.0.0"):
 
 
 @pytest.fixture
-def incremental_search(root, tmp_path):
+def incremental_search(root, tmp_path, monkeypatch):
+    monkeypatch.setenv("SKILL0_EMBEDDING_MODEL_VERSION", "fixture-v1")
     parsed_dir = tmp_path / "parsed"
     parsed_dir.mkdir()
     _write_skill(parsed_dir / "one.json", "claude__skill__one")
@@ -121,3 +122,23 @@ def test_search_and_list_hot_paths_exclude_raw_json(incremental_search):
 
     assert results and "raw_json" not in results[0]
     assert listed and all("raw_json" not in row for row in listed)
+
+
+def test_local_model_weight_drift_changes_incremental_identity(
+    incremental_search, monkeypatch, tmp_path
+):
+    search, embedder, parsed_dir = incremental_search
+    monkeypatch.delenv("SKILL0_EMBEDDING_MODEL_VERSION")
+    model_dir = tmp_path / "model"
+    model_dir.mkdir()
+    (model_dir / "config.json").write_text("{}", encoding="utf-8")
+    weights = model_dir / "model.safetensors"
+    weights.write_bytes(b"weights-v1")
+    search.model_name = str(model_dir)
+    first = search.index_assets(parsed_dir, show_progress=False)
+    weights.write_bytes(b"weights-v2")
+    second = search.index_assets(parsed_dir, show_progress=False)
+
+    assert first.changed == 2
+    assert second.changed == 2
+    assert embedder.embedded == 4

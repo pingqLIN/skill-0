@@ -109,3 +109,33 @@ def test_asset_search_uses_generic_projection(monkeypatch):
     assert response.status_code == 200
     assert response.json()["results"][0]["asset_id"] == "claude__skill__doctor"
     assert "payload" not in response.json()["results"][0]
+
+
+def test_authenticated_reload_recovers_stale_snapshot_atomically(tmp_path, monkeypatch):
+    parsed = tmp_path / "parsed"
+    parsed.mkdir()
+    source = parsed / "asset.json"
+    _write_skill(source)
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed))
+    client = TestClient(api_module.app)
+    assert client.get("/api/assets/claude__skill__asset_api").status_code == 200
+
+    _write_skill(source, name="asset-api-reloaded")
+    stale = client.get("/api/assets/claude__skill__asset_api")
+    assert stale.status_code == 409
+    assert stale.json()["detail"]["code"] == "stale_source_snapshot"
+
+    unauthenticated = client.post("/api/assets/reload")
+    assert unauthenticated.status_code == 401
+    token = api_module.create_access_token({"sub": "testadmin"})
+    reloaded = client.post(
+        "/api/assets/reload",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert reloaded.status_code == 200
+    assert reloaded.json()["revision_count"] == 1
+    fresh = client.get(
+        "/api/assets/claude__skill__asset_api", params={"include_payload": True}
+    )
+    assert fresh.status_code == 200
+    assert fresh.json()["payload"]["meta"]["name"] == "asset-api-reloaded"

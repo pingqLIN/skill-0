@@ -1,6 +1,6 @@
 # Runtime Asset Foundation — Next-Round Development Plan
 
-- Status: **Active P0 execution authority; Runtime v4 release authority remains frozen**
+- Status: **P0 implementation complete; Runtime v4 release authority remains frozen**
 - Date: `2026-07-17`
 - Target baseline: `main` at P0 plan commit `24c6f0f`
 - Planned milestone: `P0 Runtime Asset Foundation and Storage Boundary`
@@ -446,3 +446,7 @@ Any failed batch acceptance criterion blocks every downstream batch. Stop furthe
   exit codes. Current local operator evidence is intentionally
   `authority-missing` (exit `2`) because no Governance operator DB or migrated
   Asset index exists; this is observed state, not an implicit migration request.
+- `P0-F` completed on `2026-07-17`: integrated gates passed (`414` Python tests,
+  `196` parsed schemas, `34` frontend tests, lint, build, and bundle guard). The
+  P1 decision packet records NO-GO for physical DB reorganization, FTS5, a
+  second Asset Type, and Dashboard rename until their evidence gates are met.

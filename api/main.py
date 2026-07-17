@@ -21,6 +21,7 @@ import time
 import uuid
 import ipaddress
 from contextvars import ContextVar
+from contextlib import contextmanager
 from urllib.parse import urlparse
 
 import structlog
@@ -36,6 +37,7 @@ from api.routers.runs_v4 import (
     runtime_hitl_ttl_configuration_issue,
     runtime_journal_mode_configuration_issue,
     get_asset_repository,
+    reload_asset_repository,
 )
 from asset_registry.repositories import (
     AssetIdentityAmbiguousError,
@@ -595,43 +597,56 @@ def _get_db_skill_count(db_path: str) -> int:
     return int(row[0] if row else 0)
 
 
+@contextmanager
+def _search_unit_of_work():
+    engine = get_search_engine()
+    if getattr(type(engine), "open_unit_of_work", None) is None:
+        yield engine
+        return
+    with engine.open_unit_of_work() as operation_engine:
+        yield operation_engine
+
+
 def _search_sync(query: str, limit: int):
-    return get_search_engine().search(query, limit=limit)
+    with _search_unit_of_work() as engine:
+        return engine.search(query, limit=limit)
 
 
 def _similar_sync(skill_name: str, limit: int):
-    return get_search_engine().find_similar(skill_name, limit=limit)
+    with _search_unit_of_work() as engine:
+        return engine.find_similar(skill_name, limit=limit)
 
 
 def _cluster_sync(n_clusters: int):
-    return get_search_engine().cluster_skills(n_clusters=n_clusters)
+    with _search_unit_of_work() as engine:
+        return engine.cluster_skills(n_clusters=n_clusters)
 
 
 def _stats_sync():
-    return get_search_engine().get_statistics()
+    with _search_unit_of_work() as engine:
+        return engine.get_statistics()
 
 
 def _list_skills_sync():
-    return get_search_engine().store.get_all_skills()
+    with _search_unit_of_work() as engine:
+        return engine.store.get_all_skills()
 
 
 def _skill_by_id_sync(skill_id: int, include_json: bool):
-    return get_search_engine().store.get_skill_by_id(
-        skill_id, include_json=include_json
-    )
+    with _search_unit_of_work() as engine:
+        return engine.store.get_skill_by_id(skill_id, include_json=include_json)
 
 
 def _index_sync(parsed_dir: str) -> int:
-    engine = get_search_engine()
-    if engine.store.has_asset_index_state():
-        return engine.index_assets(parsed_dir, show_progress=False).changed
-    return engine.index_skills(parsed_dir, show_progress=False)
+    with _search_unit_of_work() as engine:
+        if engine.store.has_asset_index_state():
+            return engine.index_assets(parsed_dir, show_progress=False).changed
+        return engine.index_skills(parsed_dir, show_progress=False)
 
 
 def _asset_search_sync(query: str, asset_types: tuple[str, ...], limit: int):
-    return get_search_engine().search_assets(
-        query, asset_types=asset_types, limit=limit
-    )
+    with _search_unit_of_work() as engine:
+        return engine.search_assets(query, asset_types=asset_types, limit=limit)
 
 
 def _search_overloaded(exc: SearchOverloadedError) -> HTTPException:
@@ -733,6 +748,12 @@ class AssetSearchRequest(BaseModel):
     query: str = Field(min_length=1)
     asset_types: list[Literal["skill"]] = Field(default_factory=lambda: ["skill"])
     limit: int = Field(default=5, ge=1, le=50)
+
+
+class AssetReloadResponse(BaseModel):
+    snapshot_id: str
+    revision_count: int
+    ambiguous_asset_ids: list[str]
 
 
 def _revision_response(revision, *, include_payload: bool) -> AssetRevisionResponse:
@@ -846,6 +867,28 @@ async def search_assets(request: AssetSearchRequest):
         "results": [asdict(item) for item in results],
         "count": len(results),
     }
+
+
+@app.post(
+    "/api/assets/reload",
+    response_model=AssetReloadResponse,
+    tags=["Assets"],
+)
+async def reload_assets(_user: dict = Depends(require_auth)):
+    """Validate and atomically swap the configured Runtime Asset snapshot."""
+
+    try:
+        repository = await search_executor.run(reload_asset_repository)
+        revisions = repository.list_revisions()
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
+    except Exception as exc:
+        _raise_asset_repository_error(exc)
+    return AssetReloadResponse(
+        snapshot_id=repository.snapshot_id,
+        revision_count=len(revisions),
+        ambiguous_asset_ids=list(repository.ambiguous_asset_ids),
+    )
 
 
 # ==================== Endpoints ====================

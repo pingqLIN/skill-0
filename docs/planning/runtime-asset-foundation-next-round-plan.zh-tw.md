@@ -1,6 +1,6 @@
 # Runtime Asset Foundation——下一輪開發計畫
 
-- 狀態：**P0 執行依據；Runtime v4 release authority 仍維持凍結**
+- 狀態：**P0 implementation 已完成；Runtime v4 release authority 仍維持凍結**
 - 日期：`2026-07-17`
 - 目標基線：P0 plan commit `24c6f0f` 的 `main`
 - 規劃里程碑：`P0 Runtime Asset Foundation and Storage Boundary`
@@ -376,3 +376,7 @@ P0-A contracts
   stale-derived-projection、authority-missing 與 unknown。目前本機 operator
   evidence 為 `authority-missing`（exit `2`），因為沒有 Governance operator DB
   或已 migrate 的 Asset index；這是觀察狀態，不是 implicit migration request。
+- `P0-F` 已於 `2026-07-17` 完成：integrated gates 通過（`414` Python tests、
+  `196` parsed schemas、`34` frontend tests、lint、build 與 bundle guard）。P1
+  decision packet 對實體 DB 重整、FTS5、第二 Asset Type 與 Dashboard 改名維持
+  NO-GO，直到各自 evidence gate 滿足。

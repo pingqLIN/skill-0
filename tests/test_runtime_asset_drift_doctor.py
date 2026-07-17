@@ -130,3 +130,29 @@ def test_doctor_distinguishes_stale_projection(tmp_path):
     )
     assert report["state"] == "stale-derived-projection"
     assert report["findings"]["pending_projection"] == ["doctor.json"]
+
+
+def test_doctor_fails_closed_on_migration_checksum_drift(tmp_path):
+    parsed = tmp_path / "parsed"
+    parsed.mkdir()
+    _write_skill(parsed / "doctor.json")
+    revision = LegacySkillAssetRepository(parsed).list_revisions()[0]
+    index = tmp_path / "index.db"
+    governance = tmp_path / "governance.db"
+    _create_index(index, revision)
+    _create_governance(governance, revision)
+    with sqlite3.connect(index) as connection:
+        connection.execute(
+            "CREATE TABLE schema_migrations (migration_id TEXT PRIMARY KEY, checksum TEXT, applied_at TEXT, runner_version TEXT)"
+        )
+        connection.execute(
+            "INSERT INTO schema_migrations VALUES ('001_asset_index_state', ?, 'now', 'test')",
+            ("sha256:" + "0" * 64,),
+        )
+
+    report = build_doctor_report(
+        parsed_dir=parsed, index_db=index, governance_db=governance
+    )
+    assert report["state"] == "unknown"
+    assert report["exit_code"] == 3
+    assert report["findings"]["migration_checksum_drift"][0]["migration_id"] == "001_asset_index_state"

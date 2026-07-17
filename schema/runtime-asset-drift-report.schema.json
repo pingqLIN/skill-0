@@ -22,13 +22,15 @@
     "findings": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["pending_projection", "stale_index_identity", "duplicate_canonical_identity", "model_version_drift", "authority_missing", "unknown"],
+      "required": ["pending_projection", "stale_index_identity", "duplicate_canonical_identity", "model_version_drift", "authority_missing", "migration_status", "migration_checksum_drift", "unknown"],
       "properties": {
         "pending_projection": { "type": "array" },
         "stale_index_identity": { "type": "array" },
         "duplicate_canonical_identity": { "type": "array" },
         "model_version_drift": { "type": "array" },
         "authority_missing": { "type": "array" },
+        "migration_status": { "type": "array" },
+        "migration_checksum_drift": { "type": "array" },
         "unknown": { "type": "array" }
       }
     }

@@ -64,7 +64,8 @@ def connect_sqlite(
     path: Path,
     *,
     policy: SQLitePolicy,
-    mode: Literal["read_only", "read_write", "maintenance"] = "read_only",
+    mode: Literal["read_only", "existing", "read_write", "maintenance"] = "read_only",
+    check_same_thread: bool = True,
 ) -> sqlite3.Connection:
     """Open one explicit unit-of-work connection without implicit DDL."""
 
@@ -74,11 +75,20 @@ def connect_sqlite(
             f"file:{resolved.as_posix()}?mode=ro",
             uri=True,
             timeout=policy.busy_timeout_ms / 1000,
+            check_same_thread=check_same_thread,
+        )
+    elif mode == "existing":
+        connection = sqlite3.connect(
+            f"file:{resolved.as_posix()}?mode=rw",
+            uri=True,
+            timeout=policy.busy_timeout_ms / 1000,
+            check_same_thread=check_same_thread,
         )
     else:
         connection = sqlite3.connect(
             resolved,
             timeout=policy.busy_timeout_ms / 1000,
+            check_same_thread=check_same_thread,
         )
     connection.row_factory = sqlite3.Row
     connection.execute(f"PRAGMA busy_timeout={policy.busy_timeout_ms}")

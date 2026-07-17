@@ -18,6 +18,7 @@ from asset_registry.repositories import (
     AssetSnapshotBuildError,
     LegacySkillAssetRepository,
 )
+from asset_registry.sqlite import load_migrations, preview_migrations
 
 
 EXIT_CODES = {
@@ -154,15 +155,52 @@ def _authority_findings(governance_db: Path, revisions) -> list[dict[str, str]]:
     return findings
 
 
+def _migration_findings(index_db: Path, migration_dir: Path):
+    migrations = load_migrations(migration_dir)
+    if not index_db.exists():
+        statuses = [
+            {
+                "migration_id": item.migration_id,
+                "checksum": item.checksum,
+                "state": "pending",
+            }
+            for item in migrations
+        ]
+    else:
+        try:
+            with _readonly(index_db) as connection:
+                statuses = [
+                    {
+                        "migration_id": item.migration_id,
+                        "checksum": item.checksum,
+                        "state": item.state,
+                    }
+                    for item in preview_migrations(connection, migrations)
+                ]
+        except sqlite3.DatabaseError as exc:
+            return [], [
+                {"code": "migration_status_unavailable", "detail": type(exc).__name__}
+            ]
+    drift = [item for item in statuses if item["state"] == "checksum_drift"]
+    return statuses, drift
+
+
 def build_doctor_report(
-    *, parsed_dir: Path, index_db: Path, governance_db: Path
+    *,
+    parsed_dir: Path,
+    index_db: Path,
+    governance_db: Path,
+    migration_dir: Path | None = None,
 ) -> dict[str, Any]:
+    migration_dir = migration_dir or ROOT / "migrations/index"
     findings: dict[str, list[Any]] = {
         "pending_projection": [],
         "stale_index_identity": [],
         "duplicate_canonical_identity": [],
         "model_version_drift": [],
         "authority_missing": [],
+        "migration_status": [],
+        "migration_checksum_drift": [],
         "unknown": [],
     }
     try:
@@ -190,8 +228,12 @@ def build_doctor_report(
     for key, values in index_findings.items():
         findings[key].extend(values)
     findings["authority_missing"] = _authority_findings(governance_db, revisions)
+    (
+        findings["migration_status"],
+        findings["migration_checksum_drift"],
+    ) = _migration_findings(index_db, migration_dir)
 
-    if findings["unknown"]:
+    if findings["unknown"] or findings["migration_checksum_drift"]:
         state = "unknown"
     elif findings["authority_missing"] or findings["duplicate_canonical_identity"]:
         state = "authority-missing"
@@ -225,12 +267,16 @@ def main(argv: list[str] | None = None) -> int:
         type=Path,
         default=Path("governance/db/governance.db"),
     )
+    parser.add_argument(
+        "--migration-dir", type=Path, default=ROOT / "migrations/index"
+    )
     parser.add_argument("--format", choices=("json", "text"), default="text")
     args = parser.parse_args(argv)
     report = build_doctor_report(
         parsed_dir=args.parsed_dir,
         index_db=args.index_db,
         governance_db=args.governance_db,
+        migration_dir=args.migration_dir,
     )
     if args.format == "json":
         print(json.dumps(report, ensure_ascii=False, indent=2))
