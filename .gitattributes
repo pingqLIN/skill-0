@@ -1,2 +1,7 @@
 * text=auto
 *.sh text eol=lf
+
+# Certification digests bind exact artifact bytes, so these surfaces must be
+# stable across Windows and POSIX checkouts.
+runtime/adapters/** text eol=lf
+adapters/**/adapter-certification.json text eol=lf
