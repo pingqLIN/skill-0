@@ -113,7 +113,7 @@ prove `healthy`, `stale-derived-projection`, and `unknown` classifications.
 | Candidate | Decision | Evidence gate required to reopen |
 |---|---|---|
 | Physical DB reorganization | **NO-GO** | operator-copy migration rehearsal, restore timing, contention, size, and operating-cost measurements |
-| FTS5/hybrid ranking | **NO-GO — pilot evidence insufficient** | 18-query pilot passed directional quality/latency but failed the 80-query coverage and 25% storage gates; see [`runtime-asset-p1-search-evidence.md`](runtime-asset-p1-search-evidence.md) |
+| FTS5/hybrid ranking | **NO-GO — representative evidence failed fixed gates** | The frozen 84-query suite covered 42 lexical and 42 semantic cases. All profiles failed the 25% storage gate, lexical nDCG gain was 0.0347 below the required 0.05, and the smallest profile also failed relative latency; see [`runtime-asset-p1-search-evidence.md`](runtime-asset-p1-search-evidence.md) |
 | Second Asset Type | **NO-GO** | accepted ground-truth corpus, parser contract, failure taxonomy, and measured fidelity |
 | Dashboard Asset rename | **NO-GO** | stable second type or measured operator need, versioned API usage evidence, and migration/rollback design |
 

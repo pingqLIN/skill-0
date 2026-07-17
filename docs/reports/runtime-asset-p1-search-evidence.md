@@ -1,83 +1,87 @@
 # Runtime Asset P1 Search Evidence Decision
 
-- Decision: **NO_GO_INSUFFICIENT_EVIDENCE**
+- Decision: **NO_GO**
 - Date: `2026-07-18`
+- Scope: local offline evidence; no production security or integration clearance
 - Plan: [`../planning/runtime-asset-p1-search-evidence-plan.md`](../planning/runtime-asset-p1-search-evidence-plan.md)
 - Traditional Chinese companion: [`runtime-asset-p1-search-evidence.zh-tw.md`](runtime-asset-p1-search-evidence.zh-tw.md)
 
 ## Outcome
 
-The offline pilot does not authorize an FTS5 production prototype or
-integration. Hybrid retrieval showed useful directional quality with small
-warm-latency overhead, but the predeclared decision gate failed on query
-coverage and storage ratio. Production search therefore remains sqlite-vec
+The expanded representative evidence does not authorize an FTS5 prototype or
+integration. Hybrid retrieval improved overall quality, but every predeclared
+gate had to pass in one profile. All profiles exceeded the storage ceiling and
+the lexical nDCG gain missed its floor; the smallest profile also exceeded the
+relative latency ceiling. Runtime search therefore remains sqlite-vec
 vector-only. Physical database reorganization, a second Asset Type, and
 Dashboard renaming remain deferred.
 
 ## Frozen evidence
 
-| Item | Result |
+| Item | Verified result |
 |---|---|
-| Corpus | 196 canonical Assets; exact revision/content/source identities matched |
-| Judged queries | 18 total; 9 lexical and 9 semantic; 31 positive qrel rows; required GO coverage is 80/30/30 |
-| Query suite SHA-256 | `2969b1916b4fb07d38f605e6c46de991ee74bfd26e8c0e1bf5107cdb2397d6be` |
-| Vector model | `all-MiniLM-L6-v2`; immutable local digest recorded |
-| Index migration | `001_asset_index_state` exact checksum, applied |
-| Source Index | 3,444,736 bytes; integrity `ok` |
-| Source isolation | SHA-256, size, and mtime identical before and after |
-| Disposable evidence | `.artifacts/p1-search/20260717T194521Z/` (ignored, local only) |
+| Corpus | 196 canonical Assets; 196 exact index rows |
+| Judged suite | 84 queries: 42 lexical, 42 semantic; 120 qrels; 85 direct targets; eight taxonomies |
+| Suite SHA-256 | `614c41967d6c45e6d07f9760414a153fecbdff7e9d59de5734f9f0dcd91ec18f` |
+| Freeze manifest SHA-256 | `c355eb423448c52c4fa8198ede1ecaae88e27bb18a8bff183db61922791c24fe` |
+| Freeze review | curator `agent:governance_authority_research`; reviewer `agent:p02_bootstrap_review`; reviewed before measurement |
+| Source Index | 3,485,696 bytes; integrity `ok`; migration `001_asset_index_state` applied with exact checksum |
+| Source isolation | SHA-256 `2266356996053850eb5c5619da0ae7a5e00bdd4fbf9c22b18b33504f555ef119`; SHA, size, and mtime identical before and after |
+| Disposable evidence | `.artifacts/p1-search/20260717T231233Z/` (ignored, local only) |
 
-No Governance or Runtime database was opened or created. FTS5 DDL existed only
-in the disposable `fts5-benchmark.db`; vector queries used an integrity-checked
-SQLite backup.
+The harness validated the detached freeze manifest before retrieval. It queried
+an integrity-checked `vector-snapshot.db`; FTS5 DDL existed only in three
+disposable profile databases. No benchmark artifact became an authority source.
 
 ## Quality
 
-Binary judgments treat direct and useful-adjacent targets as relevant.
+The three storage profiles produced the same rankings. Binary judgments treat
+all positive qrels as relevant.
 
 | Slice / nDCG@5 | sqlite-vec | FTS5 | Hybrid RRF |
 |---|---:|---:|---:|
-| Overall | 0.9018 | **0.9551** | 0.9459 |
-| Lexical | 0.8528 | **0.9727** | 0.9412 |
-| Semantic | **0.9507** | 0.9375 | **0.9507** |
+| Overall | 0.8391 | 0.8843 | **0.8977** |
+| Lexical | 0.8666 | 0.8920 | **0.9013** |
+| Semantic | 0.8116 | 0.8766 | **0.8941** |
 
-Overall Recall@5 was `0.9444` for vector and `0.9722` for both FTS5 and hybrid.
-Hybrid improved overall nDCG@5 by `+0.0442` and lexical nDCG@5 by `+0.0883`
-versus vector without semantic regression. These are directional pilot results,
-not a representative quality claim; FTS5 alone also outscored hybrid overall,
-so a fusion prototype is not yet justified.
+Overall Recall@5 rose from `0.8889` to `0.9306`. Semantic nDCG and the overall
+quality/recall floors passed. Lexical nDCG improved by `0.0347`, below the
+predeclared `0.05` floor, so every profile failed the lexical gain gate.
 
 ## Performance and storage
 
-| Method | Warm p50 | Warm p95 |
-|---|---:|---:|
-| sqlite-vec | 22.82 ms | 28.99 ms |
-| FTS5 | 2.81 ms | 3.96 ms |
-| Hybrid RRF | 26.28 ms | 31.25 ms |
+| FTS5 profile | Build | Bytes | Source ratio | Vector p95 | FTS5 p95 | Hybrid p95 | Gate |
+|---|---:|---:|---:|---:|---:|---:|---|
+| baseline | 83.40 ms | 1,155,072 | 33.14% | 32.67 ms | 4.65 ms | 32.98 ms | NO_GO |
+| `detail=none` | 97.67 ms | 925,696 | 26.56% | 29.08 ms | 15.88 ms | 41.88 ms | NO_GO |
+| `detail=none,columnsize=0` | 98.95 ms | 921,600 | 26.44% | 31.16 ms | 20.67 ms | 53.66 ms | NO_GO |
 
-Hybrid added `2.25 ms` at p95 and stayed within both latency thresholds. FTS5
-built in `90.56 ms`, but its 1,155,072-byte database was `33.53%` of the source
-Index, exceeding the `25%` gate.
+Mapping storage is embedded and included in every byte count. All profiles
+failed the `25%` storage gate. Baseline and `detail=none` passed both latency
+gates. The smallest profile added `22.50 ms` but `72.21%` over vector p95, so it
+failed the relative `50%` ceiling.
 
-## Gate result
+## Gate decision
 
 | Gate | Result |
 |---|---|
+| Reviewed frozen evidence and representative 84/42/42 coverage | PASS |
 | Complete exact 196-Asset projection | PASS |
 | Source Index unchanged | PASS |
-| Overall/lexical/semantic quality floors | PASS |
-| Recall floor | PASS |
-| Absolute and relative p95 latency | PASS |
-| Representative query coverage | **FAIL — 18/9/9 below 80/30/30** |
-| FTS5 storage ratio | **FAIL — 33.53% above 25%** |
+| Overall and semantic quality floors | PASS |
+| Overall Recall floor | PASS |
+| Lexical nDCG gain at least 0.05 | **FAIL — 0.0347** |
+| Hybrid p95 absolute/relative ceilings | PASS for two profiles; **FAIL relative ceiling for smallest profile** |
+| FTS5 artifact no more than 25% | **FAIL — all profiles; best 26.44%** |
 
-The stable CLI exit was `5`, which is the expected non-success result for
-`NO_GO_INSUFFICIENT_EVIDENCE`.
+The deterministic aggregate decision is `NO_GO`, with no selected profile.
 
 ## Recommendation
 
-Keep production vector-only. Reopen this candidate only after independent
-judgment expands the suite to at least 80 queries with the required stratified
-coverage and after a separately planned storage experiment reduces FTS5
-overhead without changing the frozen relevance protocol. Any future run needs
-new evidence; it must not relax these thresholds after observing results.
+Keep Runtime search vector-only and do not implement FTS5 in P1. The measured
+gap is small enough to justify retaining the reproducible harness, but not
+changing the frozen gates. Reopen only with a new, separately approved evidence
+cycle that states a concrete hypothesis before measurement—for example, a
+different lexical representation that improves discriminative ranking while
+reducing whole-file storage. Do not tune against this suite and reuse it as
+unseen validation evidence.
