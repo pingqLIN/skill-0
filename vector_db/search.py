@@ -26,7 +26,9 @@ class SemanticSearch:
     def __init__(
         self,
         db_path: Union[str, Path] = 'skills.db',
-        model_name: Optional[str] = None
+        model_name: Optional[str] = None,
+        *,
+        initialize_schema: bool = True,
     ):
         """
         初始化搜尋引擎
@@ -38,7 +40,11 @@ class SemanticSearch:
         self.model_name = model_name or os.getenv('SKILL0_EMBEDDING_MODEL', _default_model_name())
         self.dimension = SkillEmbedder.DEFAULT_DIMENSION
         self._embedder: Optional[SkillEmbedder] = None
-        self.store = VectorStore(db_path, dimension=self.dimension)
+        self.store = VectorStore(
+            db_path,
+            dimension=self.dimension,
+            initialize_schema=initialize_schema,
+        )
 
     @property
     def embedder(self) -> SkillEmbedder:

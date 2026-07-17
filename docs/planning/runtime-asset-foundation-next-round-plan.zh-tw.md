@@ -358,3 +358,8 @@ P0-A contracts
   並以 Runtime dependency binding 取代 request-time JSON enumeration。Checked-in
   corpus 仍為 `196/196` schema-valid；focused repository、contract 與 Runtime API
   verification 為 `48 passed`。
+- `P0-C` 已於 `2026-07-17` 完成 code 與 fixture boundary：新增 named SQLite
+  policies、明確的 existing/read-only 與 maintenance modes、checksum-aware
+  migrations、classified contention，以及通過 integrity check 的 backup/restore。
+  未 migrate 任何 operator database；focused storage 與 Core API verification
+  為 `48 passed`。

@@ -571,13 +571,14 @@ def get_search_engine() -> "SemanticSearch":
     global search_engine
     if search_engine is None:
         SemanticSearch = _load_semantic_search_class()
-        search_engine = SemanticSearch(db_path=DB_PATH)
+        search_engine = SemanticSearch(db_path=DB_PATH, initialize_schema=False)
     return search_engine
 
 
 def _get_db_skill_count(db_path: str) -> int:
     """Read total skill rows directly from SQLite without initializing the embedder."""
-    with sqlite3.connect(db_path) as conn:
+    resolved = Path(db_path).resolve()
+    with sqlite3.connect(f"file:{resolved.as_posix()}?mode=ro", uri=True) as conn:
         row = conn.execute('SELECT COUNT(*) FROM skills').fetchone()
     return int(row[0] if row else 0)
 

@@ -18,7 +18,13 @@ except ImportError:
 class VectorStore:
     """SQLite-vec 向量資料庫封裝"""
     
-    def __init__(self, db_path: Union[str, Path] = 'skills.db', dimension: int = 384):
+    def __init__(
+        self,
+        db_path: Union[str, Path] = 'skills.db',
+        dimension: int = 384,
+        *,
+        initialize_schema: bool = True,
+    ):
         """
         初始化向量資料庫
         
@@ -32,16 +38,42 @@ class VectorStore:
         self.db_path = Path(db_path)
         self.dimension = dimension
         self.conn = None
-        self._connect()
+        self._connect(initialize_schema=initialize_schema)
         
-    def _connect(self):
+    def _connect(self, *, initialize_schema: bool):
         """建立資料庫連線並載入 sqlite-vec 擴充"""
-        self.conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
+        if initialize_schema:
+            self.conn = sqlite3.connect(str(self.db_path), check_same_thread=False)
+        else:
+            resolved = self.db_path.resolve()
+            self.conn = sqlite3.connect(
+                f"file:{resolved.as_posix()}?mode=rw",
+                uri=True,
+                check_same_thread=False,
+            )
         self.conn.enable_load_extension(True)
         sqlite_vec.load(self.conn)
         self.conn.enable_load_extension(False)
         self.conn.row_factory = sqlite3.Row
-        self._init_schema()
+        if initialize_schema:
+            self._init_schema()
+        else:
+            self._validate_existing_schema()
+
+    def _validate_existing_schema(self):
+        required = {"skills", "skill_embeddings"}
+        available = {
+            row[0]
+            for row in self.conn.execute(
+                "SELECT name FROM sqlite_master WHERE type IN ('table', 'view')"
+            )
+        }
+        missing = sorted(required - available)
+        if missing:
+            raise RuntimeError(
+                "Index database requires explicit maintenance initialization: "
+                + ", ".join(missing)
+            )
         
     def _init_schema(self):
         """初始化資料庫 schema"""

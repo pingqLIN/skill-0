@@ -426,3 +426,8 @@ Any failed batch acceptance criterion blocks every downstream batch. Stop furthe
   and Runtime dependency binding replaced request-time JSON enumeration. The
   checked-in corpus remains `196/196` schema-valid; focused repository, contract,
   and Runtime API verification passed (`48 passed`).
+- `P0-C` completed on `2026-07-17` for code and fixture boundaries only: named
+  SQLite policies, explicit existing/read-only versus maintenance modes,
+  checksum-aware migrations, classified contention, and integrity-checked
+  backup/restore were added. No operator database was migrated. Focused storage
+  and Core API verification passed (`48 passed`).
