@@ -1,8 +1,8 @@
 # Runtime Asset Foundation——下一輪開發計畫
 
-- 狀態：**提案中；不是目前 release authority**
+- 狀態：**P0 執行依據；Runtime v4 release authority 仍維持凍結**
 - 日期：`2026-07-17`
-- 目標基線：Runtime v4 closeout commit `7257ea1` 的 `main`
+- 目標基線：P0 plan commit `24c6f0f` 的 `main`
 - 規劃里程碑：`P0 Runtime Asset Foundation and Storage Boundary`
 - 英文權威版：[`runtime-asset-foundation-next-round-plan.md`](runtime-asset-foundation-next-round-plan.md)
 

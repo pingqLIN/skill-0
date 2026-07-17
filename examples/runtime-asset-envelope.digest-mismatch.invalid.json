@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "asset_id": "claude__skill__digest_mismatch",
+  "revision_id": "asset-revision:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "asset_type": "skill",
+  "name": "digest-mismatch",
+  "summary": "Semantic failure fixture",
+  "payload": { "meta": { "skill_id": "claude__skill__digest_mismatch" } },
+  "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "parser_id": "fixture-parser",
+  "parser_version": "1.0.0",
+  "provenance": { "source_path": "parsed/digest-mismatch.json", "canonical_skill_id": "claude__skill__digest_mismatch" },
+  "lifecycle": { "status": "active" }
+}

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skill-0.local/schema/runtime-asset-envelope.schema.json",
+  "title": "Runtime Asset Envelope v1",
+  "description": "Additive identity and provenance envelope. ARD remains inside the Skill payload and governance revision approval remains Runtime authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "asset_id",
+    "revision_id",
+    "asset_type",
+    "name",
+    "summary",
+    "payload",
+    "content_hash",
+    "source_digest",
+    "parser_id",
+    "parser_version",
+    "provenance",
+    "lifecycle"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "asset_id": {
+      "type": "string",
+      "pattern": "^(claude|mcp)__[A-Za-z0-9_]+__[A-Za-z0-9_]+$"
+    },
+    "revision_id": { "$ref": "#/$defs/assetRevision" },
+    "asset_type": { "const": "skill" },
+    "name": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "summary": { "type": "string", "maxLength": 4000 },
+    "payload": { "type": "object" },
+    "content_hash": { "$ref": "#/$defs/sha256" },
+    "source_digest": { "$ref": "#/$defs/sha256" },
+    "parser_id": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "parser_version": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_path", "canonical_skill_id"],
+      "properties": {
+        "source_path": { "type": "string", "minLength": 1 },
+        "canonical_skill_id": { "type": "string", "minLength": 1 }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "enum": ["active", "deprecated", "retired"] }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "assetRevision": {
+      "type": "string",
+      "pattern": "^asset-revision:sha256:[a-f0-9]{64}$"
+    }
+  }
+}

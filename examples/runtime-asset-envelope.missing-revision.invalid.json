@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "asset_id": "claude__skill__missing_revision",
+  "asset_type": "skill",
+  "name": "missing-revision",
+  "summary": "Missing revision identity",
+  "payload": {},
+  "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "parser_id": "fixture-parser",
+  "parser_version": "1.0.0",
+  "provenance": { "source_path": "parsed/missing.json", "canonical_skill_id": "claude__skill__missing_revision" },
+  "lifecycle": { "status": "active" }
+}

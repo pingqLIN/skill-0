@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0.0",
+  "decision": "preserve_by_default",
+  "global_replace_allowed": false,
+  "categories": {
+    "domain_generic": "New Asset-domain code; use Asset terminology.",
+    "skill_adapter_specific": "Skill parsing or payload semantics; retain Skill terminology.",
+    "legacy_compatibility": "Existing public API, persisted field, or Runtime/governance contract; retain until an approved migration.",
+    "historical_migration": "Historical schema, event, or migration identifier; never rename in place.",
+    "fixture": "Compatibility or regression fixture; change only with its governing contract.",
+    "documentation_only": "Explanatory text; update deliberately without implying a code migration."
+  },
+  "path_rules": [
+    { "glob": "asset_registry/**", "category": "domain_generic", "exception": "Symbols containing skill are Skill adapter-specific." },
+    { "glob": "tools/*parse*.py", "category": "skill_adapter_specific" },
+    { "glob": "tools/*skill*.py", "category": "skill_adapter_specific" },
+    { "glob": "schema/skill-*.json", "category": "skill_adapter_specific" },
+    { "glob": "parsed/**", "category": "fixture" },
+    { "glob": "tests/**", "category": "fixture" },
+    { "glob": "examples/**", "category": "fixture" },
+    { "glob": "migrations/**", "category": "historical_migration" },
+    { "glob": "runtime/**", "category": "legacy_compatibility" },
+    { "glob": "api/**", "category": "legacy_compatibility" },
+    { "glob": "governance/**", "category": "legacy_compatibility" },
+    { "glob": "vector_db/**", "category": "legacy_compatibility" },
+    { "glob": "skill-0-dashboard/**", "category": "legacy_compatibility" },
+    { "glob": "docs/**", "category": "documentation_only" }
+  ],
+  "identifier_rules": [
+    { "pattern": "^asset_", "category": "domain_generic", "action": "prefer_for_new_generic_code" },
+    { "pattern": "^skill_(id|name|version|source_digest)$", "category": "legacy_compatibility", "action": "preserve_p0" },
+    { "pattern": "^skill_(parser|document|payload)", "category": "skill_adapter_specific", "action": "retain_in_adapter" }
+  ],
+  "p1_evidence_gate": "Rename only after a versioned migration, usage evidence, rollback rehearsal, and explicit approval."
+}

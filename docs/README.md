@@ -2,18 +2,21 @@
 
 Updated: `2026-07-17`
 
-This page is the current document entry point. The Runtime v4 closeout is feature-frozen; dated planning files do not become current merely because they describe unfinished work.
+This page is the current document entry point. The Runtime v4 closeout remains
+feature-frozen. The explicitly approved P0 Runtime Asset plan opens an additive
+post-closeout milestone without changing the Runtime v4 release boundary.
 
 ## Current authority
 
 Read in this order:
 
 1. [`../README.md`](../README.md) — product scope and supported Runtime v4 boundary.
-2. [`../ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) — compact current state and branch handoff.
-3. [`closeout/FINAL_REPORT.md`](closeout/FINAL_REPORT.md) — release decision, exact verification, and rollback.
-4. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
-5. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
-6. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level acceptance evidence.
+2. [`planning/runtime-asset-foundation-next-round-plan.md`](planning/runtime-asset-foundation-next-round-plan.md) — active P0 Runtime Asset execution authority and scope gates.
+3. [`../ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) — compact frozen Runtime v4 state and branch handoff.
+4. [`closeout/FINAL_REPORT.md`](closeout/FINAL_REPORT.md) — Runtime v4 release decision, exact verification, and rollback.
+5. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
+6. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
+7. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level Runtime v4 acceptance evidence.
 
 The non-suffixed English operations documents are authoritative. Existing `.zh-tw.md` companions are human-readable translations.
 

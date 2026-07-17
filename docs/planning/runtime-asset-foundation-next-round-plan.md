@@ -1,8 +1,8 @@
 # Runtime Asset Foundation — Next-Round Development Plan
 
-- Status: **Proposed; not current release authority**
+- Status: **Active P0 execution authority; Runtime v4 release authority remains frozen**
 - Date: `2026-07-17`
-- Target baseline: `main` at Runtime v4 closeout commit `7257ea1`
+- Target baseline: `main` at P0 plan commit `24c6f0f`
 - Planned milestone: `P0 Runtime Asset Foundation and Storage Boundary`
 - Traditional Chinese companion: [`runtime-asset-foundation-next-round-plan.zh-tw.md`](runtime-asset-foundation-next-round-plan.zh-tw.md)
 

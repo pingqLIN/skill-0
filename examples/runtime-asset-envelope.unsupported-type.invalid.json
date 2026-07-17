@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "asset_id": "claude__workflow__unsupported",
+  "revision_id": "asset-revision:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "asset_type": "workflow",
+  "name": "unsupported",
+  "summary": "P1 candidate",
+  "payload": {},
+  "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "parser_id": "fixture-parser",
+  "parser_version": "1.0.0",
+  "provenance": { "source_path": "unsupported.json", "canonical_skill_id": "unsupported" },
+  "lifecycle": { "status": "active" }
+}

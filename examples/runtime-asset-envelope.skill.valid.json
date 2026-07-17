@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "asset_id": "claude__skill__runtime_asset_fixture",
+  "revision_id": "asset-revision:sha256:91fc66aa659937178cb3e2eb061286aa6be41ec8c74455bf3e6fd9fe165d6f72",
+  "asset_type": "skill",
+  "name": "runtime-asset-fixture",
+  "summary": "Runtime Asset contract fixture",
+  "payload": {
+    "meta": {
+      "skill_id": "claude__skill__runtime_asset_fixture",
+      "name": "runtime-asset-fixture",
+      "description": "Runtime Asset contract fixture",
+      "parsed_by": "fixture-parser",
+      "parser_version": "1.0.0"
+    },
+    "decomposition": {
+      "actions": [],
+      "rules": [],
+      "directives": []
+    }
+  },
+  "content_hash": "sha256:91fc66aa659937178cb3e2eb061286aa6be41ec8c74455bf3e6fd9fe165d6f72",
+  "source_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "parser_id": "fixture-parser",
+  "parser_version": "1.0.0",
+  "provenance": {
+    "source_path": "parsed/runtime-asset-fixture.json",
+    "canonical_skill_id": "claude__skill__runtime_asset_fixture"
+  },
+  "lifecycle": { "status": "active" }
+}

@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "asset_id": "claude__skill__bad_provenance",
+  "revision_id": "asset-revision:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "asset_type": "skill",
+  "name": "bad-provenance",
+  "summary": "Malformed provenance",
+  "payload": {},
+  "content_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "source_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "parser_id": "fixture-parser",
+  "parser_version": "1.0.0",
+  "provenance": { "canonical_skill_id": "claude__skill__bad_provenance" },
+  "lifecycle": { "status": "active" }
+}
