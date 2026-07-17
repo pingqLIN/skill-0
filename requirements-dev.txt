@@ -2,7 +2,7 @@
 -r skill-0-dashboard/apps/api/requirements.txt
 
 # Test and CI tooling
-pytest>=7.0.0
+pytest>=9.0.3,<10
 httpx>=0.24.0
 rich>=13.0.0
 pytest-cov>=6.0.0

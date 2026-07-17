@@ -1,9 +1,9 @@
 # Skill-0 Dependencies
 # Core
 sqlite-vec>=0.1.0
-sentence-transformers>=2.2.0
-# Keep runtime on Transformers 4.x until 5.x stops pulling typer -> rich -> Pygments.
-transformers<5
+sentence-transformers>=5.6,<6
+transformers>=5.14.1,<6
+torch>=2.13,<3
 numpy>=1.21.0
 
 # Analysis
@@ -14,11 +14,11 @@ jsonschema>=4.0.0
 fastapi>=0.100.0
 uvicorn[standard]>=0.22.0
 pydantic>=2.0.0
-PyJWT>=2.7.0
+PyJWT>=2.13,<3
 prometheus_client>=0.14.0
 structlog>=23.0.0
 
 # Development (optional)
-pytest>=7.0.0
+pytest>=9.0.3,<10
 httpx>=0.24.0
 rich>=13.0.0

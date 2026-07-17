@@ -142,3 +142,26 @@ def test_local_model_weight_drift_changes_incremental_identity(
     assert first.changed == 2
     assert second.changed == 2
     assert embedder.embedded == 4
+
+
+def test_embedding_stack_drift_changes_incremental_identity(
+    incremental_search, monkeypatch
+):
+    search, embedder, parsed_dir = incremental_search
+    versions = {
+        "sentence-transformers": "5.6.0",
+        "transformers": "4.57.6",
+        "torch": "2.12.1+cpu",
+    }
+    monkeypatch.setattr(
+        "vector_db.search.package_version",
+        lambda package: versions[package],
+    )
+
+    first = search.index_assets(parsed_dir, show_progress=False)
+    unchanged = search.index_assets(parsed_dir, show_progress=False)
+    versions["transformers"] = "5.14.1"
+    upgraded = search.index_assets(parsed_dir, show_progress=False)
+
+    assert (first.changed, unchanged.changed, upgraded.changed) == (2, 0, 2)
+    assert embedder.embedded == 4

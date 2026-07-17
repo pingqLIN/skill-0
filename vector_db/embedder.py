@@ -89,7 +89,10 @@ class SkillEmbedder:
             )
             self.model = SentenceTransformer(model_name, device=device)
 
-        self.dimension = self.model.get_sentence_embedding_dimension()
+        if hasattr(self.model, "get_embedding_dimension"):
+            self.dimension = self.model.get_embedding_dimension()
+        else:
+            self.dimension = self.model.get_sentence_embedding_dimension()
         
     def skill_to_text(self, skill: Dict) -> str:
         """

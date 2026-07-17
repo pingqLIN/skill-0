@@ -8,6 +8,7 @@ import os
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import hashlib
+from importlib.metadata import PackageNotFoundError, version as package_version
 from pathlib import Path
 import threading
 from contextlib import contextmanager
@@ -22,6 +23,7 @@ from asset_registry.search import AssetSearchResult
 
 
 REPRESENTATION_VERSION = "skill-text-v1"
+EMBEDDING_STACK_PACKAGES = ("sentence-transformers", "transformers", "torch")
 
 
 def _serialized(method):
@@ -109,8 +111,20 @@ class SemanticSearch:
         model_path = Path(self.model_name)
         model_id = model_path.name if model_path.exists() else self.model_name
         configured_version = os.getenv("SKILL0_EMBEDDING_MODEL_VERSION")
+        stack_versions = []
+        for package in EMBEDDING_STACK_PACKAGES:
+            try:
+                installed_version = package_version(package)
+            except PackageNotFoundError:
+                installed_version = "missing"
+            stack_versions.append(f"{package}={installed_version}")
+        stack_digest = hashlib.sha256("|".join(stack_versions).encode("utf-8")).hexdigest()
+
+        def with_stack_provenance(model_version: str) -> str:
+            return f"{model_version}|stack-sha256:{stack_digest}"
+
         if configured_version:
-            return model_id, configured_version
+            return model_id, with_stack_provenance(configured_version)
         if model_path.is_dir():
             digest = hashlib.sha256()
             matched = False
@@ -125,7 +139,7 @@ class SemanticSearch:
                         digest.update(chunk)
                 matched = True
             if matched:
-                return model_id, "sha256:" + digest.hexdigest()
+                return model_id, with_stack_provenance("sha256:" + digest.hexdigest())
         return model_id, "unversioned"
         
     @_serialized

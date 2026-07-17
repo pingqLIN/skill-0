@@ -1,4 +1,4 @@
-FROM python:3.12.13-slim@sha256:0bbd3d5f3abb2024c1b92ce69e8bdfefa17c248999827c34e2ed52ba0772da1b
+FROM python:3.12.13-slim-bookworm@sha256:d50fb7611f86d04a3b0471b46d7557818d88983fc3136726336b2a4c657aa30b
 
 WORKDIR /app
 
@@ -24,15 +24,16 @@ RUN --mount=type=secret,id=build_ca,required=false \
         ca_installed=1; \
     fi; \
     pip install --no-cache-dir --upgrade pip; \
-    pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch; \
+    pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu "torch>=2.13,<3"; \
     pip install --no-cache-dir -r requirements-api.txt; \
-    pip install --no-cache-dir "setuptools>=78.1.1,<82" "filelock>=3.20.3"
+    pip install --no-cache-dir "setuptools>=83,<84" "filelock>=3.20.3"
 
 COPY requirements-runtime.txt .
 RUN pip install --no-cache-dir -r requirements-runtime.txt
 
 # Copy application code
 COPY api/ ./api/
+COPY asset_registry/ ./asset_registry/
 COPY runtime/ ./runtime/
 COPY vector_db/ ./vector_db/
 COPY parsed/ ./parsed/
