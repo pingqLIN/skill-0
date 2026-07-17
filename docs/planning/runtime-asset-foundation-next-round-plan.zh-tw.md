@@ -369,3 +369,10 @@ P0-A contracts
   revision/model/representation identity 驅動 atomic incremental reconciliation。
   第二次 unchanged run 的 embedding 數為零；drift、removal 與 injected-failure
   fixtures 均通過。Focused search/index/API verification 為 `66 passed`。
+- `P0-E` 已於 `2026-07-17` 完成：兩次連續完整 Python regression 均為
+  `403 passed`，且中間沒有 corrective change，因此通過 conditional API cut
+  line。其後新增 read-only Asset list/detail/revision/search surfaces，以及具
+  schema version 的 drift doctor。Doctor 以穩定 exit code 區分 healthy、
+  stale-derived-projection、authority-missing 與 unknown。目前本機 operator
+  evidence 為 `authority-missing`（exit `2`），因為沒有 Governance operator DB
+  或已 migrate 的 Asset index；這是觀察狀態，不是 implicit migration request。

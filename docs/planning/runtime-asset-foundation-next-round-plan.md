@@ -438,3 +438,11 @@ Any failed batch acceptance criterion blocks every downstream batch. Stop furthe
   reconciliation. Unchanged second runs embed zero items; drift, removal, and
   injected-failure fixtures passed. Focused search/index/API verification passed
   (`66 passed`).
+- `P0-E` completed on `2026-07-17`: two consecutive full Python regressions
+  passed with no corrective change between them (`403 passed` each), opening the
+  conditional API cut line. Read-only Asset list/detail/revision/search surfaces
+  and a schema-versioned drift doctor were then added. The doctor classifies
+  healthy, stale-derived-projection, authority-missing, and unknown with stable
+  exit codes. Current local operator evidence is intentionally
+  `authority-missing` (exit `2`) because no Governance operator DB or migrated
+  Asset index exists; this is observed state, not an implicit migration request.

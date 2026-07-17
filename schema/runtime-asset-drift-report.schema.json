@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skill-0.local/schema/runtime-asset-drift-report.schema.json",
+  "title": "Runtime Asset Drift Doctor Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "state", "exit_code", "snapshot_id", "counts", "findings"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "state": { "enum": ["healthy", "stale-derived-projection", "authority-missing", "unknown"] },
+    "exit_code": { "type": "integer", "minimum": 0, "maximum": 3 },
+    "snapshot_id": { "type": ["string", "null"] },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registry_revisions", "index_rows"],
+      "properties": {
+        "registry_revisions": { "type": "integer", "minimum": 0 },
+        "index_rows": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "findings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pending_projection", "stale_index_identity", "duplicate_canonical_identity", "model_version_drift", "authority_missing", "unknown"],
+      "properties": {
+        "pending_projection": { "type": "array" },
+        "stale_index_identity": { "type": "array" },
+        "duplicate_canonical_identity": { "type": "array" },
+        "model_version_drift": { "type": "array" },
+        "authority_missing": { "type": "array" },
+        "unknown": { "type": "array" }
+      }
+    }
+  }
+}

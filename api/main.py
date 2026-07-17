@@ -8,7 +8,8 @@ from fastapi.responses import Response, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any, TYPE_CHECKING
+from typing import List, Optional, Dict, Any, TYPE_CHECKING, Literal
+from dataclasses import asdict
 import atexit
 import hashlib
 import os
@@ -34,6 +35,13 @@ from api.routers.runs_v4 import (
     runtime_binding_key_configuration_issue,
     runtime_hitl_ttl_configuration_issue,
     runtime_journal_mode_configuration_issue,
+    get_asset_repository,
+)
+from asset_registry.repositories import (
+    AssetIdentityAmbiguousError,
+    AssetNotFoundError,
+    AssetRepository,
+    StaleSourceSnapshotError,
 )
 
 # 初始化結構化日誌
@@ -620,6 +628,12 @@ def _index_sync(parsed_dir: str) -> int:
     return engine.index_skills(parsed_dir, show_progress=False)
 
 
+def _asset_search_sync(query: str, asset_types: tuple[str, ...], limit: int):
+    return get_search_engine().search_assets(
+        query, asset_types=asset_types, limit=limit
+    )
+
+
 def _search_overloaded(exc: SearchOverloadedError) -> HTTPException:
     return HTTPException(
         status_code=429,
@@ -694,6 +708,144 @@ class IndexResponse(BaseModel):
     indexed_count: int
     elapsed_seconds: float
     message: str
+
+
+class AssetSummary(BaseModel):
+    asset_id: str
+    asset_type: Literal["skill"]
+    name: str
+    summary: str
+    revision_count: int
+    ambiguous: bool
+
+
+class AssetRevisionResponse(BaseModel):
+    asset_id: str
+    revision_id: str
+    asset_type: Literal["skill"]
+    content_hash: str
+    source_digest: str
+    source_path: str
+    payload: dict[str, Any] | None = None
+
+
+class AssetSearchRequest(BaseModel):
+    query: str = Field(min_length=1)
+    asset_types: list[Literal["skill"]] = Field(default_factory=lambda: ["skill"])
+    limit: int = Field(default=5, ge=1, le=50)
+
+
+def _revision_response(revision, *, include_payload: bool) -> AssetRevisionResponse:
+    return AssetRevisionResponse(
+        asset_id=revision.asset_id,
+        revision_id=revision.revision_id,
+        asset_type="skill",
+        content_hash=revision.content_hash,
+        source_digest=revision.source_digest,
+        source_path=revision.source_path.as_posix(),
+        payload=revision.payload if include_payload else None,
+    )
+
+
+def _raise_asset_repository_error(exc: Exception) -> None:
+    if isinstance(exc, AssetNotFoundError):
+        raise HTTPException(status_code=404, detail="Asset not found") from exc
+    if isinstance(exc, StaleSourceSnapshotError):
+        raise HTTPException(
+            status_code=409,
+            detail={"code": exc.code, "message": "Asset source snapshot changed"},
+        ) from exc
+    if isinstance(exc, AssetIdentityAmbiguousError):
+        raise HTTPException(
+            status_code=409,
+            detail={"code": exc.code, "message": "Asset identity is ambiguous"},
+        ) from exc
+    raise exc
+
+
+@app.get("/api/assets", response_model=list[AssetSummary], tags=["Assets"])
+async def list_assets(
+    repository: AssetRepository = Depends(get_asset_repository),
+):
+    try:
+        revisions = await search_executor.run(repository.list_revisions)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
+    except Exception as exc:
+        _raise_asset_repository_error(exc)
+    grouped: dict[str, list] = {}
+    for revision in revisions:
+        grouped.setdefault(revision.asset_id, []).append(revision)
+    return [
+        AssetSummary(
+            asset_id=asset_id,
+            asset_type="skill",
+            name=str(items[0].payload.get("meta", {}).get("name") or asset_id),
+            summary=str(items[0].payload.get("meta", {}).get("description") or ""),
+            revision_count=len(items),
+            ambiguous=len(items) > 1,
+        )
+        for asset_id, items in sorted(grouped.items())
+    ]
+
+
+@app.get(
+    "/api/assets/{asset_id}/revisions",
+    response_model=list[AssetRevisionResponse],
+    tags=["Assets"],
+)
+async def list_asset_revisions(
+    asset_id: str,
+    repository: AssetRepository = Depends(get_asset_repository),
+):
+    try:
+        revisions = await search_executor.run(
+            repository.list_asset_revisions, asset_id
+        )
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
+    except Exception as exc:
+        _raise_asset_repository_error(exc)
+    return [_revision_response(item, include_payload=False) for item in revisions]
+
+
+@app.get(
+    "/api/assets/{asset_id}",
+    response_model=AssetRevisionResponse,
+    tags=["Assets"],
+)
+async def get_asset(
+    asset_id: str,
+    include_payload: bool = Query(False),
+    repository: AssetRepository = Depends(get_asset_repository),
+):
+    try:
+        revision = await search_executor.run(repository.get_revision, asset_id)
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
+    except Exception as exc:
+        _raise_asset_repository_error(exc)
+    return _revision_response(revision, include_payload=include_payload)
+
+
+@app.post("/api/assets/search", tags=["Assets"])
+async def search_assets(request: AssetSearchRequest):
+    try:
+        results = await search_executor.run(
+            _asset_search_sync,
+            request.query,
+            tuple(request.asset_types),
+            request.limit,
+        )
+    except SearchOverloadedError as exc:
+        raise _search_overloaded(exc) from exc
+    except Exception as exc:
+        raise _search_service_unavailable("/api/assets/search", exc) from exc
+    return {
+        "query": request.query,
+        "results": [asdict(item) for item in results],
+        "count": len(results),
+    }
 
 
 # ==================== Endpoints ====================

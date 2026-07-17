@@ -50,6 +50,8 @@ class AssetRepository(Protocol):
 
     def list_revisions(self) -> tuple[AssetRevision, ...]: ...
 
+    def list_asset_revisions(self, asset_id: str) -> tuple[AssetRevision, ...]: ...
+
 
 class SkillParserAdapter:
     """Wrap existing canonical Skill output without changing parser behavior."""
@@ -200,3 +202,12 @@ class LegacySkillAssetRepository:
         for ambiguous in self._ambiguous.values():
             revisions.extend(ambiguous)
         return tuple(sorted(revisions, key=lambda item: item.source_path.as_posix()))
+
+    def list_asset_revisions(self, asset_id: str) -> tuple[AssetRevision, ...]:
+        self.assert_fresh()
+        if asset_id in self._ambiguous:
+            return self._ambiguous[asset_id]
+        revision = self._available.get(asset_id)
+        if revision is None:
+            raise AssetNotFoundError(AssetNotFoundError.code)
+        return (revision,)
