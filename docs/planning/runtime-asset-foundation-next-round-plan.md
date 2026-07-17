@@ -415,3 +415,14 @@ P0-A contracts
 ```
 
 Any failed batch acceptance criterion blocks every downstream batch. Stop further mutation immediately, preserve the first failure evidence, and perform only the read-only diagnostics needed to classify it before attempting a corrective replacement run.
+
+## 14. Execution log
+
+- `P0-A` completed on `2026-07-17`: ADR-0007/0008, Envelope v1,
+  compatibility map, semantic failure fixtures, and contract tests were added.
+  Focused contract/document verification passed (`27 passed`).
+- `P0-B` completed on `2026-07-17`: the immutable legacy corpus repository,
+  explicit Skill adapter, available/ambiguous identity map, stale snapshot guard,
+  and Runtime dependency binding replaced request-time JSON enumeration. The
+  checked-in corpus remains `196/196` schema-valid; focused repository, contract,
+  and Runtime API verification passed (`48 passed`).

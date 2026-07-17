@@ -1,14 +1,23 @@
 """Runtime governance run read API."""
 from __future__ import annotations
 
-import json
 import os
 from pathlib import Path
 import sqlite3
+from functools import lru_cache
 from typing import Any, Iterator, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel, ConfigDict, Field
+
+from asset_registry.repositories import (
+    AssetIdentityAmbiguousError,
+    AssetNotFoundError,
+    AssetRepository,
+    AssetSnapshotBuildError,
+    LegacySkillAssetRepository,
+    StaleSourceSnapshotError,
+)
 
 from runtime.evidence import build_run_evidence
 from runtime.executor import ActionResult
@@ -266,21 +275,44 @@ def get_parsed_dir() -> Path:
     return Path(os.getenv("SKILL0_PARSED_DIR", "parsed"))
 
 
-def load_canonical_skill(skill_id: str) -> dict[str, Any]:
-    matches: list[dict[str, Any]] = []
-    parsed_dir = get_parsed_dir()
-    for path in sorted(parsed_dir.glob("*.json")):
-        try:
-            document = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-            continue
-        if document.get("meta", {}).get("skill_id") == skill_id:
-            matches.append(document)
-    if not matches:
-        raise HTTPException(status_code=404, detail="Canonical skill not found")
-    if len(matches) > 1:
-        raise HTTPException(status_code=409, detail="Canonical skill identity is ambiguous")
-    return matches[0]
+@lru_cache(maxsize=16)
+def _repository_for_path(path: str) -> LegacySkillAssetRepository:
+    return LegacySkillAssetRepository(Path(path))
+
+
+def get_asset_repository() -> AssetRepository:
+    try:
+        return _repository_for_path(str(get_parsed_dir().resolve()))
+    except AssetSnapshotBuildError as exc:
+        raise HTTPException(
+            status_code=503,
+            detail={"code": exc.code, "diagnostic_count": len(exc.diagnostics)},
+        ) from exc
+
+
+def reload_asset_repository() -> AssetRepository:
+    """Explicitly replace process-local snapshots after maintenance validation."""
+
+    _repository_for_path.cache_clear()
+    return get_asset_repository()
+
+
+def load_canonical_skill(
+    skill_id: str, repository: AssetRepository
+) -> dict[str, Any]:
+    try:
+        return repository.get_revision(skill_id).payload
+    except AssetNotFoundError as exc:
+        raise HTTPException(status_code=404, detail="Canonical skill not found") from exc
+    except AssetIdentityAmbiguousError as exc:
+        raise HTTPException(
+            status_code=409, detail="Canonical skill identity is ambiguous"
+        ) from exc
+    except StaleSourceSnapshotError as exc:
+        raise HTTPException(
+            status_code=409,
+            detail={"code": exc.code, "message": "Canonical source snapshot changed"},
+        ) from exc
 
 
 def _public_hitl_item(item: dict[str, Any]) -> dict[str, Any]:
@@ -325,6 +357,7 @@ def create_run(
     request: CreateRunRequest,
     ledger: RuntimeLedger = Depends(get_runtime_ledger),
     governance_gate: RuntimeGovernanceGate = Depends(get_runtime_governance_gate),
+    asset_repository: AssetRepository = Depends(get_asset_repository),
 ) -> CreateRunResponse:
     raw_bindings = request.runtime_contract.get("action_bindings", [])
     action_bindings = raw_bindings if isinstance(raw_bindings, list) else []
@@ -346,7 +379,7 @@ def create_run(
             detail="Batch A accepts only test adapters for deterministic dry-run execution",
         )
 
-    skill_document = load_canonical_skill(request.skill_id)
+    skill_document = load_canonical_skill(request.skill_id, asset_repository)
     orchestrator = RuntimeOrchestrator(
         ledger,
         SimulationAdapter(),
@@ -429,6 +462,7 @@ def resume_hitl_run(
     request: ResumeRunRequest,
     ledger: RuntimeLedger = Depends(get_runtime_ledger),
     governance_gate: RuntimeGovernanceGate = Depends(get_runtime_governance_gate),
+    asset_repository: AssetRepository = Depends(get_asset_repository),
 ) -> CreateRunResponse:
     try:
         item = ledger.get_hitl_item(item_id)
@@ -443,7 +477,7 @@ def resume_hitl_run(
     if item["basis_digest"] != basis["execution_digest"]:
         raise HTTPException(status_code=409, detail="HITL item basis does not match run")
 
-    skill_document = load_canonical_skill(item["skill_id"])
+    skill_document = load_canonical_skill(item["skill_id"], asset_repository)
     orchestrator = RuntimeOrchestrator(
         ledger,
         SimulationAdapter(),

@@ -347,3 +347,14 @@ P0-A contracts
 ```
 
 任何 batch acceptance criterion 失敗都會阻擋全部 downstream batches。立即停止後續 mutation，保存第一份失敗 evidence；只進行分類所需的 read-only diagnostics，之後才可考慮 corrective replacement run。
+
+## 14. 執行紀錄
+
+- `P0-A` 已於 `2026-07-17` 完成：新增 ADR-0007/0008、Envelope v1、
+  compatibility map、semantic failure fixtures 與 contract tests；focused
+  contract/document verification 為 `27 passed`。
+- `P0-B` 已於 `2026-07-17` 完成：新增 immutable legacy corpus repository、
+  explicit Skill adapter、available/ambiguous identity map、stale snapshot guard，
+  並以 Runtime dependency binding 取代 request-time JSON enumeration。Checked-in
+  corpus 仍為 `196/196` schema-valid；focused repository、contract 與 Runtime API
+  verification 為 `48 passed`。

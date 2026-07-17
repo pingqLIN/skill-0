@@ -7,6 +7,17 @@ from .contracts import (
     skill_document_to_asset_envelope,
     validate_asset_envelope,
 )
+from .models import AssetRevision, SnapshotDiagnostic
+from .repositories import (
+    AssetIdentityAmbiguousError,
+    AssetNotFoundError,
+    AssetRepository,
+    AssetRepositoryError,
+    AssetSnapshotBuildError,
+    LegacySkillAssetRepository,
+    SkillParserAdapter,
+    StaleSourceSnapshotError,
+)
 
 __all__ = [
     "AssetContractError",
@@ -14,4 +25,14 @@ __all__ = [
     "canonical_content_digest",
     "skill_document_to_asset_envelope",
     "validate_asset_envelope",
+    "AssetIdentityAmbiguousError",
+    "AssetNotFoundError",
+    "AssetRepository",
+    "AssetRepositoryError",
+    "AssetRevision",
+    "AssetSnapshotBuildError",
+    "LegacySkillAssetRepository",
+    "SkillParserAdapter",
+    "SnapshotDiagnostic",
+    "StaleSourceSnapshotError",
 ]

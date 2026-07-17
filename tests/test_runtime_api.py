@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 import pytest
 
 import api.main as api_module
-from api.routers.runs_v4 import get_runtime_governance_gate
+from api.routers.runs_v4 import get_runtime_governance_gate, reload_asset_repository
 from runtime.ledger import RuntimeLedger
 from runtime.governance import RuntimeGovernanceError
 from runtime.models import RuntimeEvent, RuntimeEventType
@@ -465,6 +465,44 @@ def test_create_runtime_run_requires_canonical_skill(tmp_path, monkeypatch, read
         "/api/runs", json=payload, headers=_auth_headers()
     )
     assert response.status_code == 404
+
+
+def test_create_runtime_run_rejects_ambiguous_canonical_identity(
+    tmp_path, monkeypatch, read_json
+):
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(tmp_path / "runtime.db"))
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    payload = _create_payload(read_json, parsed_dir)
+    original = parsed_dir / "runtime-api-skill.json"
+    (parsed_dir / "duplicate.json").write_bytes(original.read_bytes())
+
+    response = TestClient(api_module.app).post(
+        "/api/runs", json=payload, headers=_auth_headers()
+    )
+    assert response.status_code == 409
+    assert response.json()["detail"] == "Canonical skill identity is ambiguous"
+
+
+def test_create_runtime_run_fails_closed_when_snapshot_becomes_stale(
+    tmp_path, monkeypatch, read_json
+):
+    monkeypatch.setenv("SKILL0_RUNTIME_DB_PATH", str(tmp_path / "runtime.db"))
+    parsed_dir = tmp_path / "parsed"
+    monkeypatch.setenv("SKILL0_PARSED_DIR", str(parsed_dir))
+    payload = _create_payload(read_json, parsed_dir)
+    client = TestClient(api_module.app)
+    first = client.post("/api/runs", json=payload, headers=_auth_headers())
+    assert first.status_code == 201
+
+    source = parsed_dir / "runtime-api-skill.json"
+    document = json.loads(source.read_text(encoding="utf-8"))
+    document["meta"]["description"] = "changed after snapshot initialization"
+    source.write_text(json.dumps(document), encoding="utf-8")
+
+    stale = client.post("/api/runs", json=payload, headers=_auth_headers())
+    assert stale.status_code == 409
+    assert stale.json()["detail"]["code"] == "stale_source_snapshot"
 
 
 def test_create_runtime_run_requires_governance_approved_revision(
@@ -943,6 +981,7 @@ def test_manual_recovery_requires_confirmation_and_auto_recovery_executes(
     auto_payload = _create_payload(
         read_json, parsed_dir, "examples/runtime-contract.auto-rollback.json"
     )
+    reload_asset_repository()
     auto_payload["parameters"] = {"customer_id": "42"}
     auto_created = client.post("/api/runs", json=auto_payload, headers=headers)
     assert auto_created.status_code == 201

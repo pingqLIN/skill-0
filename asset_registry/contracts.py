@@ -47,8 +47,10 @@ def skill_document_to_asset_envelope(
         raise AssetContractError("payload.meta must be an object")
     canonical_skill_id = _require_non_empty_string(meta, "skill_id")
     name = _require_non_empty_string(meta, "name")
-    parser_id = _require_non_empty_string(meta, "parsed_by")
-    parser_version = _require_non_empty_string(meta, "parser_version")
+    parser_id = str(meta.get("parsed_by") or "legacy-unknown")
+    parser_version = str(
+        meta.get("parser_version") or meta.get("schema_version") or "legacy-unknown"
+    )
     if not source_digest.startswith(SHA256_PREFIX) or len(source_digest) != 71:
         raise AssetContractError("source_digest must be a sha256 digest")
     if not source_path:
