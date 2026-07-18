@@ -25,6 +25,7 @@ The non-suffixed English operations documents are authoritative. Existing `.zh-t
 
 ## Supporting contracts
 
+- [`knowledge-plane-extension-contract.md`](knowledge-plane-extension-contract.md) defines context-only, Directive-bound Knowledge Plane extensions without adding an Asset type or authority source.
 - [`runtime-v4-execution-plan.md`](runtime-v4-execution-plan.md) records the implemented Runtime v4 architecture but does not reopen the frozen feature scope.
 - [`runtime-v4-contract.md`](runtime-v4-contract.md) and [`runtime-v4-contract.json`](runtime-v4-contract.json) define the runtime contract.
 - [`shared-documentation-model.md`](shared-documentation-model.md) and [`gui-governance.md`](gui-governance.md) define the external GUI mirror boundary.
