@@ -1,0 +1,58 @@
+{
+  "architecture_version": "1.0.0",
+  "status": "stable-foundation",
+  "supported_asset_types": [
+    "skill"
+  ],
+  "planes": {
+    "asset": {
+      "authority": "canonical-skill-payload-and-deterministic-envelope",
+      "mutable": false
+    },
+    "index": {
+      "authority": "none-derived-projection",
+      "mutable": true
+    },
+    "governance": {
+      "authority": "current-approved-governance-revision-and-artifact-digest",
+      "mutable": true
+    },
+    "runtime": {
+      "authority": "append-only-runtime-event-ledger",
+      "mutable": true
+    },
+    "evidence": {
+      "authority": "none-derived-from-immutable-facts",
+      "mutable": false
+    }
+  },
+  "physical_stores": {
+    "skills.db": "derived-index",
+    "governance.db": "revision-and-approval-authority",
+    "runtime.db": "append-only-runtime-ledger"
+  },
+  "execution": {
+    "mode": "dry-run-only",
+    "real_adapter_execution_available": false,
+    "certification_artifacts_are_authority": false,
+    "future_non_dry_run_requires_new_architecture_baseline": true,
+    "unknown_outcome": "reconciliation-required"
+  },
+  "semantic_invariants": {
+    "ard_categories": [
+      "action",
+      "rule",
+      "directive"
+    ],
+    "evidence_is_orthogonal": true,
+    "index_is_authority": false,
+    "benchmark_is_authority": false,
+    "runtime_status_is_projection": true
+  },
+  "excluded": {
+    "fts5": true,
+    "dashboard_redesign": true,
+    "new_asset_type": true,
+    "physical_database_migration": true
+  }
+}

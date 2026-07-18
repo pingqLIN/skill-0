@@ -11,14 +11,15 @@ post-closeout milestone without changing the Runtime v4 release boundary.
 Read in this order:
 
 1. [`../README.md`](../README.md) — product scope and supported Runtime v4 boundary.
-2. [`planning/runtime-asset-foundation-next-round-plan.md`](planning/runtime-asset-foundation-next-round-plan.md) — active P0 Runtime Asset execution authority and scope gates.
-3. [`planning/runtime-asset-p0-1-operational-readiness-plan.md`](planning/runtime-asset-p0-1-operational-readiness-plan.md) — active P0.1 identity and operator-readiness work.
-4. [`planning/runtime-asset-p1-search-evidence-plan.md`](planning/runtime-asset-p1-search-evidence-plan.md) — offline-only FTS5 plus sqlite-vec evidence gate; no production integration authority.
-5. [`../ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) — compact frozen Runtime v4 state and branch handoff.
-6. [`closeout/FINAL_REPORT.md`](closeout/FINAL_REPORT.md) — Runtime v4 release decision, exact verification, and rollback.
-7. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
-8. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
-9. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level Runtime v4 acceptance evidence.
+2. [`runtime-architecture-v1.md`](runtime-architecture-v1.md) — accepted Runtime Asset stable-foundation architecture and change boundary.
+3. [`planning/runtime-asset-foundation-next-round-plan.md`](planning/runtime-asset-foundation-next-round-plan.md) — implemented P0 Runtime Asset execution authority and scope gates.
+4. [`planning/runtime-asset-p0-1-operational-readiness-plan.md`](planning/runtime-asset-p0-1-operational-readiness-plan.md) — implemented P0.1 identity and operator-readiness work.
+5. [`planning/runtime-asset-p1-search-evidence-plan.md`](planning/runtime-asset-p1-search-evidence-plan.md) — completed offline-only FTS5 plus sqlite-vec evidence gate; no production integration authority.
+6. [`../ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) — compact frozen Runtime v4 state and branch handoff.
+7. [`closeout/FINAL_REPORT.md`](closeout/FINAL_REPORT.md) — Runtime v4 release decision, exact verification, and rollback.
+8. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
+9. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
+10. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level Runtime v4 acceptance evidence.
 
 The non-suffixed English operations documents are authoritative. Existing `.zh-tw.md` companions are human-readable translations.
 
