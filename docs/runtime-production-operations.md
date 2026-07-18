@@ -2,6 +2,9 @@
 
 This is the authoritative operator runbook for the Runtime v4 production boundary. See [runtime-production-operations.zh-tw.md](runtime-production-operations.zh-tw.md) for the Traditional Chinese companion.
 
+All deployments must also satisfy the mandatory controls and external evidence
+requirements in [`production-security-policy.md`](production-security-policy.md).
+
 ## Storage topology
 
 Runtime v4 has three independent SQLite stores. A release is not production-ready when any store is missing.

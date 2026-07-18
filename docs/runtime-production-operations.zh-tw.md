@@ -2,6 +2,8 @@
 
 > 本文件是 [runtime-production-operations.md](runtime-production-operations.md) 的繁體中文參考版本；英文原文為權威版本。
 
+所有 deployment 也必須符合 [`production-security-policy.md`](production-security-policy.md) 的 mandatory controls 與 external evidence requirements。
+
 ## 儲存拓樸
 
 Runtime v4 使用三個彼此獨立的 SQLite store；任何一個缺失，都不能宣告 production-ready。

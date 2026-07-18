@@ -1,0 +1,85 @@
+{
+  "policy_version": "1.0.0",
+  "status": "stable-foundation",
+  "deployment_boundary": {
+    "topology": "single-host-docker-compose",
+    "runtime_mode": "dry-run-only",
+    "supported_asset_types": ["skill"],
+    "physical_stores": ["skills.db", "governance.db", "runtime.db"]
+  },
+  "verified_application_controls": [
+    "production-config-fail-closed",
+    "production-api-docs-disabled",
+    "rate-limits",
+    "constant-time-credential-comparison",
+    "trusted-proxy-cidr-gate",
+    "dry-run-literal-request-contract",
+    "test-adapter-only-public-runtime",
+    "governance-read-only-core-mount",
+    "runtime-wal-required",
+    "three-store-doctor-and-backup-gate",
+    "hitl-actor-allowlist-and-deadline"
+  ],
+  "required_external_controls": [
+    "tls-termination",
+    "network-acl",
+    "secret-manager",
+    "unique-high-entropy-credentials",
+    "volume-encryption-and-file-permissions",
+    "encrypted-separated-backups",
+    "host-and-container-admin-restriction",
+    "central-log-retention-and-access-control"
+  ],
+  "release_evidence": [
+    "python-regression-459-baseline-plus-new-tests",
+    "frontend-gates-when-shipped",
+    "production-config-negative-tests",
+    "dry-run-only-contract",
+    "healthy-production-doctor",
+    "three-store-backup-restore-restart",
+    "fresh-governed-dry-run",
+    "secret-and-artifact-diff-scan",
+    "independent-review-no-critical-or-warning",
+    "external-control-operator-evidence"
+  ],
+  "known_unenforced_controls": [
+    "tls-inside-compose",
+    "credential-entropy-for-all-secrets",
+    "token-revocation-service",
+    "approval-expiry",
+    "approval-quorum",
+    "dedicated-governance-revocation",
+    "governance-decision-current-target-enforcement",
+    "fresh-evidence-reapproval",
+    "cryptographic-audit-chain",
+    "startup-enforcement-runtime-initialization-disabled",
+    "health-response-metadata-redaction-or-authentication",
+    "cross-store-atomic-backup-snapshot",
+    "sbom-generation",
+    "image-signing",
+    "provenance-attestation",
+    "continuous-image-scanning"
+  ],
+  "prohibited": {
+    "real_adapter_execution": true,
+    "non_dry_run": true,
+    "fts5_production_integration": true,
+    "dashboard_redesign_dependency": true,
+    "new_asset_type": true,
+    "physical_database_migration": true,
+    "wildcard_or_localhost_cors": true,
+    "direct_untrusted_http_exposure": true,
+    "credential_persistence_in_repository_or_image": true,
+    "runtime_initialization_during_normal_operation": true,
+    "writable_governance_mount_in_core_api": true
+  },
+  "authority": {
+    "search_is_authority": false,
+    "knowledge_is_authority": false,
+    "evaluation_is_authority": false,
+    "dashboard_is_authority": false,
+    "skills_status_is_authority": false,
+    "runtime_hitl_grants_governance_authority": false
+  },
+  "failed_or_unknown_gate_blocks_release": true
+}
