@@ -1,8 +1,8 @@
 # Production Security Policy v1
 
 - 狀態：**已接受，適用 Runtime Architecture v1 stable foundation**
-- 版本：`1.3.0`
-- 生效日期：`2026-07-20`
+- 版本：`1.4.0`
+- 生效日期：`2026-07-21`
 - Machine-readable policy：[`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations：[`runtime-production-operations.md`](runtime-production-operations.md)
 - Authority lifecycle：[`governance-authority-lifecycle.md`](governance-authority-lifecycle.md)
@@ -30,7 +30,7 @@
 - Public `/health` 只回傳 liveness status。`/api/health/detail` 需要 JWT authentication，且不回傳 database path、storage size、model name、version metadata。
 - Runtime doctor 可要求三個 stores 都有 current/readable backup，且只回報 configuration names，不回報 secret values。
 - HITL decision 需要 authenticated JWT subject 出現在 `SKILL0_RUNTIME_DECISION_ACTORS`，並受 immutable item deadline 限制。
-- Production embedding model loader 使用 `local_files_only`；模型不存在時會 fail closed，絕不改用 remote model download。把 local artifact 綁定到 operator-approved digest 仍是尚未強制的 release gate。
+- Production 要求 absolute、symlink-free、由 operator materialize 的 model directory，並設定 `SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST`。Startup、model loading、index identity 與 production doctor 都會計算具版本的完整 tree digest；artifact 缺少、格式錯誤、不可讀或 digest 不一致時一律 fail closed。Model volume 為 read-only，remote fallback 維持停用；錯誤只回傳穩定 reason code，不顯示 path 或 digest value。
 
 ### REQUIRED deployment controls（application 未強制）
 
@@ -40,6 +40,7 @@
 - JWT、API password、Runtime binding secret 必須各自 unique/high-entropy。Application 會檢查 binding-key length/independence，但不檢查所有 credentials 的 entropy。
 - Host volumes/backups 必須 encrypted at rest、限制 ownership/mode，且 backup decryption keys 與 media 分離。
 - Host/container administration、Docker socket、backup paths、model cache writes 只允許 named operator roles。
+- Provision read-only model volume 前，必須先核准 exact model artifact digest。即使 application 會驗證 mounted bytes，host／volume administrator 仍屬 application trust boundary 之外。
 - 集中保存 logs，設定 retention/access control，並保留 request、Governance revision、Runtime run、event correlation。
 - 將 public liveness 與 metrics routes 限制於 trusted network boundary；authentication 可降低暴露，但不能取代 network containment。
 
@@ -113,7 +114,7 @@
 2. 若發布 frontend artifacts，frontend lint/tests/`build:ci` 通過；
 3. placeholder/missing credential 與 unsafe CORS 會 fail closed；
 4. Runtime 維持 dry-run-only 且只走 simulation/test adapter；
-5. initialization disabled、three valid stores、Runtime WAL、actor allowlist、TTL、current backups 下 doctor healthy；
+5. initialization disabled、three valid stores、Runtime WAL、actor allowlist、TTL、current backups 與 exact approved local model artifact digest 均成立時 doctor healthy；
 6. restore/restart rehearsal 與 fresh governed dry run 通過；
 7. secret/artifact diff scan 沒有 credential、operator DB、backup、private benchmark material；
 8. independent review 無 unresolved Critical/Warning；

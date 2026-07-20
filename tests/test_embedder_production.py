@@ -6,6 +6,7 @@ import types
 import pytest
 
 from vector_db.embedder import SkillEmbedder
+from vector_db.model_artifact import compute_model_artifact_digest
 
 
 class _DummyModel:
@@ -29,19 +30,32 @@ def _install_sentence_transformer(monkeypatch, *, local_available: bool):
     return calls
 
 
-def test_production_embedder_refuses_remote_model_fallback(monkeypatch):
+def _configure_production_model(monkeypatch, tmp_path):
+    model_dir = tmp_path / "model"
+    model_dir.mkdir()
+    (model_dir / "config.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setenv("SKILL0_EMBEDDING_MODEL", str(model_dir))
+    monkeypatch.setenv(
+        "SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST",
+        compute_model_artifact_digest(model_dir),
+    )
+    return model_dir
+
+
+def test_production_embedder_refuses_remote_model_fallback(monkeypatch, tmp_path):
     calls = _install_sentence_transformer(monkeypatch, local_available=False)
     monkeypatch.setenv("SKILL0_ENV", "production")
+    model_dir = _configure_production_model(monkeypatch, tmp_path)
 
     with pytest.raises(
         RuntimeError,
         match="production embedding model must be available locally",
     ):
-        SkillEmbedder("operator-approved-model")
+        SkillEmbedder(str(model_dir))
 
     assert calls == [
         {
-            "model_name": "operator-approved-model",
+            "model_name": str(model_dir),
             "device": "cpu",
             "local_files_only": True,
         }
@@ -65,16 +79,17 @@ def test_development_embedder_preserves_remote_fallback(monkeypatch):
     ]
 
 
-def test_production_embedder_accepts_available_local_model(monkeypatch):
+def test_production_embedder_accepts_available_local_model(monkeypatch, tmp_path):
     calls = _install_sentence_transformer(monkeypatch, local_available=True)
     monkeypatch.setenv("SKILL0_ENV", "production")
+    model_dir = _configure_production_model(monkeypatch, tmp_path)
 
-    embedder = SkillEmbedder("operator-approved-model")
+    embedder = SkillEmbedder(str(model_dir))
 
     assert embedder.dimension == SkillEmbedder.DEFAULT_DIMENSION
     assert calls == [
         {
-            "model_name": "operator-approved-model",
+            "model_name": str(model_dir),
             "device": "cpu",
             "local_files_only": True,
         }

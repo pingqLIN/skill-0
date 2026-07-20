@@ -10,6 +10,11 @@ from pathlib import Path
 from typing import Dict, List, Optional, Union
 import numpy as np
 
+from .model_artifact import (
+    EmbeddingModelArtifactError,
+    production_model_artifact_issue,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -68,8 +73,6 @@ class SkillEmbedder:
             model_name: sentence-transformers 模型名稱
                        預設使用 all-MiniLM-L6-v2 (384 維, 快速且高效)
         """
-        from sentence_transformers import SentenceTransformer
-
         device = _resolve_device()
         self.device = device
         self.model_name = model_name
@@ -77,6 +80,17 @@ class SkillEmbedder:
             "production",
             "prod",
         }
+
+        if production:
+            issue = production_model_artifact_issue(
+                os.environ.get("SKILL0_ENV"),
+                model_name,
+                os.environ.get("SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST"),
+            )
+            if issue:
+                raise EmbeddingModelArtifactError(issue)
+
+        from sentence_transformers import SentenceTransformer
 
         try:
             self.model = SentenceTransformer(

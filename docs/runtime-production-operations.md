@@ -31,9 +31,12 @@ must not import repository-local authority state.
 - `SKILL0_RUNTIME_DB_PATH=/app/runtime-data/runtime.db`.
 - `SKILL0_GOVERNANCE_DB_PATH=/app/governance/db/governance.db`.
 - `SKILL0_RUNTIME_ALLOW_INITIALIZE=false` during normal operation.
-- `SKILL0_EMBEDDING_MODEL`: an operator-provisioned model already available in
-  the local cache. Production refuses remote fallback. Record and verify the
-  approved artifact digest outside the current application gate.
+- `SKILL0_EMBEDDING_MODEL`: the absolute path to a symlink-free,
+  operator-materialized model directory in the read-only model volume.
+- `SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST`: the approved
+  `sha256:<64 lowercase hex>` complete-tree digest. Startup, the production
+  doctor, model loading, and index identity all verify it; production refuses
+  remote fallback and does not ignore model drift.
 - `SKILL0_BIND_ADDRESS=127.0.0.1` by default. Override it only behind an
   explicitly reviewed network boundary and maintained TLS proxy or ingress.
 
@@ -41,17 +44,21 @@ The doctor reports only configuration names and structural findings. It never pr
 
 ## First start and upgrade
 
-1. Restore or provision `skills.db` and `governance.db` before accepting traffic. A clean public checkout intentionally has neither production identity nor approvals.
-2. Start the Dashboard API so the governance volume is present and its schema is current.
-3. For the first intentional provisioning boot only, set `SKILL0_RUNTIME_ALLOW_INITIALIZE=true`. If the Runtime ledger is missing while this flag is false, startup fails instead of silently creating an empty history.
-4. Start the Core API. Its entrypoint initializes or migrates `runtime.db`, then runs:
+1. Materialize the approved model into the model volume without symlinks. Compute
+   its digest with `compute_model_artifact_digest()` from
+   `vector_db.model_artifact`, record the reviewed value, then mount the volume
+   read-only. Do not let the normal API service provision or update model bytes.
+2. Restore or provision `skills.db` and `governance.db` before accepting traffic. A clean public checkout intentionally has neither production identity nor approvals.
+3. Start the Dashboard API so the governance volume is present and its schema is current.
+4. For the first intentional provisioning boot only, set `SKILL0_RUNTIME_ALLOW_INITIALIZE=true`. If the Runtime ledger is missing while this flag is false, startup fails instead of silently creating an empty history.
+5. Start the Core API. Its entrypoint initializes or migrates `runtime.db`, then runs:
 
    ```bash
    python /app/scripts/runtime_doctor.py --production --json
    ```
 
-5. Return `SKILL0_RUNTIME_ALLOW_INITIALIZE=false`, restart the Core API, and verify the doctor again.
-6. Start the web service only after both APIs are healthy.
+6. Return `SKILL0_RUNTIME_ALLOW_INITIALIZE=false`, restart the Core API, and verify the doctor again.
+7. Start the web service only after both APIs are healthy.
 
 Legacy HITL rows without `expires_at` are treated as expired. Legacy execution bases without `governance_revision_id` are non-resumable. Do not rewrite those attestations: start a fresh run against the current approved canonical revision.
 

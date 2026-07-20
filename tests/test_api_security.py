@@ -19,6 +19,7 @@ from api.main import (
     is_production_env,
     validate_login_credentials,
 )
+from vector_db.model_artifact import compute_model_artifact_digest
 
 
 def test_is_production_env_variants():
@@ -99,6 +100,35 @@ def test_production_security_rejects_runtime_placeholders_and_accepts_independen
         runtime_hitl_ttl_seconds="86400",
         runtime_journal_mode="WAL",
     ) == []
+
+
+def test_production_security_validates_approved_model_artifact(tmp_path):
+    model_dir = tmp_path / "approved-model"
+    model_dir.mkdir()
+    (model_dir / "config.json").write_text("{}\n", encoding="utf-8")
+    expected_digest = compute_model_artifact_digest(model_dir)
+    base = {
+        "env_value": "production",
+        "cors_origins": ["https://app.example.com"],
+        "jwt_secret_key": "production-jwt-secret-key-0123456789",
+        "default_jwt_secret_key": "dev-secret-change-in-production",
+        "configured_username": "admin",
+        "configured_password": "strong-password",
+        "embedding_model": str(model_dir.resolve()),
+        "validate_embedding_model": True,
+    }
+
+    assert find_production_security_issues(
+        **base,
+        embedding_model_artifact_digest=expected_digest,
+    ) == []
+
+    issues = find_production_security_issues(
+        **base,
+        embedding_model_artifact_digest="sha256:" + "0" * 64,
+    )
+
+    assert issues == ["embedding_model_artifact_digest_mismatch"]
 
 
 def test_validate_login_credentials_uses_constant_time_comparisons(monkeypatch):

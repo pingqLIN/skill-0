@@ -20,11 +20,15 @@ services:
       SKILL0_RUNTIME_HITL_TTL_SECONDS: ${SKILL0_RUNTIME_HITL_TTL_SECONDS:-86400}
       SKILL0_RUNTIME_JOURNAL_MODE: WAL
       SKILL0_RUNTIME_ALLOW_INITIALIZE: ${SKILL0_RUNTIME_ALLOW_INITIALIZE:-false}
+      SKILL0_EMBEDDING_MODEL: ${SKILL0_EMBEDDING_MODEL:?Set SKILL0_EMBEDDING_MODEL to the approved absolute model directory}
+      SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST: ${SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST:?Set the approved sha256 model artifact digest}
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
     volumes:
       - skill0-skills-db:/app/data
       - skill0-runtime-db:/app/runtime-data
       - skill0-governance-db:/app/governance/db:ro
-      - model-cache:/app/.cache
+      - model-cache:/app/.cache:ro
     depends_on:
       dashboard:
         condition: service_healthy

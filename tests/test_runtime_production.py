@@ -8,6 +8,7 @@ from pathlib import Path
 from runtime.ledger import RuntimeLedger
 from scripts.runtime_doctor import run_doctor
 from tools.governance_db import GovernanceDB
+from vector_db.model_artifact import compute_model_artifact_digest
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +36,9 @@ def _configure_production_environment(monkeypatch, tmp_path: Path) -> dict[str, 
     parsed_dir = tmp_path / "parsed"
     parsed_dir.mkdir()
     (parsed_dir / "fixture.json").write_text("{}", encoding="utf-8")
+    model_dir = tmp_path / "approved-model"
+    model_dir.mkdir()
+    (model_dir / "config.json").write_text("{}\n", encoding="utf-8")
     sqlite3.connect(skills_db).close()
     GovernanceDB(db_path=governance_db)
     with RuntimeLedger(runtime_db, journal_mode="WAL"):
@@ -53,6 +57,11 @@ def _configure_production_environment(monkeypatch, tmp_path: Path) -> dict[str, 
     monkeypatch.setenv("SKILL0_RUNTIME_DECISION_ACTORS", "runtime-reviewer")
     monkeypatch.setenv("SKILL0_RUNTIME_HITL_TTL_SECONDS", "86400")
     monkeypatch.setenv("SKILL0_RUNTIME_JOURNAL_MODE", "WAL")
+    monkeypatch.setenv("SKILL0_EMBEDDING_MODEL", str(model_dir.resolve()))
+    monkeypatch.setenv(
+        "SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST",
+        compute_model_artifact_digest(model_dir),
+    )
     return {
         "skills": skills_db,
         "governance": governance_db,
@@ -115,6 +124,25 @@ def test_production_doctor_rejects_runtime_initialization_mode_without_backup_ga
     assert "runtime_initialization_is_enabled" not in report["warnings"]
 
 
+def test_production_doctor_rejects_model_artifact_drift(tmp_path, monkeypatch):
+    _configure_production_environment(monkeypatch, tmp_path)
+    monkeypatch.setenv(
+        "SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST",
+        "sha256:" + "0" * 64,
+    )
+
+    report = run_doctor(
+        production=True,
+        require_backups=False,
+        backup_dir=tmp_path / "backups",
+        max_backup_age_days=2,
+    )
+
+    assert report["status"] == "failed"
+    assert "embedding_model_artifact_digest_mismatch" in report["errors"]
+    assert report["checks"]["embedding_model_artifact"] == {"verified": False}
+
+
 def test_release_gate_rejects_corrupt_runtime_backup(tmp_path, monkeypatch):
     databases = _configure_production_environment(monkeypatch, tmp_path)
     backup_dir = tmp_path / "backups"
@@ -146,6 +174,10 @@ def test_production_compose_persists_runtime_and_reads_governance_db():
     assert "skill0-governance-db:/app/governance/db:ro" in compose
     assert "SKILL0_RUNTIME_JOURNAL_MODE: WAL" in compose
     assert "SKILL0_RUNTIME_ALLOW_INITIALIZE: ${SKILL0_RUNTIME_ALLOW_INITIALIZE:-false}" in compose
+    assert "SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST:" in compose
+    assert "model-cache:/app/.cache:ro" in compose
+    assert 'HF_HUB_OFFLINE: "1"' in compose
+    assert 'TRANSFORMERS_OFFLINE: "1"' in compose
     assert "dashboard:\n        condition: service_healthy" in compose
     assert '${SKILL0_BIND_ADDRESS:-127.0.0.1}:${API_PORT:-8080}:8000' in compose
     assert '${SKILL0_BIND_ADDRESS:-127.0.0.1}:${WEB_PORT:-3080}:8080' in compose
@@ -158,6 +190,8 @@ def test_production_compose_persists_runtime_and_reads_governance_db():
     assert "pip install --no-cache-dir -r requirements-runtime.txt" in dockerfile
     assert "COPY skills.db" not in dockerfile
     assert "VectorStore('/app/bootstrap/skills.db').close()" in dockerfile
+    assert "HF_HUB_OFFLINE=1" not in dockerfile
+    assert "TRANSFORMERS_OFFLINE=1" not in dockerfile
 
     runtime_requirements = (ROOT / "requirements-runtime.txt").read_text(
         encoding="utf-8"
@@ -212,6 +246,10 @@ def test_maintenance_scripts_cover_all_three_databases():
     assert "runtime_sentinel_after_restart" in rehearsal
     assert "BuildCaFile" in rehearsal
     assert "build_ca" in rehearsal
+    assert "Provision disposable approved model artifact" in rehearsal
+    assert "--user root" in rehearsal
+    assert "compute_model_artifact_digest" in rehearsal
+    assert "SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST" in rehearsal
     assert "failed with exit code" in rehearsal
     assert "$rehearsalPassed = $false" in rehearsal
     assert "if (-not $KeepRunning -or -not $rehearsalPassed)" in rehearsal

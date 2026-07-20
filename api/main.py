@@ -45,6 +45,11 @@ from asset_registry.repositories import (
     AssetRepository,
     StaleSourceSnapshotError,
 )
+from vector_db.model_artifact import (
+    DIGEST_ENV as EMBEDDING_MODEL_DIGEST_ENV,
+    MODEL_ENV as EMBEDDING_MODEL_ENV,
+    production_model_artifact_issue,
+)
 
 # 初始化結構化日誌
 _log_format = os.getenv("SKILL0_LOG_FORMAT", "json").lower()
@@ -130,6 +135,9 @@ def find_production_security_issues(
     runtime_hitl_ttl_seconds: Optional[str] = None,
     runtime_journal_mode: Optional[str] = None,
     validate_runtime: bool = False,
+    embedding_model: Optional[str] = None,
+    embedding_model_artifact_digest: Optional[str] = None,
+    validate_embedding_model: bool = False,
 ) -> List[str]:
     """Enumerate production security misconfigurations."""
     if not is_production_env(env_value):
@@ -180,6 +188,15 @@ def find_production_security_issues(
         if journal_issue is not None:
             issues.append(journal_issue)
 
+    if validate_embedding_model:
+        model_issue = production_model_artifact_issue(
+            env_value,
+            embedding_model,
+            embedding_model_artifact_digest,
+        )
+        if model_issue is not None:
+            issues.append(model_issue)
+
     return issues
 
 
@@ -197,6 +214,9 @@ def enforce_production_security_configuration() -> None:
         runtime_hitl_ttl_seconds=os.getenv(RUNTIME_HITL_TTL_SECONDS_ENV),
         runtime_journal_mode=os.getenv(RUNTIME_JOURNAL_MODE_ENV),
         validate_runtime=True,
+        embedding_model=os.getenv(EMBEDDING_MODEL_ENV),
+        embedding_model_artifact_digest=os.getenv(EMBEDDING_MODEL_DIGEST_ENV),
+        validate_embedding_model=True,
     )
     if issues:
         raise RuntimeError(

@@ -1,8 +1,8 @@
 # Production Security Policy v1
 
 - Status: **Accepted for the Runtime Architecture v1 stable foundation**
-- Version: `1.3.0`
-- Effective date: `2026-07-20`
+- Version: `1.4.0`
+- Effective date: `2026-07-21`
 - Machine-readable policy: [`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations: [`runtime-production-operations.md`](runtime-production-operations.md)
 - Authority lifecycle: [`governance-authority-lifecycle.md`](governance-authority-lifecycle.md)
@@ -54,10 +54,12 @@ deployment controls that must be supplied outside the repository.
   and reports configuration names rather than secret values.
 - HITL decisions require an authenticated JWT subject in
   `SKILL0_RUNTIME_DECISION_ACTORS` and expire under an immutable item deadline.
-- Production embedding model loading uses `local_files_only` and fails closed
-  when the model is absent; it never retries through a remote model download.
-  Binding that local artifact to an operator-approved digest remains an
-  unenforced release gate.
+- Production requires an absolute, symlink-free, operator-materialized model
+  directory plus `SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST`. Startup, model
+  loading, index identity, and the production doctor compute the versioned
+  complete-tree digest and fail closed on missing, malformed, unreadable, or
+  mismatched artifacts. The model volume is read-only and remote model fallback
+  is disabled. Errors contain stable reason codes rather than paths or digests.
 
 ### REQUIRED deployment controls not enforced by the application
 
@@ -75,6 +77,9 @@ deployment controls that must be supplied outside the repository.
   keep backup decryption keys separate from backup media.
 - Restrict host/container administration, Docker socket access, backup paths,
   and model cache writes to named operator roles.
+- Approve the exact model artifact digest before provisioning the read-only
+  model volume. Host or volume administrators remain outside the application
+  trust boundary even though the application verifies the mounted bytes.
 - Centralize logs with retention and access controls while preserving request,
   Governance revision, Runtime run, and event correlation.
 - Keep public liveness and metrics routes within the trusted network boundary;
@@ -200,7 +205,8 @@ A release is blocked unless all of the following are evidenced:
    CORS;
 4. Runtime remains dry-run-only and uses only the simulation/test adapter path;
 5. production doctor is healthy with initialization disabled, three valid stores,
-   Runtime WAL, actor allowlist, TTL, and current three-store backups;
+   Runtime WAL, actor allowlist, TTL, current three-store backups, and the exact
+   approved local model artifact digest;
 6. restore/restart rehearsal and a fresh governed dry run pass;
 7. secret/artifact diff scan finds no credential, operator DB, backup, or private
    benchmark material;

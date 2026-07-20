@@ -14,7 +14,7 @@ def _policy():
 def test_production_security_policy_freezes_supported_boundary():
     policy = _policy()
 
-    assert policy["policy_version"] == "1.3.0"
+    assert policy["policy_version"] == "1.4.0"
     assert policy["status"] == "stable-foundation"
     assert policy["deployment_boundary"] == {
         "topology": "single-host-docker-compose",
@@ -78,6 +78,9 @@ def test_production_security_policy_separates_verified_and_external_controls():
         "verified_application_controls"
     ]
     assert "approved-local-model-artifact-digest" in policy[
+        "verified_application_controls"
+    ]
+    assert "approved-local-model-artifact-digest" not in policy[
         "known_unenforced_controls"
     ]
     assert set(policy["verified_application_controls"]).isdisjoint(
@@ -95,6 +98,8 @@ def test_production_security_policy_matches_runtime_and_compose_guards():
     assert "skill0-governance-db:/app/governance/db:ro" in compose
     assert 'SKILL0_ENABLE_DOCS: "false"' in compose
     assert "SKILL0_RUNTIME_ALLOW_INITIALIZE: ${SKILL0_RUNTIME_ALLOW_INITIALIZE:-false}" in compose
+    assert "SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST:" in compose
+    assert "model-cache:/app/.cache:ro" in compose
 
 
 def test_public_security_entrypoints_link_authoritative_policy_and_companion():
