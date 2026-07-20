@@ -1,7 +1,7 @@
 # Production Security Policy v1
 
 - Status: **Accepted for the Runtime Architecture v1 stable foundation**
-- Version: `1.2.0`
+- Version: `1.3.0`
 - Effective date: `2026-07-20`
 - Machine-readable policy: [`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations: [`runtime-production-operations.md`](runtime-production-operations.md)
@@ -54,6 +54,10 @@ deployment controls that must be supplied outside the repository.
   and reports configuration names rather than secret values.
 - HITL decisions require an authenticated JWT subject in
   `SKILL0_RUNTIME_DECISION_ACTORS` and expire under an immutable item deadline.
+- Production embedding model loading uses `local_files_only` and fails closed
+  when the model is absent; it never retries through a remote model download.
+  Binding that local artifact to an operator-approved digest remains an
+  unenforced release gate.
 
 ### REQUIRED deployment controls not enforced by the application
 

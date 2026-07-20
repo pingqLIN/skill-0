@@ -28,7 +28,7 @@ Final API 與 Dashboard image 各含 Debian Bookworm essential Perl runtime 的 
 - `2026-07-20` follow-up offline `local://` scans 驗證 pinned Dashboard candidate 為 1 Critical／2 High，pinned Web candidate 為 1 Critical／9 High。Web base 從 digest `806f6d3e...` 更新為 `08c2bc9344...` 後，觀察結果由 2 Critical／14 High 降低，但仍未通過 Critical／High 必須為零的 gate。
 - 所有 production Dockerfile stages 現在都已 digest-pin。所有 remote GitHub Actions references 也已 pin 到完整 commit SHA，並以註解保留預期 major version。Static regression tests 會在 Docker stage 或 action reference 可變時 fail。使用 pinned images 的第二次 isolated Compose rehearsal 已通過 build、health、production doctor、governed dry-run、deterministic Evidence、three-store backup/restore、restart persistence 與 zero-resource cleanup。
 - Regression：451 個 Python test、34 個 Web test 通過；frontend production build 與 Python compile check 通過。
-- Follow-up hardening regression：505 個 Python/API tests、36 個 frontend tests 通過；frontend lint/build 與 schema validation 196/196 通過。
+- Follow-up hardening regression：508 個 Python/API tests、36 個 frontend tests 通過；frontend lint/build 與 schema validation 196/196 通過。
 
 忽略追蹤的本機證據位於 `.artifacts/security-review/20260717T214200Z/`，包含 resolver report、audit JSON、vector comparison 與 strict indexing evidence。
 
@@ -83,6 +83,6 @@ docker scout cves --only-severity critical,high --format sarif --output api-cves
 
 1. **Dashboard／Web container CVE inventory — VERIFIED production blockers。** Dashboard Bookworm image 與 API 相同，含尚無修正版的 Perl 1 Critical／2 High。Web image 含 OpenSSL 1 Critical／8 High，加上 musl 1 High；Scout 回報 fixed boundaries 為 `openssl>=3.5.7-r0` 與 `musl>=1.2.5-r23`，但目前官方 image digest 仍含較舊套件。Build environment 的 TLS trust gate 阻止安全 package refresh，且本次沒有使用 trusted-host 或 force-missing-repository bypass。必須以更新的官方 digest 或 approved CA-enabled rebuild 重驗；gate 仍要求 Critical／High 為零。
 2. **Legacy lock 不完整 — Warning。** `requirements.lock` 未被 CI 或 container 使用，也不是具有 hash 的完整 transitive lock。現在僅保留為已標示的 legacy snapshot；後續應改成按環境拆分、hash-verified lock，或依 repository 的 recoverable deletion workflow 移除。
-3. **Model source boundary — Warning。** `SkillEmbedder` 優先使用 local cache，但仍可 fallback 至遠端下載。Production 應要求已批准且有 digest 的 local model artifact，不應接受任意 `SKILL0_EMBEDDING_MODEL` 值。
+3. **Model approval boundary — 部分解決的 Warning。** Production `SkillEmbedder` 現在使用 `local_files_only`，local model 不存在時 fail closed；remote fallback 只保留在非 production。Application 仍未把 `SKILL0_EMBEDDING_MODEL` 綁到 operator-approved artifact digest，因此 release 仍需該項證據。
 
 上述 warnings 與 blockers 交由 Runtime maintainers 在第一個 production-hardening batch 處理。關閉前，本審核只支援本機 Runtime dry-run 與 P1 Search evidence。

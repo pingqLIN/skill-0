@@ -1,5 +1,5 @@
 {
-  "policy_version": "1.2.0",
+  "policy_version": "1.3.0",
   "status": "stable-foundation",
   "deployment_boundary": {
     "topology": "single-host-docker-compose",
@@ -21,7 +21,8 @@
     "runtime-wal-required",
     "three-store-doctor-and-backup-gate",
     "hitl-actor-allowlist-and-deadline",
-    "governance-decision-current-target-enforcement"
+    "governance-decision-current-target-enforcement",
+    "embedding-model-remote-fallback-disabled"
   ],
   "required_external_controls": [
     "tls-termination",
@@ -58,7 +59,8 @@
     "sbom-generation",
     "image-signing",
     "provenance-attestation",
-    "continuous-image-scanning"
+    "continuous-image-scanning",
+    "approved-local-model-artifact-digest"
   ],
   "prohibited": {
     "real_adapter_execution": true,

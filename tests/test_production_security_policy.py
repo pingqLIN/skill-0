@@ -14,7 +14,7 @@ def _policy():
 def test_production_security_policy_freezes_supported_boundary():
     policy = _policy()
 
-    assert policy["policy_version"] == "1.2.0"
+    assert policy["policy_version"] == "1.3.0"
     assert policy["status"] == "stable-foundation"
     assert policy["deployment_boundary"] == {
         "topology": "single-host-docker-compose",
@@ -73,6 +73,12 @@ def test_production_security_policy_separates_verified_and_external_controls():
     )
     assert "authenticated-redacted-health-detail" in policy[
         "verified_application_controls"
+    ]
+    assert "embedding-model-remote-fallback-disabled" in policy[
+        "verified_application_controls"
+    ]
+    assert "approved-local-model-artifact-digest" in policy[
+        "known_unenforced_controls"
     ]
     assert set(policy["verified_application_controls"]).isdisjoint(
         policy["known_unenforced_controls"]

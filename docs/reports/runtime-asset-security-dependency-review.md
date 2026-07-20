@@ -28,7 +28,7 @@ The final API and Dashboard images each contain **1 Critical and 2 High** findin
 - Follow-up offline `local://` scans on `2026-07-20` verified the pinned Dashboard candidate at 1 Critical / 2 High and the pinned Web candidate at 1 Critical / 9 High. Updating the Web base from digest `806f6d3e...` to `08c2bc9344...` reduced the observed result from 2 Critical / 14 High but did not satisfy the zero-Critical/High gate.
 - All production Dockerfile stages are now digest-pinned. All remote GitHub Actions references are pinned to full commit SHAs with their intended major versions retained as comments. Static regression tests fail on a mutable Docker stage or action reference. A second isolated Compose rehearsal passed build, health, production doctor, governed dry-run, deterministic Evidence, three-store backup/restore, restart persistence, and zero-resource cleanup with the pinned images.
 - Regression: 451 Python tests passed; 34 web tests passed; frontend production build and Python compile checks passed.
-- Follow-up hardening regression: 505 Python/API tests and 36 frontend tests passed; frontend lint/build and schema validation 196/196 passed.
+- Follow-up hardening regression: 508 Python/API tests and 36 frontend tests passed; frontend lint/build and schema validation 196/196 passed.
 
 Ignored local evidence is under `.artifacts/security-review/20260717T214200Z/`, including resolver reports, audit JSON, vector comparison, and strict indexing evidence.
 
@@ -83,6 +83,6 @@ Production remains blocked unless the result has zero Critical/High findings or 
 
 1. **Dashboard/Web container CVE inventories — VERIFIED production blockers.** The Dashboard Bookworm image has the same unfixed Perl 1 Critical / 2 High set as the API. The Web image has OpenSSL 1 Critical / 8 High plus musl 1 High; Scout reports fixed boundaries `openssl>=3.5.7-r0` and `musl>=1.2.5-r23`, but the current official image digest contains older packages. The build environment's TLS trust gate prevented a safe package refresh, and no trusted-host or force-missing-repository bypass was used. Revalidate a newer official digest or an approved CA-enabled rebuild; the gate remains zero Critical/High.
 2. **Incomplete legacy lock — Warning.** `requirements.lock` is not consumed by CI or containers and is not a hash-complete transitive lock. It is retained only as a labelled legacy snapshot. Replace it with per-environment, hash-verified locks or remove it through the repository's recoverable deletion workflow.
-3. **Model-source boundary — Warning.** `SkillEmbedder` prefers the local cache but can fall back to remote model loading. Production should require an approved local model artifact and digest rather than accepting an arbitrary `SKILL0_EMBEDDING_MODEL` value.
+3. **Model approval boundary — partially resolved Warning.** Production `SkillEmbedder` now uses `local_files_only` and fails closed without a local model; remote fallback remains available only outside production. The application still does not bind `SKILL0_EMBEDDING_MODEL` to an operator-approved artifact digest, so that release evidence remains required.
 
 Warnings and blockers are assigned to the Runtime maintainers for the first production-hardening batch. Until they are closed, this review supports local Runtime dry-runs and P1 Search evidence only.

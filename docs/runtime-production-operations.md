@@ -31,6 +31,9 @@ must not import repository-local authority state.
 - `SKILL0_RUNTIME_DB_PATH=/app/runtime-data/runtime.db`.
 - `SKILL0_GOVERNANCE_DB_PATH=/app/governance/db/governance.db`.
 - `SKILL0_RUNTIME_ALLOW_INITIALIZE=false` during normal operation.
+- `SKILL0_EMBEDDING_MODEL`: an operator-provisioned model already available in
+  the local cache. Production refuses remote fallback. Record and verify the
+  approved artifact digest outside the current application gate.
 - `SKILL0_BIND_ADDRESS=127.0.0.1` by default. Override it only behind an
   explicitly reviewed network boundary and maintained TLS proxy or ingress.
 

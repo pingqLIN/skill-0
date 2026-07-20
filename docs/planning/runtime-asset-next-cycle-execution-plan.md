@@ -49,13 +49,13 @@ blocked by the separate security and external-control gates.
   production startup through an entrypoint-overridden helper, then runs the
   stack with Runtime initialization disabled throughout.
 - [`../production-security-policy.md`](../production-security-policy.md) is
-  advanced to policy `1.2.0`; the two controls are no longer listed as known
+  advanced to policy `1.3.0`; the implemented controls are no longer listed as known
   unenforced gaps.
 
 ### Validation evidence
 
 - Focused production contract regression: `7 passed`.
-- Full Python/API regression: `505 passed, 76 warnings`.
+- Full Python/API regression: `508 passed, 76 warnings`.
 - Schema validation: `196 passed, 0 failed`.
 - The isolated PowerShell Compose rehearsal passed service health, production
   doctor, governed dry-run, deterministic Evidence, three-store backup/restore,

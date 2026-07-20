@@ -73,6 +73,10 @@ class SkillEmbedder:
         device = _resolve_device()
         self.device = device
         self.model_name = model_name
+        production = os.environ.get("SKILL0_ENV", "development").strip().lower() in {
+            "production",
+            "prod",
+        }
 
         try:
             self.model = SentenceTransformer(
@@ -82,6 +86,14 @@ class SkillEmbedder:
             )
             logger.info("從本機 Hugging Face cache 載入 embedding 模型: %s", model_name)
         except Exception as exc:
+            if production:
+                logger.error(
+                    "Production embedding 模型不在本機 cache，拒絕遠端 fallback: %s",
+                    model_name,
+                )
+                raise RuntimeError(
+                    "production embedding model must be available locally"
+                ) from exc
             logger.warning(
                 "本機 embedding 模型 cache 不可用，改為遠端載入 %s (%s)",
                 model_name,

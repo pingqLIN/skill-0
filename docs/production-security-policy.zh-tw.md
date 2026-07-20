@@ -1,7 +1,7 @@
 # Production Security Policy v1
 
 - 狀態：**已接受，適用 Runtime Architecture v1 stable foundation**
-- 版本：`1.2.0`
+- 版本：`1.3.0`
 - 生效日期：`2026-07-20`
 - Machine-readable policy：[`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations：[`runtime-production-operations.md`](runtime-production-operations.md)
@@ -30,6 +30,7 @@
 - Public `/health` 只回傳 liveness status。`/api/health/detail` 需要 JWT authentication，且不回傳 database path、storage size、model name、version metadata。
 - Runtime doctor 可要求三個 stores 都有 current/readable backup，且只回報 configuration names，不回報 secret values。
 - HITL decision 需要 authenticated JWT subject 出現在 `SKILL0_RUNTIME_DECISION_ACTORS`，並受 immutable item deadline 限制。
+- Production embedding model loader 使用 `local_files_only`；模型不存在時會 fail closed，絕不改用 remote model download。把 local artifact 綁定到 operator-approved digest 仍是尚未強制的 release gate。
 
 ### REQUIRED deployment controls（application 未強制）
 
