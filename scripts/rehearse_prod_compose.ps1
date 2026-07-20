@@ -31,6 +31,29 @@ function Assert-LocalPortAvailable {
     }
 }
 
+function Assert-NoExistingComposeResources {
+    $projectLabel = "com.docker.compose.project=$ProjectName"
+    $containers = @(& docker container ls --all --quiet --filter "label=$projectLabel")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Docker daemon is unavailable; start it before running the rehearsal"
+    }
+
+    $volumes = @(& docker volume ls --quiet --filter "label=$projectLabel")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to inspect Docker volumes for compose project '$ProjectName'"
+    }
+
+    $networks = @(& docker network ls --quiet --filter "label=$projectLabel")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to inspect Docker networks for compose project '$ProjectName'"
+    }
+
+    if ($containers.Count -gt 0 -or $volumes.Count -gt 0 -or $networks.Count -gt 0) {
+        throw "Compose project '$ProjectName' already owns containers, volumes, or networks; choose a unique -ProjectName and preserve the existing resources"
+    }
+}
+
+Assert-NoExistingComposeResources
 Assert-LocalPortAvailable -Port $ApiPort
 Assert-LocalPortAvailable -Port $WebPort
 
@@ -93,6 +116,7 @@ JWT_ALGORITHM=HS256
 JWT_EXPIRE_MINUTES=15
 API_USERNAME=rehearsal-admin
 API_PASSWORD=rehearsal-password-0123456789
+SKILL0_BIND_ADDRESS=127.0.0.1
 API_PORT=$ApiPort
 WEB_PORT=$WebPort
 API_RATE_LIMIT=60/minute

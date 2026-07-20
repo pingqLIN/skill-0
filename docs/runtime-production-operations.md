@@ -26,6 +26,8 @@ Runtime v4 has three independent SQLite stores. A release is not production-read
 - `SKILL0_RUNTIME_DB_PATH=/app/runtime-data/runtime.db`.
 - `SKILL0_GOVERNANCE_DB_PATH=/app/governance/db/governance.db`.
 - `SKILL0_RUNTIME_ALLOW_INITIALIZE=false` during normal operation.
+- `SKILL0_BIND_ADDRESS=127.0.0.1` by default. Override it only behind an
+  explicitly reviewed network boundary and maintained TLS proxy or ingress.
 
 The doctor reports only configuration names and structural findings. It never prints secret values.
 
@@ -79,7 +81,11 @@ The release gate fails when initialization remains enabled or any store, require
 
 ## Restore and restart rehearsal
 
-Use only an isolated project name. The helper creates disposable volumes, initializes a rehearsal governance store, validates all three stores, performs online SQLite backup/restore verification, restarts the Core API, and reruns the doctor:
+Use only an isolated project name. The helper fails closed when that project
+name already owns containers, volumes, or networks, binds its HTTP ports to loopback,
+creates disposable volumes, initializes a rehearsal governance store, validates
+all three stores, performs online SQLite backup/restore verification, restarts
+the Core API, and reruns the doctor:
 
 ```powershell
 pwsh -File scripts/rehearse_prod_compose.ps1

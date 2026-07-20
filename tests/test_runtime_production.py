@@ -131,6 +131,8 @@ def test_production_compose_persists_runtime_and_reads_governance_db():
     assert "SKILL0_RUNTIME_JOURNAL_MODE: WAL" in compose
     assert "SKILL0_RUNTIME_ALLOW_INITIALIZE: ${SKILL0_RUNTIME_ALLOW_INITIALIZE:-false}" in compose
     assert "dashboard:\n        condition: service_healthy" in compose
+    assert '${SKILL0_BIND_ADDRESS:-127.0.0.1}:${API_PORT:-8080}:8000' in compose
+    assert '${SKILL0_BIND_ADDRESS:-127.0.0.1}:${WEB_PORT:-3080}:8080' in compose
 
     dockerfile = (ROOT / "Dockerfile.api").read_text(encoding="utf-8")
     assert "--mount=type=secret,id=build_ca,required=false" in dockerfile
@@ -196,6 +198,11 @@ def test_maintenance_scripts_cover_all_three_databases():
     assert 'Invoke-Compose -ComposeArgs @("up", "--detach")' in rehearsal
     assert "Assert-LocalPortAvailable -Port $ApiPort" in rehearsal
     assert "Assert-LocalPortAvailable -Port $WebPort" in rehearsal
+    assert "Assert-NoExistingComposeResources" in rehearsal
+    assert 'com.docker.compose.project=$ProjectName' in rehearsal
+    assert 'docker network ls --quiet --filter "label=$projectLabel"' in rehearsal
+    assert "choose a unique -ProjectName" in rehearsal
+    assert "SKILL0_BIND_ADDRESS=127.0.0.1" in rehearsal
     assert '"$ProjectName-$PID.env"' in rehearsal
 
     entrypoint = (ROOT / "scripts" / "docker-entrypoint-api.sh").read_text(
