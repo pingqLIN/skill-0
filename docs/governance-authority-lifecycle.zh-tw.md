@@ -136,3 +136,5 @@ Incident review 必須能回答：
 ## 9. Change control
 
 改變 authority tuple、強制 current-target decisions、hardening re-approval、新增 approval expiry、revocation/quorum 或改變 persistence semantics，都需要 focused tests、independent review；若 storage 改變，還需要 explicit migration plan。Runtime Architecture v1 本身不授權這些變更。
+
+[`governance-authority-lifecycle-proposal.md`](governance-authority-lifecycle-proposal.md) 記錄實作這些 gaps 前所需的 operator decisions 與 staged design gates。

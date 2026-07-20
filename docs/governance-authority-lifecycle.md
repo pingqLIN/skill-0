@@ -203,4 +203,6 @@ Changing the authority tuple, enforcing current-target decisions, hardening
 re-approval, adding approval expiry, adding revocation/quorum, or changing
 persistence semantics requires focused tests, independent review, and an
 explicit migration plan if storage changes. Runtime Architecture v1 does not
-authorize those changes by itself.
+authorize those changes by itself. See
+[`governance-authority-lifecycle-proposal.md`](governance-authority-lifecycle-proposal.md)
+for the required operator decisions and staged design gates.
