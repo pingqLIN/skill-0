@@ -34,8 +34,9 @@ them.
 
 ## Pre-stage — production security hardening closure
 
-**Status:** Local source and contract hardening complete on `2026-07-20`;
-isolated Compose rehearsal is blocked by local deployment prerequisites.
+**Status:** Local source and contract hardening and the isolated Compose
+technical rehearsal completed on `2026-07-20`; production clearance remains
+blocked by the separate security and external-control gates.
 
 ### Delivered local controls
 
@@ -48,27 +49,36 @@ isolated Compose rehearsal is blocked by local deployment prerequisites.
   production startup through an entrypoint-overridden helper, then runs the
   stack with Runtime initialization disabled throughout.
 - [`../production-security-policy.md`](../production-security-policy.md) is
-  advanced to policy `1.1.0`; the two controls are no longer listed as known
+  advanced to policy `1.2.0`; the two controls are no longer listed as known
   unenforced gaps.
 
 ### Validation evidence
 
-- Focused production/API/security regression: `96 passed`.
-- Full Python/API regression: `497 passed, 62 warnings`.
-- The PowerShell Compose rehearsal parsed successfully without execution.
+- Focused production contract regression: `6 passed`.
+- Full Python/API regression: `503 passed, 76 warnings`.
+- Schema validation: `196 passed, 0 failed`.
+- The isolated PowerShell Compose rehearsal passed service health, production
+  doctor, governed dry-run, deterministic Evidence, three-store backup/restore,
+  restart persistence, and cleanup checks. See
+  [`../reports/runtime-production-compose-rehearsal-2026-07-20.md`](../reports/runtime-production-compose-rehearsal-2026-07-20.md).
 - The local Git worktree was clean before this batch; no Asset type, FTS5
   integration, Dashboard redesign, real adapter, or physical database migration
   was introduced.
 
-### Blocked deployment evidence
+### Rehearsal evidence and remaining production boundary
 
-The requested live isolated rehearsal is `BLOCKED`, not passed: Docker client
-`29.6.1` is installed but its local daemon pipe is unavailable, and a real
-production `CORS_ORIGINS` value was intentionally not read or created. No
-container, route, secret file, volume, or external service was started or
-modified. Re-run the existing rehearsal only after a local Docker daemon and
-operator-provided staging configuration are available; that deployment evidence
-remains required before any production-readiness claim.
+The requested live isolated rehearsal is now `TECHNICAL_REHEARSAL_PASS`. It used
+synthetic rehearsal-only values, loopback ports, a unique Compose project, and
+disposable volumes; it did not read real production configuration or create a
+public route. The first run exposed repository-local Governance DB copy-up into
+the Dashboard image. Commit `0b3acbb` removed that image input and added a build
+context guard; the clean rerun passed and left zero project containers, volumes,
+or networks.
+
+This does not grant production clearance. The dependency/image review remains
+`PRODUCTION_NO_GO_PENDING_BASE_CVE_FIX`, Dashboard/Web image vulnerability state
+remains `UNKNOWN`, and external TLS, network, secret-manager, encrypted-backup,
+and monitoring controls still require operator evidence.
 
 ## Stage 1 — P0.2 real Governance authority
 

@@ -38,6 +38,7 @@ The non-suffixed English operations documents are authoritative. Existing `.zh-t
 - [`reports/runtime-asset-p0-verification-and-p1-decision.md`](reports/runtime-asset-p0-verification-and-p1-decision.md) records the verified P0 result and evidence-gated P1 NO-GO decisions.
 - [`reports/runtime-asset-p0-1-operational-readiness.md`](reports/runtime-asset-p0-1-operational-readiness.md) records canonical identity repair, guarded local Index creation, backups, and the remaining Governance authority boundary.
 - [`reports/runtime-asset-p1-search-evidence.md`](reports/runtime-asset-p1-search-evidence.md) records the reviewed 84-query FTS5/sqlite-vec evidence run and its `NO_GO` decision.
+- [`reports/runtime-production-compose-rehearsal-2026-07-20.md`](reports/runtime-production-compose-rehearsal-2026-07-20.md) records the isolated three-store production Compose technical rehearsal and its remaining production-security boundary.
 
 ## Historical material
 
