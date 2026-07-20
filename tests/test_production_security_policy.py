@@ -13,7 +13,7 @@ def _policy():
 def test_production_security_policy_freezes_supported_boundary():
     policy = _policy()
 
-    assert policy["policy_version"] == "1.1.0"
+    assert policy["policy_version"] == "1.2.0"
     assert policy["status"] == "stable-foundation"
     assert policy["deployment_boundary"] == {
         "topology": "single-host-docker-compose",
@@ -60,6 +60,12 @@ def test_production_security_policy_separates_verified_and_external_controls():
     assert "secret-manager" in policy["required_external_controls"]
     assert "tls-inside-compose" in policy["known_unenforced_controls"]
     assert "fresh-evidence-reapproval" in policy["known_unenforced_controls"]
+    assert "governance-decision-current-target-enforcement" in policy[
+        "verified_application_controls"
+    ]
+    assert "governance-decision-current-target-enforcement" not in policy[
+        "known_unenforced_controls"
+    ]
     assert (
         "runtime-initialization-disabled-production-startup"
         in policy["verified_application_controls"]

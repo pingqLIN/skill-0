@@ -1,5 +1,5 @@
 {
-  "policy_version": "1.1.0",
+  "policy_version": "1.2.0",
   "status": "stable-foundation",
   "deployment_boundary": {
     "topology": "single-host-docker-compose",
@@ -20,7 +20,8 @@
     "authenticated-redacted-health-detail",
     "runtime-wal-required",
     "three-store-doctor-and-backup-gate",
-    "hitl-actor-allowlist-and-deadline"
+    "hitl-actor-allowlist-and-deadline",
+    "governance-decision-current-target-enforcement"
   ],
   "required_external_controls": [
     "tls-termination",
@@ -51,7 +52,6 @@
     "approval-expiry",
     "approval-quorum",
     "dedicated-governance-revocation",
-    "governance-decision-current-target-enforcement",
     "fresh-evidence-reapproval",
     "cryptographic-audit-chain",
     "cross-store-atomic-backup-snapshot",

@@ -398,6 +398,47 @@ class TestGovernanceServiceRunScan:
         assert result["status"] == "failed"
         assert result["error_code"] == "SCAN_RUNTIME_ERROR"
 
+    def test_scan_maps_inflight_supersession_without_success_evidence(
+        self, tmp_path, monkeypatch
+    ):
+        from governance_db import GovernanceTargetError  # noqa
+
+        monkeypatch.setenv("SKILL0_ALLOWED_PATH_ROOTS", str(tmp_path))
+        src = tmp_path / "source.md"
+        src.write_text("skill content")
+        svc = self._make_service_with_skill(source_path=str(src))
+        current = MagicMock()
+        current.revision_id = "rev_001"
+        svc.db.get_current_revision.return_value = current
+        svc.db.record_security_scan.side_effect = GovernanceTargetError(
+            "STALE_TARGET_REVISION",
+            skill_id="skill_001",
+            target_revision_id="rev_001",
+            current_revision_id="rev_002",
+        )
+
+        scan_result = MagicMock()
+        scan_result.risk_level = "low"
+        scan_result.risk_score = 1
+        scan_result.findings = []
+        analyzer = MagicMock()
+        analyzer.analyze.return_value = scan_result
+        mock_module = MagicMock()
+        mock_module.AdvancedSkillAnalyzer.return_value = analyzer
+
+        with patch.dict("sys.modules", {"advanced_skill_analyzer": mock_module}):
+            result = svc.run_scan(
+                "skill_001",
+                target_revision_id="rev_001",
+                require_exact_target=True,
+            )
+
+        assert result["status"] == "failed"
+        assert result["error_code"] == "STALE_TARGET_REVISION"
+        assert result["target_revision_id"] == "rev_001"
+        assert result["current_revision_id"] == "rev_002"
+        assert result["results"] == []
+
     def test_scan_source_path_not_allowed(self, tmp_path, monkeypatch):
         allowed_root = tmp_path / "allowed"
         allowed_root.mkdir()
@@ -508,7 +549,7 @@ class TestGovernanceServiceActionJobs:
         svc = self._make_service(tmp_path, monkeypatch)
         monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
 
-        def fake_run_scan(skill_id):
+        def fake_run_scan(skill_id, **_target):
             if skill_id == "skill_ok":
                 return {
                     "status": "success",
@@ -548,7 +589,7 @@ class TestGovernanceServiceActionJobs:
         monkeypatch.setattr(
             svc,
             "run_scan",
-            lambda skill_id: {
+            lambda skill_id, **_target: {
                 "status": "failed",
                 "skill_id": skill_id,
                 "processed": 0,
@@ -579,6 +620,62 @@ class TestGovernanceServiceActionJobs:
         assert retry_items[0]["attempt_number"] == 2
         assert retry_items[0]["retry_of_item_id"] == item["item_id"]
         assert retry_items[0]["suggested_next_step"] == "wait_for_worker"
+
+    @pytest.mark.parametrize(
+        ("job_type", "history_method", "event_type"),
+        [
+            ("scan_batch", "get_scan_history", "scan"),
+            ("test_batch", "get_test_history", "test"),
+        ],
+    )
+    def test_action_job_fails_closed_when_target_is_superseded(
+        self,
+        tmp_path,
+        monkeypatch,
+        job_type,
+        history_method,
+        event_type,
+    ):
+        svc = self._make_service(tmp_path, monkeypatch)
+        monkeypatch.setattr(svc, "_start_action_job_runner", lambda job_id: None)
+        skill_id = svc.db.create_skill(name=f"stale-{job_type}", version="1.0.0")
+        original = svc.db.get_current_revision(skill_id)
+        assert original is not None
+
+        job = svc.enqueue_action_job(
+            job_type=job_type,
+            skill_ids=[skill_id],
+            requested_by="reviewer",
+            selection_mode="explicit",
+            max_attempts=2,
+        )
+        replacement_revision_id = svc.db.register_revision(skill_id, version="2.0.0")
+        assert replacement_revision_id is not None
+
+        svc._run_action_job(job["job_id"])
+
+        updated = svc.get_action_job(job["job_id"])
+        item = svc.get_action_job_items(job["job_id"])[0]
+        assert updated is not None
+        assert updated["status"] == "failed"
+        assert updated["error_code"] == "STALE_TARGET_REVISION"
+        assert item["status"] == "failed"
+        assert item["error_code"] == "STALE_TARGET_REVISION"
+        assert item["target_revision_id"] == original.revision_id
+        assert item["result"]["target_revision_id"] == original.revision_id
+        assert item["result"]["current_revision_id"] == replacement_revision_id
+        assert item["suggested_next_step"] == "enqueue_current_revision_job"
+        assert getattr(svc.db, history_method)(skill_id, limit=10) == []
+        assert not any(
+            event["event_type"] == event_type
+            for event in svc.db.get_audit_log(skill_id=skill_id, limit=100)
+        )
+        with pytest.raises(ValueError, match="not retriable"):
+            svc.retry_action_job_item(
+                job_id=job["job_id"],
+                item_id=item["item_id"],
+                requested_by="reviewer",
+            )
 
     def test_claim_next_action_job_item_is_atomic(self, tmp_path, monkeypatch):
         svc = self._make_service(tmp_path, monkeypatch)
@@ -791,7 +888,7 @@ class TestGovernanceServiceActionJobs:
 
         monkeypatch.setattr(svc.db, "refresh_action_job_item_lease", tracked_refresh)
 
-        def slow_scan(skill_id):
+        def slow_scan(skill_id, **_target):
             import time
             time.sleep(0.2)
             return {

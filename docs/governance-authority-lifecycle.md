@@ -1,8 +1,8 @@
 # Governance Authority Lifecycle v1
 
 - Status: **Accepted stable-foundation authority model**
-- Version: `1.0.0`
-- Effective date: `2026-07-18`
+- Version: `1.1.0`
+- Effective date: `2026-07-20`
 - Machine-readable lifecycle: [`contracts/governance-authority-lifecycle-v1.json`](contracts/governance-authority-lifecycle-v1.json)
 - Runtime admission: [`runtime-governance.md`](runtime-governance.md)
 - Traditional Chinese companion: [`governance-authority-lifecycle.zh-tw.md`](governance-authority-lifecycle.zh-tw.md)
@@ -34,10 +34,12 @@ does not create a new database lifecycle or authorize a physical migration.
 - `approve_skill()` can currently return a rejected current revision with a
   retained binding directly to `approved`; it does not require a new binding or
   fresh decision-evidence field.
-- Reject and scan APIs accept an explicit revision target without consistently
-  enforcing that the target is current. A non-current target can change a
-  historical revision and `skills.status` while leaving the approved current
-  revision authoritative.
+- Approve, reject, security-scan, and equivalence-test writes resolve the exact
+  current revision in their write transaction. Explicit stale targets fail
+  before revision, projection, evidence, or audit writes.
+- Dashboard scan/test jobs preserve their captured `target_revision_id` through
+  execution. Superseded jobs fail as `STALE_TARGET_REVISION` and are not
+  retriable; an operator must enqueue a new job for the current revision.
 - Governance decisions are appended to `audit_log`; Runtime decisions and
   execution history remain in the separate Runtime ledger.
 
@@ -60,14 +62,12 @@ does not create a new database lifecycle or authorize a physical migration.
 - Actor separation-of-duties and quorum are deployment policy, not enforced by
   the current schema.
 - Re-approval after rejection does not enforce rebinding or fresh evidence.
-- Reject and scan target-currentness is not consistently enforced at the
-  database-method boundary.
 - `skills.status` and revision status are mutable projections. `audit_log`
   records decisions but is not cryptographically chained.
 
-These gaps must not be described as implemented controls. Production policy may
-fail closed around them, but closing them in storage requires a separately
-approved design and migration.
+These remaining gaps must not be described as implemented controls. Production
+policy may fail closed around them. Any future persistence change still needs a
+separately approved design and migration.
 
 ## 3. Authority unit
 
@@ -132,16 +132,16 @@ evidence was collected. A blocked current revision cannot be overridden by the
 normal approval call.
 
 Rejection creates `rejected-current` only when the targeted revision is current.
-Blocking creates `blocked-current` only when the current revision status is also
-blocked. A non-current reject/scan target or standalone `skills.status`
-projection change is not authority and cannot by itself grant or remove Runtime
-admission.
+Blocking creates `blocked-current` only when a security scan writes against the
+current revision. Non-current reject, scan, and equivalence targets fail before
+any projection or evidence write. A standalone `skills.status` projection
+change is not authority and cannot by itself grant or remove Runtime admission.
 
 ### Supersede, revoke effect, and drift
 
 - A new current revision makes the prior revision `superseded` immediately.
 - Rejecting or blocking the current revision ends its admission authority.
-  Rejecting or scanning only a historical revision does not.
+  Authority-affecting and evidence writes cannot target a historical revision.
 - Exact identity, version, digest, currentness, or approval-provenance mismatch
   yields `drifted` at admission time and fails closed.
 - Because no dedicated revocation event exists, operators must preserve the
@@ -152,10 +152,11 @@ admission.
 
 The current approval method can restore a bound rejected current revision
 directly; that is implementation behavior, not proof of a fresh review. A
-blocked current revision is rejected by the approval method. Until a stronger
-workflow is implemented, production policy should require fresh decision
-evidence and an explicitly current target before re-approval, and must not claim
-that the database enforces rebinding, expiry, quorum, or evidence freshness.
+blocked current revision is rejected by the approval method. Current-target
+enforcement is implemented, but until a stronger workflow exists production
+policy should require fresh decision evidence before re-approval and must not
+claim that the database enforces rebinding, expiry, quorum, or evidence
+freshness.
 
 ## 6. Runtime interaction
 
@@ -199,8 +200,8 @@ An incident review must be able to answer:
 
 ## 9. Change control
 
-Changing the authority tuple, enforcing current-target decisions, hardening
-re-approval, adding approval expiry, adding revocation/quorum, or changing
+Changing the authority tuple or current-target semantics, hardening re-approval,
+adding approval expiry, adding revocation/quorum, or changing
 persistence semantics requires focused tests, independent review, and an
 explicit migration plan if storage changes. Runtime Architecture v1 does not
 authorize those changes by itself. See

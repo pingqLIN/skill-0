@@ -19,15 +19,15 @@ timestamp. Runtime create and resume continue to revalidate that tuple.
 
 ## Decision boundary
 
-The following are not implemented controls: approval expiry, a dedicated
-append-only revocation decision, quorum/separation of duties, enforced
-current-target scan/reject decisions, fresh-evidence reapproval, and a
-cryptographic Governance audit chain. They must remain documented as gaps until
-an approved implementation closes them.
+The following remain unimplemented controls: approval expiry, a dedicated
+append-only revocation decision, quorum/separation of duties, fresh-evidence
+reapproval, and a cryptographic Governance audit chain. They must remain
+documented as gaps until an approved implementation closes them. Gate A
+current-target enforcement is implemented without a schema migration.
 
 | Decision | Candidate direction | Current consequence | Separate authority needed |
 |---|---|---|---|
-| Current-target enforcement | Reject scan/reject/approve targets that are not the current revision at the service boundary. | Historical actions can affect projections without changing current admission. | Focused code design and compatibility review. |
+| Current-target enforcement | Enforce the captured current target for approve/reject/scan/test writes. | **Implemented in Gate A:** stale jobs fail without evidence/projection writes and cannot retry. | Complete; extensions require a new focused review. |
 | Fresh reapproval | Require a new exact bind plus immutable decision-evidence reference after rejection, drift, or expiry. | A bound rejected current revision can be approved without fresh evidence. | Evidence-retention and API contract decision. |
 | Approval expiry | Attach an explicit expiry rule to an approval and fail Runtime admission after it. | Approval has no renewal clock. | Time semantics, operator policy, and persistence design. |
 | Revocation | Add a dedicated, append-only revocation decision that ends current authority without rewriting history. | Rejection, blocking, supersession, or drift are the available effects. | Incident authority and persistence design. |
@@ -64,8 +64,9 @@ access to `governance.db`. Do not implement it in this proposal.
 
 The reviewed design artifact is
 [`governance-authority-gate-a-design.md`](governance-authority-gate-a-design.md).
-It fully scopes current-target enforcement but leaves fresh-evidence semantics
-at Gate B because the required evidence and retention rules are not yet chosen.
+It records the implemented current-target enforcement contract but leaves
+fresh-evidence semantics at Gate B because the required evidence and retention
+rules are not yet chosen.
 
 ### Gate B — authority semantics decision
 

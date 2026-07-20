@@ -525,4 +525,61 @@ describe('ReviewQueue async action jobs', () => {
     expect(mockCancelJobMutateAsync).toHaveBeenCalledWith({ jobId: 'job_scan_001' });
     expect(await screen.findByText('Scan job cancelled')).toBeInTheDocument();
   });
+
+  it('does not offer retry for a stale revision target', async () => {
+    mockEnqueueScanMutateAsync.mockImplementationOnce(async () => {
+      currentActionJob = {
+      job_id: 'job_scan_stale',
+      job_type: 'scan_batch',
+      status: 'failed',
+      requested_by: 'tester',
+      selection_mode: 'explicit',
+      queued_items: 1,
+      max_attempts: 2,
+      queued_at: '2026-04-03T00:00:00Z',
+      started_at: '2026-04-03T00:00:01Z',
+      completed_at: '2026-04-03T00:00:02Z',
+      cancelled_at: null,
+      cancelled_by: null,
+      error_code: 'STALE_TARGET_REVISION',
+      error_message: 'Governance revision target is no longer current',
+      active_workers: [],
+      active_lease_expires_at: null,
+      last_item_started_at: '2026-04-03T00:00:01Z',
+      last_item_completed_at: '2026-04-03T00:00:02Z',
+      summary: {
+        total: 1, queued: 0, running: 0, succeeded: 0, failed: 1,
+        retrying: 0, skipped: 0, cancelled: 0,
+      },
+    };
+      currentActionJobItems = [{
+      item_id: 'job_scan_stale_item_sk_001_01',
+      job_id: 'job_scan_stale',
+      skill_id: 'sk_001',
+      target_revision_id: 'rev_001',
+      action_type: 'scan',
+      status: 'failed',
+      attempt_number: 1,
+      max_attempts: 2,
+      started_at: '2026-04-03T00:00:01Z',
+      completed_at: '2026-04-03T00:00:02Z',
+      claimed_by: null,
+      lease_expires_at: null,
+      result: null,
+      error_code: 'STALE_TARGET_REVISION',
+      error_message: 'Governance revision target is no longer current',
+      retry_of_item_id: null,
+      }];
+      return currentActionJob;
+    });
+
+    const user = userEvent.setup();
+    renderPage();
+    await user.click(screen.getByRole('button', { name: 'Scan Pending (2)' }));
+    await user.click(screen.getByRole('button', { name: 'Show details' }));
+
+    expect(screen.getAllByText(/Governance revision target is no longer current/).length).toBeGreaterThan(0);
+    expect(screen.queryByRole('button', { name: /Retry Failed Items/ })).not.toBeInTheDocument();
+    expect(mockRetryFailuresMutateAsync).not.toHaveBeenCalled();
+  });
 });

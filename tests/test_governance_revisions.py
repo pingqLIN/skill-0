@@ -5,7 +5,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from tools.governance_db import GovernanceDB
+from tools.governance_db import GovernanceDB, GovernanceTargetError
 from runtime.digest import canonical_digest
 from runtime.governance import RuntimeGovernanceError, SQLiteRuntimeGovernanceGate
 
@@ -270,6 +270,101 @@ def test_approval_rejects_non_current_revision_id(tmp_path):
         approved_by="reviewer",
         reason="current revision",
         revision_id=current.revision_id,
+    )
+
+
+def _revision_target_snapshot(db: GovernanceDB, skill_id: str) -> dict:
+    with db.connection() as connection:
+        return {
+            "skill": dict(
+                connection.execute(
+                    "SELECT * FROM skills WHERE skill_id = ?", (skill_id,)
+                ).fetchone()
+            ),
+            "revisions": [
+                dict(row)
+                for row in connection.execute(
+                    "SELECT * FROM skill_revisions WHERE skill_id = ? ORDER BY revision_number",
+                    (skill_id,),
+                ).fetchall()
+            ],
+            "scan_count": connection.execute(
+                "SELECT COUNT(*) FROM security_scans WHERE skill_id = ?", (skill_id,)
+            ).fetchone()[0],
+            "test_count": connection.execute(
+                "SELECT COUNT(*) FROM equivalence_tests WHERE skill_id = ?", (skill_id,)
+            ).fetchone()[0],
+            "audit_count": connection.execute(
+                "SELECT COUNT(*) FROM audit_log WHERE skill_id = ?", (skill_id,)
+            ).fetchone()[0],
+        }
+
+
+def test_stale_revision_writes_fail_without_side_effects(tmp_path):
+    db = GovernanceDB(db_path=tmp_path / "governance.db")
+    skill_id = db.create_skill(name="stale-target", version="1.0.0")
+    historical = db.get_current_revision(skill_id)
+    assert historical is not None
+    current_revision_id = db.register_revision(skill_id, version="2.0.0")
+    assert current_revision_id is not None
+    before = _revision_target_snapshot(db, skill_id)
+
+    assert not db.reject_skill(
+        skill_id,
+        rejected_by="reviewer",
+        reason="stale target",
+        revision_id=historical.revision_id,
+    )
+    with pytest.raises(GovernanceTargetError) as scan_error:
+        db.record_security_scan(
+            skill_id,
+            {
+                "risk_level": "critical",
+                "risk_score": 10,
+                "blocked": True,
+                "findings": [],
+            },
+            revision_id=historical.revision_id,
+        )
+    with pytest.raises(GovernanceTargetError) as test_error:
+        db.record_equivalence_test(
+            skill_id,
+            {"scores": {"overall": 1.0}, "passed": True},
+            revision_id=historical.revision_id,
+        )
+
+    assert scan_error.value.code == "STALE_TARGET_REVISION"
+    assert scan_error.value.target_revision_id == historical.revision_id
+    assert scan_error.value.current_revision_id == current_revision_id
+    assert test_error.value.code == "STALE_TARGET_REVISION"
+    assert _revision_target_snapshot(db, skill_id) == before
+
+
+def test_evidence_writes_resolve_omitted_or_explicit_current_revision(tmp_path):
+    db = GovernanceDB(db_path=tmp_path / "governance.db")
+    skill_id = db.create_skill(name="current-target", version="1.0.0")
+    current = db.get_current_revision(skill_id)
+    assert current is not None
+
+    scan_id = db.record_security_scan(
+        skill_id,
+        {"risk_level": "low", "risk_score": 1, "blocked": False, "findings": []},
+    )
+    test_id = db.record_equivalence_test(
+        skill_id,
+        {"scores": {"overall": 0.9}, "passed": True},
+        revision_id=current.revision_id,
+    )
+
+    scan = db.get_scan_history(skill_id, limit=1)[0]
+    equivalence = db.get_test_history(skill_id, limit=1)[0]
+    assert (scan["scan_id"], scan["revision_id"]) == (
+        scan_id,
+        current.revision_id,
+    )
+    assert (equivalence["test_id"], equivalence["revision_id"]) == (
+        test_id,
+        current.revision_id,
     )
 
 

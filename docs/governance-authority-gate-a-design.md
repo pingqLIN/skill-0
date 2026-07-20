@@ -1,6 +1,6 @@
 # Governance Authority Gate A Compatibility Design v1
 
-- Status: **Reviewed design; no implementation authority**
+- Status: **A1 implemented and independently reviewed**
 - Date: `2026-07-20`
 - Decision proposal: [`governance-authority-lifecycle-proposal.md`](governance-authority-lifecycle-proposal.md)
 - Current behavior: [`governance-authority-lifecycle.md`](governance-authority-lifecycle.md)
@@ -8,18 +8,18 @@
 
 ## Purpose and boundary
 
-This Gate A artifact defines a compatibility-only implementation shape for
-current-target enforcement and records the unresolved decisions for fresh
-reapproval. It does not authorize code changes, alter the authority tuple,
-change Runtime admission, add an Asset type, redesign the Dashboard, or permit
-a physical database migration.
+This Gate A artifact defines and records the compatibility-only implementation
+of current-target enforcement, while preserving the unresolved decisions for
+fresh reapproval. It does not alter the authority tuple, change Runtime
+admission, add an Asset type, redesign the Dashboard, or permit a physical
+database migration.
 
 The exact current approved Governance revision and matching canonical identity,
 artifact digest, version, approver, and approval timestamp remain the only
 Runtime authority. Mutable projections, jobs, scans, Search, Knowledge, and
 Evaluation remain non-authoritative.
 
-## Verified baseline
+## Historical pre-A1 baseline
 
 - `approve_skill()` rejects an explicitly supplied non-current revision.
 - `reject_skill()` and `record_security_scan()` accept an explicit historical
@@ -54,34 +54,32 @@ legacy callers. An explicit identifier must equal the current identifier. A
 missing skill, missing current revision, or stale explicit target fails before
 any revision row, mutable projection, scan result, or audit event is written.
 
-Use the resolver from `reject_skill()` and the authority-affecting
-`record_security_scan()` path. `approve_skill()` keeps its existing currentness
-guard but should converge on the same resolver during implementation so all
-three operations share one rule.
+The implementation uses the resolver from `approve_skill()`, `reject_skill()`,
+`record_security_scan()`, and `record_equivalence_test()`. Evidence writers
+raise a stable `GovernanceTargetError`; boolean approval/rejection callers keep
+their existing `False` failure contract.
 
 ### Dashboard job boundary
 
-The action worker must pass the immutable job `target_revision_id` through
-`run_scan()` into `record_security_scan()`. If a new revision supersedes that
-target before execution, the job fails as `STALE_TARGET_REVISION`; it must not
-retarget, scan the replacement revision, update projections, or emit successful
-scan evidence. Retry remains bound to the original target. An operator must
+The action worker passes the immutable job `target_revision_id` through
+`run_scan()` or `run_test()` into the matching evidence writer. If a new
+revision supersedes that target before or during execution, the job fails as
+`STALE_TARGET_REVISION`; it does not retarget, update projections, or emit
+successful scan/test evidence. The error is non-retriable. An operator must
 enqueue a new job for the new current revision.
 
 Existing synchronous callers that omit `revision_id` retain current behavior.
-The implementation batch must choose and document one stable mapping for stale
-explicit callers—domain exception, false result, or structured service error—
-before changing public API behavior. HTTP routes need no new request field for
-Gate A unless that mapping cannot be contained in the service layer.
+Evidence writes expose the stable domain error; action jobs expose its stable
+structured error code. HTTP routes require no new request field.
 
 ### Candidate files
 
 | File | Intended change |
 |---|---|
-| `tools/governance_db.py` | Transaction-local current-target resolver; use it for approve, reject, and authority-affecting scan writes. |
-| `skill-0-dashboard/apps/api/services/governance.py` | Pass captured target through scan execution; fail stale jobs without retargeting. |
+| `tools/governance_db.py` | Transaction-local current-target resolver for approve, reject, scan, and equivalence writes. |
+| `skill-0-dashboard/apps/api/services/governance.py` | Pass captured target through scan/test execution; fail stale jobs without retargeting. |
 | `skill-0-dashboard/apps/api/routers/skills.py` | Only if required to normalize a stale-target response; no UI redesign. |
-| `tests/test_governance_revisions.py` | Negative DB tests for stale reject/scan and zero side effects. |
+| `tests/test_governance_revisions.py` | Negative DB tests for stale reject/scan/test and zero side effects. |
 | `skill-0-dashboard/apps/api/tests/test_governance.py` | Superseded queued-job and retry tests. |
 | `tests/test_runtime_api.py` | Preserve create/resume denial and exact-authority revalidation coverage. |
 | Lifecycle docs and JSON contract | Update only in the same implementation commit that changes verified behavior. |
@@ -112,7 +110,7 @@ implementation may claim to enforce fresh evidence.
 1. Rejecting an explicit historical revision, or recording a blocked security
    scan against it, changes no revision, `skills.status`, scan record, or audit
    event.
-2. A queued scan superseded before execution fails
+2. A queued scan or test superseded before execution fails
    `STALE_TARGET_REVISION`; retry does not retarget.
 3. Omitted revision identifiers still resolve to the current revision.
 4. Runtime create and resume remain denied after rejection, blocking,

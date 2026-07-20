@@ -204,6 +204,24 @@ class SkillRevisionRecord:
         )
 
 
+class GovernanceTargetError(ValueError):
+    """Stable failure for a missing or stale revision-targeted write."""
+
+    def __init__(
+        self,
+        code: str,
+        *,
+        skill_id: str,
+        target_revision_id: Optional[str] = None,
+        current_revision_id: Optional[str] = None,
+    ):
+        self.code = code
+        self.skill_id = skill_id
+        self.target_revision_id = target_revision_id
+        self.current_revision_id = current_revision_id
+        super().__init__(f"{code}: governance target is not writable")
+
+
 class GovernanceDB:
     """SQLite database for skill governance"""
 
@@ -321,6 +339,53 @@ class GovernanceDB:
             FROM skills s
             LEFT JOIN skill_revisions sr ON sr.revision_id = s.current_revision_id
         """
+
+    def _resolve_current_target(
+        self,
+        conn: sqlite3.Connection,
+        *,
+        skill_id: str,
+        revision_id: Optional[str] = None,
+    ) -> sqlite3.Row:
+        """Resolve one exact current revision inside the caller's write transaction."""
+        row = conn.execute(
+            """
+            SELECT
+                s.skill_id,
+                s.name,
+                s.canonical_skill_id,
+                s.current_revision_id,
+                sr.revision_id,
+                sr.status,
+                sr.artifact_digest
+            FROM skills s
+            LEFT JOIN skill_revisions sr
+              ON sr.revision_id = s.current_revision_id
+             AND sr.skill_id = s.skill_id
+             AND sr.is_current = 1
+            WHERE s.skill_id = ?
+            """,
+            (skill_id,),
+        ).fetchone()
+        if row is None:
+            raise GovernanceTargetError("SKILL_NOT_FOUND", skill_id=skill_id)
+
+        current_revision_id = row["current_revision_id"]
+        if not current_revision_id or row["revision_id"] != current_revision_id:
+            raise GovernanceTargetError(
+                "CURRENT_TARGET_UNAVAILABLE",
+                skill_id=skill_id,
+                target_revision_id=revision_id,
+                current_revision_id=current_revision_id,
+            )
+        if revision_id is not None and revision_id != current_revision_id:
+            raise GovernanceTargetError(
+                "STALE_TARGET_REVISION",
+                skill_id=skill_id,
+                target_revision_id=revision_id,
+                current_revision_id=current_revision_id,
+            )
+        return row
 
     def _revision_payload_from_row(self, row: sqlite3.Row) -> Dict[str, Any]:
         payload = {
@@ -1312,9 +1377,14 @@ class GovernanceDB:
         scan_id = self.generate_id()
 
         with self.connection() as conn:
+            conn.execute("BEGIN IMMEDIATE")
             cursor = conn.cursor()
-            current_revision_record = self.get_current_revision(skill_id) if revision_id is None else None
-            current_revision = revision_id or (current_revision_record.revision_id if current_revision_record else None)
+            target = self._resolve_current_target(
+                conn,
+                skill_id=skill_id,
+                revision_id=revision_id,
+            )
+            current_revision = target["current_revision_id"]
 
             cursor.execute(
                 """
@@ -1440,9 +1510,14 @@ class GovernanceDB:
         scores = test_result.get("scores", {})
 
         with self.connection() as conn:
+            conn.execute("BEGIN IMMEDIATE")
             cursor = conn.cursor()
-            current_revision_record = self.get_current_revision(skill_id) if revision_id is None else None
-            current_revision = revision_id or (current_revision_record.revision_id if current_revision_record else None)
+            target = self._resolve_current_target(
+                conn,
+                skill_id=skill_id,
+                revision_id=revision_id,
+            )
+            current_revision = target["current_revision_id"]
 
             cursor.execute(
                 """
@@ -1838,25 +1913,21 @@ class GovernanceDB:
     ) -> bool:
         """Approve a skill for use"""
         with self.connection() as conn:
+            conn.execute("BEGIN IMMEDIATE")
             cursor = conn.cursor()
-
-            cursor.execute(
-                self._skill_projection_query() + " WHERE s.skill_id = ?",
-                (skill_id,),
-            )
-            row = cursor.fetchone()
-
-            if not row:
+            try:
+                row = self._resolve_current_target(
+                    conn,
+                    skill_id=skill_id,
+                    revision_id=revision_id,
+                )
+            except GovernanceTargetError:
                 return False
 
             if row["status"] == "blocked":
                 return False  # Cannot approve blocked skills
 
             current_revision = row["current_revision_id"]
-            if not current_revision:
-                return False
-            if revision_id is not None and revision_id != current_revision:
-                return False
             if not row["canonical_skill_id"] or not row["artifact_digest"]:
                 return False
 
@@ -1923,18 +1994,18 @@ class GovernanceDB:
     ) -> bool:
         """Reject a skill"""
         with self.connection() as conn:
+            conn.execute("BEGIN IMMEDIATE")
             cursor = conn.cursor()
-
-            cursor.execute(
-                self._skill_projection_query() + " WHERE s.skill_id = ?",
-                (skill_id,),
-            )
-            row = cursor.fetchone()
-
-            if not row:
+            try:
+                row = self._resolve_current_target(
+                    conn,
+                    skill_id=skill_id,
+                    revision_id=revision_id,
+                )
+            except GovernanceTargetError:
                 return False
 
-            current_revision = revision_id or row["current_revision_id"]
+            current_revision = row["current_revision_id"]
 
             cursor.execute(
                 """

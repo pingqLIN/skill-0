@@ -1,7 +1,9 @@
 import json
 from pathlib import Path
 
-from tools.governance_db import GovernanceDB
+import pytest
+
+from tools.governance_db import GovernanceDB, GovernanceTargetError
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -17,7 +19,7 @@ def _contract():
 def test_governance_lifecycle_has_one_exact_authoritative_state():
     contract = _contract()
 
-    assert contract["lifecycle_version"] == "1.0.0"
+    assert contract["lifecycle_version"] == "1.1.0"
     assert contract["status"] == "stable-foundation"
     authoritative = [
         state
@@ -73,18 +75,27 @@ def test_governance_lifecycle_requires_revalidation_and_preserves_history():
         "cryptographic_audit_chain": False,
         "identical_binding_requires_pending_status": False,
         "reapproval_requires_fresh_evidence": False,
-        "reject_target_currentness_enforced": False,
-        "scan_target_currentness_enforced": False,
+        "reject_target_currentness_enforced": True,
+        "scan_target_currentness_enforced": True,
     }
     assert contract["noncurrent_target_effects"] == {
         "reject": {
             "current_authority_changes": False,
-            "skills_status_projection_may_change": True,
+            "skills_status_projection_may_change": False,
         },
         "scan-block": {
             "current_authority_changes": False,
-            "skills_status_projection_may_change": True,
+            "skills_status_projection_may_change": False,
         },
+    }
+    assert contract["revision_targeted_writes"] == {
+        "approve_currentness_enforced": True,
+        "reject_currentness_enforced": True,
+        "scan_currentness_enforced": True,
+        "equivalence_currentness_enforced": True,
+        "stale_job_error_code": "STALE_TARGET_REVISION",
+        "stale_job_retriable": False,
+        "stale_write_creates_evidence": False,
     }
 
 
@@ -122,12 +133,12 @@ def test_governance_lifecycle_transition_set_is_explicit():
     }
 
 
-def test_gate_a_design_is_compatibility_only_and_does_not_claim_freshness():
+def test_gate_a_design_records_a1_without_claiming_freshness():
     design = (ROOT / "docs" / "governance-authority-gate-a-design.md").read_text(
         encoding="utf-8"
     )
 
-    assert "no implementation authority" in design
+    assert "A1 implemented" in design
     assert "STALE_TARGET_REVISION" in design
     assert "It requires no schema or data migration" in design
     assert "Gate A does not fully specify or authorize fresh reapproval" in design
@@ -183,7 +194,7 @@ def test_lifecycle_documents_identical_approved_binding_is_idempotent(tmp_path):
     assert db.get_current_revision(skill_id).status == "approved"
 
 
-def test_lifecycle_documents_noncurrent_reject_projection_gap(tmp_path):
+def test_lifecycle_enforces_current_target_for_reject(tmp_path):
     db, skill_id, canonical_skill_id, _digest, historical_revision_id = (
         _approved_governance_skill(tmp_path)
     )
@@ -197,7 +208,8 @@ def test_lifecycle_documents_noncurrent_reject_projection_gap(tmp_path):
     )
     assert db.approve_skill(skill_id, approved_by="reviewer", reason="reviewed")
 
-    assert db.reject_skill(
+    before_audit_count = len(db.get_audit_log(skill_id=skill_id, limit=100))
+    assert not db.reject_skill(
         skill_id,
         rejected_by="reviewer",
         reason="historical target",
@@ -214,10 +226,11 @@ def test_lifecycle_documents_noncurrent_reject_projection_gap(tmp_path):
         projection_status = connection.execute(
             "SELECT status FROM skills WHERE skill_id=?", (skill_id,)
         ).fetchone()[0]
-    assert projection_status == "rejected"
+    assert projection_status == "approved"
+    assert len(db.get_audit_log(skill_id=skill_id, limit=100)) == before_audit_count
 
 
-def test_lifecycle_documents_noncurrent_scan_projection_gap(tmp_path):
+def test_lifecycle_enforces_current_target_for_blocked_scan(tmp_path):
     db, skill_id, canonical_skill_id, _digest, historical_revision_id = (
         _approved_governance_skill(tmp_path)
     )
@@ -231,12 +244,15 @@ def test_lifecycle_documents_noncurrent_scan_projection_gap(tmp_path):
     )
     assert db.approve_skill(skill_id, approved_by="reviewer", reason="reviewed")
 
-    db.record_security_scan(
-        skill_id,
-        {"blocked": True, "risk_level": "critical", "risk_score": 10},
-        revision_id=historical_revision_id,
-    )
+    before_audit_count = len(db.get_audit_log(skill_id=skill_id, limit=100))
+    with pytest.raises(GovernanceTargetError) as error:
+        db.record_security_scan(
+            skill_id,
+            {"blocked": True, "risk_level": "critical", "risk_score": 10},
+            revision_id=historical_revision_id,
+        )
 
+    assert error.value.code == "STALE_TARGET_REVISION"
     assert db.get_current_revision(skill_id).status == "approved"
     assert db.get_runtime_approval(
         canonical_skill_id=canonical_skill_id,
@@ -246,4 +262,6 @@ def test_lifecycle_documents_noncurrent_scan_projection_gap(tmp_path):
         projection_status = connection.execute(
             "SELECT status FROM skills WHERE skill_id=?", (skill_id,)
         ).fetchone()[0]
-    assert projection_status == "blocked"
+    assert projection_status == "approved"
+    assert db.get_scan_history(skill_id, limit=10) == []
+    assert len(db.get_audit_log(skill_id=skill_id, limit=100)) == before_audit_count
