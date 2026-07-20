@@ -54,8 +54,8 @@ blocked by the separate security and external-control gates.
 
 ### Validation evidence
 
-- Focused production contract regression: `6 passed`.
-- Full Python/API regression: `503 passed, 76 warnings`.
+- Focused production contract regression: `7 passed`.
+- Full Python/API regression: `504 passed, 76 warnings`.
 - Schema validation: `196 passed, 0 failed`.
 - The isolated PowerShell Compose rehearsal passed service health, production
   doctor, governed dry-run, deterministic Evidence, three-store backup/restore,
@@ -76,9 +76,10 @@ context guard; the clean rerun passed and left zero project containers, volumes,
 or networks.
 
 This does not grant production clearance. The dependency/image review remains
-`PRODUCTION_NO_GO_PENDING_BASE_CVE_FIX`, Dashboard/Web image vulnerability state
-remains `UNKNOWN`, and external TLS, network, secret-manager, encrypted-backup,
-and monitoring controls still require operator evidence.
+`PRODUCTION_NO_GO_PENDING_BASE_CVE_FIX`: offline scans verified Dashboard at
+1 Critical / 2 High and Web at 1 Critical / 9 High. External TLS, network,
+secret-manager, encrypted-backup, and monitoring controls also still require
+operator evidence.
 
 ## Stage 1 — P0.2 real Governance authority
 

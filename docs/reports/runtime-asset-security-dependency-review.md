@@ -2,6 +2,8 @@
 
 **Date:** 2026-07-18
 
+**Updated:** 2026-07-20
+
 **Scope:** P0 Runtime Asset Foundation and Storage Boundary
 
 **Authority:** Local development and Runtime dry-run evidence only; this is not production security clearance.
@@ -10,7 +12,7 @@
 
 **LOCAL_GO / PRODUCTION_NO_GO_PENDING_BASE_CVE_FIX.** The reviewed dependency remediation is accepted for local P0/P1 development. No verified Critical or untreated High dependency finding remains in the declared Python or web dependency graphs. The Runtime Asset index is healthy after a provenance-triggered full rebuild.
 
-The final API image still contains **1 Critical and 2 High** findings in Debian Bookworm's essential Perl runtime, all reported without a fixed Bookworm version. These findings are treated by an explicit production deny, not by risk acceptance: the image is not cleared for production, release, deploy, or public exposure. Dashboard and Web image CVE status remains **UNKNOWN** because their Scout scans did not complete.
+The final API and Dashboard images each contain **1 Critical and 2 High** findings in Debian Bookworm's essential Perl runtime, all reported without a fixed Bookworm version. The pinned Web runtime image contains **1 Critical and 9 High** Alpine findings. These findings are treated by an explicit production deny, not by risk acceptance: none of the images is cleared for production, release, deploy, or public exposure.
 
 ## Evidence
 
@@ -23,7 +25,10 @@ The final API image still contains **1 Critical and 2 High** findings in Debian 
 - Strict post-upgrade indexing: first run rebuilt 196/196 because stack provenance changed; second run was 196/196 unchanged; drift doctor was `healthy` with exit code 0.
 - Container builds: API, Dashboard API, and web images built successfully. The API image directly reported `sentence-transformers 5.6.0`, `transformers 5.14.1`, `torch 2.13.0+cpu`, `setuptools 83.0.0`, successful `asset_registry`/`VectorStore` imports, and a clean `pip check`.
 - Container CVE scan: the former Debian Trixie API image had 1 Critical and 11 High findings. Pinning the current Bookworm image digest removed all glibc/OpenSSL findings. The final API image scan completed with exactly 1 Critical and 2 High Perl findings and no application-layer Critical/High addition.
+- Follow-up offline `local://` scans on `2026-07-20` verified the pinned Dashboard candidate at 1 Critical / 2 High and the pinned Web candidate at 1 Critical / 9 High. Updating the Web base from digest `806f6d3e...` to `08c2bc9344...` reduced the observed result from 2 Critical / 14 High but did not satisfy the zero-Critical/High gate.
+- All production Dockerfile stages are now digest-pinned. A second isolated Compose rehearsal passed build, health, production doctor, governed dry-run, deterministic Evidence, three-store backup/restore, restart persistence, and zero-resource cleanup with the pinned images.
 - Regression: 451 Python tests passed; 34 web tests passed; frontend production build and Python compile checks passed.
+- Follow-up pinned-image regression: 504 Python/API tests and 36 frontend tests passed; frontend lint/build and schema validation 196/196 passed.
 
 Ignored local evidence is under `.artifacts/security-review/20260717T214200Z/`, including resolver reports, audit JSON, vector comparison, and strict indexing evidence.
 
@@ -74,10 +79,10 @@ docker scout cves --only-severity critical,high --format sarif --output api-cves
 
 Production remains blocked unless the result has zero Critical/High findings or a human explicitly approves a separate, time-bounded production exception after a fresh reachability review.
 
-## Remaining Warnings / Unknowns
+## Remaining Warnings / Blockers
 
-1. **Dashboard/Web container CVE inventories — UNKNOWN, production blocker.** Their Scout attempts did not complete. The successful builds and package-manager audits do not replace OS/package-level scans. Docker documents one-off CLI analysis as non-persistent and supports `local://` to prevent registry fallback: [Docker Scout image analysis](https://docs.docker.com/scout/explore/analysis/) and [`docker scout cves`](https://docs.docker.com/reference/cli/docker/scout/cves/).
-2. **Mutable supply-chain references — Warning.** `Dockerfile.dashboard`, the Node build stage in `Dockerfile.web`, and GitHub Actions use mutable tags. Pin image digests and Action commit SHAs in a dedicated hardening batch, then use an update bot to avoid silent staleness.
+1. **Dashboard/Web container CVE inventories — VERIFIED production blockers.** The Dashboard Bookworm image has the same unfixed Perl 1 Critical / 2 High set as the API. The Web image has OpenSSL 1 Critical / 8 High plus musl 1 High; Scout reports fixed boundaries `openssl>=3.5.7-r0` and `musl>=1.2.5-r23`, but the current official image digest contains older packages. The build environment's TLS trust gate prevented a safe package refresh, and no trusted-host or force-missing-repository bypass was used. Revalidate a newer official digest or an approved CA-enabled rebuild; the gate remains zero Critical/High.
+2. **Mutable supply-chain references — partially resolved Warning.** API, Dashboard, Web build, and Web runtime stages are digest-pinned. GitHub Actions still use mutable tags. Pin Action commit SHAs in a dedicated hardening batch, then use an update bot to avoid silent staleness.
 3. **Incomplete legacy lock — Warning.** `requirements.lock` is not consumed by CI or containers and is not a hash-complete transitive lock. It is retained only as a labelled legacy snapshot. Replace it with per-environment, hash-verified locks or remove it through the repository's recoverable deletion workflow.
 4. **Model-source boundary — Warning.** `SkillEmbedder` prefers the local cache but can fall back to remote model loading. Production should require an approved local model artifact and digest rather than accepting an arbitrary `SKILL0_EMBEDDING_MODEL` value.
 

@@ -40,8 +40,8 @@ pwsh -NoProfile -File scripts\rehearse_prod_compose.ps1 `
 
 修正後的 repository verification：
 
-- focused production contract tests：`6 passed`；
-- full Python/API regression：`503 passed, 76 warnings`；
+- focused production contract tests：`7 passed`；
+- full Python/API regression：`504 passed, 76 warnings`；
 - schema validation：`196 passed, 0 failed`；
 - changed-scope audit：沒有 forbidden path、added DDL 或 secret-like finding。
 
@@ -50,7 +50,7 @@ pwsh -NoProfile -File scripts\rehearse_prod_compose.ps1 `
 本演練已滿足 production policy 中 repository-controlled technical rehearsal 的部分，但 production 仍為 `NO_GO`：
 
 - 目前 dependency report 記錄 API base image 有一個 Critical 與兩個 High findings，且 Bookworm 沒有 fixed version；
-- Dashboard/Web image vulnerability status 仍是 `UNKNOWN`；
+- 所有 production image stages 完成 digest-pin 後，offline `local://` scans 驗證 Dashboard 為 1 Critical／2 High、Web 為 1 Critical／9 High；
 - external TLS、network ACL、secret-manager、host-volume、encrypted-backup 與 monitoring evidence 不在本演練範圍；
 - 未授權 public push、release、deploy、production secret 使用或 risk exception。
 

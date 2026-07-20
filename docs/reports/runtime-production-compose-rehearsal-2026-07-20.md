@@ -53,8 +53,8 @@ pwsh -NoProfile -File scripts\rehearse_prod_compose.ps1 `
 
 Repository verification after the remediation reported:
 
-- focused production contract tests: `6 passed`;
-- full Python/API regression: `503 passed, 76 warnings`;
+- focused production contract tests: `7 passed`;
+- full Python/API regression: `504 passed, 76 warnings`;
 - schema validation: `196 passed, 0 failed`;
 - changed-scope audit: no forbidden path, added DDL, or secret-like finding.
 
@@ -65,7 +65,8 @@ the production policy, but production remains `NO_GO`:
 
 - the current dependency report records one Critical and two High findings in the
   API base image without a fixed Bookworm version;
-- Dashboard and Web image vulnerability status remains `UNKNOWN`;
+- offline `local://` scans verified Dashboard at 1 Critical / 2 High and Web at
+  1 Critical / 9 High after all production image stages were digest-pinned;
 - external TLS, network ACL, secret-manager, host-volume, encrypted-backup, and
   monitoring evidence is outside this rehearsal; and
 - no public push, release, deploy, production secret use, or risk exception was

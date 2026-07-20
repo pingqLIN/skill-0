@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import shutil
 import sqlite3
 from pathlib import Path
@@ -10,6 +11,21 @@ from tools.governance_db import GovernanceDB
 
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_production_docker_stages_pin_image_digests():
+    for dockerfile_name in ("Dockerfile.api", "Dockerfile.dashboard", "Dockerfile.web"):
+        dockerfile = (ROOT / dockerfile_name).read_text(encoding="utf-8")
+        base_lines = [
+            line for line in dockerfile.splitlines() if line.startswith("FROM ")
+        ]
+
+        assert base_lines
+        for line in base_lines:
+            image = line.split()[1]
+            assert re.search(r"@sha256:[0-9a-f]{64}$", image), (
+                f"{dockerfile_name} has an unpinned base stage: {line}"
+            )
 
 
 def _configure_production_environment(monkeypatch, tmp_path: Path) -> dict[str, Path]:
