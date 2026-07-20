@@ -26,7 +26,7 @@ The non-suffixed English operations documents are authoritative. Existing `.zh-t
 ## Supporting contracts
 
 - [`knowledge-plane-extension-contract.md`](knowledge-plane-extension-contract.md) defines context-only, Directive-bound Knowledge Plane extensions without adding an Asset type or authority source.
-- [`agent-evaluation-benchmark-framework.md`](agent-evaluation-benchmark-framework.md) defines deterministic, replay-based evaluation evidence and freeze gates without provider execution.
+- [`agent-evaluation-benchmark-framework.md`](agent-evaluation-benchmark-framework.md) defines deterministic replay gates and records the reviewed-frozen synthetic foundation replay without provider execution.
 - [`governance-authority-lifecycle.md`](governance-authority-lifecycle.md) defines the exact revision-authority tuple, state transitions, Runtime revalidation, and current control gaps.
 - [`governance-authority-lifecycle-proposal.md`](governance-authority-lifecycle-proposal.md) records the operator decisions and gated design work required before lifecycle gaps may be implemented.
 - [`governance-authority-gate-a-design.md`](governance-authority-gate-a-design.md) records the reviewed, no-migration current-target enforcement shape.

@@ -11,15 +11,53 @@
     "suite_digest",
     "candidate_id",
     "produced_at",
+    "capture",
     "records"
   ],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "document_type": {"const": "agent-evaluation-candidate"},
     "benchmark_id": {"type": "string", "minLength": 1},
     "suite_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
     "candidate_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_.-]*$"},
     "produced_at": {"type": "string", "format": "date-time"},
+    "capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "source_ref",
+        "source_digest",
+        "source_digest_kind",
+        "attempt_count",
+        "retry_policy",
+        "selection_policy",
+        "extraction_method",
+        "extraction_version",
+        "attestation_ref"
+      ],
+      "properties": {
+        "kind": {"enum": ["synthetic-fixture", "external-agent"]},
+        "source_ref": {"type": "string", "minLength": 1},
+        "source_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "description": "Canonical suite digest for synthetic fixtures or raw-byte SHA-256 for external captures, as declared by source_digest_kind."
+        },
+        "source_digest_kind": {
+          "enum": ["canonical-suite", "sha256-bytes"],
+          "description": "Disambiguates canonical JSON suite hashing from external capture byte hashing."
+        },
+        "attempt_count": {"type": "integer", "minimum": 1},
+        "retry_policy": {"type": "string", "minLength": 1},
+        "selection_policy": {
+          "enum": ["predeclared-single", "all-attempts", "manual-selection"]
+        },
+        "extraction_method": {"type": "string", "minLength": 1},
+        "extraction_version": {"type": "string", "minLength": 1},
+        "attestation_ref": {"type": "string", "minLength": 1}
+      }
+    },
     "records": {
       "type": "array",
       "minItems": 1,

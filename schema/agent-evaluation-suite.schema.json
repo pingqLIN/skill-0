@@ -10,11 +10,12 @@
     "benchmark_id",
     "suite_digest",
     "freeze",
+    "coverage",
     "thresholds",
     "cases"
   ],
   "properties": {
-    "schema_version": {"const": "1.0.0"},
+    "schema_version": {"const": "1.1.0"},
     "document_type": {"const": "agent-evaluation-suite"},
     "benchmark_id": {
       "type": "string",
@@ -31,12 +32,35 @@
       "properties": {
         "state": {"enum": ["draft", "reviewed-frozen"]},
         "reviewer": {"type": "string", "pattern": "^agent:[a-z0-9][a-z0-9_-]*$"},
-        "reviewed_at": {"type": "string", "format": "date-time"}
+        "reviewed_at": {"type": "string", "format": "date-time"},
+        "review_method": {"const": "independent-agent-review"},
+        "review_scope": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "case-content",
+              "thresholds",
+              "taxonomy-coverage",
+              "code-allowlists"
+            ]
+          }
+        },
+        "review_attestation": {"const": "unverified"}
       },
       "allOf": [
         {
           "if": {"properties": {"state": {"const": "reviewed-frozen"}}},
-          "then": {"required": ["reviewer", "reviewed_at"]}
+          "then": {
+            "required": [
+              "reviewer",
+              "reviewed_at",
+              "review_method",
+              "review_scope",
+              "review_attestation"
+            ]
+          }
         },
         {
           "if": {"properties": {"state": {"const": "draft"}}},
@@ -44,12 +68,30 @@
             "not": {
               "anyOf": [
                 {"required": ["reviewer"]},
-                {"required": ["reviewed_at"]}
+                {"required": ["reviewed_at"]},
+                {"required": ["review_method"]},
+                {"required": ["review_scope"]},
+                {"required": ["review_attestation"]}
               ]
             }
           }
         }
       ]
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_categories"],
+      "properties": {
+        "required_categories": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["authority", "knowledge", "planning", "execution", "recovery", "evidence"]
+          }
+        }
+      }
     },
     "thresholds": {
       "type": "object",
@@ -101,15 +143,34 @@
         "expected": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["outcome", "required_evidence_codes", "forbidden_claim_codes"],
+          "required": [
+            "outcome",
+            "required_evidence_codes",
+            "allowed_evidence_codes",
+            "forbidden_claim_codes",
+            "allowed_claim_codes"
+          ],
           "properties": {
             "outcome": {"$ref": "#/$defs/outcome"},
             "required_evidence_codes": {
               "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/code"}
+            },
+            "allowed_evidence_codes": {
+              "type": "array",
+              "minItems": 1,
               "uniqueItems": true,
               "items": {"$ref": "#/$defs/code"}
             },
             "forbidden_claim_codes": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {"$ref": "#/$defs/code"}
+            },
+            "allowed_claim_codes": {
               "type": "array",
               "uniqueItems": true,
               "items": {"$ref": "#/$defs/code"}

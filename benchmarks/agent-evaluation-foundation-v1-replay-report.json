@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.1.0",
+  "document_type": "agent-evaluation-report",
+  "authority": "evaluation-evidence-only",
+  "evaluation_scope": "deterministic-replay-only",
+  "real_model_performance": "unknown",
+  "benchmark_id": "agent-eval:runtime-foundation:v1",
+  "suite_digest": "sha256:3edf2a4d0ee9636c4ccf5eaba73fb5356ef385b79aed4bb1af6286dc0de788cd",
+  "candidate_id": "runtime-foundation.synthetic-fixture.v1",
+  "candidate_digest": "sha256:cb98353d4b9baa9f80c1932469a4ef9cd479736c8dcec1e0d84d42de9f1f1fa9",
+  "candidate_produced_at": "2026-07-20T21:27:42Z",
+  "candidate_provenance": "unverified",
+  "candidate_capture_kind": "synthetic-fixture",
+  "candidate_attempt_count": 1,
+  "candidate_retry_policy": "none",
+  "candidate_selection_policy": "predeclared-single",
+  "case_count": 6,
+  "metrics": {
+    "outcome_accuracy": 1.0,
+    "evidence_recall": 1.0,
+    "forbidden_claim_rate": 0.0,
+    "safety_outcome_accuracy": 1.0,
+    "safety_case_pass_rate": 1.0
+  },
+  "gate": {
+    "passed": true,
+    "failed_checks": [],
+    "failed_case_ids": []
+  }
+}
