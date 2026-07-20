@@ -1,8 +1,8 @@
 # Governance Authority Lifecycle v1
 
 - Status: **Accepted stable-foundation authority model**
-- Version: `1.1.0`
-- Effective date: `2026-07-20`
+- Version: `1.2.0`
+- Effective date: `2026-07-21`
 - Machine-readable lifecycle: [`contracts/governance-authority-lifecycle-v1.json`](contracts/governance-authority-lifecycle-v1.json)
 - Runtime admission: [`runtime-governance.md`](runtime-governance.md)
 - Traditional Chinese companion: [`governance-authority-lifecycle.zh-tw.md`](governance-authority-lifecycle.zh-tw.md)
@@ -31,9 +31,13 @@ does not create a new database lifecycle or authorize a physical migration.
   mutable `skills.status` projection as an authority source.
 - Create and resume both re-evaluate Governance. Supersession, current-revision
   rejection or blocking, missing provenance, or artifact drift denies admission.
-- `approve_skill()` can currently return a rejected current revision with a
-  retained binding directly to `approved`; it does not require a new binding or
-  fresh decision-evidence field.
+- `approve_skill()` denies a rejected current revision. Fresh reapproval requires
+  a new pending revision, a new exact binding, non-blocking scan and passing
+  equivalence-test events written after that binding, and a same-transaction
+  authenticated review plus approval decision packet.
+- Registering a new revision clears all scan, test, risk, approval, binding, and
+  installation workflow projections. Historical revisions and evidence rows are
+  retained.
 - Approve, reject, security-scan, and equivalence-test writes resolve the exact
   current revision in their write transaction. Explicit stale targets fail
   before revision, projection, evidence, or audit writes.
@@ -61,9 +65,10 @@ does not create a new database lifecycle or authorize a physical migration.
   is ended by rejection, blocking, supersession, or failed exact admission.
 - Actor separation-of-duties and quorum are deployment policy, not enforced by
   the current schema.
-- Re-approval after rejection does not enforce rebinding or fresh evidence.
 - `skills.status` and revision status are mutable projections. `audit_log`
   records decisions but is not cryptographically chained.
+- Application history is append-only by workflow convention, but the database
+  has no trigger, cryptographic chain, or out-of-band writer protection.
 
 These remaining gaps must not be described as implemented controls. Production
 policy may fail closed around them. Any future persistence change still needs a
@@ -126,10 +131,20 @@ revision's authority state.
 
 Scans, tests, and review packets are decision evidence. They do not themselves
 grant authority. Initial approval creates `approved-current` only after exact
-binding. The current implementation also permits a bound `rejected-current`
-revision to return directly to `approved-current`; it does not prove that fresh
-evidence was collected. A blocked current revision cannot be overridden by the
-normal approval call.
+binding. A rejected or blocked current revision cannot be returned directly to
+`approved-current` by the normal approval call.
+
+After rejection, a new revision must be registered and exactly bound before new
+scan/test evidence can qualify for fresh reapproval. Approval derives the qualifying evidence IDs
+from application-written audit events, creates an authenticated `review` event,
+and records the decision under `governance.fresh-reapproval.v1` in the same
+transaction. Missing, failed, pre-binding, or cross-revision evidence denies the
+write with no partial review or approval event.
+
+The only generic revision-state transition is application remediation from
+`blocked` to `pending`. It cannot set `approved` or clear a rejection. A
+remediated blocked revision must provide new qualifying scan/test evidence after
+the reset before approval.
 
 Rejection creates `rejected-current` only when the targeted revision is current.
 Blocking creates `blocked-current` only when a security scan writes against the
@@ -150,13 +165,12 @@ change is not authority and cannot by itself grant or remove Runtime admission.
 
 ### Re-approve
 
-The current approval method can restore a bound rejected current revision
-directly; that is implementation behavior, not proof of a fresh review. A
-blocked current revision is rejected by the approval method. Current-target
-enforcement is implemented, but until a stronger workflow exists production
-policy should require fresh decision evidence before re-approval and must not
-claim that the database enforces rebinding, expiry, quorum, or evidence
-freshness.
+Direct reapproval of a rejected current revision is denied. The only supported
+path is `register new revision -> exact bind -> fresh scan -> fresh passing test
+-> authenticated review -> approve`. Initial approvals remain compatible, and
+Runtime authority remains the same exact approved-current tuple. This control
+does not implement approval expiry, quorum, dedicated revocation, cryptographic
+audit chaining, or database-level tamper resistance.
 
 ## 6. Runtime interaction
 
@@ -187,8 +201,14 @@ freshness.
 
 For every authority-affecting decision, retain the Governance Skill ID, revision
 ID, canonical Asset ID, artifact digest, actor, timestamp, reason, decision
-evidence reference, previous state, and new state. Never delete historical
-revisions or rewrite Runtime events to make current state appear continuous.
+evidence reference, previous state, and new state. Fresh reapproval additionally
+retains the binding event, scan ID, test ID, review event, and policy identifier.
+Never delete historical revisions or rewrite Runtime events to make current
+state appear continuous.
+
+The application exposes no history update/delete workflow, but this is not
+physical immutability. Database-level tamper resistance remains a separately
+gated persistence change.
 
 An incident review must be able to answer:
 

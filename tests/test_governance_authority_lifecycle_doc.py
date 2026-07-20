@@ -19,7 +19,7 @@ def _contract():
 def test_governance_lifecycle_has_one_exact_authoritative_state():
     contract = _contract()
 
-    assert contract["lifecycle_version"] == "1.1.0"
+    assert contract["lifecycle_version"] == "1.2.0"
     assert contract["status"] == "stable-foundation"
     authoritative = [
         state
@@ -74,7 +74,7 @@ def test_governance_lifecycle_requires_revalidation_and_preserves_history():
         "approval_quorum": False,
         "cryptographic_audit_chain": False,
         "identical_binding_requires_pending_status": False,
-        "reapproval_requires_fresh_evidence": False,
+        "reapproval_requires_fresh_evidence": True,
         "reject_target_currentness_enforced": True,
         "scan_target_currentness_enforced": True,
     }
@@ -97,6 +97,19 @@ def test_governance_lifecycle_requires_revalidation_and_preserves_history():
         "stale_job_retriable": False,
         "stale_write_creates_evidence": False,
     }
+    assert contract["fresh_reapproval"] == {
+        "policy": "governance.fresh-reapproval.v1",
+        "direct_rejected_revision_approval": False,
+        "new_revision_required": True,
+        "exact_binding_required_before_qualifying_evidence": True,
+        "mandatory_artifacts": ["scan", "equivalence-test", "review", "decision"],
+        "scan_and_test_ids_are_server_derived": True,
+        "freshness_sensitive_projection_is_reset": True,
+        "generic_state_update_can_approve": False,
+        "blocked_to_pending_requires_post_reset_evidence": True,
+        "application_history_is_append_only": True,
+        "database_tamper_resistance": False,
+    }
 
 
 def test_governance_lifecycle_transition_set_is_explicit():
@@ -115,9 +128,9 @@ def test_governance_lifecycle_transition_set_is_explicit():
     }
     assert transitions["approve"] == {
         "event": "approve",
-        "from": ["pending-bound", "rejected-current", "approved-current"],
+        "from": ["pending-bound", "approved-current"],
         "to": "approved-current",
-        "current_behavior_requires_fresh_evidence": False,
+        "rejected_current_requires_new_revision": True,
     }
     assert transitions["register-new-revision"]["previous_current_becomes"] == "superseded"
     assert transitions["admission-mismatch"]["to"] == "drifted"
@@ -133,7 +146,7 @@ def test_governance_lifecycle_transition_set_is_explicit():
     }
 
 
-def test_gate_a_design_records_a1_without_claiming_freshness():
+def test_gate_designs_record_current_target_and_fresh_reapproval_boundaries():
     design = (ROOT / "docs" / "governance-authority-gate-a-design.md").read_text(
         encoding="utf-8"
     )
@@ -144,6 +157,13 @@ def test_gate_a_design_records_a1_without_claiming_freshness():
     assert "Gate A does not fully specify or authorize fresh reapproval" in design
     assert "FTS5" in design
     assert "Dashboard redesign" in design
+    gate_b = (ROOT / "docs" / "governance-authority-gate-b-design.md").read_text(
+        encoding="utf-8"
+    )
+    assert "Gate B implemented" in gate_b
+    assert "governance.fresh-reapproval.v1" in gate_b
+    assert "no schema or data migration" in gate_b
+    assert "database-level tamper resistance" in gate_b
 
 
 def _approved_governance_skill(tmp_path):
@@ -162,15 +182,15 @@ def _approved_governance_skill(tmp_path):
     return db, skill_id, canonical_skill_id, digest, binding["revision_id"]
 
 
-def test_lifecycle_documents_direct_reapproval_gap(tmp_path):
+def test_lifecycle_enforces_new_revision_for_reapproval(tmp_path):
     db, skill_id, _canonical_skill_id, _digest, _revision_id = (
         _approved_governance_skill(tmp_path)
     )
 
     assert db.reject_skill(skill_id, rejected_by="reviewer", reason="rejected")
     assert db.get_current_revision(skill_id).status == "rejected"
-    assert db.approve_skill(skill_id, approved_by="reviewer-2", reason="reapproved")
-    assert db.get_current_revision(skill_id).status == "approved"
+    assert not db.approve_skill(skill_id, approved_by="reviewer-2", reason="reapproved")
+    assert db.get_current_revision(skill_id).status == "rejected"
 
 
 def test_lifecycle_documents_identical_approved_binding_is_idempotent(tmp_path):

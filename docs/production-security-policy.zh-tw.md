@@ -1,7 +1,7 @@
 # Production Security Policy v1
 
 - 狀態：**已接受，適用 Runtime Architecture v1 stable foundation**
-- 版本：`1.4.0`
+- 版本：`1.5.0`
 - 生效日期：`2026-07-21`
 - Machine-readable policy：[`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations：[`runtime-production-operations.md`](runtime-production-operations.md)
@@ -71,7 +71,7 @@
 - Search、Knowledge context、Agent Evaluation report、Dashboard state、mutable `skills.status`、prior run result 永遠不是 authority。
 - Unknown effect、risk、rule evaluator、authority、source freshness、adapter outcome 都 fail closed；ambiguous outcome 進入 reconciliation。
 - Runtime HITL actor allowlist/immutable deadline 是 mandatory；approval 只記錄 decision，不自動 execute/resume/recover。
-- Approve/reject/scan/test write 與 immutable Dashboard action-job target 已實作 current-target enforcement。其他 `governance-authority-lifecycle.md` gaps 仍是 gaps；不得聲稱 approval expiry、quorum、dedicated revocation 或 fresh-evidence reapproval 已實作。
+- Approve/reject/scan/test write 與 immutable Dashboard action-job target 已實作 current-target enforcement。Rejected current revision 不能 direct approve；fresh reapproval 必須 new exact-bound revision、post-binding scan/test evidence，以及同 transaction 的 review/decision audit artifacts。Approval expiry、quorum、dedicated revocation、cryptographic audit chain 與 database-level tamper resistance 仍是 gaps。
 
 ## 6. Data、SQLite、backup、restore
 

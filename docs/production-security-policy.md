@@ -1,7 +1,7 @@
 # Production Security Policy v1
 
 - Status: **Accepted for the Runtime Architecture v1 stable foundation**
-- Version: `1.4.0`
+- Version: `1.5.0`
 - Effective date: `2026-07-21`
 - Machine-readable policy: [`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations: [`runtime-production-operations.md`](runtime-production-operations.md)
@@ -132,9 +132,11 @@ with this policy even if the application doctor passes.
 - Runtime HITL actor allowlists and immutable deadlines are mandatory. Approval
   records a decision; it does not automatically execute, resume, or recover.
 - Current-target enforcement is implemented for approve/reject/scan/test writes
-  and immutable Dashboard action-job targets. Other Governance lifecycle gaps
-  remain gaps. Deployments must not claim approval expiry, quorum, dedicated
-  revocation, or fresh-evidence reapproval as implemented controls.
+  and immutable Dashboard action-job targets. Rejected current revisions cannot
+  be approved directly; fresh reapproval requires a new exact-bound revision,
+  post-binding scan/test evidence, and same-transaction review/decision audit
+  artifacts. Approval expiry, quorum, dedicated revocation, cryptographic audit
+  chaining, and database-level tamper resistance remain gaps.
 
 ## 6. Data, SQLite, backup, and restore
 

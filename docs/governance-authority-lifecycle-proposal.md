@@ -1,6 +1,6 @@
 # Governance Authority Lifecycle Decision Proposal v1
 
-- Status: **Proposed; no implementation authority**
+- Status: **Partially implemented through Gates A/B; remaining proposals grant no implementation authority**
 - Date: `2026-07-20`
 - Current lifecycle: [`governance-authority-lifecycle.md`](governance-authority-lifecycle.md)
 - Runtime boundary: [`ADR-0006-runtime-boundary.md`](ADR-0006-runtime-boundary.md)
@@ -20,15 +20,15 @@ timestamp. Runtime create and resume continue to revalidate that tuple.
 ## Decision boundary
 
 The following remain unimplemented controls: approval expiry, a dedicated
-append-only revocation decision, quorum/separation of duties, fresh-evidence
-reapproval, and a cryptographic Governance audit chain. They must remain
-documented as gaps until an approved implementation closes them. Gate A
-current-target enforcement is implemented without a schema migration.
+append-only revocation decision, quorum/separation of duties, and a
+cryptographic Governance audit chain. They must remain documented as gaps until
+an approved implementation closes them. Gates A and B implement current-target
+enforcement and fresh reapproval without a schema migration.
 
 | Decision | Candidate direction | Current consequence | Separate authority needed |
 |---|---|---|---|
 | Current-target enforcement | Enforce the captured current target for approve/reject/scan/test writes. | **Implemented in Gate A:** stale jobs fail without evidence/projection writes and cannot retry. | Complete; extensions require a new focused review. |
-| Fresh reapproval | Require a new exact bind plus immutable decision-evidence reference after rejection, drift, or expiry. | A bound rejected current revision can be approved without fresh evidence. | Evidence-retention and API contract decision. |
+| Fresh reapproval | Require a new exact bind plus revision-scoped scan/test/review/decision evidence after rejection. | **Implemented in Gate B:** direct rejected-revision approval is denied; database-level tamper resistance remains absent. | Complete for application enforcement; physical immutability requires a separate persistence gate. |
 | Approval expiry | Attach an explicit expiry rule to an approval and fail Runtime admission after it. | Approval has no renewal clock. | Time semantics, operator policy, and persistence design. |
 | Revocation | Add a dedicated, append-only revocation decision that ends current authority without rewriting history. | Rejection, blocking, supersession, or drift are the available effects. | Incident authority and persistence design. |
 | Quorum / separation of duties | Require distinct authenticated roles for bind, evidence review, approval, and emergency revocation. | Actor separation is deployment policy only. | Identity-source and role-governance decision. |
@@ -70,10 +70,11 @@ rules are not yet chosen.
 
 ### Gate B — authority semantics decision
 
-Use a signed or otherwise authenticated operator decision packet to choose
-expiry, revocation, quorum, actor roles, evidence freshness, and emergency
-behavior. The packet must identify its reviewer, scope, date, reason, and the
-canonical policy version it approves.
+The implemented decision is recorded in
+[`governance-authority-gate-b-design.md`](governance-authority-gate-b-design.md).
+It selects mandatory new-revision fresh evidence for reapproval and explicitly
+defers expiry, revocation, quorum, cryptographic chaining, and physical
+immutability.
 
 ### Gate C — migration and recovery decision
 

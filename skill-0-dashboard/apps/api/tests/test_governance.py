@@ -439,6 +439,89 @@ class TestGovernanceServiceRunScan:
         assert result["current_revision_id"] == "rev_002"
         assert result["results"] == []
 
+    def test_blocked_scan_is_persisted_and_cannot_qualify_for_reapproval(
+        self, tmp_path, monkeypatch
+    ):
+        from advanced_skill_analyzer import RiskLevel  # noqa
+        from governance_db import GovernanceDB  # noqa
+        from apps.api.services.governance import GovernanceService  # noqa
+
+        monkeypatch.setenv("SKILL0_ALLOWED_PATH_ROOTS", str(tmp_path))
+        source = tmp_path / "blocked-skill.md"
+        source.write_text("blocked skill", encoding="utf-8")
+        service = object.__new__(GovernanceService)
+        service.db = GovernanceDB(db_path=tmp_path / "governance.db")
+        canonical_skill_id = "claude__test__blocked-scan"
+        artifact_digest = canonical_digest(
+            {"meta": {"skill_id": canonical_skill_id}}
+        )
+        skill_id = service.db.create_skill(
+            name="blocked-scan",
+            version="1.0.0",
+            source_path=str(source),
+        )
+        service.db.bind_runtime_artifact(
+            skill_id,
+            canonical_skill_id=canonical_skill_id,
+            artifact_digest=artifact_digest,
+            bound_by="binder",
+        )
+        assert service.db.approve_skill(
+            skill_id, approved_by="reviewer", reason="initial"
+        )
+        assert service.db.reject_skill(
+            skill_id, rejected_by="reviewer", reason="rejected"
+        )
+        revision_id = service.db.register_revision(skill_id, version="2.0.0")
+        service.db.bind_runtime_artifact(
+            skill_id,
+            canonical_skill_id=canonical_skill_id,
+            artifact_digest=artifact_digest,
+            bound_by="binder-2",
+        )
+
+        scan_result = MagicMock()
+        scan_result.scanned_at = "2026-07-21T00:00:00"
+        scan_result.scanner_version = "test-scanner"
+        scan_result.risk_level = RiskLevel.BLOCKED
+        scan_result.risk_score = 100
+        scan_result.files_scanned = 1
+        scan_result.findings = []
+        scan_result.blocked = True
+        scan_result.blocked_reason = "critical finding"
+        analyzer = MagicMock()
+        analyzer.analyze.return_value = scan_result
+        mock_module = MagicMock()
+        mock_module.AdvancedSkillAnalyzer.return_value = analyzer
+
+        with patch.dict("sys.modules", {"advanced_skill_analyzer": mock_module}):
+            result = service.run_scan(
+                skill_id,
+                target_revision_id=revision_id,
+                require_exact_target=True,
+            )
+
+        scan = service.db.get_scan_history(skill_id, limit=1)[0]
+        current = service.db.get_current_revision(skill_id)
+        assert result["status"] == "success"
+        assert result["results"][0]["risk_level"] == "blocked"
+        assert result["results"][0]["blocked"] is True
+        assert scan["blocked"] == 1
+        assert scan["blocked_reason"] == "critical finding"
+        assert scan["risk_level"] == "blocked"
+        assert current is not None
+        assert current.status == "blocked"
+        service.db.record_equivalence_test(
+            skill_id,
+            {"scores": {"overall": 1.0}, "passed": True},
+            revision_id=revision_id,
+        )
+        assert not service.db.approve_skill(
+            skill_id,
+            approved_by="reviewer-2",
+            reason="blocked scan cannot qualify",
+        )
+
     def test_scan_source_path_not_allowed(self, tmp_path, monkeypatch):
         allowed_root = tmp_path / "allowed"
         allowed_root.mkdir()

@@ -387,6 +387,149 @@ class GovernanceDB:
             )
         return row
 
+    def _has_prior_authority_failure(
+        self,
+        conn: sqlite3.Connection,
+        *,
+        skill_id: str,
+        current_revision_id: str,
+    ) -> bool:
+        """Return whether immutable history records a prior authority failure."""
+        projected_failure = conn.execute(
+            """SELECT 1 FROM skill_revisions
+               WHERE skill_id=? AND revision_id<>?
+                 AND status IN ('rejected', 'blocked')
+               LIMIT 1""",
+            (skill_id, current_revision_id),
+        ).fetchone()
+        if projected_failure is not None:
+            return True
+
+        persisted_block = conn.execute(
+            """SELECT 1 FROM security_scans
+               WHERE skill_id=? AND revision_id IS NOT NULL AND revision_id<>?
+                 AND blocked=1
+               LIMIT 1""",
+            (skill_id, current_revision_id),
+        ).fetchone()
+        if persisted_block is not None:
+            return True
+
+        events = conn.execute(
+            """SELECT event_type, details_json FROM audit_log
+               WHERE skill_id=? AND revision_id IS NOT NULL AND revision_id<>?
+                 AND event_type IN ('reject', 'scan')""",
+            (skill_id, current_revision_id),
+        ).fetchall()
+        for event in events:
+            if event["event_type"] == "reject":
+                return True
+            details = self._decode_json_field(event["details_json"], {})
+            if isinstance(details, dict) and details.get("blocked") is True:
+                return True
+        return False
+
+    def _fresh_reapproval_evidence(
+        self,
+        conn: sqlite3.Connection,
+        *,
+        skill_id: str,
+        revision_id: str,
+        canonical_skill_id: str,
+        artifact_digest: str,
+        not_before: Optional[str] = None,
+    ) -> Optional[Dict[str, str]]:
+        """Resolve server-recorded scan/test evidence created after exact binding."""
+        binding = conn.execute(
+            """SELECT event_id, timestamp, details_json FROM audit_log
+               WHERE skill_id=? AND revision_id=? AND event_type='runtime_bind'
+               ORDER BY timestamp DESC LIMIT 1""",
+            (skill_id, revision_id),
+        ).fetchone()
+        if binding is None:
+            return None
+        binding_details = self._decode_json_field(binding["details_json"], {})
+        if (
+            not isinstance(binding_details, dict)
+            or binding_details.get("canonical_skill_id") != canonical_skill_id
+            or binding_details.get("artifact_digest") != artifact_digest
+        ):
+            return None
+        evidence_cutoff = max(
+            timestamp
+            for timestamp in (binding["timestamp"], not_before)
+            if timestamp is not None
+        )
+
+        def resolve_evidence(event_type: str, id_field: str, table: str) -> Optional[str]:
+            event = conn.execute(
+                """SELECT event_id, details_json FROM audit_log
+                   WHERE skill_id=? AND revision_id=? AND event_type=? AND timestamp>=?
+                   ORDER BY timestamp DESC, rowid DESC LIMIT 1""",
+                (skill_id, revision_id, event_type, evidence_cutoff),
+            ).fetchone()
+            if event is None:
+                return None
+            details = self._decode_json_field(event["details_json"], {})
+            evidence_id = details.get(id_field) if isinstance(details, dict) else None
+            if not isinstance(evidence_id, str) or not evidence_id:
+                return None
+            if table == "security_scans":
+                evidence = conn.execute(
+                    """SELECT scan_id FROM security_scans
+                       WHERE scan_id=? AND skill_id=? AND revision_id=? AND blocked=0""",
+                    (evidence_id, skill_id, revision_id),
+                ).fetchone()
+            else:
+                evidence = conn.execute(
+                    """SELECT test_id FROM equivalence_tests
+                       WHERE test_id=? AND skill_id=? AND revision_id=? AND passed=1""",
+                    (evidence_id, skill_id, revision_id),
+                ).fetchone()
+            return evidence_id if evidence is not None else None
+
+        scan_id = resolve_evidence("scan", "scan_id", "security_scans")
+        test_id = resolve_evidence("test", "test_id", "equivalence_tests")
+        if scan_id is None or test_id is None:
+            return None
+        return {
+            "policy": "governance.fresh-reapproval.v1",
+            "revision_id": revision_id,
+            "canonical_skill_id": canonical_skill_id,
+            "artifact_digest": artifact_digest,
+            "binding_event_id": binding["event_id"],
+            "scan_id": scan_id,
+            "test_id": test_id,
+        }
+
+    def _blocked_remediation_cutoff(
+        self,
+        conn: sqlite3.Connection,
+        *,
+        skill_id: str,
+        revision_id: str,
+    ) -> Optional[str]:
+        """Return the latest application-authorized blocked-to-pending reset."""
+        events = conn.execute(
+            """SELECT timestamp, previous_state_json, new_state_json
+               FROM audit_log
+               WHERE skill_id=? AND revision_id=?
+                 AND event_type='revision_state_update'
+               ORDER BY timestamp DESC""",
+            (skill_id, revision_id),
+        ).fetchall()
+        for event in events:
+            previous = self._decode_json_field(event["previous_state_json"], {})
+            new = self._decode_json_field(event["new_state_json"], {})
+            if (
+                isinstance(previous, dict)
+                and isinstance(new, dict)
+                and previous.get("status") == "blocked"
+                and new.get("status") == "pending"
+            ):
+                return event["timestamp"]
+        return None
+
     def _revision_payload_from_row(self, row: sqlite3.Row) -> Dict[str, Any]:
         payload = {
             "version": row["version"] or "1.0.0",
@@ -1110,7 +1253,7 @@ class GovernanceDB:
         return False
 
     def update_current_revision_state(self, skill_id: str, **updates) -> bool:
-        """Update mutable workflow state on the current revision only."""
+        """Allow only the application remediation transition blocked -> pending."""
         if not updates:
             return False
 
@@ -1126,6 +1269,11 @@ class GovernanceDB:
             prev_row = cursor.fetchone()
             if not prev_row or not prev_row["current_revision_id"]:
                 return False
+            if updates != {"status": "pending"} or prev_row["status"] != "blocked":
+                raise ValueError(
+                    "Current revision state updates only allow blocked-to-pending remediation; "
+                    "approval requires approve_skill() and rejection requires a new revision"
+                )
 
             now = datetime.now().isoformat()
             revision_updates = dict(updates)
@@ -1149,6 +1297,7 @@ class GovernanceDB:
                 skill_name=prev_row["name"],
                 details=updates,
                 previous_state=dict(prev_row),
+                new_state={"status": "pending"},
             )
             return True
 
@@ -1218,15 +1367,37 @@ class GovernanceDB:
             if not row:
                 return None
 
+            now = datetime.now().isoformat()
             payload = dict(row)
             payload.update(updates)
-            # A new revision never inherits the prior parsed-artifact binding.
-            # It must be rebound explicitly before Runtime admission.
-            payload["artifact_digest"] = None
-            payload["status"] = "pending"
-            payload["approved_by"] = None
-            payload["approved_at"] = None
-            payload["updated_at"] = datetime.now().isoformat()
+            # A new revision never inherits authority or freshness-sensitive
+            # workflow projections. It must be rebound, rescanned, retested,
+            # and reviewed through evidence written for its own revision ID.
+            payload.update(
+                {
+                    "artifact_digest": None,
+                    "status": "pending",
+                    "approved_by": None,
+                    "approved_at": None,
+                    "security_scanned_at": None,
+                    "scanner_version": None,
+                    "risk_level": "unknown",
+                    "risk_score": 0,
+                    "security_findings": None,
+                    "equivalence_tested_at": None,
+                    "equivalence_score": None,
+                    "semantic_similarity": None,
+                    "structure_similarity": None,
+                    "keyword_similarity": None,
+                    "equivalence_passed": None,
+                    "installed_path": None,
+                    "installed_at": None,
+                    "source_checksum": None,
+                    "provenance_json": None,
+                    "created_at": now,
+                    "updated_at": now,
+                }
+            )
             revision_id = self._create_revision(conn, skill_id, payload, is_current=True)
             self._log_event(
                 conn,
@@ -1471,10 +1642,12 @@ class GovernanceDB:
                 skill_id=skill_id,
                 revision_id=current_revision,
                 details={
+                    "scan_id": scan_id,
                     "revision_id": current_revision,
                     "risk_level": scan_result.get("risk_level"),
                     "risk_score": scan_result.get("risk_score"),
                     "findings_count": scan_result.get("findings_count"),
+                    "blocked": bool(scan_result.get("blocked")),
                 },
             )
 
@@ -1606,6 +1779,7 @@ class GovernanceDB:
                 skill_id=skill_id,
                 revision_id=current_revision,
                 details={
+                    "test_id": test_id,
                     "revision_id": current_revision,
                     "overall_score": scores.get("overall"),
                     "passed": test_result.get("passed"),
@@ -1924,12 +2098,56 @@ class GovernanceDB:
             except GovernanceTargetError:
                 return False
 
-            if row["status"] == "blocked":
-                return False  # Cannot approve blocked skills
+            if row["status"] in {"blocked", "rejected"}:
+                return False  # Rejected revisions must be superseded before reapproval.
 
             current_revision = row["current_revision_id"]
             if not row["canonical_skill_id"] or not row["artifact_digest"]:
                 return False
+
+            fresh_reapproval = None
+            prior_authority_failure = self._has_prior_authority_failure(
+                conn,
+                skill_id=skill_id,
+                current_revision_id=current_revision,
+            )
+            blocked_remediation_cutoff = self._blocked_remediation_cutoff(
+                conn,
+                skill_id=skill_id,
+                revision_id=current_revision,
+            )
+            if row["status"] == "pending" and (
+                prior_authority_failure or blocked_remediation_cutoff is not None
+            ):
+                actor = (approved_by or "").strip()
+                review_reason = (reason or "").strip()
+                if not actor or not review_reason:
+                    return False
+                fresh_reapproval = self._fresh_reapproval_evidence(
+                    conn,
+                    skill_id=skill_id,
+                    revision_id=current_revision,
+                    canonical_skill_id=row["canonical_skill_id"],
+                    artifact_digest=row["artifact_digest"],
+                    not_before=blocked_remediation_cutoff,
+                )
+                if fresh_reapproval is None:
+                    return False
+                review_event_id = self._log_event(
+                    conn,
+                    "review",
+                    skill_id=skill_id,
+                    revision_id=current_revision,
+                    skill_name=row["name"],
+                    actor=actor,
+                    details={
+                        **fresh_reapproval,
+                        "reason": review_reason,
+                    },
+                    previous_state={"status": row["status"]},
+                    new_state={"status": row["status"]},
+                )
+                fresh_reapproval["review_event_id"] = review_event_id
 
             cursor.execute(
                 """
@@ -1977,6 +2195,7 @@ class GovernanceDB:
                     "reason": reason,
                     "revision_id": current_revision,
                     "decision_evidence": decision_evidence,
+                    "fresh_reapproval": fresh_reapproval,
                 },
                 previous_state={"status": row["status"]},
                 new_state={"status": "approved"},
@@ -2059,9 +2278,10 @@ class GovernanceDB:
         details: Dict = None,
         previous_state: Dict = None,
         new_state: Dict = None,
-    ):
+    ) -> str:
         """Internal: Log an audit event"""
         cursor = conn.cursor()
+        event_id = self.generate_id()
         cursor.execute(
             """
             INSERT INTO audit_log (
@@ -2070,7 +2290,7 @@ class GovernanceDB:
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
             (
-                self.generate_id(),
+                event_id,
                 datetime.now().isoformat(),
                 event_type,
                 skill_id,
@@ -2082,6 +2302,7 @@ class GovernanceDB:
                 json.dumps(new_state) if new_state else None,
             ),
         )
+        return event_id
 
     def get_audit_log(
         self,

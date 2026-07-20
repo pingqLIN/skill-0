@@ -2,6 +2,7 @@
 
 - 狀態：**A1 已實作並通過 independent review**
 - 日期：`2026-07-20`
+- 後續：[`governance-authority-gate-b-design.zh-tw.md`](governance-authority-gate-b-design.zh-tw.md) 已於 `2026-07-21` 實作 no-migration fresh-reapproval decision。
 - Decision proposal：[`governance-authority-lifecycle-proposal.md`](governance-authority-lifecycle-proposal.md)
 - 現行 behavior：[`governance-authority-lifecycle.md`](governance-authority-lifecycle.md)
 - 英文權威文件：[`governance-authority-gate-a-design.md`](governance-authority-gate-a-design.md)
@@ -42,7 +43,7 @@ Gate A 不完整規範、也不授權 fresh reapproval。`decision_evidence` 目
 
 最安全的 no-migration candidate 是：禁止 rejected current revision 直接 approve，要求 new revision、exact new binding，以及該 revision 專屬的新 evidence。但 Gate B 必須先決定 mandatory artifacts、digest linkage、revision registration 時需 reset 的欄位、retention/immutability，以及 reapproval 是否永遠需要 new revision，或可接受 authenticated fresh-evidence packet。
 
-上述 decisions 完成前，direct reapproval 維持 documented gap，不得宣稱已 enforce fresh evidence。
+這是 Gate A 當時的 stop condition。Gate B 後續已選定並實作 new-revision 選項；本節保留為 historical decision input，不再代表 current behavior。
 
 ## Implementation batch 的必要 negative tests
 

@@ -2,6 +2,7 @@
 
 - Status: **A1 implemented and independently reviewed**
 - Date: `2026-07-20`
+- Follow-on: [`governance-authority-gate-b-design.md`](governance-authority-gate-b-design.md) implements the no-migration fresh-reapproval decision as of `2026-07-21`.
 - Decision proposal: [`governance-authority-lifecycle-proposal.md`](governance-authority-lifecycle-proposal.md)
 - Current behavior: [`governance-authority-lifecycle.md`](governance-authority-lifecycle.md)
 - Traditional Chinese companion: [`governance-authority-gate-a-design.zh-tw.md`](governance-authority-gate-a-design.zh-tw.md)
@@ -102,8 +103,9 @@ created for that revision before approval. Gate B must first decide:
 5. whether reapproval always requires a new revision or may use an
    authenticated fresh-evidence packet on the rejected revision.
 
-Until those decisions exist, direct reapproval remains a documented gap and no
-implementation may claim to enforce fresh evidence.
+This was the Gate A stop condition. Gate B has since selected and implemented
+the new-revision option; this section remains the historical decision input, not
+the current behavior statement.
 
 ## Required negative tests for an implementation batch
 

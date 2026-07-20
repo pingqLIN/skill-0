@@ -1325,16 +1325,38 @@ class GovernanceService:
             analyzer = AdvancedSkillAnalyzer()
             scan_result = analyzer.analyze(resolved_source_path)
 
+            risk_level = getattr(scan_result.risk_level, "value", scan_result.risk_level)
+            findings = [
+                finding.to_dict()
+                if callable(getattr(finding, "to_dict", None))
+                else finding.__dict__
+                if hasattr(finding, "__dict__")
+                else finding
+                for finding in (scan_result.findings or [])
+            ]
+            scanned_at = getattr(scan_result, "scanned_at", None)
+            scanner_version = getattr(scan_result, "scanner_version", None)
+            files_scanned = getattr(scan_result, "files_scanned", 0)
+            blocked_value = getattr(scan_result, "blocked", False)
+            blocked = blocked_value if isinstance(blocked_value, bool) else False
+            blocked_reason = getattr(scan_result, "blocked_reason", "")
+            if not isinstance(blocked_reason, str):
+                blocked_reason = ""
             scan_data = {
-                "scanned_at": _dt.now().isoformat(),
-                "scanner_version": getattr(analyzer, "VERSION", "1.0.0"),
+                "scanned_at": scanned_at
+                if isinstance(scanned_at, str) and scanned_at
+                else _dt.now().isoformat(),
+                "scanner_version": scanner_version
+                if isinstance(scanner_version, str) and scanner_version
+                else getattr(analyzer, "VERSION", "1.0.0"),
                 "file_path": str(resolved_source_path),
-                "risk_level": scan_result.risk_level,
+                "risk_level": risk_level,
                 "risk_score": scan_result.risk_score,
-                "findings": [
-                    f.__dict__ if hasattr(f, "__dict__") else f
-                    for f in (scan_result.findings or [])
-                ],
+                "files_scanned": files_scanned if isinstance(files_scanned, int) else 0,
+                "findings_count": len(findings),
+                "findings": findings,
+                "blocked": blocked,
+                "blocked_reason": blocked_reason,
             }
             self.db.record_security_scan(
                 skill_id,
@@ -1346,9 +1368,11 @@ class GovernanceService:
                 "skill_id": skill_id,
                 "revision_id": execution_revision_id,
                 "status": "success",
-                "risk_level": scan_result.risk_level,
+                "risk_level": risk_level,
                 "risk_score": scan_result.risk_score,
-                "findings_count": len(scan_result.findings or []),
+                "findings_count": len(findings),
+                "blocked": blocked,
+                "blocked_reason": blocked_reason,
             }
             return {
                 "status": "success",
