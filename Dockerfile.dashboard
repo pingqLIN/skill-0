@@ -8,11 +8,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy dashboard API code (preserve package structure for relative imports)
 COPY skill-0-dashboard/apps/api/ ./api/
-# Copy governance data accessed by the service
+# Copy Dashboard service dependencies
 COPY tools/ ./tools/
 COPY runtime/digest.py ./runtime/digest.py
 COPY parsed/ ./parsed/
-COPY governance/ ./governance/
 
 # Non-root user
 RUN adduser --disabled-password --gecos "" --no-create-home appuser && \

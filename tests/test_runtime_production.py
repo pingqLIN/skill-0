@@ -154,6 +154,10 @@ def test_production_compose_persists_runtime_and_reads_governance_db():
     assert "COPY runtime/digest.py ./runtime/digest.py" in dashboard_dockerfile
     assert "COPY parsed/ ./parsed/" in dashboard_dockerfile
     assert "COPY runtime/ ./runtime/" not in dashboard_dockerfile
+    assert "COPY governance/" not in dashboard_dockerfile
+
+    dockerignore = (ROOT / ".dockerignore").read_text(encoding="utf-8")
+    assert "governance/db/" in dockerignore
 
 
 def test_maintenance_scripts_cover_all_three_databases():

@@ -17,6 +17,11 @@ Runtime v4 has three independent SQLite stores. A release is not production-read
 
 `docker-compose.prod.yml` gives the Runtime ledger its own named volume and mounts the governance volume read-only into the Core API. The Core API waits for the Dashboard API health check before its fail-closed startup doctor runs.
 
+Production images never embed `governance/db/` or an operator
+`governance.db`. A new governance volume therefore starts empty until an
+explicit provisioning or restore step initializes it; Docker volume copy-up
+must not import repository-local authority state.
+
 ## Required production configuration
 
 - `SKILL0_RUNTIME_BINDING_KEY`: independent secret, at least 32 characters, never equal to `JWT_SECRET_KEY`.
