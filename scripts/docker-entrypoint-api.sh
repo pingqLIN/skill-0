@@ -21,16 +21,18 @@ if [ ! -s "$RUNTIME_DB" ]; then
   fi
 fi
 
-if [ ! -s "$RUNTIME_LEDGER" ]; then
-  case "${SKILL0_ENV:-development}" in
-    production|prod)
-      if [ "$ALLOW_RUNTIME_INITIALIZE" != "true" ]; then
-        echo "Runtime ledger is missing at $RUNTIME_LEDGER; restore it or set SKILL0_RUNTIME_ALLOW_INITIALIZE=true for one provisioning boot" >&2
-        exit 1
-      fi
-      ;;
-  esac
-fi
+case "${SKILL0_ENV:-development}" in
+  production|prod)
+    if [ "$ALLOW_RUNTIME_INITIALIZE" = "true" ]; then
+      echo "Runtime initialization must be disabled in production; restore a verified ledger instead" >&2
+      exit 1
+    fi
+    if [ ! -s "$RUNTIME_LEDGER" ]; then
+      echo "Runtime ledger is missing at $RUNTIME_LEDGER; restore a verified ledger before production startup" >&2
+      exit 1
+    fi
+    ;;
+esac
 
 python - "$RUNTIME_LEDGER" "$RUNTIME_JOURNAL_MODE" "$HITL_TTL_SECONDS" <<'PY'
 import sys

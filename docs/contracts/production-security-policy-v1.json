@@ -1,5 +1,5 @@
 {
-  "policy_version": "1.0.0",
+  "policy_version": "1.1.0",
   "status": "stable-foundation",
   "deployment_boundary": {
     "topology": "single-host-docker-compose",
@@ -16,6 +16,8 @@
     "dry-run-literal-request-contract",
     "test-adapter-only-public-runtime",
     "governance-read-only-core-mount",
+    "runtime-initialization-disabled-production-startup",
+    "authenticated-redacted-health-detail",
     "runtime-wal-required",
     "three-store-doctor-and-backup-gate",
     "hitl-actor-allowlist-and-deadline"
@@ -52,8 +54,6 @@
     "governance-decision-current-target-enforcement",
     "fresh-evidence-reapproval",
     "cryptographic-audit-chain",
-    "startup-enforcement-runtime-initialization-disabled",
-    "health-response-metadata-redaction-or-authentication",
     "cross-store-atomic-backup-snapshot",
     "sbom-generation",
     "image-signing",

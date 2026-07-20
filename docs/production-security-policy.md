@@ -1,8 +1,8 @@
 # Production Security Policy v1
 
 - Status: **Accepted for the Runtime Architecture v1 stable foundation**
-- Version: `1.0.0`
-- Effective date: `2026-07-18`
+- Version: `1.1.0`
+- Effective date: `2026-07-20`
 - Machine-readable policy: [`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations: [`runtime-production-operations.md`](runtime-production-operations.md)
 - Authority lifecycle: [`governance-authority-lifecycle.md`](governance-authority-lifecycle.md)
@@ -43,10 +43,13 @@ deployment controls that must be supplied outside the repository.
   and the simulation adapter rejects real execution.
 - The Core API mounts `governance.db` read-only; the Governance service owns its
   writes. Runtime events and decision evidence use the separate Runtime store.
-- The production Compose configuration defaults
-  `SKILL0_RUNTIME_ALLOW_INITIALIZE=false`; with an existing ledger, the current
-  startup doctor warns rather than fails when an operator overrides it to
-  `true`. Release evidence must therefore verify the effective value.
+- Production startup and the production doctor reject
+  `SKILL0_RUNTIME_ALLOW_INITIALIZE=true`. A missing Runtime ledger must be
+  restored through the verified recovery workflow; it cannot be initialized by
+  a production boot.
+- Public `/health` returns a liveness status only. `/api/health/detail` requires
+  JWT authentication and omits database paths, storage sizes, model names, and
+  version metadata.
 - The Runtime doctor can require current, readable backups for all three stores
   and reports configuration names rather than secret values.
 - HITL decisions require an authenticated JWT subject in
@@ -70,10 +73,8 @@ deployment controls that must be supplied outside the repository.
   and model cache writes to named operator roles.
 - Centralize logs with retention and access controls while preserving request,
   Governance revision, Runtime run, and event correlation.
-- Contain unauthenticated health endpoints within the trusted network boundary.
-  The current Core API health responses expose database path and selected
-  environment/model metadata; response redaction or route authentication is not
-  implemented by this foundation.
+- Keep public liveness and metrics routes within the trusted network boundary;
+  authentication reduces exposure but does not replace network containment.
 
 If any required deployment control is absent, the deployment is not compliant
 with this policy even if the application doctor passes.
@@ -165,12 +166,10 @@ with this policy even if the application doctor passes.
 - Logs and public Evidence must omit secrets, credentials, raw authorization
   headers, private payloads, and unnecessary recovery parameters. Prefer stable
   IDs, reason codes, digests, counts, and redacted summaries.
-- Health and error responses must not expose filesystem layout, SQL text, stack
-  traces, or configuration values beyond the minimum operator-safe reason code.
-  This is a deployment requirement, not a verified application control: current
-  unauthenticated Core API health routes expose database path and selected
-  environment/model metadata. Network containment is mandatory until those
-  fields are redacted or the routes are authenticated.
+- Public health and error responses must not expose filesystem layout, SQL text,
+  stack traces, or configuration values beyond the minimum operator-safe reason
+  code. The public health route returns status only; the authenticated detail
+  route omits database paths, storage sizes, model names, and version metadata.
 
 ## 8. Supply chain and build policy
 

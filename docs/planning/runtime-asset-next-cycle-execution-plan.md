@@ -32,6 +32,44 @@ them.
 - Database publication, dependency mutation, and any public push remain explicit
   gates. A failed gate stops only the affected stage and is reported truthfully.
 
+## Pre-stage — production security hardening closure
+
+**Status:** Local source and contract hardening complete on `2026-07-20`;
+isolated Compose rehearsal is blocked by local deployment prerequisites.
+
+### Delivered local controls
+
+- Production startup and `runtime_doctor --production` reject
+  `SKILL0_RUNTIME_ALLOW_INITIALIZE=true`; production boots cannot initialize an
+  empty Runtime ledger.
+- Public `/health` returns a liveness status only. Authenticated
+  `/api/health/detail` omits filesystem, storage, model, and version metadata.
+- The isolated Compose rehearsal initializes its disposable Runtime volume before
+  production startup through an entrypoint-overridden helper, then runs the
+  stack with Runtime initialization disabled throughout.
+- [`../production-security-policy.md`](../production-security-policy.md) is
+  advanced to policy `1.1.0`; the two controls are no longer listed as known
+  unenforced gaps.
+
+### Validation evidence
+
+- Focused production/API/security regression: `96 passed`.
+- Full Python/API regression: `497 passed, 62 warnings`.
+- The PowerShell Compose rehearsal parsed successfully without execution.
+- The local Git worktree was clean before this batch; no Asset type, FTS5
+  integration, Dashboard redesign, real adapter, or physical database migration
+  was introduced.
+
+### Blocked deployment evidence
+
+The requested live isolated rehearsal is `BLOCKED`, not passed: Docker client
+`29.6.1` is installed but its local daemon pipe is unavailable, and a real
+production `CORS_ORIGINS` value was intentionally not read or created. No
+container, route, secret file, volume, or external service was started or
+modified. Re-run the existing rehearsal only after a local Docker daemon and
+operator-provided staging configuration are available; that deployment evidence
+remains required before any production-readiness claim.
+
 ## Stage 1 — P0.2 real Governance authority
 
 ### Deliverables

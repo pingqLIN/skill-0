@@ -1,8 +1,8 @@
 # Production Security Policy v1
 
 - 狀態：**已接受，適用 Runtime Architecture v1 stable foundation**
-- 版本：`1.0.0`
-- 生效日期：`2026-07-18`
+- 版本：`1.1.0`
+- 生效日期：`2026-07-20`
 - Machine-readable policy：[`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations：[`runtime-production-operations.md`](runtime-production-operations.md)
 - Authority lifecycle：[`governance-authority-lifecycle.md`](governance-authority-lifecycle.md)
@@ -26,7 +26,8 @@
 - 只有 explicit enable proxy trust 且 peer 位於 trusted proxy CIDRs 時，才接受 forwarded client-IP headers。
 - Runtime create/resume/recovery request models 要求 `dry_run: Literal[True]`；public Runtime route 只接受 test adapters，simulation adapter 拒絕 real execution。
 - Core API 以 read-only mount 使用 `governance.db`；Governance service 擁有 write。Runtime decisions/evidence 使用獨立 Runtime store。
-- Production Compose 預設 `SKILL0_RUNTIME_ALLOW_INITIALIZE=false`；若 ledger 已存在而 operator override 為 `true`，目前 startup doctor 只 warning、不 fail。Release evidence 因此必須驗證 effective value。
+- Production startup 與 production doctor 都會拒絕 `SKILL0_RUNTIME_ALLOW_INITIALIZE=true`。缺少 Runtime ledger 時必須經 verified recovery workflow restore；production boot 不得初始化它。
+- Public `/health` 只回傳 liveness status。`/api/health/detail` 需要 JWT authentication，且不回傳 database path、storage size、model name、version metadata。
 - Runtime doctor 可要求三個 stores 都有 current/readable backup，且只回報 configuration names，不回報 secret values。
 - HITL decision 需要 authenticated JWT subject 出現在 `SKILL0_RUNTIME_DECISION_ACTORS`，並受 immutable item deadline 限制。
 
@@ -39,7 +40,7 @@
 - Host volumes/backups 必須 encrypted at rest、限制 ownership/mode，且 backup decryption keys 與 media 分離。
 - Host/container administration、Docker socket、backup paths、model cache writes 只允許 named operator roles。
 - 集中保存 logs，設定 retention/access control，並保留 request、Governance revision、Runtime run、event correlation。
-- 將 unauthenticated health endpoints 限制於 trusted network boundary。現行 Core API health responses 會暴露 database path 與部分 environment/model metadata；本 foundation 尚未實作 response redaction 或 route authentication。
+- 將 public liveness 與 metrics routes 限制於 trusted network boundary；authentication 可降低暴露，但不能取代 network containment。
 
 缺少任一 required deployment control 時，即使 application doctor 通過，也不符合本 policy。
 
@@ -93,7 +94,7 @@
 - 未來啟用 Knowledge resolver 前，必須執行 classification、authorization、digest、budget、redaction、prompt-injection controls。
 - Agent Evaluation report 的 candidate provenance 維持 `unverified`；不得把 private prompts/responses/traces 公開為 evidence。
 - Logs/public Evidence 不得包含 secrets、credentials、raw authorization headers、private payload、非必要 recovery parameters；使用 stable IDs、reason codes、digests、counts、redacted summaries。
-- Health/error response 不得暴露 filesystem layout、SQL text、stack trace 或非必要 config values。這是 deployment requirement，不是 verified application control：現行 unauthenticated Core API health routes 會暴露 database path 與部分 environment/model metadata；在欄位 redaction 或 route authentication 實作前，必須以 network containment 保護。
+- Public health/error response 不得暴露 filesystem layout、SQL text、stack trace 或非必要 config values。Public health route 僅回傳 status；authenticated detail route 不回傳 database path、storage size、model name、version metadata。
 
 ## 8. Supply chain 與 build policy
 

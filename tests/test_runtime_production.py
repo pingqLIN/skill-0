@@ -82,18 +82,21 @@ def test_runtime_doctor_fails_closed_when_runtime_store_is_missing(
     assert any(issue.startswith("runtime_db_missing:") for issue in report["errors"])
 
 
-def test_release_gate_rejects_runtime_initialization_mode(tmp_path, monkeypatch):
+def test_production_doctor_rejects_runtime_initialization_mode_without_backup_gate(
+    tmp_path, monkeypatch
+):
     _configure_production_environment(monkeypatch, tmp_path)
     monkeypatch.setenv("SKILL0_RUNTIME_ALLOW_INITIALIZE", "true")
 
     report = run_doctor(
         production=True,
-        require_backups=True,
-        backup_dir=tmp_path / "missing-backups",
+        require_backups=False,
+        backup_dir=tmp_path / "backups",
         max_backup_age_days=2,
     )
 
     assert "runtime_initialization_is_enabled" in report["errors"]
+    assert "runtime_initialization_is_enabled" not in report["warnings"]
 
 
 def test_release_gate_rejects_corrupt_runtime_backup(tmp_path, monkeypatch):
@@ -170,9 +173,11 @@ def test_maintenance_scripts_cover_all_three_databases():
     assert '?mode=ro",uri=True' in rehearsal
     assert 'skill0-runtime-db:/runtime" python:3.12-slim python -c $storageCheck' in rehearsal
     assert "Runtime production doctor" in rehearsal
-    assert "Disable Runtime initialization and recreate Core API" in rehearsal
-    assert '"SKILL0_RUNTIME_ALLOW_INITIALIZE=false"' in rehearsal
-    assert '@("up", "--detach", "--force-recreate", "api")' in rehearsal
+    assert "Initialize disposable Runtime ledger before production startup" in rehearsal
+    assert '"--entrypoint", "python", "api"' in rehearsal
+    assert "RuntimeLedger(\"/app/runtime-data/runtime.db\"" in rehearsal
+    assert "SKILL0_RUNTIME_ALLOW_INITIALIZE=false" in rehearsal
+    assert "SKILL0_RUNTIME_ALLOW_INITIALIZE=true" not in rehearsal
     assert "Governed Runtime dry-run and deterministic Evidence" in rehearsal
     assert "governance_runtime_approval" in rehearsal
     assert 'Uri "http://127.0.0.1:$ApiPort/api/runs"' in rehearsal
@@ -198,3 +203,5 @@ def test_maintenance_scripts_cover_all_three_databases():
     )
     assert "SKILL0_RUNTIME_ALLOW_INITIALIZE" in entrypoint
     assert "Runtime ledger is missing" in entrypoint
+    assert "Runtime initialization must be disabled in production" in entrypoint
+    assert "set SKILL0_RUNTIME_ALLOW_INITIALIZE=true" not in entrypoint

@@ -138,6 +138,7 @@ def test_rate_limit_exempt_paths():
     assert _is_rate_limit_exempt_path('/metrics') is True
     assert _is_rate_limit_exempt_path('/docs') is True
     assert _is_rate_limit_exempt_path('/docs/oauth2-redirect') is True
+    assert _is_rate_limit_exempt_path('/api/health/detail') is False
     assert _is_rate_limit_exempt_path('/api/search') is False
 
 
@@ -216,4 +217,27 @@ def test_health_endpoint_does_not_initialize_search_engine(monkeypatch, tmp_path
     response = client.get("/health")
 
     assert response.status_code == 200
+    assert response.json() == {"status": "healthy"}
+
+
+def test_health_detail_requires_authentication_and_redacts_metadata(monkeypatch, tmp_path):
+    db_path = tmp_path / "skills.db"
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("CREATE TABLE skills (id INTEGER PRIMARY KEY, name TEXT NOT NULL)")
+        conn.execute("INSERT INTO skills (name) VALUES ('fixture-skill')")
+        conn.commit()
+
+    monkeypatch.setattr(api_module, "DB_PATH", str(db_path))
+    client = TestClient(api_module.app)
+
+    assert client.get("/api/health/detail").status_code == 401
+
+    token = api_module.create_access_token({"sub": "health-observer"})
+    response = client.get(
+        "/api/health/detail",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 200
     assert response.json()["total_skills"] == 1
+    assert set(response.json()) == {"status", "total_skills", "uptime_seconds"}

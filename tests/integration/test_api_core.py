@@ -126,26 +126,24 @@ class TestRootAndHealth:
         assert "endpoints" in data
 
     def test_health_check(self, client):
-        """GET /health returns healthy status"""
+        """GET /health returns only a public liveness status."""
         resp = client.get("/health")
         assert resp.status_code == 200
-        data = resp.json()
-        assert data["status"] == "healthy"
-        assert "total_skills" in data
-        assert data["total_skills"] > 0
+        assert resp.json() == {"status": "healthy"}
 
     def test_health_detail(self, client):
-        """GET /api/health/detail returns detailed metrics"""
-        resp = client.get("/api/health/detail")
+        """GET /api/health/detail requires JWT and redacts storage metadata."""
+        token = create_access_token({"sub": "health-observer"})
+        resp = client.get(
+            "/api/health/detail",
+            headers={"Authorization": f"Bearer {token}"},
+        )
         assert resp.status_code == 200
         data = resp.json()
         assert data["status"] in ("healthy", "degraded")
-        assert data["version"] == API_VERSION
-        assert data["db_exists"] is True
-        assert data["db_size_bytes"] > 0
         assert data["total_skills"] > 0
         assert data["uptime_seconds"] >= 0
-        assert isinstance(data["embedding_model"], str)
+        assert set(data) == {"status", "total_skills", "uptime_seconds"}
 
 
 # ==================== Search ====================

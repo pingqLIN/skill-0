@@ -210,12 +210,10 @@ def test_health_no_auth():
     assert resp.status_code in (200, 503)
 
 
-def test_health_detail_no_auth():
-    """/api/health/detail 不需要認證，且回傳 status 欄位。"""
+def test_health_detail_requires_auth():
+    """/api/health/detail 只提供給 authenticated operator。"""
     resp = client.get("/api/health/detail")
-    assert resp.status_code == 200
-    data = resp.json()
-    assert "status" in data
+    assert resp.status_code == 401
 
 
 def test_root_no_auth():

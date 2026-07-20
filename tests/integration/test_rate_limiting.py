@@ -164,16 +164,6 @@ def test_root_exempt_from_rate_limit(monkeypatch):
         assert resp.status_code == 200
 
 
-def test_health_detail_exempt_from_rate_limit(monkeypatch):
-    """/api/health/detail 豁免速率限制。"""
-    monkeypatch.setattr(api_module, "API_RATE_LIMIT", "1/minute")
-    _rate_limit_store.clear()
-
-    for _ in range(10):
-        resp = client.get("/api/health/detail")
-        assert resp.status_code == 200
-
-
 def test_metrics_exempt_from_rate_limit(monkeypatch):
     """/metrics 豁免速率限制。"""
     monkeypatch.setattr(api_module, "API_RATE_LIMIT", "1/minute")

@@ -84,7 +84,7 @@ SKILL0_RUNTIME_BINDING_KEY=rehearsal-runtime-binding-key-0123456789
 SKILL0_RUNTIME_DECISION_ACTORS=rehearsal-admin
 SKILL0_RUNTIME_HITL_TTL_SECONDS=86400
 SKILL0_RUNTIME_JOURNAL_MODE=WAL
-SKILL0_RUNTIME_ALLOW_INITIALIZE=true
+SKILL0_RUNTIME_ALLOW_INITIALIZE=false
 SKILL0_TOOLS_PATH=/app/tools
 SKILL0_DEVICE=cpu
 CORS_ORIGINS=https://rehearsal.example.invalid
@@ -113,6 +113,10 @@ try {
     Write-Host "[STEP] Initialize disposable governance volume"
     Invoke-Compose -ComposeArgs @("run", "--rm", "--no-deps", "dashboard", "python", "-c", 'from tools.governance_db import GovernanceDB; GovernanceDB("/app/governance/db/governance.db")')
 
+    Write-Host "[STEP] Initialize disposable Runtime ledger before production startup"
+    $runtimeInitialize = 'from runtime.ledger import RuntimeLedger; RuntimeLedger("/app/runtime-data/runtime.db", journal_mode="WAL", hitl_ttl_seconds=86400).close()'
+    Invoke-Compose -ComposeArgs @("run", "--rm", "--no-deps", "--entrypoint", "python", "api", "-c", $runtimeInitialize)
+
     Write-Host "[STEP] Start production compose stack"
     Invoke-Compose -ComposeArgs @("up", "--detach")
 
@@ -124,16 +128,6 @@ try {
 
     Write-Host "[STEP] Web health"
     Wait-Http -Uri "http://127.0.0.1:$WebPort/"
-
-    Write-Host "[STEP] Disable Runtime initialization and recreate Core API"
-    $envContent = Get-Content -Raw -LiteralPath $envFile
-    $envContent = $envContent.Replace(
-        "SKILL0_RUNTIME_ALLOW_INITIALIZE=true",
-        "SKILL0_RUNTIME_ALLOW_INITIALIZE=false"
-    )
-    Set-Content -LiteralPath $envFile -Value $envContent -NoNewline -Encoding utf8
-    Invoke-Compose -ComposeArgs @("up", "--detach", "--force-recreate", "api")
-    Wait-Http -Uri "http://127.0.0.1:$ApiPort/health"
 
     Write-Host "[STEP] Runtime production doctor"
     Invoke-Compose -ComposeArgs @("exec", "-T", "api", "python", "/app/scripts/runtime_doctor.py", "--production", "--json")
