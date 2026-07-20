@@ -55,7 +55,7 @@ blocked by the separate security and external-control gates.
 ### Validation evidence
 
 - Focused production contract regression: `7 passed`.
-- Full Python/API regression: `504 passed, 76 warnings`.
+- Full Python/API regression: `505 passed, 76 warnings`.
 - Schema validation: `196 passed, 0 failed`.
 - The isolated PowerShell Compose rehearsal passed service health, production
   doctor, governed dry-run, deterministic Evidence, three-store backup/restore,

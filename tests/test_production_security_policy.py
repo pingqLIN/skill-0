@@ -1,4 +1,5 @@
 import json
+import re
 from pathlib import Path
 
 
@@ -97,3 +98,22 @@ def test_public_security_entrypoints_link_authoritative_policy_and_companion():
     assert "docs/production-security-policy.md" in security
     assert "SECURITY.zh-tw.md" in security
     assert "SECURITY.md" in companion
+
+
+def test_ci_remote_actions_pin_full_commit_shas():
+    workflow_dir = ROOT / ".github" / "workflows"
+    action_pattern = re.compile(r"^\s*-?\s*uses:\s+([^\s#]+)", re.MULTILINE)
+
+    for workflow_path in workflow_dir.glob("*.yml"):
+        workflow = workflow_path.read_text(encoding="utf-8")
+        remote_actions = [
+            action
+            for action in action_pattern.findall(workflow)
+            if not action.startswith(("./", "docker://"))
+        ]
+
+        assert remote_actions
+        for action in remote_actions:
+            assert re.fullmatch(r"[^@\s]+@[0-9a-f]{40}", action), (
+                f"{workflow_path.name} has an unpinned action: {action}"
+            )

@@ -41,7 +41,7 @@ pwsh -NoProfile -File scripts\rehearse_prod_compose.ps1 `
 修正後的 repository verification：
 
 - focused production contract tests：`7 passed`；
-- full Python/API regression：`504 passed, 76 warnings`；
+- full Python/API regression：`505 passed, 76 warnings`；
 - schema validation：`196 passed, 0 failed`；
 - changed-scope audit：沒有 forbidden path、added DDL 或 secret-like finding。
 
