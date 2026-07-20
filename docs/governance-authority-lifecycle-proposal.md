@@ -62,6 +62,11 @@ preconditions. It must show that every affected API operation still preserves
 the current exact-authority tuple, immutable Runtime events, and read-only Core
 access to `governance.db`. Do not implement it in this proposal.
 
+The reviewed design artifact is
+[`governance-authority-gate-a-design.md`](governance-authority-gate-a-design.md).
+It fully scopes current-target enforcement but leaves fresh-evidence semantics
+at Gate B because the required evidence and retention rules are not yet chosen.
+
 ### Gate B — authority semantics decision
 
 Use a signed or otherwise authenticated operator decision packet to choose

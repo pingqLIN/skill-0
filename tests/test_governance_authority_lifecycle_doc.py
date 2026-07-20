@@ -122,6 +122,19 @@ def test_governance_lifecycle_transition_set_is_explicit():
     }
 
 
+def test_gate_a_design_is_compatibility_only_and_does_not_claim_freshness():
+    design = (ROOT / "docs" / "governance-authority-gate-a-design.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "no implementation authority" in design
+    assert "STALE_TARGET_REVISION" in design
+    assert "It requires no schema or data migration" in design
+    assert "Gate A does not fully specify or authorize fresh reapproval" in design
+    assert "FTS5" in design
+    assert "Dashboard redesign" in design
+
+
 def _approved_governance_skill(tmp_path):
     db = GovernanceDB(db_path=tmp_path / "governance.db")
     canonical_skill_id = "claude__skill__lifecycle_test"

@@ -33,7 +33,7 @@
 
 ## 建議順序
 
-1. **Gate A — compatibility-only design：** 為 current-target enforcement 與 reapproval preconditions 產出 file-scoped design；證明不改變 exact authority tuple、immutable Runtime events 與 Core 對 `governance.db` 的 read-only access。本提案不實作它。
+1. **Gate A — compatibility-only design：** 已產出 [`governance-authority-gate-a-design.md`](governance-authority-gate-a-design.md)。它完整界定 current-target enforcement；fresh-evidence semantics 因 evidence/retention rules 尚未決定，保留到 Gate B。本提案不授權實作。
 2. **Gate B — authority semantics decision：** 以 signed 或同等 authenticated operator decision packet 選定 expiry、revocation、quorum、actor roles、evidence freshness、emergency behavior；packet 必須包含 reviewer、scope、date、reason、canonical policy version。
 3. **Gate C — migration and recovery decision：** 若 Gate B 需要新的 persisted lifecycle facts，另行提出 staged copy、integrity check、backup/restore、current-revision reconciliation、backward compatibility、rollback 的 migration proposal。獨立核准前不得開始 physical migration。
 4. **Gate D — implementation batches：** 依 current-target、fresh reapproval、expiry、revocation、quorum、audit chain 拆成各自 batch；每個 batch 都要有 focused negative tests、Runtime create/resume tests、independent review 與可回復 commit。

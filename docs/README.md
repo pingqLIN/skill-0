@@ -29,6 +29,7 @@ The non-suffixed English operations documents are authoritative. Existing `.zh-t
 - [`agent-evaluation-benchmark-framework.md`](agent-evaluation-benchmark-framework.md) defines deterministic, replay-based evaluation evidence and freeze gates without provider execution.
 - [`governance-authority-lifecycle.md`](governance-authority-lifecycle.md) defines the exact revision-authority tuple, state transitions, Runtime revalidation, and current control gaps.
 - [`governance-authority-lifecycle-proposal.md`](governance-authority-lifecycle-proposal.md) records the operator decisions and gated design work required before lifecycle gaps may be implemented.
+- [`governance-authority-gate-a-design.md`](governance-authority-gate-a-design.md) provides the reviewed, no-migration implementation shape for current-target enforcement and preserves fresh reapproval as a Gate B decision.
 - [`production-security-policy.md`](production-security-policy.md) defines the dry-run-only production threat boundary, mandatory controls, external responsibilities, release blockers, and incident response.
 - [`runtime-v4-execution-plan.md`](runtime-v4-execution-plan.md) records the implemented Runtime v4 architecture but does not reopen the frozen feature scope.
 - [`runtime-v4-contract.md`](runtime-v4-contract.md) and [`runtime-v4-contract.json`](runtime-v4-contract.json) define the runtime contract.
