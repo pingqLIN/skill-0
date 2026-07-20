@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-18
 
-**Updated:** 2026-07-20
+**Updated:** 2026-07-21
 
 **Scope:** P0 Runtime Asset Foundation and Storage Boundary
 
@@ -12,13 +12,13 @@
 
 **LOCAL_GO / PRODUCTION_NO_GO_PENDING_BASE_CVE_FIX.** The reviewed dependency remediation is accepted for local P0/P1 development. No verified Critical or untreated High dependency finding remains in the declared Python or web dependency graphs. The Runtime Asset index is healthy after a provenance-triggered full rebuild.
 
-The final API and Dashboard images each contain **1 Critical and 2 High** findings in Debian Bookworm's essential Perl runtime, all reported without a fixed Bookworm version. The pinned Web runtime image contains **1 Critical and 9 High** Alpine findings. These findings are treated by an explicit production deny, not by risk acceptance: none of the images is cleared for production, release, deploy, or public exposure.
+The final API and Dashboard images each contain **1 Critical and 2 High** findings in Debian Bookworm's essential Perl runtime, all reported without a fixed Bookworm version. The Web runtime blocker is resolved on the reviewed candidate: the digest-pinned `nginxinc/nginx-unprivileged:1.31.3-alpine3.24-slim` final image reports zero vulnerabilities at every severity. The image set and deployment remain blocked from production, release, deploy, or public exposure because the API/Dashboard findings and required external controls are still open.
 
 ## Evidence
 
 - Initial local Python environment: 79 dependencies; 7 advisories across `pydantic-settings`, `setuptools`, `torch`, and `transformers`.
 - Remediated local Python environment: 82 dependency records; 81 were auditable with no known vulnerabilities. The CPU build `torch==2.13.0+cpu` was skipped by `pip-audit` because that local-version identifier is not on PyPI; its installed version and the upstream fixed-version boundary were checked separately.
-- Partial legacy `requirements.lock`: 15 pinned packages, no known vulnerabilities after remediation. The file is explicitly non-authoritative and remains incomplete.
+- Removed legacy `requirements.lock`: its 15-package partial snapshot was never consumed by CI or containers and could be mistaken for an authoritative lock. The recoverable local copy is retained under ignored `.del/`; active environment inputs remain the scoped `requirements-*.txt` files until a separately reviewed hash-complete lock workflow is adopted.
 - Web lockfile: 480 total dependencies and 0 npm audit vulnerabilities. The production web image also reported 0 vulnerabilities during `npm ci`.
 - GitHub Dependabot API: 0 open alerts at capture time.
 - Upgraded embedding-stack probe: all 196 Asset document vectors and five fixed query vectors were bitwise equal before and after the `transformers`/`torch` upgrade; all five top-10 ranking orders were equal.
@@ -27,6 +27,7 @@ The final API and Dashboard images each contain **1 Critical and 2 High** findin
 - Container CVE scan: the former Debian Trixie API image had 1 Critical and 11 High findings. Pinning the current Bookworm image digest removed all glibc/OpenSSL findings. The final API image scan completed with exactly 1 Critical and 2 High Perl findings and no application-layer Critical/High addition.
 - Follow-up offline `local://` scans on `2026-07-20` verified the pinned Dashboard candidate at 1 Critical / 2 High and the pinned Web candidate at 1 Critical / 9 High. Updating the Web base from digest `806f6d3e...` to `08c2bc9344...` reduced the observed result from 2 Critical / 14 High but did not satisfy the zero-Critical/High gate.
 - A fresh `2026-07-21` rebuild and `local://` scan reproduced API at 1 Critical / 2 High, Dashboard at 1 Critical / 2 High, and Web at 1 Critical / 9 High. The same rehearsal verified the new approved local model artifact digest gate; see [`runtime-production-compose-rehearsal-2026-07-21.md`](runtime-production-compose-rehearsal-2026-07-21.md).
+- A later `2026-07-21` Web-only remediation replaced the runtime base with the official multi-architecture digest `sha256:90d82b3358df5758b3c57d20f2565082ce6f744906e7dc09afd0096c1b8eb2b5`. The rebuilt final Web image (`sha256:f604964103605aae8e96fafd642a0bc3a937596638252bd9291aa9f74aec29fc`) was scanned with Docker Scout as `0 Critical / 0 High / 0 Medium / 0 Low`; the SARIF contains zero results and has SHA-256 `69933e606e8fc010c7d1df52993f413523163ac7ca1c3247fc26bdbc6c946878`. An isolated bridge-network smoke returned HTTP 200 while the container ran as user `101`.
 - All production Dockerfile stages are now digest-pinned. All remote GitHub Actions references are pinned to full commit SHAs with their intended major versions retained as comments. Static regression tests fail on a mutable Docker stage or action reference. A second isolated Compose rehearsal passed build, health, production doctor, governed dry-run, deterministic Evidence, three-store backup/restore, restart persistence, and zero-resource cleanup with the pinned images.
 - Regression: 451 Python tests passed; 34 web tests passed; frontend production build and Python compile checks passed.
 - Follow-up hardening regression: 508 Python/API tests and 36 frontend tests passed; frontend lint/build and schema validation 196/196 passed.
@@ -82,8 +83,7 @@ Production remains blocked unless the result has zero Critical/High findings or 
 
 ## Remaining Warnings / Blockers
 
-1. **Dashboard/Web container CVE inventories — VERIFIED production blockers.** The Dashboard Bookworm image has the same unfixed Perl 1 Critical / 2 High set as the API. The Web image has OpenSSL 1 Critical / 8 High plus musl 1 High; Scout reports fixed boundaries `openssl>=3.5.7-r0` and `musl>=1.2.5-r23`, but the current official image digest contains older packages. The build environment's TLS trust gate prevented a safe package refresh, and no trusted-host or force-missing-repository bypass was used. Revalidate a newer official digest or an approved CA-enabled rebuild; the gate remains zero Critical/High.
-2. **Incomplete legacy lock — Warning.** `requirements.lock` is not consumed by CI or containers and is not a hash-complete transitive lock. It is retained only as a labelled legacy snapshot. Replace it with per-environment, hash-verified locks or remove it through the repository's recoverable deletion workflow.
-3. **Model approval boundary — application control resolved; deployment evidence still required.** Production now requires an absolute, symlink-free local model directory and an operator-approved complete-tree digest. Startup, `SkillEmbedder`, index identity, and the production doctor fail closed when the artifact is missing, malformed, unreadable, or mismatched; remote fallback remains available only outside production and the Compose model volume is read-only. A real deployment must still supply the reviewed artifact, approved digest, and operator evidence because host and volume administration remain outside the application trust boundary.
+1. **API/Dashboard container CVE inventories — VERIFIED production blockers.** The two Bookworm images retain the same unfixed Perl 1 Critical / 2 High set. No fixed Bookworm version or changed official Python base digest was available at the `2026-07-21` recheck. Do not mix Debian releases, force package replacement, suppress the findings, or disable TLS verification. Revalidate a fixed supported official base when available; the gate remains zero Critical/High. The former Web OpenSSL/musl blocker is closed by the separately rebuilt and scanned Alpine 3.24 candidate described above.
+2. **Model approval boundary — application control resolved; deployment evidence still required.** Production now requires an absolute, symlink-free local model directory and an operator-approved complete-tree digest. Startup, `SkillEmbedder`, index identity, and the production doctor fail closed when the artifact is missing, malformed, unreadable, or mismatched; remote fallback remains available only outside production and the Compose model volume is read-only. A real deployment must still supply the reviewed artifact, approved digest, and operator evidence because host and volume administration remain outside the application trust boundary.
 
 Warnings and blockers are assigned to the Runtime maintainers for the first production-hardening batch. Until they are closed, this review supports local Runtime dry-runs and P1 Search evidence only.

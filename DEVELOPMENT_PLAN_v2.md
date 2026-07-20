@@ -221,7 +221,7 @@ tests/integration/
 **目標**：消除破壞性升級風險
 
 **執行**：
-- Python：`pip freeze > requirements.lock`
+- Python：維持各 environment 使用的 scoped `requirements-*.txt`；若要導入 lock，必須產生按環境拆分且 hash-complete 的 reviewed lock，不使用全域 `pip freeze` snapshot 冒充 authoritative lock
 - Node：確認 `package-lock.json` 存在且 up-to-date
 
 ---

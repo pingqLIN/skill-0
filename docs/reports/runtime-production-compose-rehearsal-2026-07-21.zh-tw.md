@@ -92,7 +92,7 @@ package filesystem layer。
 
 Repository-controlled model artifact 缺口已關閉，但 production 仍為 `NO_GO`：
 
-- 三個 images 仍未通過 Critical／High 必須為零的 gate；
+- 演練當下三個 images 都未通過 Critical／High 必須為零的 gate；
 - external TLS、network ACL、secret-manager、host-volume、encrypted-backup 與
   monitoring evidence 仍在 repository 範圍外；
 - 本次沒有執行或授權 deploy、public exposure、production secret 使用或
@@ -100,3 +100,16 @@ Repository-controlled model artifact 缺口已關閉，但 production 仍為 `NO
 
 明確排除項目不變：不做 FTS5 production integration、Dashboard redesign、new
 Asset Type、physical database migration 或 real adapter。
+
+## 演練後 Web image 修補
+
+後續在 `2026-07-21` 將 Web-only runtime base 更新為 official digest-pinned
+`nginxinc/nginx-unprivileged:1.31.3-alpine3.24-slim` image。重建後的 final Web
+image 以 non-root user `101` 通過 isolated HTTP 200 smoke。Docker Scout 回報
+`0 Critical／0 High／0 Medium／0 Low`；零 result SARIF 的 SHA-256 為
+`69933e606e8fc010c7d1df52993f413523163ac7ca1c3247fc26bdbc6c946878`。
+
+這只關閉 Web image CVE blocker；上表仍保留 Compose rehearsal 當時的歷史
+scan evidence。Production 維持 `NO_GO`，因 API 與 Dashboard 各自仍有
+1 Critical／2 High 的 Bookworm Perl 未修補 findings，且上述 external controls
+仍需 operator evidence。

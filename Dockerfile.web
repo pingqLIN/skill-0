@@ -10,7 +10,7 @@ COPY skill-0-dashboard/apps/web/ .
 RUN npm run build
 
 # Stage 2: Serve
-FROM nginxinc/nginx-unprivileged:1.29.5-alpine-slim@sha256:08c2bc93448bc00d2a2e86cd2f8f729220f1d48b56bbf7f211e117fcfe0c4cb6
+FROM nginxinc/nginx-unprivileged:1.31.3-alpine3.24-slim@sha256:90d82b3358df5758b3c57d20f2565082ce6f744906e7dc09afd0096c1b8eb2b5
 
 # SPA routing config
 RUN printf 'server {\n\

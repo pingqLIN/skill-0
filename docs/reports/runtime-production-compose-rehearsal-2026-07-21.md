@@ -99,7 +99,7 @@ flags, and no package filesystem layer changed after the retained scan.
 The repository-controlled model artifact gap is closed, but production remains
 `NO_GO`:
 
-- all three images still violate the zero-Critical/High gate;
+- at rehearsal time, all three images violated the zero-Critical/High gate;
 - external TLS, network ACL, secret-manager, host-volume, encrypted-backup, and
   monitoring evidence remains outside the repository; and
 - no deploy, public exposure, production secret use, or vulnerability exception
@@ -108,3 +108,17 @@ The repository-controlled model artifact gap is closed, but production remains
 The explicit exclusions remain unchanged: no FTS5 production integration,
 Dashboard redesign, new Asset Type, physical database migration, or real
 adapter.
+
+## Post-rehearsal Web image remediation
+
+Later on `2026-07-21`, the Web-only runtime base was refreshed to the official
+digest-pinned `nginxinc/nginx-unprivileged:1.31.3-alpine3.24-slim` image. The
+rebuilt final Web image passed an isolated HTTP 200 smoke as non-root user `101`.
+Docker Scout reported `0 Critical / 0 High / 0 Medium / 0 Low`; the zero-result
+SARIF has SHA-256
+`69933e606e8fc010c7d1df52993f413523163ac7ca1c3247fc26bdbc6c946878`.
+
+This closes the Web image CVE blocker only. The original table above remains the
+historical scan evidence for the Compose rehearsal. Production stays `NO_GO`
+because API and Dashboard each retain 1 Critical / 2 High unfixed Bookworm Perl
+findings and the external controls listed above still require operator evidence.

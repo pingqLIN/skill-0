@@ -29,6 +29,23 @@ def test_production_docker_stages_pin_image_digests():
             )
 
 
+def test_web_runtime_uses_reviewed_zero_finding_base():
+    dockerfile = (ROOT / "Dockerfile.web").read_text(encoding="utf-8")
+
+    assert (
+        "nginxinc/nginx-unprivileged:1.31.3-alpine3.24-slim"
+        "@sha256:90d82b3358df5758b3c57d20f2565082ce6f744906e7dc09afd0096c1b8eb2b5"
+        in dockerfile
+    )
+
+
+def test_legacy_partial_requirements_lock_is_not_an_authority_file():
+    assert not (ROOT / "requirements.lock").exists()
+    assert (ROOT / "requirements-api.txt").is_file()
+    assert (ROOT / "requirements-runtime.txt").is_file()
+    assert (ROOT / "requirements-dev.txt").is_file()
+
+
 def _configure_production_environment(monkeypatch, tmp_path: Path) -> dict[str, Path]:
     skills_db = tmp_path / "skills.db"
     governance_db = tmp_path / "governance.db"

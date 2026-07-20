@@ -76,10 +76,11 @@ context guard; the clean rerun passed and left zero project containers, volumes,
 or networks.
 
 This does not grant production clearance. The dependency/image review remains
-`PRODUCTION_NO_GO_PENDING_BASE_CVE_FIX`: offline scans verified Dashboard at
-1 Critical / 2 High and Web at 1 Critical / 9 High. External TLS, network,
-secret-manager, encrypted-backup, and monitoring controls also still require
-operator evidence.
+`PRODUCTION_NO_GO_PENDING_BASE_CVE_FIX`: the `2026-07-21` Web-only refresh now
+scans at zero vulnerabilities at every severity, but API and Dashboard remain at
+1 Critical / 2 High each because Bookworm has no fixed Perl version. External
+TLS, network, secret-manager, encrypted-backup, and monitoring controls also
+still require operator evidence.
 
 ## Stage 1 — P0.2 real Governance authority
 
