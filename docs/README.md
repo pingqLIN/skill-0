@@ -1,6 +1,6 @@
 # Skill-0 Document Authority
 
-Updated: `2026-07-20`
+Updated: `2026-07-21`
 
 This page is the current document entry point. The Runtime v4 closeout remains
 feature-frozen. The explicitly approved P0 Runtime Asset plan opens an additive
@@ -17,9 +17,12 @@ Read in this order:
 5. [`planning/runtime-asset-p1-search-evidence-plan.md`](planning/runtime-asset-p1-search-evidence-plan.md) — completed offline-only FTS5 plus sqlite-vec evidence gate; no production integration authority.
 6. [`../ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) — compact frozen Runtime v4 state and branch handoff.
 7. [`closeout/FINAL_REPORT.md`](closeout/FINAL_REPORT.md) — Runtime v4 release decision, exact verification, and rollback.
-8. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
-9. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
-10. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level Runtime v4 acceptance evidence.
+8. [`contracts/runtime-production-admission-v1.md`](contracts/runtime-production-admission-v1.md) — signed, exact-release-bound production admission contract and checklist.
+9. [`production-operator-handoff.md`](production-operator-handoff.md) — human-only evidence and signing handoff for the current `WAITING_FOR_OPERATOR_EVIDENCE` boundary.
+10. [`production-admission-recovery.md`](production-admission-recovery.md) — fail-closed `BLOCKED` re-entry, audit retention, and rollback workflow.
+11. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
+12. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
+13. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level Runtime v4 acceptance evidence.
 
 The non-suffixed English operations documents are authoritative. Existing `.zh-tw.md` companions are human-readable translations.
 
@@ -32,6 +35,7 @@ The non-suffixed English operations documents are authoritative. Existing `.zh-t
 - [`governance-authority-gate-a-design.md`](governance-authority-gate-a-design.md) records the reviewed, no-migration current-target enforcement shape.
 - [`governance-authority-gate-b-design.md`](governance-authority-gate-b-design.md) defines the implemented new-revision, exact-binding, fresh-evidence reapproval gate and its application-only retention boundary.
 - [`production-security-policy.md`](production-security-policy.md) defines the dry-run-only production threat boundary, mandatory controls, external responsibilities, release blockers, and incident response.
+- [`contracts/runtime-production-admission-v1.md`](contracts/runtime-production-admission-v1.md) composes the existing security and external-control gates into one signed production admission package without expanding Runtime authority.
 - [`runtime-v4-execution-plan.md`](runtime-v4-execution-plan.md) records the implemented Runtime v4 architecture but does not reopen the frozen feature scope.
 - [`runtime-v4-contract.md`](runtime-v4-contract.md) and [`runtime-v4-contract.json`](runtime-v4-contract.json) define the runtime contract.
 - [`shared-documentation-model.md`](shared-documentation-model.md) and [`gui-governance.md`](gui-governance.md) define the external GUI mirror boundary.

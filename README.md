@@ -18,6 +18,18 @@ The governed Runtime v4 pilot is **dry-run only**. Its supported deployment is o
 
 For current release state and evidence, start with [docs/README.md](docs/README.md), [ai-context-export/CURRENT_STATE.md](ai-context-export/CURRENT_STATE.md), and [docs/closeout/FINAL_REPORT.md](docs/closeout/FINAL_REPORT.md).
 
+### Production Admission Status
+
+- Repository Gate: `GO`
+- Production Admission: `WAITING_FOR_OPERATOR_EVIDENCE`
+
+Production admission requires a real, signed operator package bound to the
+deployed image and model digests. See the
+[admission contract](docs/contracts/runtime-production-admission-v1.md),
+[operator handoff](docs/production-operator-handoff.md), and
+[BLOCKED recovery workflow](docs/production-admission-recovery.md). No repository
+check or AI-generated value can substitute for the external operator evidence.
+
 ## Compatibility with Existing Skills
 
 ### Low-risk adoption path

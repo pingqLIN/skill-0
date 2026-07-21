@@ -12,6 +12,25 @@
 
 Skill-0 是一個分類系統，用於將 AI/Chatbot Skills（特別是 Claude Skills 和 MCP Tools）解析為結構化的組件。包含**語義搜尋**功能，透過向量嵌入實現智慧 skill 探索。
 
+### Runtime v4 試行邊界
+
+受治理的 Runtime v4 試行環境僅支援 **dry-run**。目前支援的部署邊界是由
+一台主機透過 Docker Compose 執行三個獨立的 SQLite 儲存區（`skills.db`、
+`governance.db` 與 `runtime.db`）。它不會執行真實動作、不提供非 dry-run
+adapter，也不支援多節點或高可用性運作。
+
+### 正式環境準入狀態
+
+- Repository Gate：`GO`
+- Production Admission：`WAITING_FOR_OPERATOR_EVIDENCE`
+
+正式環境準入必須具備由真實操作人員簽署，且與已部署映像檔及模型摘要值
+綁定的套件。請參閱
+[準入契約](docs/contracts/runtime-production-admission-v1.zh-tw.md)、
+[操作人員交接說明](docs/production-operator-handoff.zh-tw.md) 與
+[`BLOCKED` 復原流程](docs/production-admission-recovery.zh-tw.md)。任何程式庫
+檢查或 AI 生成的值，都不能取代外部操作人員提供的證據。
+
 ## 與現行 Skill 相容與應用建議
 
 ### 相容策略（低風險導入）
