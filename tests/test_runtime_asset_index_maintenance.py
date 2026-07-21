@@ -96,6 +96,7 @@ def test_index_twice_requires_second_run_to_be_noop(root, tmp_path, monkeypatch)
     assert result["second"]["changed"] == 0
     assert result["doctor"]["state"] == "authority-missing"
     assert result["accepted"] is False
+    assert result["allow_nonhealthy_evidence"] is True
     assert result["rehearsal_only"] is True
     assert result["inspection"]["integrity"] == "ok"
     assert result["model_identity"] == {

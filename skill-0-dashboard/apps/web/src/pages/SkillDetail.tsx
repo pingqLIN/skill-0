@@ -50,6 +50,8 @@ const NON_RETRIABLE_ERROR_CODES = new Set([
   'SOURCE_PATH_NOT_ALLOWED',
   'INSTALLED_PATH_MISSING',
   'INSTALLED_PATH_NOT_ALLOWED',
+  'CURRENT_TARGET_UNAVAILABLE',
+  'STALE_TARGET_REVISION',
 ]);
 
 function formatLeaseExpiry(leaseExpiresAt: string | null) {

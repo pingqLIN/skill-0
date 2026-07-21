@@ -1,0 +1,137 @@
+{
+  "lifecycle_version": "1.2.0",
+  "status": "stable-foundation",
+  "authority_unit": [
+    "governance_skill_id",
+    "current_revision_id",
+    "is_current",
+    "revision_status_approved",
+    "canonical_asset_id",
+    "artifact_digest",
+    "skill_version",
+    "approved_by",
+    "approved_at"
+  ],
+  "states": {
+    "pending-unbound": {"authoritative": false, "stored": true},
+    "pending-bound": {"authoritative": false, "stored": true},
+    "approved-current": {"authoritative": true, "stored": true},
+    "rejected-current": {"authoritative": false, "stored": true},
+    "blocked-current": {"authoritative": false, "stored": true},
+    "superseded": {"authoritative": false, "stored": true},
+    "drifted": {"authoritative": false, "stored": false}
+  },
+  "transitions": [
+    {
+      "event": "register",
+      "from": ["unregistered"],
+      "to": "pending-unbound"
+    },
+    {
+      "event": "bind-runtime-artifact",
+      "from": ["pending-unbound"],
+      "to": "pending-bound"
+    },
+    {
+      "event": "bind-runtime-artifact-identical",
+      "from": [
+        "pending-bound",
+        "approved-current",
+        "rejected-current",
+        "blocked-current"
+      ],
+      "to": "same-state"
+    },
+    {
+      "event": "approve",
+      "from": ["pending-bound", "approved-current"],
+      "to": "approved-current",
+      "rejected_current_requires_new_revision": true
+    },
+    {
+      "event": "reject",
+      "from": ["pending-unbound", "pending-bound", "approved-current"],
+      "to": "rejected-current"
+    },
+    {
+      "event": "block",
+      "from": ["pending-unbound", "pending-bound", "approved-current"],
+      "to": "blocked-current"
+    },
+    {
+      "event": "register-new-revision",
+      "from": [
+        "pending-unbound",
+        "pending-bound",
+        "approved-current",
+        "rejected-current",
+        "blocked-current"
+      ],
+      "to": "pending-unbound",
+      "previous_current_becomes": "superseded"
+    },
+    {
+      "event": "admission-mismatch",
+      "from": ["approved-current"],
+      "to": "drifted"
+    }
+  ],
+  "non_authority_sources": [
+    "skills.status",
+    "asset-index",
+    "dashboard",
+    "knowledge-plane",
+    "agent-evaluation",
+    "runtime-contract",
+    "prior-run-result"
+  ],
+  "runtime": {
+    "create_revalidates": true,
+    "resume_revalidates": true,
+    "resume_checks_before_claim": true,
+    "historical_events_are_rewritten": false,
+    "runtime_hitl_can_grant_governance_authority": false
+  },
+  "noncurrent_target_effects": {
+    "reject": {
+      "current_authority_changes": false,
+      "skills_status_projection_may_change": false
+    },
+    "scan-block": {
+      "current_authority_changes": false,
+      "skills_status_projection_may_change": false
+    }
+  },
+  "revision_targeted_writes": {
+    "approve_currentness_enforced": true,
+    "reject_currentness_enforced": true,
+    "scan_currentness_enforced": true,
+    "equivalence_currentness_enforced": true,
+    "stale_job_error_code": "STALE_TARGET_REVISION",
+    "stale_job_retriable": false,
+    "stale_write_creates_evidence": false
+  },
+  "fresh_reapproval": {
+    "policy": "governance.fresh-reapproval.v1",
+    "direct_rejected_revision_approval": false,
+    "new_revision_required": true,
+    "exact_binding_required_before_qualifying_evidence": true,
+    "mandatory_artifacts": ["scan", "equivalence-test", "review", "decision"],
+    "scan_and_test_ids_are_server_derived": true,
+    "freshness_sensitive_projection_is_reset": true,
+    "generic_state_update_can_approve": false,
+    "blocked_to_pending_requires_post_reset_evidence": true,
+    "application_history_is_append_only": true,
+    "database_tamper_resistance": false
+  },
+  "implemented_gaps": {
+    "approval_expiry": false,
+    "dedicated_revocation_event": false,
+    "approval_quorum": false,
+    "cryptographic_audit_chain": false,
+    "identical_binding_requires_pending_status": false,
+    "reapproval_requires_fresh_evidence": true,
+    "reject_target_currentness_enforced": true,
+    "scan_target_currentness_enforced": true
+  }
+}

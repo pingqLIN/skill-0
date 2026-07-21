@@ -1,6 +1,6 @@
 # Skill-0 Document Authority
 
-Updated: `2026-07-18`
+Updated: `2026-07-20`
 
 This page is the current document entry point. The Runtime v4 closeout remains
 feature-frozen. The explicitly approved P0 Runtime Asset plan opens an additive
@@ -11,26 +11,35 @@ post-closeout milestone without changing the Runtime v4 release boundary.
 Read in this order:
 
 1. [`../README.md`](../README.md) — product scope and supported Runtime v4 boundary.
-2. [`planning/runtime-asset-foundation-next-round-plan.md`](planning/runtime-asset-foundation-next-round-plan.md) — active P0 Runtime Asset execution authority and scope gates.
-3. [`planning/runtime-asset-p0-1-operational-readiness-plan.md`](planning/runtime-asset-p0-1-operational-readiness-plan.md) — active P0.1 identity and operator-readiness work.
-4. [`planning/runtime-asset-p1-search-evidence-plan.md`](planning/runtime-asset-p1-search-evidence-plan.md) — offline-only FTS5 plus sqlite-vec evidence gate; no production integration authority.
-5. [`../ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) — compact frozen Runtime v4 state and branch handoff.
-6. [`closeout/FINAL_REPORT.md`](closeout/FINAL_REPORT.md) — Runtime v4 release decision, exact verification, and rollback.
-7. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
-8. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
-9. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level Runtime v4 acceptance evidence.
+2. [`runtime-architecture-v1.md`](runtime-architecture-v1.md) — accepted Runtime Asset stable-foundation architecture and change boundary.
+3. [`planning/runtime-asset-foundation-next-round-plan.md`](planning/runtime-asset-foundation-next-round-plan.md) — implemented P0 Runtime Asset execution authority and scope gates.
+4. [`planning/runtime-asset-p0-1-operational-readiness-plan.md`](planning/runtime-asset-p0-1-operational-readiness-plan.md) — implemented P0.1 identity and operator-readiness work.
+5. [`planning/runtime-asset-p1-search-evidence-plan.md`](planning/runtime-asset-p1-search-evidence-plan.md) — completed offline-only FTS5 plus sqlite-vec evidence gate; no production integration authority.
+6. [`../ai-context-export/CURRENT_STATE.md`](../ai-context-export/CURRENT_STATE.md) — compact frozen Runtime v4 state and branch handoff.
+7. [`closeout/FINAL_REPORT.md`](closeout/FINAL_REPORT.md) — Runtime v4 release decision, exact verification, and rollback.
+8. [`runtime-production-operations.md`](runtime-production-operations.md) — three-store production operations.
+9. [`operations-runbook.md`](operations-runbook.md) — operator commands and incident workflow.
+10. [`closeout/VERIFICATION_MATRIX.md`](closeout/VERIFICATION_MATRIX.md) — command-level Runtime v4 acceptance evidence.
 
 The non-suffixed English operations documents are authoritative. Existing `.zh-tw.md` companions are human-readable translations.
 
 ## Supporting contracts
 
+- [`knowledge-plane-extension-contract.md`](knowledge-plane-extension-contract.md) defines context-only, Directive-bound Knowledge Plane extensions without adding an Asset type or authority source.
+- [`agent-evaluation-benchmark-framework.md`](agent-evaluation-benchmark-framework.md) defines deterministic replay gates and records the reviewed-frozen synthetic foundation replay without provider execution.
+- [`governance-authority-lifecycle.md`](governance-authority-lifecycle.md) defines the exact revision-authority tuple, state transitions, Runtime revalidation, and current control gaps.
+- [`governance-authority-lifecycle-proposal.md`](governance-authority-lifecycle-proposal.md) records the operator decisions and gated design work required before lifecycle gaps may be implemented.
+- [`governance-authority-gate-a-design.md`](governance-authority-gate-a-design.md) records the reviewed, no-migration current-target enforcement shape.
+- [`governance-authority-gate-b-design.md`](governance-authority-gate-b-design.md) defines the implemented new-revision, exact-binding, fresh-evidence reapproval gate and its application-only retention boundary.
+- [`production-security-policy.md`](production-security-policy.md) defines the dry-run-only production threat boundary, mandatory controls, external responsibilities, release blockers, and incident response.
 - [`runtime-v4-execution-plan.md`](runtime-v4-execution-plan.md) records the implemented Runtime v4 architecture but does not reopen the frozen feature scope.
 - [`runtime-v4-contract.md`](runtime-v4-contract.md) and [`runtime-v4-contract.json`](runtime-v4-contract.json) define the runtime contract.
 - [`shared-documentation-model.md`](shared-documentation-model.md) and [`gui-governance.md`](gui-governance.md) define the external GUI mirror boundary.
 - [`closeout/KNOWN_LIMITATIONS.md`](closeout/KNOWN_LIMITATIONS.md) and [`closeout/DEFERRED_BACKLOG.md`](closeout/DEFERRED_BACKLOG.md) separate accepted limitations from future work.
 - [`reports/runtime-asset-p0-verification-and-p1-decision.md`](reports/runtime-asset-p0-verification-and-p1-decision.md) records the verified P0 result and evidence-gated P1 NO-GO decisions.
 - [`reports/runtime-asset-p0-1-operational-readiness.md`](reports/runtime-asset-p0-1-operational-readiness.md) records canonical identity repair, guarded local Index creation, backups, and the remaining Governance authority boundary.
-- [`reports/runtime-asset-p1-search-evidence.md`](reports/runtime-asset-p1-search-evidence.md) records the isolated FTS5/sqlite-vec pilot and its `NO_GO_INSUFFICIENT_EVIDENCE` decision.
+- [`reports/runtime-asset-p1-search-evidence.md`](reports/runtime-asset-p1-search-evidence.md) records the reviewed 84-query FTS5/sqlite-vec evidence run and its `NO_GO` decision.
+- [`reports/runtime-production-compose-rehearsal-2026-07-20.md`](reports/runtime-production-compose-rehearsal-2026-07-20.md) records the isolated three-store production Compose technical rehearsal and its remaining production-security boundary.
 
 ## Historical material
 

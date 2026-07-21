@@ -31,6 +31,29 @@ function Assert-LocalPortAvailable {
     }
 }
 
+function Assert-NoExistingComposeResources {
+    $projectLabel = "com.docker.compose.project=$ProjectName"
+    $containers = @(& docker container ls --all --quiet --filter "label=$projectLabel")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Docker daemon is unavailable; start it before running the rehearsal"
+    }
+
+    $volumes = @(& docker volume ls --quiet --filter "label=$projectLabel")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to inspect Docker volumes for compose project '$ProjectName'"
+    }
+
+    $networks = @(& docker network ls --quiet --filter "label=$projectLabel")
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to inspect Docker networks for compose project '$ProjectName'"
+    }
+
+    if ($containers.Count -gt 0 -or $volumes.Count -gt 0 -or $networks.Count -gt 0) {
+        throw "Compose project '$ProjectName' already owns containers, volumes, or networks; choose a unique -ProjectName and preserve the existing resources"
+    }
+}
+
+Assert-NoExistingComposeResources
 Assert-LocalPortAvailable -Port $ApiPort
 Assert-LocalPortAvailable -Port $WebPort
 
@@ -84,15 +107,18 @@ SKILL0_RUNTIME_BINDING_KEY=rehearsal-runtime-binding-key-0123456789
 SKILL0_RUNTIME_DECISION_ACTORS=rehearsal-admin
 SKILL0_RUNTIME_HITL_TTL_SECONDS=86400
 SKILL0_RUNTIME_JOURNAL_MODE=WAL
-SKILL0_RUNTIME_ALLOW_INITIALIZE=true
+SKILL0_RUNTIME_ALLOW_INITIALIZE=false
 SKILL0_TOOLS_PATH=/app/tools
 SKILL0_DEVICE=cpu
+SKILL0_EMBEDDING_MODEL=/app/.cache/approved-model
+SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST=sha256:$('0' * 64)
 CORS_ORIGINS=https://rehearsal.example.invalid
 JWT_SECRET_KEY=rehearsal-secret-key-change-me-0123456789
 JWT_ALGORITHM=HS256
 JWT_EXPIRE_MINUTES=15
 API_USERNAME=rehearsal-admin
 API_PASSWORD=rehearsal-password-0123456789
+SKILL0_BIND_ADDRESS=127.0.0.1
 API_PORT=$ApiPort
 WEB_PORT=$WebPort
 API_RATE_LIMIT=60/minute
@@ -110,8 +136,36 @@ try {
     Write-Host "[STEP] Build production compose images"
     Invoke-Compose -ComposeArgs @("build")
 
+    Write-Host "[STEP] Provision disposable approved model artifact"
+    $modelVolume = "${ProjectName}_model-cache"
+    & docker volume create `
+        --label "com.docker.compose.project=$ProjectName" `
+        --label "com.docker.compose.volume=model-cache" `
+        $modelVolume | Out-Null
+    if ($LASTEXITCODE -ne 0) {
+        throw "Unable to create the disposable model-cache volume"
+    }
+    $modelSeed = 'from pathlib import Path; from vector_db.model_artifact import compute_model_artifact_digest; root=Path("/model/approved-model"); root.mkdir(parents=True,exist_ok=True); (root/"config.json").write_text("{\"model_type\":\"rehearsal-only\"}\n",encoding="utf-8"); (root/"model.safetensors").write_bytes(b"skill0-rehearsal-model-artifact\n"); print(compute_model_artifact_digest(root))'
+    $modelDigest = ((& docker run --rm `
+        --user root `
+        --volume "${modelVolume}:/model" `
+        --entrypoint python `
+        "${ProjectName}-api" `
+        -c $modelSeed | Select-Object -Last 1) -as [string]).Trim()
+    if ($LASTEXITCODE -ne 0 -or $modelDigest -notmatch '^sha256:[0-9a-f]{64}$') {
+        throw "Disposable model artifact provisioning failed"
+    }
+    $updatedEnv = (Get-Content -Raw -LiteralPath $envFile) -replace `
+        'SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST=sha256:0{64}', `
+        "SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST=$modelDigest"
+    $updatedEnv | Set-Content -LiteralPath $envFile -NoNewline -Encoding utf8
+
     Write-Host "[STEP] Initialize disposable governance volume"
     Invoke-Compose -ComposeArgs @("run", "--rm", "--no-deps", "dashboard", "python", "-c", 'from tools.governance_db import GovernanceDB; GovernanceDB("/app/governance/db/governance.db")')
+
+    Write-Host "[STEP] Initialize disposable Runtime ledger before production startup"
+    $runtimeInitialize = 'from runtime.ledger import RuntimeLedger; RuntimeLedger("/app/runtime-data/runtime.db", journal_mode="WAL", hitl_ttl_seconds=86400).close()'
+    Invoke-Compose -ComposeArgs @("run", "--rm", "--no-deps", "--entrypoint", "python", "api", "-c", $runtimeInitialize)
 
     Write-Host "[STEP] Start production compose stack"
     Invoke-Compose -ComposeArgs @("up", "--detach")
@@ -124,16 +178,6 @@ try {
 
     Write-Host "[STEP] Web health"
     Wait-Http -Uri "http://127.0.0.1:$WebPort/"
-
-    Write-Host "[STEP] Disable Runtime initialization and recreate Core API"
-    $envContent = Get-Content -Raw -LiteralPath $envFile
-    $envContent = $envContent.Replace(
-        "SKILL0_RUNTIME_ALLOW_INITIALIZE=true",
-        "SKILL0_RUNTIME_ALLOW_INITIALIZE=false"
-    )
-    Set-Content -LiteralPath $envFile -Value $envContent -NoNewline -Encoding utf8
-    Invoke-Compose -ComposeArgs @("up", "--detach", "--force-recreate", "api")
-    Wait-Http -Uri "http://127.0.0.1:$ApiPort/health"
 
     Write-Host "[STEP] Runtime production doctor"
     Invoke-Compose -ComposeArgs @("exec", "-T", "api", "python", "/app/scripts/runtime_doctor.py", "--production", "--json")

@@ -8,6 +8,13 @@ HITL_TTL_SECONDS="${SKILL0_RUNTIME_HITL_TTL_SECONDS:-86400}"
 ALLOW_RUNTIME_INITIALIZE="${SKILL0_RUNTIME_ALLOW_INITIALIZE:-false}"
 SEED_DB="/app/bootstrap/skills.db"
 
+# Keep application imports and entrypoint provisioning on the same resolved paths.
+export SKILL0_DB_PATH="$RUNTIME_DB"
+export SKILL0_RUNTIME_DB_PATH="$RUNTIME_LEDGER"
+export SKILL0_RUNTIME_JOURNAL_MODE="$RUNTIME_JOURNAL_MODE"
+export SKILL0_RUNTIME_HITL_TTL_SECONDS="$HITL_TTL_SECONDS"
+export SKILL0_RUNTIME_ALLOW_INITIALIZE="$ALLOW_RUNTIME_INITIALIZE"
+
 mkdir -p "$(dirname "$RUNTIME_DB")"
 mkdir -p "$(dirname "$RUNTIME_LEDGER")"
 
@@ -21,16 +28,18 @@ if [ ! -s "$RUNTIME_DB" ]; then
   fi
 fi
 
-if [ ! -s "$RUNTIME_LEDGER" ]; then
-  case "${SKILL0_ENV:-development}" in
-    production|prod)
-      if [ "$ALLOW_RUNTIME_INITIALIZE" != "true" ]; then
-        echo "Runtime ledger is missing at $RUNTIME_LEDGER; restore it or set SKILL0_RUNTIME_ALLOW_INITIALIZE=true for one provisioning boot" >&2
-        exit 1
-      fi
-      ;;
-  esac
-fi
+case "${SKILL0_ENV:-development}" in
+  production|prod)
+    if [ "$ALLOW_RUNTIME_INITIALIZE" = "true" ]; then
+      echo "Runtime initialization must be disabled in production; restore a verified ledger instead" >&2
+      exit 1
+    fi
+    if [ ! -s "$RUNTIME_LEDGER" ]; then
+      echo "Runtime ledger is missing at $RUNTIME_LEDGER; restore a verified ledger before production startup" >&2
+      exit 1
+    fi
+    ;;
+esac
 
 python - "$RUNTIME_LEDGER" "$RUNTIME_JOURNAL_MODE" "$HITL_TTL_SECONDS" <<'PY'
 import sys

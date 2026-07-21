@@ -1,21 +1,29 @@
 # Security Policy
 
-## Supported Versions
+## Supported boundary
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Security maintenance covers the Runtime Architecture v1 stable foundation on
+the maintained mainline: single-host deployment, one supported Runtime Asset
+type (`skill`), and dry-run-only Runtime API behavior.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+Historical snapshots, unmaintained branches, modified deployments, real adapter
+execution, and topologies outside the documented boundary are not covered by a
+production-readiness claim.
 
-## Reporting a Vulnerability
+The authoritative deployment policy is
+[`docs/production-security-policy.md`](docs/production-security-policy.md). The
+Traditional Chinese companion is [`SECURITY.zh-tw.md`](SECURITY.zh-tw.md).
 
-Use this section to tell people how to report a vulnerability.
+## Reporting a vulnerability
 
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+Use the repository Security tab's private vulnerability-reporting channel when
+available. If that channel is unavailable, contact the repository owner through
+a private channel listed on the repository profile. Do not publish exploit
+details, secrets, credentials, customer data, or a working proof of concept in a
+public issue.
+
+Include the affected commit or version, deployment boundary, reproduction
+conditions, impact, and a minimal redacted proof. Maintainers will classify the
+report, preserve evidence, and coordinate remediation and disclosure. Never use
+a vulnerability report as authorization to access data, disrupt a deployment,
+or test systems outside your own authorized environment.

@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skill-0.local/schema/knowledge-plane-extension-contract.schema.json",
+  "title": "SKILL-0 Knowledge Plane Extension Contract",
+  "description": "Context-only bindings from an exact Skill Asset revision to existing Directive IDs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "extension_id",
+    "asset_ref",
+    "bindings",
+    "evidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "extension_id": {
+      "type": "string",
+      "pattern": "^knowledge-plane:[a-z0-9][a-z0-9_-]*:v[0-9]+$"
+    },
+    "asset_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["asset_type", "asset_id", "revision_id", "content_hash"],
+      "properties": {
+        "asset_type": {
+          "const": "skill"
+        },
+        "asset_id": {
+          "type": "string",
+          "pattern": "^(claude|mcp)__[a-z0-9_]+__[a-z0-9][a-z0-9_]*$"
+        },
+        "revision_id": {
+          "type": "string",
+          "pattern": "^asset-revision:sha256:[0-9a-f]{64}$"
+        },
+        "content_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    },
+    "bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/binding"
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_binding_ids",
+        "record_source_digests",
+        "event_watermark_required"
+      ],
+      "properties": {
+        "record_binding_ids": {
+          "const": true
+        },
+        "record_source_digests": {
+          "const": true
+        },
+        "event_watermark_required": {
+          "const": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binding_id",
+        "directive_id",
+        "phases",
+        "usage",
+        "required",
+        "unavailable_policy",
+        "budget",
+        "sources"
+      ],
+      "properties": {
+        "binding_id": {
+          "type": "string",
+          "pattern": "^kpb_[0-9]{3}$"
+        },
+        "directive_id": {
+          "type": "string",
+          "pattern": "^d_[0-9]{3}$"
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["planning", "preflight", "execution", "validation", "recovery"]
+          }
+        },
+        "usage": {
+          "const": "context-only"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "unavailable_policy": {
+          "enum": ["fail-closed", "skip-binding"]
+        },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["max_sources", "max_characters"],
+          "properties": {
+            "max_sources": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 32
+            },
+            "max_characters": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100000
+            }
+          }
+        },
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/source"
+          }
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_ref",
+        "source_revision",
+        "content_digest",
+        "classification",
+        "authority",
+        "retrieval_mode"
+      ],
+      "properties": {
+        "source_ref": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S"
+        },
+        "content_digest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "classification": {
+          "enum": ["public", "internal", "confidential"]
+        },
+        "authority": {
+          "const": "context-only"
+        },
+        "retrieval_mode": {
+          "enum": ["snapshot", "reference"]
+        }
+      }
+    }
+  }
+}

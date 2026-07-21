@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import closing
+from datetime import datetime
 import json
 from pathlib import Path
 import sqlite3
@@ -58,7 +60,7 @@ def _index_findings(
         findings["pending_projection"] = [item.source_path.as_posix() for item in revisions]
         return findings, 0
     try:
-        with _readonly(index_db) as connection:
+        with closing(_readonly(index_db)) as connection:
             if not _table_exists(connection, "asset_index_state"):
                 findings["pending_projection"] = [
                     item.source_path.as_posix() for item in revisions
@@ -109,7 +111,7 @@ def _authority_findings(governance_db: Path, revisions) -> list[dict[str, str]]:
     if not governance_db.exists():
         return [{"asset_id": "*", "reason": "governance_database_missing"}]
     try:
-        with _readonly(governance_db) as connection:
+        with closing(_readonly(governance_db)) as connection:
             if not _table_exists(connection, "skills") or not _table_exists(
                 connection, "skill_revisions"
             ):
@@ -123,14 +125,22 @@ def _authority_findings(governance_db: Path, revisions) -> list[dict[str, str]]:
             }
             required_skills = {"skill_id", "canonical_skill_id", "current_revision_id"}
             required_revisions = {
-                "skill_id", "revision_id", "artifact_digest", "status", "is_current"
+                "skill_id",
+                "revision_id",
+                "version",
+                "artifact_digest",
+                "status",
+                "approved_by",
+                "approved_at",
+                "is_current",
             }
             if not required_skills <= skill_columns or not required_revisions <= revision_columns:
                 return [{"asset_id": "*", "reason": "governance_schema_incompatible"}]
             rows = connection.execute(
                 """
                 SELECT s.canonical_skill_id, s.current_revision_id,
-                       sr.revision_id, sr.artifact_digest, sr.status, sr.is_current
+                       sr.revision_id, sr.version, sr.artifact_digest,
+                       sr.status, sr.approved_by, sr.approved_at, sr.is_current
                 FROM skills s
                 LEFT JOIN skill_revisions sr
                   ON sr.skill_id=s.skill_id AND sr.revision_id=s.current_revision_id
@@ -150,8 +160,28 @@ def _authority_findings(governance_db: Path, revisions) -> list[dict[str, str]]:
             findings.append({"asset_id": revision.asset_id, "reason": "current_revision_missing"})
         elif row["status"] != "approved" or not bool(row["is_current"]):
             findings.append({"asset_id": revision.asset_id, "reason": "revision_not_approved_current"})
+        elif str(row["version"] or "") != "1.0.0":
+            findings.append({"asset_id": revision.asset_id, "reason": "version_mismatch"})
         elif row["artifact_digest"] != revision.content_hash:
             findings.append({"asset_id": revision.asset_id, "reason": "artifact_digest_mismatch"})
+        elif not str(row["approved_by"] or "").strip() or not str(
+            row["approved_at"] or ""
+        ).strip():
+            findings.append(
+                {"asset_id": revision.asset_id, "reason": "approval_provenance_missing"}
+            )
+        else:
+            try:
+                datetime.fromisoformat(
+                    str(row["approved_at"]).strip().replace("Z", "+00:00")
+                )
+            except ValueError:
+                findings.append(
+                    {
+                        "asset_id": revision.asset_id,
+                        "reason": "approval_provenance_invalid",
+                    }
+                )
     return findings
 
 
@@ -168,7 +198,7 @@ def _migration_findings(index_db: Path, migration_dir: Path):
         ]
     else:
         try:
-            with _readonly(index_db) as connection:
+            with closing(_readonly(index_db)) as connection:
                 statuses = [
                     {
                         "migration_id": item.migration_id,

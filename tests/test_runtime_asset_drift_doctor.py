@@ -4,9 +4,11 @@ import json
 import sqlite3
 
 from jsonschema.validators import validator_for
+import pytest
 
 from asset_registry.repositories import LegacySkillAssetRepository
 from asset_registry.sqlite import load_migrations
+from tools.governance_db import GovernanceDB
 from tools.runtime_asset_drift_doctor import build_doctor_report
 
 
@@ -52,20 +54,23 @@ def _create_index(path, revision):
 
 
 def _create_governance(path, revision):
-    with sqlite3.connect(path) as connection:
-        connection.execute(
-            "CREATE TABLE skills (skill_id TEXT, canonical_skill_id TEXT, current_revision_id TEXT)"
-        )
-        connection.execute(
-            "CREATE TABLE skill_revisions (skill_id TEXT, revision_id TEXT, artifact_digest TEXT, status TEXT, is_current INTEGER)"
-        )
-        connection.execute(
-            "INSERT INTO skills VALUES ('gov', ?, 'gov-rev')", (revision.asset_id,)
-        )
-        connection.execute(
-            "INSERT INTO skill_revisions VALUES ('gov', 'gov-rev', ?, 'approved', 1)",
-            (revision.content_hash,),
-        )
+    governance = GovernanceDB(path)
+    skill_id = governance.create_skill(
+        name=revision.asset_id,
+        source_type="test_fixture",
+        source_path=revision.source_path.as_posix(),
+    )
+    governance.bind_runtime_artifact(
+        skill_id,
+        canonical_skill_id=revision.asset_id,
+        artifact_digest=revision.content_hash,
+        bound_by="operator:test-fixture",
+    )
+    assert governance.approve_skill(
+        skill_id,
+        approved_by="operator:test-fixture",
+        reason="doctor test fixture",
+    )
 
 
 def _create_full_corpus_acceptance_fixture(path, revisions, migration_dir):
@@ -114,30 +119,23 @@ def _create_full_corpus_acceptance_fixture(path, revisions, migration_dir):
             ],
         )
 
-    with sqlite3.connect(path / "governance.db") as connection:
-        connection.execute(
-            "CREATE TABLE skills (skill_id TEXT, canonical_skill_id TEXT, current_revision_id TEXT)"
+    governance = GovernanceDB(path / "governance.db")
+    for revision in revisions:
+        skill_id = governance.create_skill(
+            name=revision.asset_id,
+            source_type="test_fixture",
+            source_path=revision.source_path.as_posix(),
         )
-        connection.execute(
-            "CREATE TABLE skill_revisions (skill_id TEXT, revision_id TEXT, artifact_digest TEXT, status TEXT, is_current INTEGER)"
+        governance.bind_runtime_artifact(
+            skill_id,
+            canonical_skill_id=revision.asset_id,
+            artifact_digest=revision.content_hash,
+            bound_by="operator:test-fixture",
         )
-        connection.executemany(
-            "INSERT INTO skills VALUES (?, ?, ?)",
-            [
-                (f"fixture-{row_id}", revision.asset_id, revision.revision_id)
-                for row_id, revision in enumerate(revisions, start=1)
-            ],
-        )
-        connection.executemany(
-            "INSERT INTO skill_revisions VALUES (?, ?, ?, 'approved', 1)",
-            [
-                (
-                    f"fixture-{row_id}",
-                    revision.revision_id,
-                    revision.content_hash,
-                )
-                for row_id, revision in enumerate(revisions, start=1)
-            ],
+        assert governance.approve_skill(
+            skill_id,
+            approved_by="operator:test-fixture",
+            reason="full-corpus doctor test fixture",
         )
 
 
@@ -204,6 +202,44 @@ def test_doctor_distinguishes_stale_projection(tmp_path):
     )
     assert report["state"] == "stale-derived-projection"
     assert report["findings"]["pending_projection"] == ["doctor.json"]
+
+
+@pytest.mark.parametrize(
+    ("column", "value", "reason"),
+    [
+        ("approved_by", None, "approval_provenance_missing"),
+        ("approved_at", "not-a-timestamp", "approval_provenance_invalid"),
+        ("version", "2.0.0", "version_mismatch"),
+    ],
+)
+def test_doctor_requires_runtime_approval_provenance(
+    tmp_path, column, value, reason
+):
+    parsed = tmp_path / "parsed"
+    parsed.mkdir()
+    _write_skill(parsed / "doctor.json")
+    revision = LegacySkillAssetRepository(parsed).list_revisions()[0]
+    index = tmp_path / "index.db"
+    governance = tmp_path / "governance.db"
+    _create_index(index, revision)
+    _create_governance(governance, revision)
+    with sqlite3.connect(governance) as connection:
+        connection.execute(
+            f"UPDATE skill_revisions SET {column}=?",
+            (value,),
+        )
+
+    report = build_doctor_report(
+        parsed_dir=parsed,
+        index_db=index,
+        governance_db=governance,
+    )
+
+    assert report["state"] == "authority-missing"
+    assert report["exit_code"] == 2
+    assert report["findings"]["authority_missing"] == [
+        {"asset_id": revision.asset_id, "reason": reason}
+    ]
 
 
 def test_doctor_fails_closed_on_migration_checksum_drift(tmp_path):

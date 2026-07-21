@@ -23,6 +23,11 @@ from api.routers.runs_v4 import (  # noqa: E402
     runtime_hitl_ttl_configuration_issue,
     runtime_journal_mode_configuration_issue,
 )
+from vector_db.model_artifact import (  # noqa: E402
+    DIGEST_ENV as EMBEDDING_MODEL_DIGEST_ENV,
+    MODEL_ENV as EMBEDDING_MODEL_ENV,
+    production_model_artifact_issue,
+)
 
 
 RUNTIME_TABLES = {
@@ -170,10 +175,15 @@ def run_doctor(
             errors.append(ttl_issue)
         if os.getenv("SKILL0_RUNTIME_ALLOW_INITIALIZE", "false").lower() == "true":
             issue = "runtime_initialization_is_enabled"
-            if require_backups:
-                errors.append(issue)
-            else:
-                warnings.append(issue)
+            errors.append(issue)
+        model_issue = production_model_artifact_issue(
+            env_name,
+            os.getenv(EMBEDDING_MODEL_ENV),
+            os.getenv(EMBEDDING_MODEL_DIGEST_ENV),
+        )
+        checks["embedding_model_artifact"] = {"verified": model_issue is None}
+        if model_issue is not None:
+            errors.append(model_issue)
 
     runtime_path = Path(
         os.getenv("SKILL0_RUNTIME_DB_PATH", "governance/db/runtime.db")

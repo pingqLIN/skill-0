@@ -10,6 +10,11 @@ from pathlib import Path
 from typing import Dict, List, Optional, Union
 import numpy as np
 
+from .model_artifact import (
+    EmbeddingModelArtifactError,
+    production_model_artifact_issue,
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -68,11 +73,24 @@ class SkillEmbedder:
             model_name: sentence-transformers 模型名稱
                        預設使用 all-MiniLM-L6-v2 (384 維, 快速且高效)
         """
-        from sentence_transformers import SentenceTransformer
-
         device = _resolve_device()
         self.device = device
         self.model_name = model_name
+        production = os.environ.get("SKILL0_ENV", "development").strip().lower() in {
+            "production",
+            "prod",
+        }
+
+        if production:
+            issue = production_model_artifact_issue(
+                os.environ.get("SKILL0_ENV"),
+                model_name,
+                os.environ.get("SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST"),
+            )
+            if issue:
+                raise EmbeddingModelArtifactError(issue)
+
+        from sentence_transformers import SentenceTransformer
 
         try:
             self.model = SentenceTransformer(
@@ -82,6 +100,14 @@ class SkillEmbedder:
             )
             logger.info("從本機 Hugging Face cache 載入 embedding 模型: %s", model_name)
         except Exception as exc:
+            if production:
+                logger.error(
+                    "Production embedding 模型不在本機 cache，拒絕遠端 fallback: %s",
+                    model_name,
+                )
+                raise RuntimeError(
+                    "production embedding model must be available locally"
+                ) from exc
             logger.warning(
                 "本機 embedding 模型 cache 不可用，改為遠端載入 %s (%s)",
                 model_name,
@@ -89,7 +115,10 @@ class SkillEmbedder:
             )
             self.model = SentenceTransformer(model_name, device=device)
 
-        self.dimension = self.model.get_sentence_embedding_dimension()
+        if hasattr(self.model, "get_embedding_dimension"):
+            self.dimension = self.model.get_embedding_dimension()
+        else:
+            self.dimension = self.model.get_sentence_embedding_dimension()
         
     def skill_to_text(self, skill: Dict) -> str:
         """

@@ -1,12 +1,15 @@
-FROM python:3.12.13-slim@sha256:0bbd3d5f3abb2024c1b92ce69e8bdfefa17c248999827c34e2ed52ba0772da1b
+FROM ubuntu:24.04@sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90 AS builder
 
-WORKDIR /app
+ARG DEBIAN_FRONTEND=noninteractive
+ENV VIRTUAL_ENV=/opt/venv \
+    PATH=/opt/venv/bin:$PATH
 
-# Create persistent directories before seeding the image.
-RUN mkdir -p /app/.cache /app/data /app/runtime-data /app/governance/db /app/bootstrap /app/scripts
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates python3 python3-venv && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install dependencies
-COPY requirements-api.txt .
+WORKDIR /build
+COPY requirements-api.txt requirements-runtime.txt ./
 RUN --mount=type=secret,id=build_ca,required=false \
     set -eu; \
     ca_path="/usr/local/share/ca-certificates/skill0-build-ca.crt"; \
@@ -23,34 +26,48 @@ RUN --mount=type=secret,id=build_ca,required=false \
         update-ca-certificates >/dev/null; \
         ca_installed=1; \
     fi; \
-    pip install --no-cache-dir --upgrade pip; \
-    pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu torch; \
+    python3 -m venv "$VIRTUAL_ENV"; \
+    pip install --no-cache-dir --upgrade "pip>=26.1.2,<27"; \
+    pip install --no-cache-dir --index-url https://download.pytorch.org/whl/cpu "torch>=2.13,<3"; \
     pip install --no-cache-dir -r requirements-api.txt; \
-    pip install --no-cache-dir "setuptools>=78.1.1,<82" "filelock>=3.20.3"
+    pip install --no-cache-dir -r requirements-runtime.txt; \
+    pip install --no-cache-dir "setuptools>=83,<84" "filelock>=3.20.3"; \
+    pip check
 
-COPY requirements-runtime.txt .
-RUN pip install --no-cache-dir -r requirements-runtime.txt
+FROM ubuntu:24.04@sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ca-certificates python3 libgomp1 && \
+    rm -rf /var/lib/apt/lists/*
+
+ENV VIRTUAL_ENV=/opt/venv \
+    PATH=/opt/venv/bin:$PATH \
+    HF_HOME=/app/.cache/huggingface \
+    TRANSFORMERS_CACHE=/app/.cache/huggingface \
+    TORCH_HOME=/app/.cache/torch
+
+WORKDIR /app
+
+# Create persistent directories before seeding the image.
+RUN mkdir -p /app/.cache /app/data /app/runtime-data /app/governance/db /app/bootstrap /app/scripts
 
 # Copy application code
+COPY --from=builder /opt/venv /opt/venv
 COPY api/ ./api/
+COPY asset_registry/ ./asset_registry/
 COPY runtime/ ./runtime/
 COPY vector_db/ ./vector_db/
 COPY parsed/ ./parsed/
 COPY schema/ ./schema/
 RUN python -c "from vector_db.vector_store import VectorStore; VectorStore('/app/bootstrap/skills.db').close()"
-COPY scripts/docker-entrypoint-api.sh /usr/local/bin/docker-entrypoint-api.sh
+COPY --chmod=755 scripts/docker-entrypoint-api.sh /usr/local/bin/docker-entrypoint-api.sh
 COPY scripts/runtime_doctor.py ./scripts/runtime_doctor.py
 
 # Non-root user with correct permissions
-RUN adduser --disabled-password --gecos "" --no-create-home appuser && \
-    chmod +x /usr/local/bin/docker-entrypoint-api.sh && \
-    chown -R appuser:appuser /app
+RUN chown -R 65532:65532 /app
 
-ENV HF_HOME=/app/.cache/huggingface \
-    TRANSFORMERS_CACHE=/app/.cache/huggingface \
-    TORCH_HOME=/app/.cache/torch
-
-USER appuser
+USER 65532:65532
 
 EXPOSE 8000
 

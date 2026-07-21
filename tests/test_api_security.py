@@ -19,6 +19,7 @@ from api.main import (
     is_production_env,
     validate_login_credentials,
 )
+from vector_db.model_artifact import compute_model_artifact_digest
 
 
 def test_is_production_env_variants():
@@ -101,6 +102,35 @@ def test_production_security_rejects_runtime_placeholders_and_accepts_independen
     ) == []
 
 
+def test_production_security_validates_approved_model_artifact(tmp_path):
+    model_dir = tmp_path / "approved-model"
+    model_dir.mkdir()
+    (model_dir / "config.json").write_text("{}\n", encoding="utf-8")
+    expected_digest = compute_model_artifact_digest(model_dir)
+    base = {
+        "env_value": "production",
+        "cors_origins": ["https://app.example.com"],
+        "jwt_secret_key": "production-jwt-secret-key-0123456789",
+        "default_jwt_secret_key": "dev-secret-change-in-production",
+        "configured_username": "admin",
+        "configured_password": "strong-password",
+        "embedding_model": str(model_dir.resolve()),
+        "validate_embedding_model": True,
+    }
+
+    assert find_production_security_issues(
+        **base,
+        embedding_model_artifact_digest=expected_digest,
+    ) == []
+
+    issues = find_production_security_issues(
+        **base,
+        embedding_model_artifact_digest="sha256:" + "0" * 64,
+    )
+
+    assert issues == ["embedding_model_artifact_digest_mismatch"]
+
+
 def test_validate_login_credentials_uses_constant_time_comparisons(monkeypatch):
     monkeypatch.setenv("API_USERNAME", "admin")
     monkeypatch.setenv("API_PASSWORD", "secret")
@@ -138,6 +168,7 @@ def test_rate_limit_exempt_paths():
     assert _is_rate_limit_exempt_path('/metrics') is True
     assert _is_rate_limit_exempt_path('/docs') is True
     assert _is_rate_limit_exempt_path('/docs/oauth2-redirect') is True
+    assert _is_rate_limit_exempt_path('/api/health/detail') is False
     assert _is_rate_limit_exempt_path('/api/search') is False
 
 
@@ -216,4 +247,27 @@ def test_health_endpoint_does_not_initialize_search_engine(monkeypatch, tmp_path
     response = client.get("/health")
 
     assert response.status_code == 200
+    assert response.json() == {"status": "healthy"}
+
+
+def test_health_detail_requires_authentication_and_redacts_metadata(monkeypatch, tmp_path):
+    db_path = tmp_path / "skills.db"
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("CREATE TABLE skills (id INTEGER PRIMARY KEY, name TEXT NOT NULL)")
+        conn.execute("INSERT INTO skills (name) VALUES ('fixture-skill')")
+        conn.commit()
+
+    monkeypatch.setattr(api_module, "DB_PATH", str(db_path))
+    client = TestClient(api_module.app)
+
+    assert client.get("/api/health/detail").status_code == 401
+
+    token = api_module.create_access_token({"sub": "health-observer"})
+    response = client.get(
+        "/api/health/detail",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 200
     assert response.json()["total_skills"] == 1
+    assert set(response.json()) == {"status", "total_skills", "uptime_seconds"}

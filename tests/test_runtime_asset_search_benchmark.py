@@ -7,12 +7,19 @@ from types import SimpleNamespace
 import pytest
 
 from tools.runtime_asset_search_benchmark import (
+    FTS_PROFILES,
+    LegacySkillAssetRepository,
+    build_fts_database,
     evaluate_gates,
     fts_expression,
+    load_query_suite,
     percentile_higher,
     ranking_metrics,
     reciprocal_rank_fusion,
     search_fts,
+    select_profile_decision,
+    sha256_file,
+    validate_freeze_manifest,
     validate_index_projection,
     validate_output_dir,
 )
@@ -45,6 +52,119 @@ def test_fts_expression_and_search_are_safe_for_punctuation():
             "INSERT INTO benchmark_asset_fts VALUES ('api', 'ASP NET REST API', '', '')"
         )
         assert search_fts(connection, "ASP.NET REST API", 5) == ["api"]
+
+
+def test_all_registered_fts_profiles_build_and_search(tmp_path):
+    revision = SimpleNamespace(
+        asset_id="asset-1",
+        payload={
+            "meta": {"name": "fixture", "description": "searchable fixture"},
+            "decomposition": {"actions": [], "rules": [], "directives": []},
+        },
+    )
+    repository = SimpleNamespace(list_revisions=lambda: (revision,))
+    assert [profile.name for profile in FTS_PROFILES] == [
+        "baseline",
+        "detail-none",
+        "detail-none-columnsize-zero",
+    ]
+    for profile in FTS_PROFILES:
+        path = tmp_path / f"{profile.name}.db"
+        build_fts_database(path, repository, profile)
+        with sqlite3.connect(path) as connection:
+            assert search_fts(connection, "searchable fixture", 5) == ["asset-1"]
+
+
+def test_profile_selection_uses_smallest_passing_artifact():
+    profiles = {
+        "baseline": {
+            "storage": {"fts5_bytes": 300},
+            "gate": {"decision": "GO_P1_PROTOTYPE"},
+        },
+        "detail-none": {
+            "storage": {"fts5_bytes": 200},
+            "gate": {"decision": "GO_P1_PROTOTYPE"},
+        },
+        "detail-none-columnsize-zero": {
+            "storage": {"fts5_bytes": 100},
+            "gate": {"decision": "NO_GO"},
+        },
+    }
+    decision = select_profile_decision(profiles)
+    assert decision["decision"] == "GO_P1_PROTOTYPE"
+    assert decision["selected_profile"] == "detail-none"
+
+
+def test_profile_selection_fails_closed_when_final_isolation_fails():
+    profiles = {
+        "baseline": {
+            "storage": {"fts5_bytes": 300},
+            "gate": {"decision": "GO_P1_PROTOTYPE"},
+        }
+    }
+    decision = select_profile_decision(profiles, final_isolation=False)
+    assert decision["decision"] == "NO_GO"
+    assert decision["selected_profile"] is None
+    assert decision["reason"] == "source_index_isolation_failed"
+
+
+def test_frozen_v2_query_suite_resolves_and_meets_coverage(root):
+    cases, document = load_query_suite(
+        root / "benchmarks" / "runtime-asset-search-queries-v2.json",
+        LegacySkillAssetRepository(root / "parsed"),
+    )
+    assert document["schema_version"] == "2.0.0"
+    assert len(cases) == 84
+    assert sum(case.subset == "lexical" for case in cases) == 42
+    assert sum(case.subset == "semantic" for case in cases) == 42
+    assert len(
+        {
+            judgment["asset_id"]
+            for case in cases
+            for judgment in case.judgments
+            if judgment["grade"] == 2
+        }
+    ) >= 40
+    freeze = json.loads(
+        (root / "benchmarks" / "runtime-asset-search-v2-freeze.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert freeze["suite_sha256"] == sha256_file(
+        root / "benchmarks" / "runtime-asset-search-queries-v2.json"
+    )
+    assert freeze["measurement_state"] == "not_run_at_freeze"
+
+
+@pytest.mark.parametrize(
+    ("field", "replacement"),
+    [
+        ("suite_sha256", "sha256:tampered"),
+        ("corpus_snapshot_id", "sha256:tampered"),
+        ("fts5_profiles", {"baseline": ["content=missing"]}),
+        ("measurement_state", "measured"),
+    ],
+)
+def test_freeze_manifest_tampering_fails_closed(root, tmp_path, field, replacement):
+    suite_path = root / "benchmarks" / "runtime-asset-search-queries-v2.json"
+    repository = LegacySkillAssetRepository(root / "parsed")
+    cases, _document = load_query_suite(suite_path, repository)
+    manifest = json.loads(
+        (root / "benchmarks" / "runtime-asset-search-v2-freeze.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    manifest[field] = replacement
+    tampered = tmp_path / "freeze.json"
+    tampered.write_text(json.dumps(manifest), encoding="utf-8")
+
+    with pytest.raises(ValueError, match=f"freeze manifest mismatch:.*{field}"):
+        validate_freeze_manifest(
+            tampered,
+            query_suite=suite_path,
+            repository=repository,
+            cases=cases,
+        )
 
 
 def test_decision_requires_every_predeclared_gate():
@@ -104,6 +224,22 @@ def test_decision_requires_every_predeclared_gate():
     )
     assert insufficient["decision"] == "NO_GO_INSUFFICIENT_EVIDENCE"
     assert insufficient["checks"]["representative_query_coverage"] is False
+
+    unreviewed = evaluate_gates(
+        quality=quality,
+        latency=latency,
+        source_size=1000,
+        fts_size=250,
+        isolation=True,
+        asset_count=196,
+        index_rows=196,
+        query_count=80,
+        lexical_query_count=40,
+        semantic_query_count=40,
+        reviewed_frozen_suite=False,
+    )
+    assert unreviewed["decision"] == "NO_GO_INSUFFICIENT_EVIDENCE"
+    assert unreviewed["checks"]["reviewed_frozen_suite"] is False
 
 
 def test_fts_expression_rejects_empty_input():

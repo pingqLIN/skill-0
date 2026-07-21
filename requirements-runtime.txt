@@ -1,2 +1,3 @@
 # Runtime v4 direct production dependencies
 jsonschema>=4.23,<5
+cryptography>=49,<50

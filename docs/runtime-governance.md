@@ -1,5 +1,9 @@
 # Runtime v4 Governance Admission
 
+Authority creation, supersession, rejection, blocking, drift, and current
+implementation gaps are defined in
+[`governance-authority-lifecycle.md`](governance-authority-lifecycle.md).
+
 Runtime v4 has two distinct governance boundaries:
 
 1. **Run admission** proves that the exact canonical parsed JSON is the artifact represented by the current approved governance revision.

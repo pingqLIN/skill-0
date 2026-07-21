@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "suite": "benchmarks/runtime-asset-search-queries-v2.json",
+  "suite_sha256": "sha256:614c41967d6c45e6d07f9760414a153fecbdff7e9d59de5734f9f0dcd91ec18f",
+  "corpus_snapshot_id": "sha256:92c9defd8f180e468e8a830773bf20a7ac0c005ebb2b2cd53df33eeb3c09c38b",
+  "query_count": 84,
+  "lexical_query_count": 42,
+  "semantic_query_count": 42,
+  "qrel_count": 120,
+  "distinct_direct_target_count": 85,
+  "taxonomy_counts": {
+    "cloud-iac": 6,
+    "data-bi": 13,
+    "documents-media": 22,
+    "mcp": 10,
+    "migration": 8,
+    "platform-framework": 13,
+    "security-delivery": 5,
+    "testing-devops": 7
+  },
+  "curator": "agent:governance_authority_research",
+  "reviewer": "agent:p02_bootstrap_review",
+  "reviewed_on": "2026-07-18",
+  "review_state": "passed_before_measurement",
+  "fts5_profiles": {
+    "baseline": [],
+    "detail-none": ["detail=none"],
+    "detail-none-columnsize-zero": ["detail=none", "columnsize=0"]
+  },
+  "storage_policy": "entire disposable FTS5 database bytes, including embedded asset mapping",
+  "measurement_state": "not_run_at_freeze"
+}

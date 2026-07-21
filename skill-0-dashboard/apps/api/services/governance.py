@@ -30,7 +30,7 @@ TOOLS_DIR = Path(os.getenv("SKILL0_TOOLS_PATH") or _default_tools_dir())
 sys.path.insert(0, str(TOOLS_DIR))
 sys.path.insert(0, str(TOOLS_DIR.parent))
 
-from governance_db import GovernanceDB, SkillRecord
+from governance_db import GovernanceDB, GovernanceTargetError, SkillRecord
 from runtime.digest import canonical_digest
 
 
@@ -86,6 +86,8 @@ class GovernanceService:
             "SOURCE_PATH_NOT_ALLOWED",
             "INSTALLED_PATH_MISSING",
             "INSTALLED_PATH_NOT_ALLOWED",
+            "CURRENT_TARGET_UNAVAILABLE",
+            "STALE_TARGET_REVISION",
         }
         return bool(error_code) and error_code not in non_retriable
 
@@ -104,6 +106,10 @@ class GovernanceService:
         if status == "skipped":
             return "review_skip_reason"
         if status == "failed":
+            if error_code == "STALE_TARGET_REVISION":
+                return "enqueue_current_revision_job"
+            if error_code == "CURRENT_TARGET_UNAVAILABLE":
+                return "inspect_governance_target"
             if error_code in {"PATH_NOT_FOUND", "SOURCE_PATH_MISSING", "SOURCE_PATH_NOT_ALLOWED"}:
                 return "fix_source_path"
             if error_code in {"INSTALLED_PATH_MISSING", "INSTALLED_PATH_NOT_ALLOWED"}:
@@ -467,7 +473,11 @@ class GovernanceService:
             if not item:
                 break
             stop_heartbeat, heartbeat_thread = self._start_item_heartbeat(item["item_id"])
-            result = runner(item["skill_id"])
+            result = runner(
+                item["skill_id"],
+                target_revision_id=item.get("target_revision_id"),
+                require_exact_target=True,
+            )
             stop_heartbeat.set()
             heartbeat_thread.join(timeout=max(self._action_job_item_heartbeat_seconds(), 1.0))
 
@@ -1181,7 +1191,88 @@ class GovernanceService:
             "reasons": reasons,
         }
 
-    def run_scan(self, skill_id: str) -> Dict[str, Any]:
+    def _target_failure(
+        self,
+        *,
+        skill_id: str,
+        code: str,
+        target_revision_id: Optional[str],
+        current_revision_id: Optional[str],
+    ) -> Dict[str, Any]:
+        current_unavailable = code == "CURRENT_TARGET_UNAVAILABLE"
+        return {
+            "status": "failed",
+            "skill_id": skill_id,
+            "revision_id": target_revision_id,
+            "target_revision_id": target_revision_id,
+            "current_revision_id": current_revision_id,
+            "processed": 0,
+            "results": [],
+            "error_code": code,
+            "error_message": (
+                "Current Governance revision target is unavailable"
+                if current_unavailable
+                else "Governance revision target is no longer current"
+            ),
+            "hint": (
+                "Inspect the Governance skill and restore a valid current revision."
+                if current_unavailable
+                else "Enqueue a new action job for the current revision."
+            ),
+        }
+
+    def _resolve_execution_target(
+        self,
+        *,
+        skill_id: str,
+        target_revision_id: Optional[str],
+        require_exact_target: bool,
+    ) -> tuple[Optional[str], Optional[Dict[str, Any]]]:
+        current = self.db.get_current_revision(skill_id)
+        current_revision_id = current.revision_id if current else None
+        if current_revision_id is None:
+            return None, self._target_failure(
+                skill_id=skill_id,
+                code="CURRENT_TARGET_UNAVAILABLE",
+                target_revision_id=target_revision_id,
+                current_revision_id=None,
+            )
+        if require_exact_target and target_revision_id is None:
+            return None, self._target_failure(
+                skill_id=skill_id,
+                code="STALE_TARGET_REVISION",
+                target_revision_id=None,
+                current_revision_id=current_revision_id,
+            )
+        if target_revision_id is not None and target_revision_id != current_revision_id:
+            return None, self._target_failure(
+                skill_id=skill_id,
+                code="STALE_TARGET_REVISION",
+                target_revision_id=target_revision_id,
+                current_revision_id=current_revision_id,
+            )
+        return target_revision_id or current_revision_id, None
+
+    def _governance_target_failure(
+        self,
+        *,
+        skill_id: str,
+        error: GovernanceTargetError,
+    ) -> Dict[str, Any]:
+        return self._target_failure(
+            skill_id=skill_id,
+            code=error.code,
+            target_revision_id=error.target_revision_id,
+            current_revision_id=error.current_revision_id,
+        )
+
+    def run_scan(
+        self,
+        skill_id: str,
+        *,
+        target_revision_id: Optional[str] = None,
+        require_exact_target: bool = False,
+    ) -> Dict[str, Any]:
         """Run a security scan for a single skill"""
         skill = self.db.get_skill(skill_id=skill_id)
         if not skill:
@@ -1194,6 +1285,14 @@ class GovernanceService:
                 "error_message": f"Skill not found: {skill_id}",
                 "hint": "Check that the skill_id is correct.",
             }
+
+        execution_revision_id, target_failure = self._resolve_execution_target(
+            skill_id=skill_id,
+            target_revision_id=target_revision_id,
+            require_exact_target=require_exact_target,
+        )
+        if target_failure:
+            return target_failure
 
         source_path = skill.source_path or ""
         if not self._path_exists(source_path):
@@ -1226,35 +1325,64 @@ class GovernanceService:
             analyzer = AdvancedSkillAnalyzer()
             scan_result = analyzer.analyze(resolved_source_path)
 
+            risk_level = getattr(scan_result.risk_level, "value", scan_result.risk_level)
+            findings = [
+                finding.to_dict()
+                if callable(getattr(finding, "to_dict", None))
+                else finding.__dict__
+                if hasattr(finding, "__dict__")
+                else finding
+                for finding in (scan_result.findings or [])
+            ]
+            scanned_at = getattr(scan_result, "scanned_at", None)
+            scanner_version = getattr(scan_result, "scanner_version", None)
+            files_scanned = getattr(scan_result, "files_scanned", 0)
+            blocked_value = getattr(scan_result, "blocked", False)
+            blocked = blocked_value if isinstance(blocked_value, bool) else False
+            blocked_reason = getattr(scan_result, "blocked_reason", "")
+            if not isinstance(blocked_reason, str):
+                blocked_reason = ""
             scan_data = {
-                "scanned_at": _dt.now().isoformat(),
-                "scanner_version": getattr(analyzer, "VERSION", "1.0.0"),
+                "scanned_at": scanned_at
+                if isinstance(scanned_at, str) and scanned_at
+                else _dt.now().isoformat(),
+                "scanner_version": scanner_version
+                if isinstance(scanner_version, str) and scanner_version
+                else getattr(analyzer, "VERSION", "1.0.0"),
                 "file_path": str(resolved_source_path),
-                "risk_level": scan_result.risk_level,
+                "risk_level": risk_level,
                 "risk_score": scan_result.risk_score,
-                "findings": [
-                    f.__dict__ if hasattr(f, "__dict__") else f
-                    for f in (scan_result.findings or [])
-                ],
+                "files_scanned": files_scanned if isinstance(files_scanned, int) else 0,
+                "findings_count": len(findings),
+                "findings": findings,
+                "blocked": blocked,
+                "blocked_reason": blocked_reason,
             }
-            self.db.record_security_scan(skill_id, scan_data)
-            current_revision = self.db.get_current_revision(skill_id)
+            self.db.record_security_scan(
+                skill_id,
+                scan_data,
+                revision_id=execution_revision_id,
+            )
 
             item = {
                 "skill_id": skill_id,
-                "revision_id": current_revision.revision_id if current_revision else None,
+                "revision_id": execution_revision_id,
                 "status": "success",
-                "risk_level": scan_result.risk_level,
+                "risk_level": risk_level,
                 "risk_score": scan_result.risk_score,
-                "findings_count": len(scan_result.findings or []),
+                "findings_count": len(findings),
+                "blocked": blocked,
+                "blocked_reason": blocked_reason,
             }
             return {
                 "status": "success",
                 "skill_id": skill_id,
-                "revision_id": current_revision.revision_id if current_revision else None,
+                "revision_id": execution_revision_id,
                 "processed": 1,
                 "results": [item],
             }
+        except GovernanceTargetError as exc:
+            return self._governance_target_failure(skill_id=skill_id, error=exc)
         except Exception as exc:
             return {
                 "status": "failed",
@@ -1294,7 +1422,13 @@ class GovernanceService:
             "results": results,
         }
 
-    def run_test(self, skill_id: str) -> Dict[str, Any]:
+    def run_test(
+        self,
+        skill_id: str,
+        *,
+        target_revision_id: Optional[str] = None,
+        require_exact_target: bool = False,
+    ) -> Dict[str, Any]:
         """Run fidelity test for a single skill"""
         skill = self.db.get_skill(skill_id=skill_id)
         if not skill:
@@ -1307,6 +1441,14 @@ class GovernanceService:
                 "error_message": f"Skill not found: {skill_id}",
                 "hint": "Check that the skill_id is correct.",
             }
+
+        execution_revision_id, target_failure = self._resolve_execution_target(
+            skill_id=skill_id,
+            target_revision_id=target_revision_id,
+            require_exact_target=require_exact_target,
+        )
+        if target_failure:
+            return target_failure
 
         source_path = skill.source_path or ""
         installed_path = skill.installed_path or ""
@@ -1377,12 +1519,15 @@ class GovernanceService:
                 },
                 "passed": test_result.passed,
             }
-            self.db.record_equivalence_test(skill_id, test_data)
-            current_revision = self.db.get_current_revision(skill_id)
+            self.db.record_equivalence_test(
+                skill_id,
+                test_data,
+                revision_id=execution_revision_id,
+            )
 
             item = {
                 "skill_id": skill_id,
-                "revision_id": current_revision.revision_id if current_revision else None,
+                "revision_id": execution_revision_id,
                 "status": "success",
                 "fidelity_score": test_result.overall_score,
                 "overall_score": test_result.overall_score,
@@ -1391,10 +1536,12 @@ class GovernanceService:
             return {
                 "status": "success",
                 "skill_id": skill_id,
-                "revision_id": current_revision.revision_id if current_revision else None,
+                "revision_id": execution_revision_id,
                 "processed": 1,
                 "results": [item],
             }
+        except GovernanceTargetError as exc:
+            return self._governance_target_failure(skill_id=skill_id, error=exc)
         except Exception as exc:
             return {
                 "status": "failed",

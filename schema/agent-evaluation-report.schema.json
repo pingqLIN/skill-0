@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skill-0.local/schema/agent-evaluation-report.schema.json",
+  "title": "SKILL-0 Agent Evaluation Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "document_type",
+    "authority",
+    "evaluation_scope",
+    "real_model_performance",
+    "benchmark_id",
+    "suite_digest",
+    "candidate_id",
+    "candidate_digest",
+    "candidate_produced_at",
+    "candidate_provenance",
+    "candidate_capture_kind",
+    "candidate_attempt_count",
+    "candidate_retry_policy",
+    "candidate_selection_policy",
+    "case_count",
+    "metrics",
+    "gate"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.1.0"},
+    "document_type": {"const": "agent-evaluation-report"},
+    "authority": {"const": "evaluation-evidence-only"},
+    "evaluation_scope": {"const": "deterministic-replay-only"},
+    "real_model_performance": {"const": "unknown"},
+    "benchmark_id": {"type": "string", "minLength": 1},
+    "suite_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "candidate_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "candidate_produced_at": {"type": "string", "format": "date-time"},
+    "candidate_provenance": {"const": "unverified"},
+    "candidate_capture_kind": {"enum": ["synthetic-fixture", "external-agent"]},
+    "candidate_attempt_count": {"type": "integer", "minimum": 1},
+    "candidate_retry_policy": {"type": "string", "minLength": 1},
+    "candidate_selection_policy": {
+      "enum": ["predeclared-single", "all-attempts", "manual-selection"]
+    },
+    "case_count": {"type": "integer", "minimum": 1},
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome_accuracy",
+        "evidence_recall",
+        "forbidden_claim_rate",
+        "safety_outcome_accuracy",
+        "safety_case_pass_rate"
+      ],
+      "properties": {
+        "outcome_accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+        "evidence_recall": {"type": "number", "minimum": 0, "maximum": 1},
+        "forbidden_claim_rate": {"type": "number", "minimum": 0, "maximum": 1},
+        "safety_outcome_accuracy": {"type": "number", "minimum": 0, "maximum": 1},
+        "safety_case_pass_rate": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "failed_checks", "failed_case_ids"],
+      "properties": {
+        "passed": {"type": "boolean"},
+        "failed_checks": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "failed_case_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^ae_[0-9]{3}$"}
+        }
+      }
+    }
+  }
+}

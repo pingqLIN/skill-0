@@ -39,6 +39,22 @@ RESULT_LIMIT = 5
 MEASURED_RUNS = 5
 MINIMUM_QUERY_COUNT = 80
 MINIMUM_SUBSET_QUERY_COUNT = 30
+V2_QUERY_COUNT = 84
+V2_SUBSET_QUERY_COUNT = 42
+V2_MINIMUM_DIRECT_TARGETS = 40
+
+
+@dataclass(frozen=True)
+class FTSProfile:
+    name: str
+    options: tuple[str, ...]
+
+
+FTS_PROFILES = (
+    FTSProfile("baseline", ()),
+    FTSProfile("detail-none", ("detail=none",)),
+    FTSProfile("detail-none-columnsize-zero", ("detail=none", "columnsize=0")),
+)
 
 
 @dataclass(frozen=True)
@@ -46,6 +62,7 @@ class QueryCase:
     query_id: str
     subset: str
     query: str
+    taxonomy: str
     relevant_asset_ids: frozenset[str]
     judgments: tuple[dict[str, object], ...]
 
@@ -193,7 +210,8 @@ def preflight_source_index(path: Path, revisions):
 
 def load_query_suite(path: Path, repository: LegacySkillAssetRepository):
     document = json.loads(path.read_text(encoding="utf-8"))
-    if document.get("schema_version") != "1.0.0":
+    schema_version = document.get("schema_version")
+    if schema_version not in {"1.0.0", "2.0.0"}:
         raise ValueError("unsupported query suite schema")
     if document.get("snapshot_id") != repository.snapshot_id:
         raise ValueError("query suite snapshot does not match parsed corpus")
@@ -203,17 +221,26 @@ def load_query_suite(path: Path, repository: LegacySkillAssetRepository):
     }
     cases = []
     seen_ids = set()
+    seen_queries = set()
     for item in document.get("queries", []):
         query_id = str(item["id"])
         if query_id in seen_ids:
             raise ValueError(f"duplicate query id: {query_id}")
         seen_ids.add(query_id)
+        query = str(item["query"]).strip()
+        normalized_query = " ".join(query.casefold().split())
+        if not normalized_query or normalized_query in seen_queries:
+            raise ValueError(f"empty or duplicate query wording: {query_id}")
+        seen_queries.add(normalized_query)
         subset = str(item["subset"])
         if subset not in {"lexical", "semantic"}:
             raise ValueError(f"unsupported subset: {subset}")
         resolved = []
         judgments = []
-        for judgment in item.get("judgments", []):
+        raw_judgments = item.get("judgments", [])
+        if schema_version == "2.0.0" and not 1 <= len(raw_judgments) <= 3:
+            raise ValueError(f"v2 query requires 1-3 judgments: {query_id}")
+        for judgment in raw_judgments:
             source_path = str(judgment["source_path"])
             grade = int(judgment["grade"])
             if source_path not in by_source or grade not in {1, 2}:
@@ -229,27 +256,118 @@ def load_query_suite(path: Path, repository: LegacySkillAssetRepository):
             QueryCase(
                 query_id=query_id,
                 subset=subset,
-                query=str(item["query"]),
+                query=query,
+                taxonomy=str(item.get("taxonomy") or "unclassified"),
                 relevant_asset_ids=frozenset(resolved),
                 judgments=tuple(judgments),
             )
         )
     if not cases:
         raise ValueError("query suite is empty")
+    if schema_version == "2.0.0":
+        freeze = document.get("freeze", {})
+        if (
+            freeze.get("state") != "reviewed_frozen"
+            or not str(freeze.get("reviewer", "")).startswith("agent:")
+        ):
+            raise ValueError("v2 suite must pass independent review before measurement")
+        lexical_count = sum(case.subset == "lexical" for case in cases)
+        semantic_count = sum(case.subset == "semantic" for case in cases)
+        direct_targets = {
+            str(judgment["asset_id"])
+            for case in cases
+            for judgment in case.judgments
+            if judgment["grade"] == 2
+        }
+        taxonomies = {case.taxonomy for case in cases}
+        if len(cases) != V2_QUERY_COUNT:
+            raise ValueError(f"v2 suite requires exactly {V2_QUERY_COUNT} queries")
+        if (lexical_count, semantic_count) != (
+            V2_SUBSET_QUERY_COUNT,
+            V2_SUBSET_QUERY_COUNT,
+        ):
+            raise ValueError("v2 suite requires exactly 42 lexical and 42 semantic queries")
+        if len(direct_targets) < V2_MINIMUM_DIRECT_TARGETS:
+            raise ValueError("v2 suite has insufficient distinct direct targets")
+        if "unclassified" in taxonomies or len(taxonomies) < 6:
+            raise ValueError("v2 suite requires classified taxonomy coverage")
     return tuple(cases), document
 
 
-def build_fts_database(path: Path, repository: LegacySkillAssetRepository) -> float:
+def validate_freeze_manifest(
+    path: Path,
+    *,
+    query_suite: Path,
+    repository: LegacySkillAssetRepository,
+    cases: tuple[QueryCase, ...],
+):
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    if manifest.get("schema_version") != "1.0.0":
+        raise ValueError("unsupported freeze manifest schema")
+    try:
+        relative_suite = query_suite.resolve().relative_to(ROOT.resolve()).as_posix()
+    except ValueError as exc:
+        raise ValueError("v2 query suite must be inside the repository") from exc
+    expected_profiles = {
+        profile.name: list(profile.options) for profile in FTS_PROFILES
+    }
+    taxonomy_counts = {
+        taxonomy: sum(case.taxonomy == taxonomy for case in cases)
+        for taxonomy in sorted({case.taxonomy for case in cases})
+    }
+    direct_target_count = len(
+        {
+            judgment["asset_id"]
+            for case in cases
+            for judgment in case.judgments
+            if judgment["grade"] == 2
+        }
+    )
+    expected = {
+        "suite": relative_suite,
+        "suite_sha256": sha256_file(query_suite),
+        "corpus_snapshot_id": repository.snapshot_id,
+        "query_count": len(cases),
+        "lexical_query_count": sum(case.subset == "lexical" for case in cases),
+        "semantic_query_count": sum(case.subset == "semantic" for case in cases),
+        "qrel_count": sum(len(case.judgments) for case in cases),
+        "distinct_direct_target_count": direct_target_count,
+        "taxonomy_counts": taxonomy_counts,
+        "fts5_profiles": expected_profiles,
+        "review_state": "passed_before_measurement",
+        "measurement_state": "not_run_at_freeze",
+    }
+    mismatches = [key for key, value in expected.items() if manifest.get(key) != value]
+    if mismatches:
+        raise ValueError("freeze manifest mismatch: " + ",".join(sorted(mismatches)))
+    return {
+        "path": str(path.resolve()),
+        "sha256": sha256_file(path),
+        **expected,
+        "curator": manifest.get("curator"),
+        "reviewer": manifest.get("reviewer"),
+        "reviewed_on": manifest.get("reviewed_on"),
+    }
+
+
+def build_fts_database(
+    path: Path,
+    repository: LegacySkillAssetRepository,
+    profile: FTSProfile = FTS_PROFILES[0],
+) -> float:
     start = time.perf_counter()
     with sqlite3.connect(path) as connection:
+        profile_options = ""
+        if profile.options:
+            profile_options = ",\n                " + ",\n                ".join(profile.options)
         connection.execute(
-            """
+            f"""
             CREATE VIRTUAL TABLE benchmark_asset_fts USING fts5(
                 asset_id UNINDEXED,
                 title,
                 description,
                 body,
-                tokenize='unicode61 remove_diacritics 2'
+                tokenize='unicode61 remove_diacritics 2'{profile_options}
             )
             """
         )
@@ -329,6 +447,7 @@ def evaluate_gates(
     query_count: int,
     lexical_query_count: int,
     semantic_query_count: int,
+    reviewed_frozen_suite: bool = True,
 ):
     epsilon = 1e-12
     vector = quality["overall"]["vector"]
@@ -354,8 +473,9 @@ def evaluate_gates(
         "latency_ratio": hybrid_p95 <= vector_p95 * 1.5,
         "storage_ratio": fts_size <= source_size * 0.25,
         "source_index_unchanged": bool(isolation),
+        "reviewed_frozen_suite": reviewed_frozen_suite,
     }
-    if not checks["representative_query_coverage"]:
+    if not checks["representative_query_coverage"] or not reviewed_frozen_suite:
         decision = "NO_GO_INSUFFICIENT_EVIDENCE"
     else:
         decision = "GO_P1_PROTOTYPE" if all(checks.values()) else "NO_GO"
@@ -365,8 +485,56 @@ def evaluate_gates(
     }
 
 
+def select_profile_decision(
+    profiles: dict[str, dict[str, object]], *, final_isolation: bool = True
+):
+    if not final_isolation:
+        return {
+            "decision": "NO_GO",
+            "selected_profile": None,
+            "profile_decisions": {
+                name: profile["gate"]["decision"]
+                for name, profile in profiles.items()
+            },
+            "final_source_isolation": False,
+            "reason": "source_index_isolation_failed",
+        }
+    passing = [
+        (name, profile)
+        for name, profile in profiles.items()
+        if profile["gate"]["decision"] == "GO_P1_PROTOTYPE"
+    ]
+    if passing:
+        selected_name, _selected = min(
+            passing,
+            key=lambda item: (int(item[1]["storage"]["fts5_bytes"]), item[0]),
+        )
+        decision = "GO_P1_PROTOTYPE"
+    else:
+        selected_name = None
+        decisions = {profile["gate"]["decision"] for profile in profiles.values()}
+        decision = (
+            "NO_GO_INSUFFICIENT_EVIDENCE"
+            if decisions == {"NO_GO_INSUFFICIENT_EVIDENCE"}
+            else "NO_GO"
+        )
+    return {
+        "decision": decision,
+        "selected_profile": selected_name,
+        "profile_decisions": {
+            name: profile["gate"]["decision"] for name, profile in profiles.items()
+        },
+        "final_source_isolation": True,
+    }
+
+
 def run_benchmark(
-    *, source_index: Path, parsed_dir: Path, query_suite: Path, output_dir: Path
+    *,
+    source_index: Path,
+    parsed_dir: Path,
+    query_suite: Path,
+    output_dir: Path,
+    freeze_manifest: Path | None = None,
 ):
     source_index = source_index.resolve()
     parsed_dir = parsed_dir.resolve()
@@ -381,98 +549,171 @@ def run_benchmark(
     source_before = source_file_state(source_index)
     output_dir.mkdir(parents=True)
     vector_copy = output_dir / "vector-snapshot.db"
-    fts_path = output_dir / "fts5-benchmark.db"
     failure: dict[str, str] | None = None
     try:
         repository = LegacySkillAssetRepository(parsed_dir)
         revisions = repository.list_revisions()
         cases, suite_document = load_query_suite(query_suite, repository)
+        freeze_evidence = None
+        if suite_document["schema_version"] == "2.0.0":
+            manifest_path = (
+                freeze_manifest
+                if freeze_manifest is not None
+                else ROOT / "benchmarks" / "runtime-asset-search-v2-freeze.json"
+            )
+            freeze_evidence = validate_freeze_manifest(
+                manifest_path.resolve(),
+                query_suite=query_suite,
+                repository=repository,
+                cases=cases,
+            )
         source_preflight = preflight_source_index(source_index, revisions)
         backup_integrity = backup_database(source_index, vector_copy)
         vector_snapshot_sha256 = sha256_file(vector_copy)
-        fts_build_ms = build_fts_database(fts_path, repository)
+        profile_paths = {
+            profile.name: output_dir / f"fts5-{profile.name}.db"
+            for profile in FTS_PROFILES
+        }
+        profile_build_ms = {
+            profile.name: build_fts_database(
+                profile_paths[profile.name], repository, profile
+            )
+            for profile in FTS_PROFILES
+        }
         engine = SemanticSearch(db_path=vector_copy, initialize_schema=False)
         try:
             model_id, model_version = engine._embedding_identity()
             if (model_id, model_version) != tuple(source_preflight["model_pair"]):
                 raise RuntimeError("query model identity does not match indexed vectors")
-            query_results = []
-            timing = {"vector_ms": [], "fts5_ms": [], "hybrid_ms": []}
-            with sqlite3.connect(fts_path) as fts_connection:
-                fts_connection.execute("PRAGMA query_only=ON")
-                for case in cases:
-                    vector_function = lambda case=case: [
-                        result.asset_id
-                        for result in engine.search_assets(case.query, limit=CANDIDATE_LIMIT)
-                    ]
-                    fts_function = lambda case=case: search_fts(
-                        fts_connection, case.query, CANDIDATE_LIMIT
-                    )
-                    hybrid_function = lambda: reciprocal_rank_fusion(
-                        vector_function(), fts_function()
-                    )
-                    vector_ids, vector_times = _measure(vector_function)
-                    fts_ids, fts_times = _measure(fts_function)
-                    hybrid_ids, hybrid_times = _measure(hybrid_function)
-                    timing["vector_ms"].extend(vector_times)
-                    timing["fts5_ms"].extend(fts_times)
-                    timing["hybrid_ms"].extend(hybrid_times)
-                    rankings = {"vector": vector_ids, "fts5": fts_ids, "hybrid": hybrid_ids}
-                    query_results.append(
-                        {
-                            "id": case.query_id,
-                            "subset": case.subset,
-                            "query": case.query,
-                            "judgments": list(case.judgments),
-                            "rankings_at_5": {
-                                method: values[:RESULT_LIMIT]
-                                for method, values in rankings.items()
-                            },
-                            "metrics": {
-                                method: ranking_metrics(values, case.relevant_asset_ids, k=RESULT_LIMIT)
-                                for method, values in rankings.items()
-                            },
+            profiles = {}
+            lexical_count = sum(case.subset == "lexical" for case in cases)
+            semantic_count = sum(case.subset == "semantic" for case in cases)
+            for profile in FTS_PROFILES:
+                query_results = []
+                timing = {"vector_ms": [], "fts5_ms": [], "hybrid_ms": []}
+                with sqlite3.connect(profile_paths[profile.name]) as fts_connection:
+                    fts_connection.execute("PRAGMA query_only=ON")
+                    for case in cases:
+                        vector_function = lambda case=case: [
+                            result.asset_id
+                            for result in engine.search_assets(
+                                case.query, limit=CANDIDATE_LIMIT
+                            )
+                        ]
+                        fts_function = lambda case=case: search_fts(
+                            fts_connection, case.query, CANDIDATE_LIMIT
+                        )
+                        hybrid_function = lambda: reciprocal_rank_fusion(
+                            vector_function(), fts_function()
+                        )
+                        vector_ids, vector_times = _measure(vector_function)
+                        fts_ids, fts_times = _measure(fts_function)
+                        hybrid_ids, hybrid_times = _measure(hybrid_function)
+                        timing["vector_ms"].extend(vector_times)
+                        timing["fts5_ms"].extend(fts_times)
+                        timing["hybrid_ms"].extend(hybrid_times)
+                        rankings = {
+                            "vector": vector_ids,
+                            "fts5": fts_ids,
+                            "hybrid": hybrid_ids,
                         }
-                    )
+                        query_results.append(
+                            {
+                                "id": case.query_id,
+                                "subset": case.subset,
+                                "taxonomy": case.taxonomy,
+                                "query": case.query,
+                                "judgments": list(case.judgments),
+                                "rankings_at_5": {
+                                    method: values[:RESULT_LIMIT]
+                                    for method, values in rankings.items()
+                                },
+                                "metrics": {
+                                    method: ranking_metrics(
+                                        values,
+                                        case.relevant_asset_ids,
+                                        k=RESULT_LIMIT,
+                                    )
+                                    for method, values in rankings.items()
+                                },
+                            }
+                        )
+
+                quality = {
+                    subset: {
+                        method: _aggregate_quality(
+                            query_results,
+                            method,
+                            None if subset == "overall" else subset,
+                        )
+                        for method in ("vector", "fts5", "hybrid")
+                    }
+                    for subset in ("overall", "lexical", "semantic")
+                }
+                latency = {
+                    method: {
+                        "samples": len(values),
+                        "p50": percentile_higher(values, 0.50),
+                        "p95": percentile_higher(values, 0.95),
+                        "max": max(values),
+                    }
+                    for method, values in timing.items()
+                }
+                profile_path = profile_paths[profile.name]
+                profile_isolation = source_state_unchanged(
+                    source_before, source_file_state(source_index)
+                )
+                profiles[profile.name] = {
+                    "configuration": {
+                        "fts5_options": list(profile.options),
+                        "fts5_weights": [0.0, 8.0, 4.0, 1.0],
+                    },
+                    "storage": {
+                        "fts5_bytes": profile_path.stat().st_size,
+                        "fts5_to_source_ratio": (
+                            profile_path.stat().st_size / int(source_before["bytes"])
+                        ),
+                        "fts5_build_ms": profile_build_ms[profile.name],
+                        "mapping_storage": "embedded_in_fts_database_and_included",
+                    },
+                    "quality": quality,
+                    "latency": latency,
+                    "queries": query_results,
+                    "gate": evaluate_gates(
+                        quality=quality,
+                        latency=latency,
+                        source_size=int(source_before["bytes"]),
+                        fts_size=profile_path.stat().st_size,
+                        isolation=profile_isolation,
+                        asset_count=len(revisions),
+                        index_rows=int(source_preflight["index_rows"]),
+                        query_count=len(cases),
+                        lexical_query_count=lexical_count,
+                        semantic_query_count=semantic_count,
+                        reviewed_frozen_suite=freeze_evidence is not None,
+                    ),
+                }
         finally:
             engine.close()
 
-        quality = {
-            subset: {
-                method: _aggregate_quality(
-                    query_results, method, None if subset == "overall" else subset
-                )
-                for method in ("vector", "fts5", "hybrid")
-            }
-            for subset in ("overall", "lexical", "semantic")
-        }
-        latency = {
-            method: {
-                "samples": len(values),
-                "p50": percentile_higher(values, 0.50),
-                "p95": percentile_higher(values, 0.95),
-                "max": max(values),
-            }
-            for method, values in timing.items()
-        }
         source_after = source_file_state(source_index)
         isolation = source_state_unchanged(source_before, source_after)
-        lexical_count = sum(case.subset == "lexical" for case in cases)
-        semantic_count = sum(case.subset == "semantic" for case in cases)
-        decision = evaluate_gates(
-            quality=quality,
-            latency=latency,
-            source_size=int(source_before["bytes"]),
-            fts_size=fts_path.stat().st_size,
-            isolation=isolation,
-            asset_count=len(revisions),
-            index_rows=int(source_preflight["index_rows"]),
-            query_count=len(cases),
-            lexical_query_count=lexical_count,
-            semantic_query_count=semantic_count,
+        decision = select_profile_decision(profiles, final_isolation=isolation)
+        taxonomy_counts = {
+            taxonomy: sum(case.taxonomy == taxonomy for case in cases)
+            for taxonomy in sorted({case.taxonomy for case in cases})
+        }
+        qrel_count = sum(len(case.judgments) for case in cases)
+        direct_target_count = len(
+            {
+                judgment["asset_id"]
+                for case in cases
+                for judgment in case.judgments
+                if judgment["grade"] == 2
+            }
         )
         report = {
-            "schema_version": "1.0.0",
+            "schema_version": "2.0.0",
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "configuration": {
                 "rrf_k": RRF_K,
@@ -481,7 +722,9 @@ def run_benchmark(
                 "measured_runs": MEASURED_RUNS,
                 "minimum_query_count": MINIMUM_QUERY_COUNT,
                 "minimum_subset_query_count": MINIMUM_SUBSET_QUERY_COUNT,
-                "fts5_weights": [0.0, 8.0, 4.0, 1.0],
+                "fts5_profiles": {
+                    profile.name: list(profile.options) for profile in FTS_PROFILES
+                },
             },
             "environment": {
                 "platform": platform.platform(),
@@ -497,8 +740,12 @@ def run_benchmark(
                 "query_count": len(cases),
                 "lexical_query_count": lexical_count,
                 "semantic_query_count": semantic_count,
+                "qrel_count": qrel_count,
+                "direct_target_count": direct_target_count,
+                "taxonomy_counts": taxonomy_counts,
                 "query_suite_sha256": sha256_file(query_suite),
                 "suite_schema_version": suite_document["schema_version"],
+                "freeze_manifest": freeze_evidence,
             },
             "source_index": {
                 "path": str(source_index),
@@ -514,13 +761,11 @@ def run_benchmark(
                 "backup_integrity": backup_integrity,
                 "vector_snapshot_sha256": vector_snapshot_sha256,
                 "vector_snapshot_bytes": vector_copy.stat().st_size,
-                "fts5_bytes": fts_path.stat().st_size,
-                "fts5_to_source_ratio": fts_path.stat().st_size / int(source_before["bytes"]),
-                "fts5_build_ms": fts_build_ms,
+                "profiles": {
+                    name: profile["storage"] for name, profile in profiles.items()
+                },
             },
-            "quality": quality,
-            "latency": latency,
-            "queries": query_results,
+            "profiles": profiles,
             "gate": decision,
             "scope": "offline_evidence_only_no_production_ddl",
         }
@@ -558,7 +803,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--queries",
         type=Path,
-        default=Path("benchmarks/runtime-asset-search-queries.json"),
+        default=Path("benchmarks/runtime-asset-search-queries-v2.json"),
+    )
+    parser.add_argument(
+        "--freeze-manifest",
+        type=Path,
+        default=Path("benchmarks/runtime-asset-search-v2-freeze.json"),
     )
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args(argv)
@@ -567,6 +817,7 @@ def main(argv: list[str] | None = None) -> int:
         parsed_dir=args.parsed_dir,
         query_suite=args.queries,
         output_dir=args.output_dir,
+        freeze_manifest=args.freeze_manifest,
     )
     print(
         json.dumps(

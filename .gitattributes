@@ -5,3 +5,7 @@
 # stable across Windows and POSIX checkouts.
 runtime/adapters/** text eol=lf
 adapters/**/adapter-certification.json text eol=lf
+
+# The frozen Runtime Asset search snapshot binds the existing parsed-corpus
+# bytes. Preserve its CRLF basis across Windows and POSIX checkouts.
+parsed/*.json text eol=crlf

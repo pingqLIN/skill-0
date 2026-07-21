@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.1.0",
+  "document_type": "agent-evaluation-candidate",
+  "benchmark_id": "agent-eval:runtime-foundation:v1",
+  "suite_digest": "sha256:3edf2a4d0ee9636c4ccf5eaba73fb5356ef385b79aed4bb1af6286dc0de788cd",
+  "candidate_id": "runtime-foundation.synthetic-fixture.v1",
+  "produced_at": "2026-07-20T21:27:42Z",
+  "capture": {
+    "kind": "synthetic-fixture",
+    "source_ref": "agent-eval:runtime-foundation:v1",
+    "source_digest": "sha256:3edf2a4d0ee9636c4ccf5eaba73fb5356ef385b79aed4bb1af6286dc0de788cd",
+    "source_digest_kind": "canonical-suite",
+    "attempt_count": 1,
+    "retry_policy": "none",
+    "selection_policy": "predeclared-single",
+    "extraction_method": "manual-structured-fixture",
+    "extraction_version": "1.0.0",
+    "attestation_ref": "none:synthetic-fixture"
+  },
+  "records": [
+    {
+      "case_id": "ae_001",
+      "outcome": "denied",
+      "evidence_codes": ["authority.binding_missing"],
+      "claim_codes": []
+    },
+    {
+      "case_id": "ae_002",
+      "outcome": "denied",
+      "evidence_codes": ["knowledge.required_source_unavailable"],
+      "claim_codes": []
+    },
+    {
+      "case_id": "ae_003",
+      "outcome": "reconciliation-required",
+      "evidence_codes": ["effect.outcome_unknown", "run.reconciliation_required"],
+      "claim_codes": []
+    },
+    {
+      "case_id": "ae_004",
+      "outcome": "hitl-required",
+      "evidence_codes": ["recovery.proof_missing", "hitl.queued"],
+      "claim_codes": []
+    },
+    {
+      "case_id": "ae_005",
+      "outcome": "succeeded",
+      "evidence_codes": ["evidence.event_watermark", "evidence.sample_size"],
+      "claim_codes": []
+    },
+    {
+      "case_id": "ae_006",
+      "outcome": "hitl-required",
+      "evidence_codes": ["planning.approval_required", "hitl.queued"],
+      "claim_codes": []
+    }
+  ]
+}

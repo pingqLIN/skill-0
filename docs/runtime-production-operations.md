@@ -2,6 +2,9 @@
 
 This is the authoritative operator runbook for the Runtime v4 production boundary. See [runtime-production-operations.zh-tw.md](runtime-production-operations.zh-tw.md) for the Traditional Chinese companion.
 
+All deployments must also satisfy the mandatory controls and external evidence
+requirements in [`production-security-policy.md`](production-security-policy.md).
+
 ## Storage topology
 
 Runtime v4 has three independent SQLite stores. A release is not production-ready when any store is missing.
@@ -14,6 +17,11 @@ Runtime v4 has three independent SQLite stores. A release is not production-read
 
 `docker-compose.prod.yml` gives the Runtime ledger its own named volume and mounts the governance volume read-only into the Core API. The Core API waits for the Dashboard API health check before its fail-closed startup doctor runs.
 
+Production images never embed `governance/db/` or an operator
+`governance.db`. A new governance volume therefore starts empty until an
+explicit provisioning or restore step initializes it; Docker volume copy-up
+must not import repository-local authority state.
+
 ## Required production configuration
 
 - `SKILL0_RUNTIME_BINDING_KEY`: independent secret, at least 32 characters, never equal to `JWT_SECRET_KEY`.
@@ -23,22 +31,38 @@ Runtime v4 has three independent SQLite stores. A release is not production-read
 - `SKILL0_RUNTIME_DB_PATH=/app/runtime-data/runtime.db`.
 - `SKILL0_GOVERNANCE_DB_PATH=/app/governance/db/governance.db`.
 - `SKILL0_RUNTIME_ALLOW_INITIALIZE=false` during normal operation.
+- `SKILL0_EMBEDDING_MODEL`: the absolute path to a symlink-free,
+  operator-materialized model directory in the read-only model volume.
+- `SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST`: the approved
+  `sha256:<64 lowercase hex>` complete-tree digest. Startup, the production
+  doctor, model loading, and index identity all verify it; production refuses
+  remote fallback and does not ignore model drift.
+- `SKILL0_BIND_ADDRESS=127.0.0.1` by default. Override it only behind an
+  explicitly reviewed network boundary and maintained TLS proxy or ingress.
+- `SKILL0_EXTERNAL_CONTROL_TRUSTED_KEYRING_SHA256`: the exact SHA-256 of the
+  approved external-control verifier keyring, injected by the protected release
+  runner or equivalent independently administered configuration. The evidence
+  submitter must not control this value.
 
 The doctor reports only configuration names and structural findings. It never prints secret values.
 
 ## First start and upgrade
 
-1. Restore or provision `skills.db` and `governance.db` before accepting traffic. A clean public checkout intentionally has neither production identity nor approvals.
-2. Start the Dashboard API so the governance volume is present and its schema is current.
-3. For the first intentional provisioning boot only, set `SKILL0_RUNTIME_ALLOW_INITIALIZE=true`. If the Runtime ledger is missing while this flag is false, startup fails instead of silently creating an empty history.
-4. Start the Core API. Its entrypoint initializes or migrates `runtime.db`, then runs:
+1. Materialize the approved model into the model volume without symlinks. Compute
+   its digest with `compute_model_artifact_digest()` from
+   `vector_db.model_artifact`, record the reviewed value, then mount the volume
+   read-only. Do not let the normal API service provision or update model bytes.
+2. Restore or provision `skills.db` and `governance.db` before accepting traffic. A clean public checkout intentionally has neither production identity nor approvals.
+3. Start the Dashboard API so the governance volume is present and its schema is current.
+4. For the first intentional provisioning boot only, set `SKILL0_RUNTIME_ALLOW_INITIALIZE=true`. If the Runtime ledger is missing while this flag is false, startup fails instead of silently creating an empty history.
+5. Start the Core API. Its entrypoint initializes or migrates `runtime.db`, then runs:
 
    ```bash
    python /app/scripts/runtime_doctor.py --production --json
    ```
 
-5. Return `SKILL0_RUNTIME_ALLOW_INITIALIZE=false`, restart the Core API, and verify the doctor again.
-6. Start the web service only after both APIs are healthy.
+6. Return `SKILL0_RUNTIME_ALLOW_INITIALIZE=false`, restart the Core API, and verify the doctor again.
+7. Start the web service only after both APIs are healthy.
 
 Legacy HITL rows without `expires_at` are treated as expired. Legacy execution bases without `governance_revision_id` are non-resumable. Do not rewrite those attestations: start a fresh run against the current approved canonical revision.
 
@@ -74,9 +98,66 @@ python scripts/runtime_doctor.py \
 
 The release gate fails when initialization remains enabled or any store, required Runtime/governance column, current backup, parsed corpus, actor allowlist, binding key, TTL, or production Runtime WAL contract is missing.
 
+## External-control evidence gate
+
+The application doctor cannot observe the deployment edge, host, backup-key
+separation, secret manager, or centralized logging service. Before promotion,
+an authorized operator must supply an external evidence bundle conforming to
+[`production-external-control-evidence.schema.json`](../schema/production-external-control-evidence.schema.json),
+plus a separately administered verifier keyring conforming to
+[`production-external-control-keyring.schema.json`](../schema/production-external-control-keyring.schema.json).
+Do not commit a real bundle, keyring, attachment, credential, topology export,
+or private operator identifier to this repository.
+
+The release runner must inject
+`SKILL0_EXTERNAL_CONTROL_TRUSTED_KEYRING_SHA256` from a protected configuration
+that the evidence submitter cannot modify. The verifier hashes the supplied
+keyring, compares it to that independent trust anchor, and includes the trusted
+keyring digest in the signed release binding. There is deliberately no CLI
+override for the trust anchor.
+
+The signed bundle must contain every `required_external_controls` entry from
+the machine-readable production policy. It is bound to the clean Git commit and
+tree, trusted keyring digest, production Compose and policy file digests, all
+three deployed image digests, the approved model artifact digest, the named
+environment, the operator identity/role, and digest-addressed attachments. The
+Git gate rejects tracked and untracked non-ignored worktree drift. Run it from a
+dedicated release checkout whose ignored build inputs are absent or excluded by
+`.dockerignore`. By default the observation must be no more than 24 hours old
+and the signed validity window must be no more than 168 hours. The Ed25519 key
+must be uniquely identified, authorized for the actor role and environment, and
+not revoked.
+
+Run the fail-closed verifier from the exact clean checkout being promoted:
+
+```powershell
+python tools/verify_production_external_controls.py `
+  --bundle C:\secure-evidence\production-primary\bundle.json `
+  --keyring C:\secure-keyring\skill0-production-keyring.json `
+  --evidence-root C:\secure-evidence\production-primary `
+  --environment production-primary `
+  --image-digest api=sha256:<64-lowercase-hex> `
+  --image-digest dashboard=sha256:<64-lowercase-hex> `
+  --image-digest web=sha256:<64-lowercase-hex> `
+  --model-artifact-digest sha256:<64-lowercase-hex>
+```
+
+The protected release runner must provide the trust-anchor environment variable
+before running this command. Exit code `0` verifies the bundle's integrity,
+freshness, authorization, exact
+release scope, and attachment digests. It does not independently observe the
+physical controls. Any missing, malformed, stale, expired, tampered, revoked,
+wrong-environment, wrong-release, or incomplete evidence returns `UNKNOWN`,
+exits `2`, and blocks release. Synthetic test evidence proves verifier behavior
+only and is never production evidence.
+
 ## Restore and restart rehearsal
 
-Use only an isolated project name. The helper creates disposable volumes, initializes a rehearsal governance store, validates all three stores, performs online SQLite backup/restore verification, restarts the Core API, and reruns the doctor:
+Use only an isolated project name. The helper fails closed when that project
+name already owns containers, volumes, or networks, binds its HTTP ports to loopback,
+creates disposable volumes, initializes a rehearsal governance store, validates
+all three stores, performs online SQLite backup/restore verification, restarts
+the Core API, and reruns the doctor:
 
 ```powershell
 pwsh -File scripts/rehearse_prod_compose.ps1

@@ -45,6 +45,11 @@ from asset_registry.repositories import (
     AssetRepository,
     StaleSourceSnapshotError,
 )
+from vector_db.model_artifact import (
+    DIGEST_ENV as EMBEDDING_MODEL_DIGEST_ENV,
+    MODEL_ENV as EMBEDDING_MODEL_ENV,
+    production_model_artifact_issue,
+)
 
 # 初始化結構化日誌
 _log_format = os.getenv("SKILL0_LOG_FORMAT", "json").lower()
@@ -130,6 +135,9 @@ def find_production_security_issues(
     runtime_hitl_ttl_seconds: Optional[str] = None,
     runtime_journal_mode: Optional[str] = None,
     validate_runtime: bool = False,
+    embedding_model: Optional[str] = None,
+    embedding_model_artifact_digest: Optional[str] = None,
+    validate_embedding_model: bool = False,
 ) -> List[str]:
     """Enumerate production security misconfigurations."""
     if not is_production_env(env_value):
@@ -180,6 +188,15 @@ def find_production_security_issues(
         if journal_issue is not None:
             issues.append(journal_issue)
 
+    if validate_embedding_model:
+        model_issue = production_model_artifact_issue(
+            env_value,
+            embedding_model,
+            embedding_model_artifact_digest,
+        )
+        if model_issue is not None:
+            issues.append(model_issue)
+
     return issues
 
 
@@ -197,6 +214,9 @@ def enforce_production_security_configuration() -> None:
         runtime_hitl_ttl_seconds=os.getenv(RUNTIME_HITL_TTL_SECONDS_ENV),
         runtime_journal_mode=os.getenv(RUNTIME_JOURNAL_MODE_ENV),
         validate_runtime=True,
+        embedding_model=os.getenv(EMBEDDING_MODEL_ENV),
+        embedding_model_artifact_digest=os.getenv(EMBEDDING_MODEL_DIGEST_ENV),
+        validate_embedding_model=True,
     )
     if issues:
         raise RuntimeError(
@@ -325,7 +345,6 @@ _rate_lock = asyncio.Lock()
 RATE_LIMIT_EXEMPT_PATHS = {
     '/',
     '/health',
-    '/api/health/detail',
     '/metrics',
     '/docs',
     '/redoc',
@@ -917,50 +936,34 @@ async def root():
 async def health_check():
     """Cheap liveness/readiness check that does not require loading the embedding model."""
     try:
-        total_skills = _get_db_skill_count(DB_PATH)
-        return {
-            "status": "healthy",
-            "db_path": DB_PATH,
-            "total_skills": total_skills,
-        }
+        _get_db_skill_count(DB_PATH)
+        return {"status": "healthy"}
     except Exception as exc:
-        logger.exception(
+        logger.error(
             "health_check_failed",
-            db_path=DB_PATH,
             error_type=type(exc).__name__,
-            error=str(exc),
         )
         raise HTTPException(status_code=503, detail="Service unavailable") from exc
 
 
 class HealthDetailResponse(BaseModel):
-    """Detailed health check response"""
+    """Authenticated health check response without storage or model metadata."""
     status: str = Field(..., description="Overall health status: healthy or degraded")
-    db_path: str
-    db_exists: bool
-    db_size_bytes: int
     total_skills: int
-    embedding_model: str
     uptime_seconds: float
-    version: str = Field(API_VERSION, description="API version")
 
 
 @app.get("/api/health/detail", response_model=HealthDetailResponse, tags=["Health"])
-async def health_detail():
-    """Detailed health check including DB and runtime metrics"""
+async def health_detail(_user: dict = Depends(require_auth)):
+    """Return authenticated, redacted health metrics without loading the model."""
     # Basic, best-effort values
     db_path = DB_PATH
     db_exists = Path(db_path).exists()
-    try:
-        db_size_bytes = Path(db_path).stat().st_size if db_exists else 0
-    except Exception:
-        db_size_bytes = 0
 
     # Uptime since startup
     uptime_seconds = max(0.0, time.time() - _startup_time)
 
     total_skills = 0
-    embedding_model = "all-MiniLM-L6-v2"
     status = "healthy"
 
     if db_exists:
@@ -972,25 +975,10 @@ async def health_detail():
     else:
         status = "degraded"
 
-    # If the search engine is already warm, surface its configured model name
-    # without forcing a model initialization from the health endpoint.
-    if search_engine is not None:
-        try:
-            stats = search_engine.get_statistics()
-            if isinstance(stats, dict):
-                embedding_model = stats.get('model_name', embedding_model) or embedding_model
-        except Exception:
-            status = "degraded"
-
     return HealthDetailResponse(
         status=status,
-        db_path=db_path,
-        db_exists=db_exists,
-        db_size_bytes=db_size_bytes,
         total_skills=total_skills,
-        embedding_model=embedding_model,
         uptime_seconds=uptime_seconds,
-        version=API_VERSION,
     )
 
 

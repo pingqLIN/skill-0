@@ -85,5 +85,8 @@ backups/*.db
 # Local audit outputs
 /audit/
 
+# Recoverable local deletion sink
+/.del/
+
 # Environment-specific adapter approval records
 /governance/approvals/
