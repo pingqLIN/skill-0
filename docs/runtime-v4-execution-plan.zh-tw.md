@@ -35,6 +35,24 @@ Runtime v4 已於 2026-07-17 通過 operator acceptance 與受控內部 dry-run 
 
 Batch F verification 通過 373 項 Python/API tests、34 項 web tests、production web build、全部 196 個 canonical schema 驗證，以及七類隔離 adapter probes。
 
+## Production Admission Phase 1 完成狀態
+
+Production Admission 的 Phase 1 實作已於 2026-07-21 完成。Commit
+`167f23f` 新增具備簽章、精確發布版本綁定與 fail-closed 特性的 admission
+package verifier（准入套件驗證器），並包含對應 schema（結構描述）、operator
+handoff（操作員交接）、recovery（復原）文件及直接的回歸測試覆蓋。
+
+本次完成閘門已通過 16 項 admission 專項測試、完整 571 項 Python/API
+回歸測試、frontend lint（前端程式碼檢查）、36 項前端測試、production web
+建置，以及 bundle-size guard（套件大小閘門）。Canonical parsed corpus
+（標準解析語料庫）仍須持續遵守專案的 schema validation gate（結構描述驗證閘門）。
+
+此處的完成狀態僅涵蓋 Phase 1 的 contract（契約）、verifier（驗證器）、文件與
+測試介面。Production Admission 仍為 `WAITING_FOR_OPERATOR_EVIDENCE`：本次
+驗證未使用或授權任何真實 operator evidence（操作員證據）、特定環境的人工核准、
+credential（憑證）、external write（外部寫入）、service start（服務啟動）、
+deployment（部署）或 public exposure（公開暴露）。
+
 ## 內部 pilot 結果與下一步
 
 受控 pilot 使用 canonical PDF skill 的 `a_006` 建檔 action、test adapter 與 `dry_run=true`：
