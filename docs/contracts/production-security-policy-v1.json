@@ -1,5 +1,5 @@
 {
-  "policy_version": "1.5.0",
+  "policy_version": "1.6.0",
   "status": "stable-foundation",
   "deployment_boundary": {
     "topology": "single-host-docker-compose",
@@ -24,7 +24,8 @@
     "governance-decision-current-target-enforcement",
     "embedding-model-remote-fallback-disabled",
     "approved-local-model-artifact-digest",
-    "fresh-evidence-reapproval"
+    "fresh-evidence-reapproval",
+    "signed-external-control-evidence-verifier"
   ],
   "required_external_controls": [
     "tls-termination",

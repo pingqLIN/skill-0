@@ -10,9 +10,9 @@
 
 ## Decision
 
-**LOCAL_GO / PRODUCTION_NO_GO_PENDING_BASE_CVE_FIX.** The reviewed dependency remediation is accepted for local P0/P1 development. No verified Critical or untreated High dependency finding remains in the declared Python or web dependency graphs. The Runtime Asset index is healthy after a provenance-triggered full rebuild.
+**LOCAL_GO / REPOSITORY_SECURITY_GATE_GO / PRODUCTION_NO_GO_PENDING_EXTERNAL_OPERATOR_EVIDENCE.** The reviewed dependency and image remediation is accepted for the repository-controlled Runtime foundation. The final API, Dashboard, and Web images each report zero Critical and zero High findings. The Runtime Asset index remains healthy and the API base migration preserves the checked embedding vectors bit for bit.
 
-The final API and Dashboard images each contain **1 Critical and 2 High** findings in Debian Bookworm's essential Perl runtime, all reported without a fixed Bookworm version. The Web runtime blocker is resolved on the reviewed candidate: the digest-pinned `nginxinc/nginx-unprivileged:1.31.3-alpine3.24-slim` final image reports zero vulnerabilities at every severity. The image set and deployment remain blocked from production, release, deploy, or public exposure because the API/Dashboard findings and required external controls are still open.
+The API now uses a same-release Ubuntu 24.04 multi-stage image because the PyTorch CPU wheels require a glibc-compatible runtime. Its all-severity inventory contains 15 Medium and 5 Low Ubuntu findings, retained below as residual risk; none is Critical or High under the scanner/vendor classification. Dashboard moved independently to Python Alpine 3.24 and reports zero findings at every severity after upgrading the image's build/runtime `pip`. Web remains zero at every severity. Production, deploy, and public exposure are still blocked because real signed operator evidence for the required external controls has not been supplied or verified.
 
 ## Evidence
 
@@ -28,11 +28,16 @@ The final API and Dashboard images each contain **1 Critical and 2 High** findin
 - Follow-up offline `local://` scans on `2026-07-20` verified the pinned Dashboard candidate at 1 Critical / 2 High and the pinned Web candidate at 1 Critical / 9 High. Updating the Web base from digest `806f6d3e...` to `08c2bc9344...` reduced the observed result from 2 Critical / 14 High but did not satisfy the zero-Critical/High gate.
 - A fresh `2026-07-21` rebuild and `local://` scan reproduced API at 1 Critical / 2 High, Dashboard at 1 Critical / 2 High, and Web at 1 Critical / 9 High. The same rehearsal verified the new approved local model artifact digest gate; see [`runtime-production-compose-rehearsal-2026-07-21.md`](runtime-production-compose-rehearsal-2026-07-21.md).
 - A later `2026-07-21` Web-only remediation replaced the runtime base with the official multi-architecture digest `sha256:90d82b3358df5758b3c57d20f2565082ce6f744906e7dc09afd0096c1b8eb2b5`. The rebuilt final Web image (`sha256:f604964103605aae8e96fafd642a0bc3a937596638252bd9291aa9f74aec29fc`) was scanned with Docker Scout as `0 Critical / 0 High / 0 Medium / 0 Low`; the SARIF contains zero results and has SHA-256 `69933e606e8fc010c7d1df52993f413523163ac7ca1c3247fc26bdbc6c946878`. An isolated bridge-network smoke returned HTTP 200 while the container ran as user `101`.
+- Final API remediation uses digest-pinned `ubuntu:24.04@sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90` in a same-release multi-stage build. Image `sha256:dc7ac417bcfb3ebf49eefaffb3b1834bfd34a5b4e3e0984b4f06d5af4111c088` passed imports, `pip check`, HTTP 200, UID 65532, build-CA absence, and a 10-vector bitwise comparison against the prior Bookworm control. Its Critical/High SARIF has zero results and SHA-256 `69933e606e8fc010c7d1df52993f413523163ac7ca1c3247fc26bdbc6c946878`; its all-severity SARIF has 15 Medium and 5 Low results and SHA-256 `bdf53c8f2785d151e3bebcd7c1c95e01e87257e2a3d8d5642cf946f2e3999330`.
+- Final Dashboard remediation uses digest-pinned `python:3.12-alpine3.24@sha256:f7fd610959cae736251523b54eb26cecb74f60ffa60bf39d9faccf128b526ab8` and bounded `pip>=26.1.2,<27`. Image `sha256:be736191417bcbed79406dde15aa70b585aff2d17daf82d0473232bcaa666bd3` passed imports, `pip check`, HTTP 200, and non-root user checks. Its all-severity SARIF contains zero results and has SHA-256 `69933e606e8fc010c7d1df52993f413523163ac7ca1c3247fc26bdbc6c946878`.
+- A fail-closed Ed25519 external-control verifier now validates schema, a protected-runner keyring SHA-256 trust anchor, key revocation, actor role/environment authorization, freshness and expiry, exact Git/tree/keyring/Compose/policy/model/image binding, the complete eight-control policy set, path-contained attachments, and attachment digests. It rejects tracked or untracked non-ignored source drift. Missing, stale, malformed, tampered, wrong-scope, unauthorized, or incomplete evidence returns `UNKNOWN` and exit code 2. The verifier proves integrity and scope, not physical control truth; real bundles and keyrings remain external and uncommitted.
 - All production Dockerfile stages are now digest-pinned. All remote GitHub Actions references are pinned to full commit SHAs with their intended major versions retained as comments. Static regression tests fail on a mutable Docker stage or action reference. A second isolated Compose rehearsal passed build, health, production doctor, governed dry-run, deterministic Evidence, three-store backup/restore, restart persistence, and zero-resource cleanup with the pinned images.
 - Regression: 451 Python tests passed; 34 web tests passed; frontend production build and Python compile checks passed.
 - Follow-up hardening regression: 508 Python/API tests and 36 frontend tests passed; frontend lint/build and schema validation 196/196 passed.
+- Final Item 3 regression: 555 Python/API tests passed; frontend lint, 36 tests, production build, and bundle-size gate passed; schema validation remained 196/196. A fresh isolated Compose rehearsal passed all prior gates and confirmed zero residual containers, volumes, or networks.
+- Independent read-only review initially returned `NO_GO` with two Warning findings: caller-selectable keyring trust and an untracked-source blind spot. The protected-runner keyring digest anchor, signed keyring binding, all-untracked Git check, and regression tests closed both findings. The second review returned `GO` for repository-controlled Item 3 with no Critical or Warning; production remained independently `NO_GO` without real external evidence.
 
-Ignored local evidence is under `.artifacts/security-review/20260717T214200Z/`, including resolver reports, audit JSON, vector comparison, and strict indexing evidence.
+Ignored local evidence is under `.artifacts/security-review/20260717T214200Z/` and `.artifacts/security-review/20260721-item3-final/`, including resolver reports, audit JSON, vector comparison, strict indexing evidence, and final-image SARIF. These files are local evidence, not publishable release artifacts.
 
 ## Findings and Treatment
 
@@ -61,9 +66,9 @@ Primary references: [PyTorch advisory](https://github.com/advisories/GHSA-rrmf-r
 
 The dependency-reviewed API image initially failed while importing `VectorStore` because `asset_registry/` was not copied into the image. The Dockerfile now includes that package, and the final image import probe passes.
 
-### Production blocker: Debian Perl vulnerabilities without a Bookworm fix
+### Resolved production blocker: Bookworm Critical/High Perl findings
 
-The completed final-image Scout report contains:
+The historical Bookworm final-image Scout report contained:
 
 | Advisory | Severity | Trigger surface | Bookworm fixed version | Treatment |
 |---|---|---|---|---|
@@ -71,19 +76,21 @@ The completed final-image Scout report contains:
 | `CVE-2026-48959` | High | Perl `IO::Uncompress::Unzip` processing attacker-controlled ZIP data | Not fixed | Production deny |
 | `CVE-2026-48962` | High | Perl `IO::Compress::File::GlobMapper` with an attacker-controlled output glob | Not fixed | Production deny |
 
-The Skill-0 API runs Python as a non-root user and no inspected application path invokes Perl or exposes these Perl APIs. That lowers observed local dry-run reachability but does not erase the vulnerable essential package or authorize production use. Debian currently lists Bookworm as vulnerable for these source packages: [`CVE-2026-12087`](https://security-tracker.debian.org/tracker/CVE-2026-12087) and [`CVE-2026-48962`](https://security-tracker.debian.org/tracker/CVE-2026-48962).
+The API moved to the reviewed, digest-pinned Ubuntu 24.04 same-release multi-stage design; Dashboard moved independently to Python Alpine 3.24. The final scanned images have zero Critical and zero High findings, so the former Bookworm deny is closed without cross-release package surgery, finding suppression, TLS bypass, or a vulnerability exception. The API still contains Ubuntu `perl-base` and other OS packages with 15 Medium and 5 Low findings; their presence and vendor severity are recorded rather than described as absent.
 
-Owner: Runtime maintainers. Revalidation due: **2026-07-25**. Rebuild on a fixed official base digest and run:
+The maintained revalidation command is:
 
 ```powershell
 docker scout cves --only-severity critical,high --format sarif --output api-cves.sarif local://skill-0-api:<review-tag>
 ```
 
-Production remains blocked unless the result has zero Critical/High findings or a human explicitly approves a separate, time-bounded production exception after a fresh reachability review.
+The zero-Critical/High result is now satisfied. Any future image change must rerun this command and invalidates the present image-bound evidence.
 
 ## Remaining Warnings / Blockers
 
-1. **API/Dashboard container CVE inventories — VERIFIED production blockers.** The two Bookworm images retain the same unfixed Perl 1 Critical / 2 High set. No fixed Bookworm version or changed official Python base digest was available at the `2026-07-21` recheck. Do not mix Debian releases, force package replacement, suppress the findings, or disable TLS verification. Revalidate a fixed supported official base when available; the gate remains zero Critical/High. The former Web OpenSSL/musl blocker is closed by the separately rebuilt and scanned Alpine 3.24 candidate described above.
-2. **Model approval boundary — application control resolved; deployment evidence still required.** Production now requires an absolute, symlink-free local model directory and an operator-approved complete-tree digest. Startup, `SkillEmbedder`, index identity, and the production doctor fail closed when the artifact is missing, malformed, unreadable, or mismatched; remote fallback remains available only outside production and the Compose model volume is read-only. A real deployment must still supply the reviewed artifact, approved digest, and operator evidence because host and volume administration remain outside the application trust boundary.
+1. **API lower-severity inventory — VERIFIED residual risk, not a Critical/High exception.** The Ubuntu API image has 15 Medium and 5 Low results across 13 OS packages. The findings remain in the retained all-severity SARIF and must be reassessed on every base/package refresh. Their vendor severity does not authorize suppressing them or describing the image as vulnerability-free.
+2. **External-control operator evidence — UNKNOWN and release-blocking.** The repository now has a signed, exact-release-bound verifier, but no real bundle, external trusted keyring, attachment set, or physical observation was supplied. TLS termination, network ACL, secret management, unique credential quality, volume protection, encrypted separated backups, host/container administration, and centralized log controls therefore remain `UNKNOWN`. A synthetic fixture or successful application doctor cannot close this gate.
+3. **Model approval boundary — application control resolved; deployment evidence still required.** Production requires an absolute, symlink-free local model directory and an operator-approved complete-tree digest. Startup, `SkillEmbedder`, index identity, and the production doctor fail closed when the artifact is missing, malformed, unreadable, or mismatched; remote fallback remains available only outside production and the Compose model volume is read-only. The real deployment bundle must bind the reviewed model digest because host and volume administration remain outside the application trust boundary.
+4. **Source-to-image and SARIF target binding — Advisory.** The release verifier rejects tracked and untracked non-ignored source drift, while the runbook requires a dedicated release checkout. The retained SARIF does not independently encode the scanned local image ID. Under policy v1.6.0, OCI provenance, image signing, a digest-stamped scan envelope, and continuous scanning remain recommended rather than enforced. Promote this Advisory into a required control before claiming cryptographic source-to-image provenance.
 
-Warnings and blockers are assigned to the Runtime maintainers for the first production-hardening batch. Until they are closed, this review supports local Runtime dry-runs and P1 Search evidence only.
+The repository-controlled security work is ready for the RC branch. Production remains `NO_GO` until an authorized operator supplies a fresh signed evidence bundle for the exact clean commit, policy, Compose file, deployed image digests, model digest, and named environment, and the verifier returns `VERIFIED`. No deploy, public exposure, real credential use, or exception was performed here.

@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skill-0.local/schema/production-external-control-evidence.schema.json",
+  "title": "Skill-0 production external-control evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "evidence_id",
+    "environment",
+    "actor",
+    "observed_at",
+    "expires_at",
+    "release_binding",
+    "controls",
+    "signature"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "topology"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "maxLength": 128},
+        "topology": {"const": "single-host-docker-compose"}
+      }
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operator_id", "role"],
+      "properties": {
+        "operator_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "role": {"type": "string", "minLength": 1, "maxLength": 128}
+      }
+    },
+    "observed_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "release_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "git_commit",
+        "git_tree",
+        "compose_sha256",
+        "policy_sha256",
+        "trusted_keyring_sha256",
+        "model_artifact_digest",
+        "image_digests"
+      ],
+      "properties": {
+        "git_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "git_tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "compose_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "policy_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "trusted_keyring_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "model_artifact_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "image_digests": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["api", "dashboard", "web"],
+          "properties": {
+            "api": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "dashboard": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "web": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          }
+        }
+      }
+    },
+    "controls": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["control_id", "status", "artifact_refs"],
+        "properties": {
+          "control_id": {
+            "enum": [
+              "tls-termination",
+              "network-acl",
+              "secret-manager",
+              "unique-high-entropy-credentials",
+              "volume-encryption-and-file-permissions",
+              "encrypted-separated-backups",
+              "host-and-container-admin-restriction",
+              "central-log-retention-and-access-control"
+            ]
+          },
+          "status": {"const": "verified"},
+          "artifact_refs": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 32,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "sha256"],
+              "properties": {
+                "path": {"type": "string", "minLength": 1, "maxLength": 512},
+                "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "key_id", "value_base64"],
+      "properties": {
+        "algorithm": {"const": "Ed25519"},
+        "key_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "value_base64": {"type": "string", "minLength": 1, "maxLength": 256}
+      }
+    }
+  }
+}

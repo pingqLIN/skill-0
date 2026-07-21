@@ -39,6 +39,10 @@ must not import repository-local authority state.
   remote fallback and does not ignore model drift.
 - `SKILL0_BIND_ADDRESS=127.0.0.1` by default. Override it only behind an
   explicitly reviewed network boundary and maintained TLS proxy or ingress.
+- `SKILL0_EXTERNAL_CONTROL_TRUSTED_KEYRING_SHA256`: the exact SHA-256 of the
+  approved external-control verifier keyring, injected by the protected release
+  runner or equivalent independently administered configuration. The evidence
+  submitter must not control this value.
 
 The doctor reports only configuration names and structural findings. It never prints secret values.
 
@@ -93,6 +97,59 @@ python scripts/runtime_doctor.py \
 ```
 
 The release gate fails when initialization remains enabled or any store, required Runtime/governance column, current backup, parsed corpus, actor allowlist, binding key, TTL, or production Runtime WAL contract is missing.
+
+## External-control evidence gate
+
+The application doctor cannot observe the deployment edge, host, backup-key
+separation, secret manager, or centralized logging service. Before promotion,
+an authorized operator must supply an external evidence bundle conforming to
+[`production-external-control-evidence.schema.json`](../schema/production-external-control-evidence.schema.json),
+plus a separately administered verifier keyring conforming to
+[`production-external-control-keyring.schema.json`](../schema/production-external-control-keyring.schema.json).
+Do not commit a real bundle, keyring, attachment, credential, topology export,
+or private operator identifier to this repository.
+
+The release runner must inject
+`SKILL0_EXTERNAL_CONTROL_TRUSTED_KEYRING_SHA256` from a protected configuration
+that the evidence submitter cannot modify. The verifier hashes the supplied
+keyring, compares it to that independent trust anchor, and includes the trusted
+keyring digest in the signed release binding. There is deliberately no CLI
+override for the trust anchor.
+
+The signed bundle must contain every `required_external_controls` entry from
+the machine-readable production policy. It is bound to the clean Git commit and
+tree, trusted keyring digest, production Compose and policy file digests, all
+three deployed image digests, the approved model artifact digest, the named
+environment, the operator identity/role, and digest-addressed attachments. The
+Git gate rejects tracked and untracked non-ignored worktree drift. Run it from a
+dedicated release checkout whose ignored build inputs are absent or excluded by
+`.dockerignore`. By default the observation must be no more than 24 hours old
+and the signed validity window must be no more than 168 hours. The Ed25519 key
+must be uniquely identified, authorized for the actor role and environment, and
+not revoked.
+
+Run the fail-closed verifier from the exact clean checkout being promoted:
+
+```powershell
+python tools/verify_production_external_controls.py `
+  --bundle C:\secure-evidence\production-primary\bundle.json `
+  --keyring C:\secure-keyring\skill0-production-keyring.json `
+  --evidence-root C:\secure-evidence\production-primary `
+  --environment production-primary `
+  --image-digest api=sha256:<64-lowercase-hex> `
+  --image-digest dashboard=sha256:<64-lowercase-hex> `
+  --image-digest web=sha256:<64-lowercase-hex> `
+  --model-artifact-digest sha256:<64-lowercase-hex>
+```
+
+The protected release runner must provide the trust-anchor environment variable
+before running this command. Exit code `0` verifies the bundle's integrity,
+freshness, authorization, exact
+release scope, and attachment digests. It does not independently observe the
+physical controls. Any missing, malformed, stale, expired, tampered, revoked,
+wrong-environment, wrong-release, or incomplete evidence returns `UNKNOWN`,
+exits `2`, and blocks release. Synthetic test evidence proves verifier behavior
+only and is never production evidence.
 
 ## Restore and restart rehearsal
 

@@ -39,6 +39,25 @@ def test_web_runtime_uses_reviewed_zero_finding_base():
     )
 
 
+def test_api_and_dashboard_use_reviewed_zero_finding_bases():
+    api_dockerfile = (ROOT / "Dockerfile.api").read_text(encoding="utf-8")
+    dashboard_dockerfile = (ROOT / "Dockerfile.dashboard").read_text(
+        encoding="utf-8"
+    )
+
+    assert api_dockerfile.count(
+        "ubuntu:24.04"
+        "@sha256:4fbb8e6a8395de5a7550b33509421a2bafbc0aab6c06ba2cef9ebffbc7092d90"
+    ) == 2
+    assert (
+        "python:3.12-alpine3.24"
+        "@sha256:f7fd610959cae736251523b54eb26cecb74f60ffa60bf39d9faccf128b526ab8"
+        in dashboard_dockerfile
+    )
+    assert '"pip>=26.1.2,<27"' in api_dockerfile
+    assert '"pip>=26.1.2,<27"' in dashboard_dockerfile
+
+
 def test_legacy_partial_requirements_lock_is_not_an_authority_file():
     assert not (ROOT / "requirements.lock").exists()
     assert (ROOT / "requirements-api.txt").is_file()
@@ -203,7 +222,7 @@ def test_production_compose_persists_runtime_and_reads_governance_db():
     assert "--mount=type=secret,id=build_ca,required=false" in dockerfile
     assert "--trusted-host" not in dockerfile
     assert "rm -f \"$ca_path\"" in dockerfile
-    assert "COPY requirements-runtime.txt ." in dockerfile
+    assert "COPY requirements-api.txt requirements-runtime.txt ./" in dockerfile
     assert "pip install --no-cache-dir -r requirements-runtime.txt" in dockerfile
     assert "COPY skills.db" not in dockerfile
     assert "VectorStore('/app/bootstrap/skills.db').close()" in dockerfile
@@ -214,6 +233,7 @@ def test_production_compose_persists_runtime_and_reads_governance_db():
         encoding="utf-8"
     )
     assert "jsonschema>=4.23,<5" in runtime_requirements
+    assert "cryptography>=49,<50" in runtime_requirements
 
     dashboard_dockerfile = (ROOT / "Dockerfile.dashboard").read_text(
         encoding="utf-8"
@@ -282,6 +302,14 @@ def test_maintenance_scripts_cover_all_three_databases():
 
     entrypoint = (ROOT / "scripts" / "docker-entrypoint-api.sh").read_text(
         encoding="utf-8"
+    )
+    assert 'export SKILL0_DB_PATH="$RUNTIME_DB"' in entrypoint
+    assert 'export SKILL0_RUNTIME_DB_PATH="$RUNTIME_LEDGER"' in entrypoint
+    assert 'export SKILL0_RUNTIME_JOURNAL_MODE="$RUNTIME_JOURNAL_MODE"' in entrypoint
+    assert 'export SKILL0_RUNTIME_HITL_TTL_SECONDS="$HITL_TTL_SECONDS"' in entrypoint
+    assert (
+        'export SKILL0_RUNTIME_ALLOW_INITIALIZE="$ALLOW_RUNTIME_INITIALIZE"'
+        in entrypoint
     )
     assert "SKILL0_RUNTIME_ALLOW_INITIALIZE" in entrypoint
     assert "Runtime ledger is missing" in entrypoint

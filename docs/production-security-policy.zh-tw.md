@@ -1,7 +1,7 @@
 # Production Security Policy v1
 
 - 狀態：**已接受，適用 Runtime Architecture v1 stable foundation**
-- 版本：`1.5.0`
+- 版本：`1.6.0`
 - 生效日期：`2026-07-21`
 - Machine-readable policy：[`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations：[`runtime-production-operations.md`](runtime-production-operations.md)
@@ -31,6 +31,7 @@
 - Runtime doctor 可要求三個 stores 都有 current/readable backup，且只回報 configuration names，不回報 secret values。
 - HITL decision 需要 authenticated JWT subject 出現在 `SKILL0_RUNTIME_DECISION_ACTORS`，並受 immutable item deadline 限制。
 - Production 要求 absolute、symlink-free、由 operator materialize 的 model directory，並設定 `SKILL0_EMBEDDING_MODEL_ARTIFACT_DIGEST`。Startup、model loading、index identity 與 production doctor 都會計算具版本的完整 tree digest；artifact 缺少、格式錯誤、不可讀或 digest 不一致時一律 fail closed。Model volume 為 read-only，remote fallback 維持停用；錯誤只回傳穩定 reason code，不顯示 path 或 digest value。
+- Repository 提供 fail-closed Ed25519 external-control evidence verifier；它會檢查 freshness、revocation、authorized actor role/environment、exact release binding、完整 policy control set 與 attachment digest，但不會把 verifier 結果當成對 physical controls 的直接觀察。Separately administered keyring 必須通過 protected-runner SHA-256 trust anchor 驗證；evidence submitter 無法透過 CLI argument 取代。
 
 ### REQUIRED deployment controls（application 未強制）
 
@@ -121,6 +122,11 @@
 9. external TLS、network ACL、secret-manager、host-volume、backup-encryption、monitoring 有 operator evidence。
 
 Unavailable check 是 `UNKNOWN` 並阻擋其 claim。Timeout、acknowledgement-only review 或 passed application doctor 都不是 external deployment control 的證據。
+
+External-control evidence 必須通過
+[`runtime-production-operations.md`](runtime-production-operations.md) 所定義的
+signed、exact-release-bound verifier。該 verifier 證明 evidence integrity 與
+scope；repository-side check 不會因此變成對 physical controls 的獨立觀察。
 
 ## 10. Incident response 與 rotation
 

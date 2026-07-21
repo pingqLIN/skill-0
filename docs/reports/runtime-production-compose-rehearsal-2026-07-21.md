@@ -118,7 +118,73 @@ Docker Scout reported `0 Critical / 0 High / 0 Medium / 0 Low`; the zero-result
 SARIF has SHA-256
 `69933e606e8fc010c7d1df52993f413523163ac7ca1c3247fc26bdbc6c946878`.
 
-This closes the Web image CVE blocker only. The original table above remains the
-historical scan evidence for the Compose rehearsal. Production stays `NO_GO`
-because API and Dashboard each retain 1 Critical / 2 High unfixed Bookworm Perl
-findings and the external controls listed above still require operator evidence.
+This closed the Web image CVE blocker at that point. The original table above
+remains historical scan evidence; the current Item 3 image and rehearsal gate is
+superseded by the final rerun below.
+
+## Final Item 3 image remediation and rerun
+
+The API moved from Python Bookworm to a digest-pinned, same-release Ubuntu 24.04
+multi-stage image. The final runtime uses the distro Python 3.12 interpreter,
+copies a builder-created virtual environment, runs as UID 65532, and retains the
+ephemeral BuildKit CA secret boundary. PyTorch CPU has no musllinux wheel, so the
+API did not move to Alpine. The Dashboard image moved independently to
+digest-pinned Python Alpine 3.24 and bounded `pip>=26.1.2,<27`.
+
+Final local image evidence:
+
+| Image | Local image ID | Critical | High | Medium | Low |
+|---|---|---:|---:|---:|---:|
+| API | `sha256:dc7ac417bcfb3ebf49eefaffb3b1834bfd34a5b4e3e0984b4f06d5af4111c088` | 0 | 0 | 15 | 5 |
+| Dashboard | `sha256:be736191417bcbed79406dde15aa70b585aff2d17daf82d0473232bcaa666bd3` | 0 | 0 | 0 | 0 |
+| Web | `sha256:f604964103605aae8e96fafd642a0bc3a937596638252bd9291aa9f74aec29fc` | 0 | 0 | 0 | 0 |
+
+The zero-result Critical/High SARIF for every image has SHA-256
+`69933e606e8fc010c7d1df52993f413523163ac7ca1c3247fc26bdbc6c946878`.
+The API all-severity SARIF has SHA-256
+`bdf53c8f2785d151e3bebcd7c1c95e01e87257e2a3d8d5642cf946f2e3999330`.
+All API residuals are Ubuntu vendor-classified Medium or Low; they remain
+visible residual risk and are not described as absent. Dashboard and Web are
+zero at every severity.
+
+The final API and the prior Bookworm control resolved identical versions of
+NumPy, PyTorch, SentenceTransformers, and Transformers. Five fixed queries and
+five parsed documents produced ten normalized 384-dimensional vectors with
+identical per-vector SHA-256 values. API and Dashboard standalone smokes both
+returned HTTP 200 as non-root users, and both images passed `pip check`.
+
+The fresh isolated rehearsal used:
+
+```powershell
+pwsh -NoProfile -File scripts\rehearse_prod_compose.ps1 `
+  -ProjectName skill0-item3-gate-0721b `
+  -ApiPort 18184 `
+  -WebPort 13184 `
+  -BuildCaFile .artifacts\build-ca\gateway-ca.crt
+```
+
+It passed Compose config/build, service health, the production doctor with zero
+errors/warnings, a governed dry run and deterministic Evidence, three-store
+online backup/restore, API restart persistence, and cleanup. The Compose-built
+images had identical RootFS layer lists to the separately scanned final tags.
+After cleanup, project-scoped container, volume, and network counts were all
+zero. Repository gates also passed with 555 Python/API tests, 36 frontend tests,
+frontend lint/build/bundle checks, and schema validation at 196/196.
+
+Repository-controlled Critical/High and technical-rehearsal gates are closed.
+Production remains `NO_GO` because no real signed external-control bundle,
+trusted operator keyring, attachments, or physical observations were supplied.
+The new verifier fails closed on missing, stale, tampered, revoked,
+wrong-environment, wrong-release, or incomplete evidence and binds a future
+bundle to the exact clean Git commit/tree, policy, Compose file, deployed image
+digests, model digest, and environment. No production deploy, public exposure,
+real credentials, or vulnerability exception was performed.
+
+An independent read-only review returned `GO` for the repository-controlled
+Item 3 after two initial Warning findings were fixed and reverified: the
+keyring is now authenticated by a protected-runner digest that is included in
+the signed release binding, and Git status includes untracked non-ignored
+files. The reviewer retained source-to-image provenance and SARIF target binding
+as Advisory because policy v1.6.0 does not yet enforce image signing,
+provenance attestation, or a digest-stamped scan envelope. Production remained
+`NO_GO` for the external-evidence reason above.

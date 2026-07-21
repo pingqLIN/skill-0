@@ -14,7 +14,7 @@ def _policy():
 def test_production_security_policy_freezes_supported_boundary():
     policy = _policy()
 
-    assert policy["policy_version"] == "1.5.0"
+    assert policy["policy_version"] == "1.6.0"
     assert policy["status"] == "stable-foundation"
     assert policy["deployment_boundary"] == {
         "topology": "single-host-docker-compose",
@@ -65,6 +65,10 @@ def test_production_security_policy_separates_verified_and_external_controls():
         "verified_application_controls"
     ]
     assert "fresh-evidence-reapproval" in policy["verified_application_controls"]
+    assert (
+        "signed-external-control-evidence-verifier"
+        in policy["verified_application_controls"]
+    )
     assert "governance-decision-current-target-enforcement" not in policy[
         "known_unenforced_controls"
     ]
@@ -84,9 +88,28 @@ def test_production_security_policy_separates_verified_and_external_controls():
     assert "approved-local-model-artifact-digest" not in policy[
         "known_unenforced_controls"
     ]
+    assert "signed-external-control-evidence-verifier" not in policy[
+        "known_unenforced_controls"
+    ]
     assert set(policy["verified_application_controls"]).isdisjoint(
         policy["known_unenforced_controls"]
     )
+
+
+def test_external_evidence_schema_covers_exact_policy_control_set():
+    evidence_schema = json.loads(
+        (
+            ROOT
+            / "schema"
+            / "production-external-control-evidence.schema.json"
+        ).read_text(encoding="utf-8")
+    )
+    schema_controls = evidence_schema["properties"]["controls"]["items"][
+        "properties"
+    ]["control_id"]["enum"]
+
+    assert set(schema_controls) == set(_policy()["required_external_controls"])
+    assert len(schema_controls) == len(set(schema_controls))
 
 
 def test_production_security_policy_matches_runtime_and_compose_guards():

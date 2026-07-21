@@ -1,7 +1,7 @@
 # Production Security Policy v1
 
 - Status: **Accepted for the Runtime Architecture v1 stable foundation**
-- Version: `1.5.0`
+- Version: `1.6.0`
 - Effective date: `2026-07-21`
 - Machine-readable policy: [`contracts/production-security-policy-v1.json`](contracts/production-security-policy-v1.json)
 - Operations: [`runtime-production-operations.md`](runtime-production-operations.md)
@@ -60,6 +60,13 @@ deployment controls that must be supplied outside the repository.
   complete-tree digest and fail closed on missing, malformed, unreadable, or
   mismatched artifacts. The model volume is read-only and remote model fallback
   is disabled. Errors contain stable reason codes rather than paths or digests.
+- The repository provides a fail-closed Ed25519 verifier for external-control
+  evidence. It checks freshness, revocation, authorized actor role/environment,
+  exact release bindings, the complete policy control set, and attachment
+  digests without treating that verification as physical observation. The
+  separately administered keyring is authenticated by a protected-runner
+  SHA-256 trust anchor; the evidence submitter cannot replace it through a CLI
+  argument.
 
 ### REQUIRED deployment controls not enforced by the application
 
@@ -219,6 +226,11 @@ A release is blocked unless all of the following are evidenced:
 An unavailable check is `UNKNOWN` and blocks its claim. A timeout,
 acknowledgement-only review, or passed application doctor is not evidence for an
 external deployment control.
+
+External-control evidence must pass the signed, exact-release-bound verifier
+described in [`runtime-production-operations.md`](runtime-production-operations.md).
+That verifier establishes evidence integrity and scope; it does not turn a
+repository-side check into independent observation of the physical controls.
 
 ## 10. Incident response and rotation
 
